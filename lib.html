@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hudson Street Library</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+
+        html {
+             scroll-behavior: smooth; /* Enable smooth scrolling */
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: #1a1a1a; /* Main dark text color */
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .nav-item::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 1px;
+            background: #1a1a1a;
+            transition: width .3s;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        .book-cover {
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        /* Removed the dark overlay on book covers */
+        /* .book-cover::after { ... } */
+
+        .book-cover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Add subtle shadow */
+        }
+
+        .line-divider {
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .line-divider::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 0;
+            width: 80px;
+            height: 1px;
+            background: #1a1a1a;
+        }
+
+        /* Define stone-50 color if not default in Tailwind v3 */
+        /* Tailwind v3+ includes it by default */
+
+    </style>
+</head>
+<body class="bg-white">
+    <!-- Header -->
+    <header class="fixed w-full bg-white z-50 py-4 shadow-sm">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-between items-center">
+                <a href="#" class="text-2xl font-bold tracking-tight">HUDSON STREET LIBRARY</a>
+
+                <nav id="main-nav" class="hidden md:flex space-x-8 items-center">
+                    <a href="#about" class="nav-item">About</a>
+                    <a href="#collection" class="nav-item">Collection</a>
+                    <a href="#publications" class="nav-item">Publications</a>
+                    <a href="#contact" class="nav-item">Contact</a>
+                    <!-- Visit button removed from here -->
+                </nav>
+
+                <button class="md:hidden focus:outline-none" aria-label="Toggle menu" aria-controls="main-nav" aria-expanded="false">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen flex items-center">
+        <div class="absolute inset-0 bg-black/60 z-10"></div>
+        <!-- *** REPLACE HERO IMAGE *** -->
+        <img src='REPLACE WITH IMAGE URL' alt="Bookshelves at Hudson Street Library" class="absolute inset-0 w-full h-full object-cover">
+
+        <div class="container mx-auto px-6 relative z-20 text-center md:text-left">
+            <h1 class="text-5xl md:text-7xl font-bold text-white mb-6">Hudson Street Library</h1>
+            <p class="text-xl md:text-2xl text-white mb-8 max-w-2xl mx-auto md:mx-0">A specialized collection of photography books in Manhattan's West Village.</p>
+            <a href="#about" class="inline-block border border-white text-white px-8 py-3 hover:bg-white hover:text-black transition-all rounded-sm">Explore</a>
+        </div>
+    </section>
+
+    <!-- Use main tag for semantic structure -->
+    <main>
+
+        <!-- About Section -->
+        <section id="about" class="py-24">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto text-center mb-20">
+                    <h2 class="text-4xl font-bold mb-6">About the Library</h2>
+                    <div class="line-divider inline-block"></div>
+                    <p class="mt-12 text-lg leading-relaxed text-gray-600">Hudson Street Library houses a unique collection of books focused on photography with specialties in New York City, surveillance, female artists, street art, fashion, music, and underrepresented creators. Our collection also includes zines, books about books, LGBT+ publications, serial landscape photography, and photography of protest.</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-10">
+                    <div class="text-center p-6 border border-gray-100 rounded-lg hover:shadow-lg transition-shadow duration-300">
+                        <div class="text-5xl mb-6 text-gray-700">
+                            <i class="fas fa-camera-retro"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Photography Focus</h3>
+                        <p class="text-gray-600">Specialized collections documenting visual culture through the lens of contemporary photography.</p>
+                    </div>
+
+                    <div class="text-center p-6 border border-gray-100 rounded-lg hover:shadow-lg transition-shadow duration-300">
+                        <div class="text-5xl mb-6 text-gray-700">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Global Perspectives</h3>
+                        <p class="text-gray-600">Works from Middle Eastern and underrepresented creators providing diverse viewpoints.</p>
+                    </div>
+
+                    <div class="text-center p-6 border border-gray-100 rounded-lg hover:shadow-lg transition-shadow duration-300">
+                        <div class="text-5xl mb-6 text-gray-700">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Unique Holdings</h3>
+                        <p class="text-gray-600">Rare zines, artist books, and special collections not found elsewhere.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Collection Section -->
+        <section id="collection" class="py-24 bg-stone-50"> <!-- Lighter background -->
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto text-center mb-20">
+                    <h2 class="text-4xl font-bold mb-6">Our Collection</h2>
+                    <div class="line-divider inline-block"></div>
+                    <p class="mt-12 text-lg leading-relaxed text-gray-600">Explore highlights from our collection, focusing on collage, New York City photography, and the unique category of books about books.</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="book-cover group">
+                        <div class="relative overflow-hidden h-96 rounded-md bg-gray-200 flex items-center justify-center"> <!-- Placeholder background -->
+                           <!-- *** REPLACE COLLECTION IMAGE 1 *** -->
+                           <img src='REPLACE WITH IMAGE URL' alt="Collage collection example" class="w-full h-full object-cover">
+                        </div>
+                        <div class="mt-4">
+                            <h3 class="text-xl font-bold mb-2">Collage</h3>
+                            <p class="text-gray-600">Exploring the art of photographic collage and assemblage.</p>
+                        </div>
+                    </div>
+
+                    <div class="book-cover group">
+                        <div class="relative overflow-hidden h-96 rounded-md bg-gray-200 flex items-center justify-center">
+                           <!-- *** REPLACE COLLECTION IMAGE 2 *** -->
+                           <img src='REPLACE WITH IMAGE URL' alt="New York City photography book" class="w-full h-full object-cover">
+                        </div>
+                        <div class="mt-4">
+                            <h3 class="text-xl font-bold mb-2">New York City</h3>
+                            <p class="text-gray-600">Documenting the ever-evolving landscape and life of NYC.</p>
+                        </div>
+                    </div>
+
+                    <div class="book-cover group">
+                        <div class="relative overflow-hidden h-96 rounded-md bg-gray-200 flex items-center justify-center">
+                           <!-- *** REPLACE COLLECTION IMAGE 3 *** -->
+                            <img src='REPLACE WITH IMAGE URL' alt="Book about photobooks" class="w-full h-full object-cover">
+                        </div>
+                        <div class="mt-4">
+                            <h3 class="text-xl font-bold mb-2">Books on Books</h3>
+                            <p class="text-gray-600">A curated selection of publications about photobooks themselves.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-16">
+                    <a href="#" class="inline-block border border-black px-8 py-3 hover:bg-black hover:text-white transition-all rounded-sm">View Full Collection</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Publications Section -->
+        <section id="publications" class="py-24">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto text-center mb-20">
+                    <h2 class="text-4xl font-bold mb-6">Publications</h2>
+                    <div class="line-divider inline-block"></div>
+                     <p class="mt-12 text-lg leading-relaxed text-gray-600">Discover publications produced by the Hudson Street Library, starting with our inaugural volume.</p>
+                </div>
+
+                <div class="flex flex-col lg:flex-row items-center gap-12">
+                    <div class="lg:w-1/2">
+                         <!-- *** REPLACE PUBLICATION IMAGE *** -->
+                        <img src='REPLACE WITH IMAGE URL' alt="Surveillance Index Edition One cover" class="w-full shadow-xl rounded-lg bg-gray-200"> <!-- Placeholder background -->
+                    </div>
+
+                    <div class="lg:w-1/2">
+                        <h3 class="text-2xl font-bold mb-4">Surveillance Index Edition One</h3>
+                        <p class="text-gray-800 mb-6">Our first publication explores the intersection of surveillance and photography through works from our collection. This compilation brings together critical essays alongside visual documentation examining how photography has both served surveillance and critiqued it.</p>
+
+                        <div class="mb-8">
+                            <h4 class="font-semibold mb-3 text-lg text-gray-800">Features include:</h4>
+                            <ul class="space-y-2 text-gray-600">
+                                <li class="flex items-start">
+                                    <svg class="w-5 h-5 text-black mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span>Historical context of surveillance photography</span>
+                                </li>
+                                <li class="flex items-start">
+                                     <svg class="w-5 h-5 text-black mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span>Contemporary artistic responses</span>
+                                </li>
+                                <li class="flex items-start">
+                                     <svg class="w-5 h-5 text-black mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span>Previously unpublished works</span>
+                                </li>
+                                <li class="flex items-start">
+                                     <svg class="w-5 h-5 text-black mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span>Critical essays by leading scholars</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="flex space-x-4">
+                            <a href="#" class="bg-black text-white px-6 py-3 hover:bg-gray-800 transition-all rounded-sm">Purchase</a>
+                            <a href="#" class="border border-black px-6 py-3 hover:bg-black hover:text-white transition-all rounded-sm">View Online</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-24 bg-stone-50"> <!-- Lighter background -->
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto text-center mb-20">
+                    <h2 class="text-4xl font-bold mb-6">Contact & Visit</h2> <!-- Updated Title -->
+                    <div class="line-divider inline-block"></div>
+                    <p class="mt-12 text-lg leading-relaxed text-gray-600">We welcome submissions from publishers, artists, and industry professionals. Please reach out via the form below or contact us directly. Note our current visit policy.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div>
+                        <!-- NOTE: This form requires a backend service -->
+                        <form class="space-y-6" action="#" method="POST">
+                            <div>
+                                <label for="name" class="block mb-2 font-medium text-gray-800">Full Name</label>
+                                <input type="text" id="name" name="name" required class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-black focus:ring-1 focus:ring-black">
+                            </div>
+                            <div>
+                                <label for="email" class="block mb-2 font-medium text-gray-800">Email Address</label>
+                                <input type="email" id="email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-black focus:ring-1 focus:ring-black">
+                            </div>
+                            <div>
+                                <label for="message" class="block mb-2 font-medium text-gray-800">Message</label>
+                                <textarea id="message" name="message" rows="5" required class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-black focus:ring-1 focus:ring-black"></textarea>
+                            </div>
+                            <button type="submit" class="bg-black text-white px-8 py-4 hover:bg-gray-800 transition-all w-full rounded-md font-medium">Send Message</button>
+                        </form>
+                    </div>
+
+                    <div class="space-y-8">
+                        <div>
+                            <h3 class="text-xl font-bold mb-4">Location</h3>
+                            <p class="text-gray-600 leading-relaxed">
+                                Hudson Street Library<br>
+                                421 Hudson St<br> <!-- UPDATED ADDRESS -->
+                                New York, NY 10014
+                             </p>
+                        </div>
+
+                         <div> <!-- New Visit Policy Section -->
+                            <h3 class="text-xl font-bold mb-4">Visit Policy</h3>
+                            <p class="text-gray-600 leading-relaxed">
+                                Visits are currently limited to artists, publishers, researchers, and students <a href="#contact" class="text-black underline hover:no-underline">by appointment</a>. Please contact us to schedule.
+                             </p>
+                        </div>
+
+                        <!-- HOURS SECTION REMOVED -->
+
+                        <div>
+                            <h3 class="text-xl font-bold mb-4">Contact Info</h3>
+                             <p class="text-gray-600 leading-relaxed">
+                                <a href="mailto:info@hudsonstreetlibrary.org" class="hover:text-black">info@hudsonstreetlibrary.org</a>
+                                <!-- PHONE NUMBER REMOVED -->
+                             </p>
+                        </div>
+
+
+                        <div>
+                            <h3 class="text-xl font-bold mb-4">Follow Us</h3>
+                            <div class="flex space-x-4">
+                                <!-- ONLY INSTAGRAM REMAINS -->
+                                <a href="#" class="text-gray-600 hover:text-black" aria-label="Instagram"><i class="fab fa-instagram text-2xl"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+         <!-- New Visit Button Section -->
+         <section class="py-16 bg-white">
+             <div class="container mx-auto px-6 text-center">
+                  <h2 class="text-3xl font-bold mb-6">Plan Your Visit</h2>
+                  <p class="text-gray-600 mb-8 max-w-xl mx-auto">Access to the library is by appointment for specific user groups. Please review our policy and contact us to arrange your visit.</p>
+                  <a href="#contact" class="bg-black text-white px-8 py-4 text-lg hover:bg-gray-800 transition-all rounded-sm">Visit Information & Contact</a>
+             </div>
+         </section>
+
+    </main> <!-- End of main content -->
+
+    <!-- Footer -->
+    <footer class="bg-black text-white py-16">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between pb-12 border-b border-gray-800">
+                <div class="mb-8 md:mb-0">
+                    <h3 class="text-2xl font-bold mb-4">HUDSON STREET LIBRARY</h3>
+                    <p class="text-gray-400 max-w-xs">A specialized photography book collection in Manhattan's West Village.</p>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+                    <div>
+                        <h4 class="font-semibold text-lg mb-4">Explore</h4>
+                        <ul class="space-y-2 text-gray-400">
+                            <li><a href="#" class="hover:text-white">Home</a></li>
+                            <li><a href="#about" class="hover:text-white">About</a></li>
+                            <li><a href="#collection" class="hover:text-white">Collection</a></li>
+                            <li><a href="#publications" class="hover:text-white">Publications</a></li>
+                             <li><a href="#contact" class="hover:text-white">Contact</a></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="font-semibold text-lg mb-4">Visit</h4>
+                        <ul class="space-y-2 text-gray-400">
+                            <li><a href="#contact" class="hover:text-white">Visit Policy</a></li>
+                            <li><a href="#contact" class="hover:text-white">Location</a></li>
+                            <li><a href="#contact" class="hover:text-white">Appointments</a></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="font-semibold text-lg mb-4">Connect</h4>
+                        <ul class="space-y-2 text-gray-400">
+                            <li><a href="#" class="hover:text-white">Instagram</a></li>
+                            <!-- Other social links removed -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-12 text-center text-gray-500 text-sm">
+                <p>© 2023 Hudson Street Library. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const mobileMenuButton = document.querySelector('button.md\\:hidden');
+        const navMenu = document.getElementById('main-nav');
+
+        mobileMenuButton.addEventListener('click', function() {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+
+            navMenu.classList.toggle('hidden');
+            navMenu.classList.toggle('md:flex'); // Should always be flex on medium+
+
+            // Add/Remove classes specifically for mobile dropdown display
+            navMenu.classList.toggle('flex'); // Base flex display
+            navMenu.classList.toggle('flex-col'); // Stack vertically
+            navMenu.classList.toggle('absolute'); // Position absolutely
+            navMenu.classList.toggle('top-16'); // Position below header (adjust if header height changes)
+            navMenu.classList.toggle('left-0');
+            navMenu.classList.toggle('right-0');
+            navMenu.classList.toggle('bg-white'); // Background for dropdown
+            navMenu.classList.toggle('shadow-md'); // Shadow for dropdown
+            navMenu.classList.toggle('px-6'); // Padding
+            navMenu.classList.toggle('py-4'); // Padding
+            navMenu.classList.toggle('space-y-4'); // Vertical spacing for links
+            navMenu.classList.remove('space-x-8'); // Remove horizontal spacing needed for desktop
+            navMenu.classList.remove('items-center'); // Remove center alignment needed for desktop
+            navMenu.classList.toggle('z-40'); // Ensure it's below header (z-50) but above content
+
+             // Change icon on toggle
+             const icon = mobileMenuButton.querySelector('i');
+             if (!isExpanded) { // Menu is opening
+                 icon.classList.remove('fa-bars');
+                 icon.classList.add('fa-times');
+                 // Ensure desktop classes are removed when opening mobile
+                 navMenu.classList.remove('md:flex', 'space-x-8', 'items-center');
+             } else { // Menu is closing
+                 icon.classList.remove('fa-times');
+                 icon.classList.add('fa-bars');
+                 // Re-add desktop classes when closing mobile if screen is md+
+                 // The 'md:flex' class handled by the initial toggle handles this.
+                 // We need to ensure space-x-8 and items-center are re-added for desktop view
+                 // This logic gets complex here; relying on Tailwind's responsive prefixes is cleaner.
+                 // Let's ensure the defaults are set correctly for desktop state
+                 navMenu.classList.add('space-x-8', 'items-center');
+             }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                 if (this.pathname === window.location.pathname && this.hash) {
+                    e.preventDefault();
+                    const targetElement = document.querySelector(this.hash);
+
+                    if (targetElement) {
+                        // Calculate offset for fixed header if needed
+                        const headerOffset = document.querySelector('header').offsetHeight || 70; // Estimate header height
+                        const elementPosition = targetElement.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: "smooth"
+                        });
+
+                        // Close mobile menu if open and if the clicked link is inside the menu
+                        const isMobileMenuOpen = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+                        if (isMobileMenuOpen && navMenu.contains(this)) {
+                            mobileMenuButton.click(); // Simulate click to close
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
+--- END OF UPDATED hsle.html ---
