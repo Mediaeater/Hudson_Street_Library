@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #fdfdfb;
+  --foreground: #171717;
+  --color-teal-50: #f0fdfa;
+  --color-teal-100: #ccfbf1;
+  --color-teal-600: #0d9488;
+  --color-teal-700: #0f766e;
+  --color-teal-800: #115e59;
+  --color-teal-900: #134e4a;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    font-family: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-playfair), ui-serif, Georgia, serif;
+  }
+}
+
+@layer components {
+  .nav-item::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 1px;
+    background: var(--color-teal-700);
+    transition: width .3s;
+  }
+  
+  .nav-item:hover::after {
+    width: 100%;
+  }
+  
+  .line-divider {
+    position: relative;
+    padding-bottom: 10px;
+    margin-bottom: 1.5rem;
+  }
+  
+  .line-divider::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+    width: 80px;
+    height: 1px;
+    background: var(--color-teal-700);
+  }
+  
+  .collection-item {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .collection-item:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+  }
+  
+  .hero-image-container {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Background gradients for collection categories */
+.fashion-bg { background: linear-gradient(135deg, #f3f4f6, #e5e7eb); color: #1f2937; }
+.photography-bg { background: linear-gradient(135deg, #e0f2fe, #dbeafe); color: #1e3a8a; }
+.queer-bg { background: linear-gradient(135deg, #f5f3ff, #ede9fe); color: #5b21b6; }
+.music-bg { background: linear-gradient(135deg, #f0fdf4, #dcfce7); color: #15803d; }
+.art-bg { background: linear-gradient(135deg, #fef2f2, #fee2e2); color: #991b1b; }
+.design-bg { background: linear-gradient(135deg, #fffbeb, #fef3c7); color: #92400e; }
+.ephemera-bg { background: linear-gradient(135deg, #eff6ff, #e0f2fe); color: #075985; }
+
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}

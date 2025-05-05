@@ -1,0 +1,474 @@
+{
+  "collections": [
+    {
+      "collection": "books",
+      "fields": [
+        {
+          "field": "id",
+          "type": "integer",
+          "meta": {
+            "interface": "input",
+            "hidden": true,
+            "readonly": true,
+            "special": ["uuid"]
+          }
+        },
+        {
+          "field": "status",
+          "type": "string",
+          "meta": {
+            "interface": "select-dropdown",
+            "options": {
+              "choices": [
+                {"text": "Published", "value": "published"},
+                {"text": "Draft", "value": "draft"},
+                {"text": "Archived", "value": "archived"}
+              ]
+            }
+          },
+          "schema": {
+            "default_value": "draft"
+          }
+        },
+        {
+          "field": "author_last_name",
+          "type": "string",
+          "meta": {
+            "interface": "input",
+            "width": "half",
+            "options": {
+              "placeholder": "Author's Last Name"
+            }
+          }
+        },
+        {
+          "field": "author_first_name",
+          "type": "string",
+          "meta": {
+            "interface": "input",
+            "width": "half",
+            "options": {
+              "placeholder": "Author's First Name"
+            }
+          }
+        },
+        {
+          "field": "title",
+          "type": "string",
+          "meta": {
+            "interface": "input",
+            "options": {
+              "placeholder": "Book Title"
+            }
+          }
+        },
+        {
+          "field": "publisher",
+          "type": "string",
+          "meta": {
+            "interface": "input",
+            "width": "half",
+            "options": {
+              "placeholder": "Publisher"
+            }
+          }
+        },
+        {
+          "field": "publication_date",
+          "type": "date",
+          "meta": {
+            "interface": "datetime",
+            "width": "half",
+            "options": {
+              "includeSeconds": false,
+              "use24Hour": false
+            }
+          }
+        },
+        {
+          "field": "dimensions",
+          "type": "string",
+          "meta": {
+            "interface": "input",
+            "width": "half",
+            "options": {
+              "placeholder": "Physical dimensions (e.g., 24 × 30 cm)"
+            }
+          }
+        },
+        {
+          "field": "physical_description",
+          "type": "string",
+          "meta": {
+            "interface": "input-multiline",
+            "width": "half",
+            "options": {
+              "placeholder": "Additional physical details"
+            }
+          }
+        },
+        {
+          "field": "edition",
+          "type": "string",
+          "meta": {
+            "interface": "input",
+            "width": "half",
+            "options": {
+              "placeholder": "Edition information"
+            }
+          }
+        },
+        {
+          "field": "isbn",
+          "type": "string",
+          "meta": {
+            "interface": "input",
+            "width": "half",
+            "options": {
+              "placeholder": "ISBN"
+            }
+          }
+        },
+        {
+          "field": "contributors",
+          "type": "string",
+          "meta": {
+            "interface": "input-multiline",
+            "options": {
+              "placeholder": "Contributors, editors, etc."
+            }
+          }
+        },
+        {
+          "field": "summary",
+          "type": "text",
+          "meta": {
+            "interface": "input-rich-text-md",
+            "options": {
+              "placeholder": "Book summary or description"
+            }
+          }
+        },
+        {
+          "field": "subjects",
+          "type": "json",
+          "meta": {
+            "interface": "tags",
+            "options": {
+              "placeholder": "Subject classifications"
+            }
+          }
+        },
+        {
+          "field": "location",
+          "type": "string",
+          "meta": {
+            "interface": "input",
+            "width": "half",
+            "options": {
+              "placeholder": "Library location"
+            }
+          },
+          "schema": {
+            "default_value": "Hudson Street Library, NYC"
+          }
+        },
+        {
+          "field": "price",
+          "type": "decimal",
+          "meta": {
+            "interface": "input",
+            "width": "half",
+            "options": {
+              "placeholder": "Book price or value",
+              "step": 0.01,
+              "min": 0
+            }
+          }
+        },
+        {
+          "field": "cover_image",
+          "type": "uuid",
+          "meta": {
+            "interface": "file-image",
+            "special": ["file"],
+            "options": {
+              "folder": "book-covers"
+            }
+          }
+        },
+        {
+          "field": "additional_images",
+          "type": "json",
+          "meta": {
+            "interface": "files",
+            "special": ["files"],
+            "options": {
+              "folder": "book-images"
+            }
+          }
+        },
+        {
+          "field": "collections",
+          "type": "alias",
+          "meta": {
+            "interface": "list-m2m",
+            "special": ["m2m"],
+            "options": {
+              "template": "{{collection_name}}"
+            }
+          }
+        },
+        {
+          "field": "date_added",
+          "type": "timestamp",
+          "meta": {
+            "interface": "datetime",
+            "width": "half",
+            "options": {
+              "includeSeconds": false
+            }
+          },
+          "schema": {
+            "on_create": "now"
+          }
+        },
+        {
+          "field": "date_updated",
+          "type": "timestamp",
+          "meta": {
+            "interface": "datetime",
+            "width": "half",
+            "options": {
+              "includeSeconds": false
+            },
+            "readonly": true
+          },
+          "schema": {
+            "on_update": "now"
+          }
+        }
+      ]
+    },
+    {
+      "collection": "collections",
+      "fields": [
+        {
+          "field": "id",
+          "type": "integer",
+          "meta": {
+            "interface": "input",
+            "hidden": true,
+            "readonly": true,
+            "special": ["uuid"]
+          }
+        },
+        {
+          "field": "status",
+          "type": "string",
+          "meta": {
+            "interface": "select-dropdown",
+            "options": {
+              "choices": [
+                {"text": "Published", "value": "published"},
+                {"text": "Draft", "value": "draft"},
+                {"text": "Archived", "value": "archived"}
+              ]
+            }
+          },
+          "schema": {
+            "default_value": "draft"
+          }
+        },
+        {
+          "field": "collection_name",
+          "type": "string",
+          "meta": {
+            "interface": "input",
+            "options": {
+              "placeholder": "Collection Name"
+            }
+          }
+        },
+        {
+          "field": "slug",
+          "type": "string",
+          "meta": {
+            "interface": "input",
+            "options": {
+              "placeholder": "URL-friendly slug",
+              "slug": true
+            }
+          }
+        },
+        {
+          "field": "description",
+          "type": "text",
+          "meta": {
+            "interface": "input-rich-text-md",
+            "options": {
+              "placeholder": "Collection description"
+            }
+          }
+        },
+        {
+          "field": "category",
+          "type": "string",
+          "meta": {
+            "interface": "select-dropdown",
+            "options": {
+              "choices": [
+                {"text": "Photography", "value": "photography"},
+                {"text": "Fashion", "value": "fashion"},
+                {"text": "Art", "value": "art"},
+                {"text": "Design", "value": "design"},
+                {"text": "Queer Studies", "value": "queer"},
+                {"text": "Music", "value": "music"},
+                {"text": "Ephemera", "value": "ephemera"}
+              ]
+            }
+          }
+        },
+        {
+          "field": "cover_image",
+          "type": "uuid",
+          "meta": {
+            "interface": "file-image",
+            "special": ["file"],
+            "options": {
+              "folder": "collection-covers"
+            }
+          }
+        },
+        {
+          "field": "featured",
+          "type": "boolean",
+          "meta": {
+            "interface": "boolean",
+            "width": "half"
+          },
+          "schema": {
+            "default_value": false
+          }
+        },
+        {
+          "field": "books",
+          "type": "alias",
+          "meta": {
+            "interface": "list-m2m",
+            "special": ["m2m"],
+            "options": {
+              "template": "{{title}} ({{author_last_name}}, {{author_first_name}})"
+            }
+          }
+        },
+        {
+          "field": "sort_order",
+          "type": "integer",
+          "meta": {
+            "interface": "input",
+            "width": "half"
+          }
+        },
+        {
+          "field": "date_created",
+          "type": "timestamp",
+          "meta": {
+            "interface": "datetime",
+            "width": "half",
+            "readonly": true
+          },
+          "schema": {
+            "on_create": "now"
+          }
+        },
+        {
+          "field": "date_updated",
+          "type": "timestamp",
+          "meta": {
+            "interface": "datetime",
+            "width": "half",
+            "readonly": true
+          },
+          "schema": {
+            "on_update": "now"
+          }
+        }
+      ]
+    },
+    {
+      "collection": "new_acquisitions",
+      "fields": [
+        {
+          "field": "id",
+          "type": "integer",
+          "meta": {
+            "interface": "input",
+            "hidden": true,
+            "readonly": true,
+            "special": ["uuid"]
+          }
+        },
+        {
+          "field": "book",
+          "type": "uuid",
+          "meta": {
+            "interface": "select-dropdown-m2o",
+            "special": ["m2o"],
+            "options": {
+              "template": "{{title}} ({{author_last_name}}, {{author_first_name}})"
+            }
+          }
+        },
+        {
+          "field": "acquisition_date",
+          "type": "date",
+          "meta": {
+            "interface": "datetime",
+            "options": {
+              "includeSeconds": false
+            }
+          }
+        },
+        {
+          "field": "featured",
+          "type": "boolean",
+          "meta": {
+            "interface": "boolean"
+          },
+          "schema": {
+            "default_value": false
+          }
+        },
+        {
+          "field": "highlight_text",
+          "type": "string",
+          "meta": {
+            "interface": "input-multiline",
+            "options": {
+              "placeholder": "Special highlight information about this acquisition"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "collection": "books",
+      "field": "collections",
+      "related_collection": "collections",
+      "meta": {
+        "junction_field": "books"
+      }
+    },
+    {
+      "collection": "new_acquisitions",
+      "field": "book",
+      "related_collection": "books",
+      "meta": {
+        "one_field": "acquisitions"
+      }
+    }
+  ]
+}

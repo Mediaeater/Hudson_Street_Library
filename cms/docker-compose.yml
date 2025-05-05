@@ -1,0 +1,57 @@
+version: '3'
+services:
+  database:
+    container_name: directus-database
+    image: postgres:14
+    volumes:
+      - ./data/database:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: directus
+      POSTGRES_PASSWORD: directus
+      POSTGRES_DB: directus
+    ports:
+      - 5432:5432
+
+  directus:
+    container_name: directus
+    image: directus/directus:latest
+    ports:
+      - 8055:8055
+    volumes:
+      - ./uploads:/directus/uploads
+      - ./extensions:/directus/extensions
+    environment:
+      KEY: 'hudson-library-key-change-in-production'
+      SECRET: 'hudson-library-secret-change-in-production'
+      
+      # Database connection
+      DB_CLIENT: 'pg'
+      DB_HOST: 'database'
+      DB_PORT: '5432'
+      DB_DATABASE: 'directus'
+      DB_USER: 'directus'
+      DB_PASSWORD: 'directus'
+      
+      # Admin user setup
+      ADMIN_EMAIL: 'admin@hudsonstreetlibrary.org'
+      ADMIN_PASSWORD: 'HudsonLibrary123!' # Change in production
+      
+      # Enable public URL
+      PUBLIC_URL: 'http://localhost:8055'
+      
+      # Cache settings
+      CACHE_ENABLED: 'true'
+      CACHE_STORE: 'memory'
+      CACHE_AUTO_PURGE: 'true'
+      
+      # Storage
+      STORAGE_LOCATIONS: 'local'
+      STORAGE_LOCAL_PUBLIC_URL: '/uploads'
+      STORAGE_LOCAL_DRIVER: 'local'
+      STORAGE_LOCAL_ROOT: '/directus/uploads'
+      
+      # Extensions
+      EXTENSIONS_PATH: '/directus/extensions'
+      
+    depends_on:
+      - database
