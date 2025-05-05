@@ -1,0 +1,17 @@
+{
+  "name": "hudson-street-library-cms",
+  "version": "1.0.0",
+  "description": "CMS for Hudson Street Library book collection",
+  "main": "index.js",
+  "scripts": {
+    "start": "docker-compose up -d",
+    "stop": "docker-compose down",
+    "import-books": "node import-scripts/import-books.js",
+    "backup": "docker-compose exec directus npx directus schema snapshot ./snapshots/$(date +%Y%m%d_%H%M%S).json"
+  },
+  "dependencies": {
+    "@directus/sdk": "^11.0.1",
+    "csv-parser": "^3.0.0",
+    "dotenv": "^16.3.1"
+  }
+}
