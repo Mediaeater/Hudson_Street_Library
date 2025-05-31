@@ -235,7 +235,11 @@
         </div>
     </footer>
 
-    <!-- Original Working JavaScript -->
+    <!-- CMS Integration -->
+    <script src="js/api.js"></script>
+    <script src="js/render-utils.js"></script>
+    <script src="js/cms-integration.js"></script>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // --- Mobile Menu Toggle ---
@@ -256,60 +260,7 @@
                 });
             }
 
-            // --- Collection Filtering/Sorting ---
-            const categoryFilter = document.getElementById('filter-category');
-            const sortBy = document.getElementById('sort-by'); // Kept this variable
-            const collectionsGrid = document.getElementById('collections-grid');
-            const loadingIndicator = document.getElementById('loading-indicator');
-            let allCollections = Array.from(collectionsGrid.querySelectorAll('.collection-item')); // Store initial items
-
-            function updateCollections() {
-                collectionsGrid.classList.add('opacity-50');
-                loadingIndicator.classList.remove('hidden');
-
-                setTimeout(() => {
-                    const selectedCategory = categoryFilter.value;
-                    const sortMethod = sortBy.value; // Kept reading sort method
-
-                    // Filter
-                    let filteredCollections = allCollections.filter(collection =>
-                        selectedCategory === 'all' || collection.dataset.category === selectedCategory
-                    );
-
-                    // Sort (Kept sorting logic)
-                    let sortedCollections = [...filteredCollections];
-                    sortedCollections.sort((a, b) => {
-                        if (sortMethod === 'title_asc') {
-                            const titleA = a.querySelector('h3')?.textContent.trim().toLowerCase() || '';
-                            const titleB = b.querySelector('h3')?.textContent.trim().toLowerCase() || '';
-                            return titleA.localeCompare(titleB);
-                        }
-                        // Add logic here if you implement data-date for 'Recently Added'
-                        return 0; // Default order (maintains filtered order)
-                    });
-
-                    // Update Grid
-                    collectionsGrid.innerHTML = ''; // Clear grid
-                    if (sortedCollections.length > 0) { // Use sortedCollections
-                        sortedCollections.forEach(collection => { // Use sortedCollections
-                            collection.classList.remove('hidden'); // Ensure visible
-                            collection.classList.add('fade-in');
-                            collectionsGrid.appendChild(collection);
-                        });
-                    } else {
-                        collectionsGrid.innerHTML = '<p class="text-gray-500 col-span-full text-center">No collections match your criteria.</p>';
-                    }
-
-                    loadingIndicator.classList.add('hidden');
-                    collectionsGrid.classList.remove('opacity-50');
-                }, 250);
-            }
-
-            // Kept both event listeners
-            if (categoryFilter && sortBy && collectionsGrid && loadingIndicator) {
-                 categoryFilter.addEventListener('change', updateCollections);
-                 sortBy.addEventListener('change', updateCollections);
-            }
+            // The rest of the collection filtering and sorting is now handled by cms-integration.js
         });
     </script>
 </body>
