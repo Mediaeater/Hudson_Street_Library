@@ -1,0 +1,35 @@
+/**
+ * Hudson Street Library - Configuration
+ * Central configuration for all CMS connections
+ */
+
+const config = {
+  // CMS Configuration
+  cms: {
+    // For local development
+    development: {
+      apiUrl: 'http://localhost:8055',
+      assetsUrl: 'http://localhost:8055/assets'
+    },
+    // For production (update when Directus is deployed)
+    production: {
+      apiUrl: 'https://cms.hudsonstreetlibrary.com', // Update with actual production URL
+      assetsUrl: 'https://cms.hudsonstreetlibrary.com/assets'
+    }
+  },
+  
+  // Current environment
+  environment: window.location.hostname === 'localhost' ? 'development' : 'production',
+  
+  // Get current API URL based on environment
+  get apiUrl() {
+    return this.cms[this.environment].apiUrl;
+  },
+  
+  get assetsUrl() {
+    return this.cms[this.environment].assetsUrl;
+  }
+};
+
+// Export for use in other scripts
+window.HSL_CONFIG = config;

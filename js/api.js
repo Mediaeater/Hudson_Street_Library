@@ -3,10 +3,12 @@
  * This module provides functions to interact with the Directus CMS API
  */
 
-// Configuration
-const API_URL = 'http://localhost:8055'; // Change to production URL when deployed
+// Configuration - uses central config from config.js
+// Make sure to include config.js before this script in HTML
+const getConfig = () => window.HSL_CONFIG || { apiUrl: 'http://localhost:8055', assetsUrl: 'http://localhost:8055/assets' };
+const API_URL = getConfig().apiUrl;
 const API_ENDPOINT = `${API_URL}/items`;
-const ASSETS_ENDPOINT = `${API_URL}/assets`;
+const ASSETS_ENDPOINT = getConfig().assetsUrl;
 
 /**
  * Fetch all collections from the CMS
