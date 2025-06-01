@@ -24,6 +24,9 @@ const config = {
   // Current environment
   environment: window.location.hostname === 'localhost' ? 'development' : 'production',
   
+  // Always use authentication for now until public permissions are fixed
+  useAuth: true,
+  
   // Get current API URL based on environment
   get apiUrl() {
     return this.cms[this.environment].apiUrl;
