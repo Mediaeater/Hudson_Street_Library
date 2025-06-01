@@ -9,7 +9,10 @@ const config = {
     // For local development
     development: {
       apiUrl: 'http://localhost:8055',
-      assetsUrl: 'http://localhost:8055/assets'
+      assetsUrl: 'http://localhost:8055/assets',
+      // Add these temporarily until permissions are fixed
+      email: 'admin@hudsonstreetlibrary.org',
+      password: 'HudsonLibrary123!'
     },
     // For production (update when Directus is deployed)
     production: {
@@ -28,6 +31,17 @@ const config = {
   
   get assetsUrl() {
     return this.cms[this.environment].assetsUrl;
+  },
+  
+  // Get credentials for development
+  get credentials() {
+    if (this.environment === 'development') {
+      return {
+        email: this.cms.development.email,
+        password: this.cms.development.password
+      };
+    }
+    return null;
   }
 };
 

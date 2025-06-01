@@ -10,13 +10,56 @@ const API_URL = getConfig().apiUrl;
 const API_ENDPOINT = `${API_URL}/items`;
 const ASSETS_ENDPOINT = getConfig().assetsUrl;
 
+// Store access token
+let accessToken = null;
+
+/**
+ * Authenticate with Directus (for development)
+ */
+async function authenticate() {
+  const config = getConfig();
+  if (!config.credentials) return null;
+  
+  try {
+    const response = await fetch(`${API_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(config.credentials)
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      accessToken = data.data.access_token;
+      return accessToken;
+    }
+  } catch (error) {
+    console.error('Authentication failed:', error);
+  }
+  return null;
+}
+
+/**
+ * Get headers with authentication if available
+ */
+async function getHeaders() {
+  const headers = {};
+  if (!accessToken) {
+    await authenticate();
+  }
+  if (accessToken) {
+    headers['Authorization'] = `Bearer ${accessToken}`;
+  }
+  return headers;
+}
+
 /**
  * Fetch all collections from the CMS
  * @returns {Promise<Array>} Array of collection objects
  */
 async function fetchCollections() {
   try {
-    const response = await fetch(`${API_ENDPOINT}/collections?fields=*,cover_image.*&sort=sort_order`);
+    const headers = await getHeaders();
+    const response = await fetch(`${API_ENDPOINT}/collections?fields=*,cover_image.*&sort=sort_order`, { headers });
     if (!response.ok) throw new Error(`API error: ${response.status}`);
     const data = await response.json();
     return data.data || [];
@@ -33,7 +76,8 @@ async function fetchCollections() {
  */
 async function fetchCollectionBySlug(slug) {
   try {
-    const response = await fetch(`${API_ENDPOINT}/collections?filter[slug][_eq]=${slug}&fields=*,books.*,cover_image.*`);
+    const headers = await getHeaders();
+    const response = await fetch(`${API_ENDPOINT}/collections?filter[slug][_eq]=${slug}&fields=*,books.*,cover_image.*`, { headers });
     if (!response.ok) throw new Error(`API error: ${response.status}`);
     const data = await response.json();
     return data.data && data.data.length > 0 ? data.data[0] : null;
@@ -61,7 +105,8 @@ async function fetchBooks(options = {}) {
     if (options.limit) url += `&limit=${options.limit}`;
     if (options.page) url += `&page=${options.page}`;
     
-    const response = await fetch(url);
+    const headers = await getHeaders();
+    const response = await fetch(url, { headers });
     if (!response.ok) throw new Error(`API error: ${response.status}`);
     const data = await response.json();
     return data.data || [];
@@ -78,7 +123,8 @@ async function fetchBooks(options = {}) {
  */
 async function fetchBookById(id) {
   try {
-    const response = await fetch(`${API_ENDPOINT}/books/${id}?fields=*,cover_image.*,additional_images.*,collections.*`);
+    const headers = await getHeaders();
+    const response = await fetch(`${API_ENDPOINT}/books/${id}?fields=*,cover_image.*,additional_images.*,collections.*`, { headers });
     if (!response.ok) throw new Error(`API error: ${response.status}`);
     const data = await response.json();
     return data.data || null;
@@ -95,7 +141,8 @@ async function fetchBookById(id) {
  */
 async function fetchRecentlyAdded(limit = 10) {
   try {
-    const response = await fetch(`${API_ENDPOINT}/books?sort=-date_added&limit=${limit}&fields=*,cover_image.*`);
+    const headers = await getHeaders();
+    const response = await fetch(`${API_ENDPOINT}/books?sort=-date_added&limit=${limit}&fields=*,cover_image.*`, { headers });
     if (!response.ok) throw new Error(`API error: ${response.status}`);
     const data = await response.json();
     return data.data || [];
@@ -112,7 +159,8 @@ async function fetchRecentlyAdded(limit = 10) {
  */
 async function fetchNewAcquisitions(limit = 10) {
   try {
-    const response = await fetch(`${API_ENDPOINT}/new_acquisitions?sort=-acquisition_date&limit=${limit}&fields=*,book.*,book.cover_image.*`);
+    const headers = await getHeaders();
+    const response = await fetch(`${API_ENDPOINT}/new_acquisitions?sort=-acquisition_date&limit=${limit}&fields=*,book.*,book.cover_image.*`, { headers });
     if (!response.ok) throw new Error(`API error: ${response.status}`);
     const data = await response.json();
     return data.data || [];

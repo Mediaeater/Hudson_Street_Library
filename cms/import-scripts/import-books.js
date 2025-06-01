@@ -7,7 +7,7 @@ const { createDirectus, rest, createItem, updateItem, readItems } = require('@di
 // Configuration
 const API_URL = process.env.DIRECTUS_URL || 'http://localhost:8055';
 const API_TOKEN = process.env.DIRECTUS_ADMIN_TOKEN;
-const CSV_FILE = path.resolve(__dirname, '../data/books.csv');
+const CSV_FILE = path.resolve(__dirname, '../data/books-formatted.csv');
 
 // Create Directus client
 const directus = createDirectus(API_URL)
