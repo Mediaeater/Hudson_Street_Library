@@ -39,7 +39,9 @@ async function fetchBooks(options = {}) {
       book.title?.toLowerCase().includes(search) ||
       book.author_first_name?.toLowerCase().includes(search) ||
       book.author_last_name?.toLowerCase().includes(search) ||
-      book.publisher?.toLowerCase().includes(search)
+      book.publisher?.toLowerCase().includes(search) ||
+      book.subjects?.some(s => s.toLowerCase().includes(search)) ||
+      book.summary?.toLowerCase().includes(search)
     );
   }
   

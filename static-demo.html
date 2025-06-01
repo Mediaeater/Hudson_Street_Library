@@ -44,18 +44,7 @@
     </style>
 </head>
 <body>
-    <h1>Hudson Street Library - Free Static JSON Demo</h1>
-    
-    <div class="stats">
-        <h3>Why This Solution is Great:</h3>
-        <ul>
-            <li>✅ <strong>100% Free</strong> - No server costs, works with GitHub Pages</li>
-            <li>✅ <strong>Super Fast</strong> - JSON files load instantly</li>
-            <li>✅ <strong>No API Limits</strong> - No rate limiting or quotas</li>
-            <li>✅ <strong>Easy Updates</strong> - Just update JSON and commit</li>
-            <li>✅ <strong>Works Offline</strong> - Can cache for offline use</li>
-        </ul>
-    </div>
+    <h1>Hudson Street Library</h1>
     
     <div id="stats" class="stats"></div>
     
@@ -63,7 +52,7 @@
     <input type="text" 
            id="search" 
            class="search-box" 
-           placeholder="Search by title, author, or publisher..."
+           placeholder="Search by title, author, publisher, or subject..."
            onkeyup="searchBooks(this.value)">
     
     <h2>Books</h2>
@@ -108,13 +97,17 @@
                 return;
             }
             
+            // Update the Books heading with count
+            document.querySelector('h2:last-of-type').textContent = `Books (${books.length} found)`;
+            
             container.innerHTML = books.map(book => `
                 <div class="book-card">
                     <div class="book-title">${book.title || 'Untitled'}</div>
                     <div><strong>Author:</strong> ${book.author_first_name || ''} ${book.author_last_name || ''}</div>
                     <div><strong>Publisher:</strong> ${book.publisher || 'Unknown'}</div>
                     ${book.isbn ? `<div><strong>ISBN:</strong> ${book.isbn}</div>` : ''}
-                    ${book.price ? `<div><strong>Price:</strong> $${book.price}</div>` : ''}
+                    ${book.subjects && book.subjects.length > 0 ? `<div><strong>Subjects:</strong> ${book.subjects.join(', ')}</div>` : ''}
+                    ${book.summary ? `<div><strong>Summary:</strong> ${book.summary.substring(0, 100)}${book.summary.length > 100 ? '...' : ''}</div>` : ''}
                 </div>
             `).join('');
         }
@@ -125,7 +118,7 @@
                 return;
             }
             
-            const result = await StaticAPI.searchBooks(query);
+            const result = await StaticAPI.fetchBooks({ search: query, limit: 1000 });
             displayBooks(result.data);
         }
         
