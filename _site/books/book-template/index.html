@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en-book-template">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Book Title: [BOOK_TITLE] -->
+    <title>[BOOK_TITLE] | Hudson Street Library Collection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Montserrat', sans-serif; background-color: #fdfdfb; color: #374151; /* gray-700 */ }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Playfair Display', serif; color: #111827; /* gray-900 */ }
+
+        .nav-item::after { content: ''; display: block; width: 0; height: 1px; background: #0f766e; transition: width .3s; }
+        .nav-item:hover::after { width: 100%; }
+
+        .details-label {
+            font-weight: 500; /* medium */
+            color: #4b5563; /* gray-600 */
+            min-width: 130px; /* Increased for more visual space */
+            display: inline-block;
+            margin-bottom: 4px; /* Add small spacing between labels */
+        }
+
+        .detail-section-title {
+            margin-bottom: 0.75rem; /* Equivalent to mb-3 */
+            margin-top: 1.5rem; /* Add space above section title */
+        }
+        
+        .prose p {
+            margin-bottom: 0.75rem; /* Spacing between paragraphs */
+        }
+
+        .subject-tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background-color: #e6fffa;
+            color: #0f766e;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            margin: 0.25rem;
+            transition: all 0.2s;
+        }
+        
+        .subject-tag:hover {
+            background-color: #99f6e4;
+            color: #115e59;
+        }
+
+        .collection-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background-color: #0f766e;
+            color: white;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+    <script>
+      tailwind.config = { theme: { extend: { colors: {} } } }
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Standard Site Header -->
+    <!-- This page is in a 'books/' directory -->
+    <header class="sticky top-0 w-full bg-white z-50 py-4 shadow-md">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-between items-center">
+                <a href="../../index.html" class="text-xl sm:text-2xl font-bold tracking-tight text-teal-900">HUDSON STREET LIBRARY</a>
+                <nav id="main-nav" class="hidden md:flex space-x-6 lg:space-x-8 items-center text-neutral-700 text-sm lg:text-base">
+                    <a href="../../index.html#about" class="nav-item hover:text-teal-700">About</a>
+                    <a href="../collection-explore.html" class="nav-item hover:text-teal-700">Collections</a>
+                    <a href="../../index.html#publications" class="nav-item hover:text-teal-700">Publications</a>
+                    <a href="../../news.html" class="nav-item hover:text-teal-700">News</a>
+                    <a href="../../index.html#contact" class="nav-item hover:text-teal-700">Contact</a>
+                </nav>
+                <button class="md:hidden focus:outline-none text-teal-800" aria-label="Toggle menu" aria-controls="mobile-nav-menu-book" aria-expanded="false">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <nav id="mobile-nav-menu-book" class="hidden md:hidden absolute top-full left-0 right-0 bg-white shadow-lg px-6 py-4 space-y-3 flex-col z-40">
+             <a href="../../index.html#about" class="block py-2 text-neutral-700 hover:text-teal-700">About</a>
+             <a href="../../collection_explore.html" class="block py-2 text-neutral-700 hover:text-teal-700">Collections</a>
+             <a href="../../index.html#publications" class="block py-2 text-neutral-700 hover:text-teal-700">Publications</a>
+             <a href="../../news.html" class="block py-2 text-neutral-700 hover:text-teal-700">News</a>
+             <a href="../../index.html#contact" class="block py-2 text-neutral-700 hover:text-teal-700">Contact</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+
+            <!-- Back Link -->
+            <div class="mb-8">
+                <a href="../collection-explore.html" class="text-sm text-teal-700 hover:text-teal-900 transition-colors">
+                    <i class="fas fa-arrow-left mr-1"></i> Back to Collections
+                </a>
+            </div>
+
+            <!-- Main Book Info Grid -->
+            <article class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+
+                <!-- Left Column: Cover Image -->
+                <div class="md:col-span-1">
+                    <div class="sticky top-28"> <!-- Sticky positioning for cover -->
+                        <div class="aspect-[3/4] bg-gray-200 rounded-md shadow-lg overflow-hidden">
+                            <img src="../imgs/books/[COVER_IMAGE_FILENAME]"
+                                 alt="Cover of [BOOK_TITLE]"
+                                 class="w-full h-full object-cover">
+                        </div>
+                         <!-- Book status section removed as requested -->
+                         
+                    </div>
+                </div>
+
+                <!-- Right Column: Details -->
+                <div class="md:col-span-2">
+                    <!-- Collection Badge (plain text as requested) -->
+                    <div class="mb-2">
+                        <p class="text-base font-medium">Collection: [COLLECTION_NAME]</p>
+                    </div>
+                    
+                    <!-- Title -->
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold title-font mb-2 text-gray-900">
+                        [BOOK_TITLE]
+                    </h1>
+                    
+                    <!-- Author -->
+                    <p class="text-lg text-gray-800 mb-6">
+                        By <span class="font-medium">[AUTHOR_NAME] ([AUTHOR_ROLE])</span>
+                    </p>
+
+                    <!-- Core Details Section -->
+                    <div class="border-t border-gray-200 pt-6 space-y-3 text-base">
+                        <p><span class="details-label">Published by:</span> [PUBLISHER]</p>
+                        <p><span class="details-label">Location:</span> [PUBLICATION_LOCATION]</p>
+                        <p><span class="details-label">Date:</span> [PUBLICATION_DATE]</p>
+                        <p><span class="details-label">Language:</span> [LANGUAGE]</p>
+                        <p><span class="details-label">Format:</span> [FORMAT], [PAGE_COUNT] pages, [ILLUSTRATIONS]</p>
+                        <p><span class="details-label">Dimensions:</span> [DIMENSIONS]</p>
+                        <p><span class="details-label">ISBN-13:</span> [ISBN_13]</p>
+                        <p><span class="details-label">ISBN-10:</span> [ISBN_10]</p>
+                        <p><span class="details-label">Contributors:</span> [CONTRIBUTORS_LIST]</p>
+                        <p><span class="details-label">LC Call No.:</span> [LC_CALL_NUMBER]</p>
+                        <p><span class="details-label">Added:</span> [ADDITION_DATE]</p>
+                    </div>
+
+                     <!-- Summary Section -->
+                     <div class="mt-8 pt-6 border-t border-gray-200">
+                         <h3 class="text-2xl font-semibold title-font mb-3">Summary</h3>
+                         <div class="prose max-w-none text-gray-700 leading-relaxed">
+                            [BOOK_SUMMARY_PARAGRAPHS]
+                         </div>
+                     </div>
+
+                    <!-- Subjects as Clickable Tags -->
+                    <section>
+                        <h2 class="detail-section-title text-xl">Subjects</h2>
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            [SUBJECT_TAGS]
+                        </div>
+                    </section>
+                    
+                    <!-- Related Names/Contributors -->
+                    <section>
+                        <h2 class="detail-section-title text-xl">Related Names</h2>
+                        <ul class="list-disc list-inside space-y-1">
+                            [RELATED_NAMES_LIST]
+                        </ul>
+                    </section>
+
+                    <!-- Notes (Optional) -->
+                    <section>
+                        <h2 class="detail-section-title text-xl">Notes</h2>
+                        <p>[NOTES]</p>
+                    </section>
+                    
+                    <!-- Related Books Section - commented out until we develop a method for this
+                    <section>
+                        <h2 class="detail-section-title text-xl">Related Books in Collection</h2>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-3">
+                            [RELATED_BOOKS]
+                        </div>
+                    </section>
+                    -->
+                    
+                    <!-- Exhibition History section removed as requested -->
