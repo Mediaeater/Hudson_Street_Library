@@ -1,0 +1,200 @@
+<h1>Hudson Street Library - Google Sheets Import System</h1>
+<p>This system imports book data directly from Google Sheets into the Hudson Street Library's Directus CMS. It includes data validation, cleaning, and batch processing with comprehensive error handling.</p>
+<h2>Features</h2>
+<ul>
+<li>Direct integration with Google Sheets API</li>
+<li>Data validation and cleaning based on library standards</li>
+<li>Batch processing to handle large imports efficiently</li>
+<li>Detailed logging and error reporting</li>
+<li>Duplicate detection and updating</li>
+</ul>
+<h2>Setup</h2>
+<h3>Prerequisites</h3>
+<ul>
+<li>Node.js 18 or higher</li>
+<li>Access to Google Sheets API and a service account</li>
+<li>Directus CMS running (locally or in production)</li>
+</ul>
+<h3>Installation</h3>
+<ol>
+<li>
+<p>Install dependencies:</p>
+<pre><code class="language-bash">cd cms/import-scripts/google-sheets
+npm install googleapis @directus/sdk dotenv fs path
+</code></pre>
+</li>
+<li>
+<p>Create a Google Cloud project and service account:</p>
+<ul>
+<li>Go to the <a href="https://console.cloud.google.com/">Google Cloud Console</a></li>
+<li>Create a new project</li>
+<li>Enable the Google Sheets API</li>
+<li>Create a service account with &quot;Viewer&quot; permissions</li>
+<li>Download the service account key as JSON</li>
+<li>Save the key as <code>credentials.json</code> in this directory</li>
+</ul>
+</li>
+<li>
+<p>Configure your environment:</p>
+<ul>
+<li>Copy <code>.env.example</code> to <code>.env</code></li>
+<li>Fill in the appropriate values:
+<ul>
+<li><code>GOOGLE_SHEETS_ID</code>: Your Google Sheets document ID</li>
+<li><code>GOOGLE_SHEETS_RANGE</code>: The range containing your book data</li>
+<li><code>DIRECTUS_URL</code>: Your Directus CMS URL</li>
+<li><code>DIRECTUS_ADMIN_TOKEN</code>: Your Directus admin token</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Share your Google Sheet with the service account email address (found in credentials.json) with Viewer permissions</p>
+</li>
+</ol>
+<h2>Usage</h2>
+<h3>Running the Import</h3>
+<pre><code class="language-bash">node import-books-from-sheets.js
+</code></pre>
+<h3>Scheduling Regular Imports</h3>
+<p>You can set up automated imports using cron jobs:</p>
+<ol>
+<li>
+<p>Create a script to run the import:</p>
+<pre><code class="language-bash">#!/bin/bash
+cd /path/to/Hudson_Street_Library/cms/import-scripts/google-sheets
+node import-books-from-sheets.js &gt; import-log.txt 2&gt;&amp;1
+</code></pre>
+</li>
+<li>
+<p>Make it executable:</p>
+<pre><code class="language-bash">chmod +x run-import.sh
+</code></pre>
+</li>
+<li>
+<p>Add a cron job to run it weekly:</p>
+<pre><code class="language-bash">crontab -e
+# Add this line to run every Monday at 2 AM
+0 2 * * 1 /path/to/Hudson_Street_Library/cms/import-scripts/google-sheets/run-import.sh
+</code></pre>
+</li>
+</ol>
+<h2>Google Sheets Structure</h2>
+<p>Your Google Sheet should have the following columns (the script will attempt to map variations of these column names):</p>
+<table>
+<thead>
+<tr>
+<th>Column Name</th>
+<th>Description</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Title</td>
+<td>Book title</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Author First Name</td>
+<td>Author's first name</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Author Last Name</td>
+<td>Author's last name</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Publisher</td>
+<td>Publisher information</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Publication Date</td>
+<td>Date of publication (YYYY-MM-DD or YYYY)</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Physical Dimensions</td>
+<td>Book dimensions (e.g., &quot;24 × 30 cm&quot;)</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Additional Book Details</td>
+<td>Additional physical description</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Edition Information</td>
+<td>Edition details</td>
+<td>No</td>
+</tr>
+<tr>
+<td>ISBN</td>
+<td>ISBN or Library of Congress Call Number</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Contributors/Editors</td>
+<td>Other contributors (comma-separated)</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Summary/Description</td>
+<td>Book summary or description</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Subject Classifications</td>
+<td>Subject categories (comma-separated)</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Location</td>
+<td>Default is &quot;Hudson Street Library, NYC&quot;</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Price</td>
+<td>Book price or value</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<h2>Error Handling</h2>
+<p>The script handles several types of errors:</p>
+<ol>
+<li><strong>Connection Errors</strong>: Problems connecting to Google Sheets or Directus</li>
+<li><strong>Authentication Errors</strong>: Issues with service account credentials or Directus token</li>
+<li><strong>Data Validation Errors</strong>: Invalid data in the spreadsheet</li>
+<li><strong>Import Errors</strong>: Problems creating or updating records in Directus</li>
+</ol>
+<p>All errors are logged to:</p>
+<ul>
+<li>The console (real-time feedback)</li>
+<li>An import log JSON file (for detailed analysis)</li>
+</ul>
+<h2>Import Logs</h2>
+<p>After each import, a detailed log file is created with:</p>
+<ul>
+<li>Summary statistics</li>
+<li>Lists of created, updated, and failed books</li>
+<li>Validation warnings for each book</li>
+<li>Complete details of invalid books that were skipped</li>
+</ul>
+<h2>Customization</h2>
+<h3>Changing Validation Rules</h3>
+<p>Edit the <code>validateAndCleanBookData</code> function in <code>import-books-from-sheets.js</code> to modify validation rules.</p>
+<h3>Modifying Field Mapping</h3>
+<p>If your Google Sheet has different column names, update the field mapping in the <code>validateAndCleanBookData</code> function.</p>
+<h3>Adjusting Batch Size</h3>
+<p>Change the <code>IMPORT_BATCH_SIZE</code> environment variable to process more or fewer books at once.</p>
+<h2>Troubleshooting</h2>
+<p>If you encounter issues:</p>
+<ol>
+<li>Check the import log file for detailed error information</li>
+<li>Verify that your service account has access to the Google Sheet</li>
+<li>Ensure your Directus admin token hasn't expired</li>
+<li>Check network connectivity to both Google APIs and your Directus instance</li>
+</ol>

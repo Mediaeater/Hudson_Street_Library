@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hudson Street Library - Static JSON Demo</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .book-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        .book-title {
+            font-weight: bold;
+            color: #0f766e;
+            margin-bottom: 5px;
+        }
+        .search-box {
+            padding: 10px;
+            width: 100%;
+            max-width: 400px;
+            font-size: 16px;
+            margin: 20px 0;
+        }
+        .stats {
+            background: #e6f7f6;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .loading { color: #666; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Hudson Street Library</h1>
+    
+    <div id="stats" class="stats"></div>
+    
+    <h2>Search Books</h2>
+    <input type="text" 
+           id="search" 
+           class="search-box" 
+           placeholder="Search by title, author, publisher, or subject..."
+           onkeyup="searchBooks(this.value)">
+    
+    <h2>Books</h2>
+    <div id="books" class="book-grid">
+        <p class="loading">Loading books...</p>
+    </div>
+    
+    <script src="js/static-api.js"></script>
+    <script>
+        let allBooks = [];
+        
+        async function loadBooks() {
+            try {
+                // Initialize the API
+                await StaticAPI.initialize();
+                
+                // Get all books
+                const result = await StaticAPI.fetchBooks({ limit: 1000 });
+                allBooks = result.data;
+                
+                // Show stats
+                document.getElementById('stats').innerHTML = `
+                    <p><strong>Total Books:</strong> ${result.total}</p>
+                    <p><strong>File Size:</strong> ~${(JSON.stringify(allBooks).length / 1024).toFixed(1)} KB</p>
+                    <p><strong>Load Time:</strong> < 1 second</p>
+                `;
+                
+                // Display first 20 books
+                displayBooks(allBooks.slice(0, 20));
+                
+            } catch (error) {
+                document.getElementById('books').innerHTML = 
+                    `<p class="error">Error: ${error.message}</p>`;
+            }
+        }
+        
+        function displayBooks(books) {
+            const container = document.getElementById('books');
+            
+            if (books.length === 0) {
+                container.innerHTML = '<p>No books found</p>';
+                return;
+            }
+            
+            // Update the Books heading with count
+            document.querySelector('h2:last-of-type').textContent = `Books (${books.length} found)`;
+            
+            container.innerHTML = books.map(book => `
+                <div class="book-card">
+                    <div class="book-title">${book.title || 'Untitled'}</div>
+                    <div><strong>Author:</strong> ${book.author_first_name || ''} ${book.author_last_name || ''}</div>
+                    <div><strong>Publisher:</strong> ${book.publisher || 'Unknown'}</div>
+                    ${book.isbn ? `<div><strong>ISBN:</strong> ${book.isbn}</div>` : ''}
+                    ${book.subjects && book.subjects.length > 0 ? `<div><strong>Subjects:</strong> ${book.subjects.join(', ')}</div>` : ''}
+                    ${book.summary ? `<div><strong>Summary:</strong> ${book.summary.substring(0, 100)}${book.summary.length > 100 ? '...' : ''}</div>` : ''}
+                </div>
+            `).join('');
+        }
+        
+        async function searchBooks(query) {
+            if (!query) {
+                displayBooks(allBooks.slice(0, 20));
+                return;
+            }
+            
+            const result = await StaticAPI.fetchBooks({ search: query, limit: 1000 });
+            displayBooks(result.data);
+        }
+        
+        // Load books when page loads
+        loadBooks();
+    </script>
+</body>
+</html>

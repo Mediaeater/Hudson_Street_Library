@@ -26,6 +26,75 @@
 
         .hero-image-container { box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); }
 
+        /* Lightbox styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            overflow: auto;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .lightbox.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            margin: auto;
+        }
+
+        .lightbox-content img {
+            width: 100%;
+            height: auto;
+            max-height: 90vh;
+            object-fit: contain;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+            z-index: 1000;
+        }
+
+        .lightbox-close:hover,
+        .lightbox-close:focus {
+            color: #999;
+        }
+
+        .lightbox-caption {
+            text-align: center;
+            color: #ccc;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .clickable-image {
+            cursor: zoom-in;
+        }
+
     </style>
     <script>
       tailwind.config = { theme: { extend: { colors: {} } } }
@@ -40,7 +109,8 @@
                 <a href="../index.html" class="text-xl sm:text-2xl font-bold tracking-tight text-teal-900">HUDSON STREET LIBRARY</a>
                 <nav id="main-nav" class="hidden md:flex space-x-6 lg:space-x-8 items-center text-neutral-700 text-sm lg:text-base">
                     <a href="../index.html#about" class="nav-item hover:text-teal-700">About</a>
-                    <a href="../curated-collections.html" class="nav-item hover:text-teal-700 font-semibold text-teal-700">Collections</a>
+                    <a href="https://hudsonstreetlibrary.com/collection-explore.html" class="nav-item hover:text-teal-700 font-semibold text-teal-700">Collections</a>
+                    <a href="../static-demo.html" class="nav-item hover:text-teal-700">Search</a>
                     <a href="../index.html#publications" class="nav-item hover:text-teal-700">Publications</a>
                     <a href="../news.html" class="nav-item hover:text-teal-700">News</a>
                     <a href="../index.html#contact" class="nav-item hover:text-teal-700">Contact</a>
@@ -53,7 +123,8 @@
         <!-- Mobile Nav Structure (hidden initially) -->
         <nav id="mobile-nav-menu" class="hidden md:hidden absolute top-full left-0 right-0 bg-white shadow-lg px-6 py-4 space-y-3 flex-col z-40">
              <a href="../index.html#about" class="block py-2 text-neutral-700 hover:text-teal-700">About</a>
-             <a href="../curated-collections.html" class="block py-2 text-neutral-700 hover:text-teal-700 font-semibold text-teal-700">Collections</a>
+             <a href="https://hudsonstreetlibrary.com/collection-explore.html" class="block py-2 text-neutral-700 hover:text-teal-700 font-semibold text-teal-700">Collections</a>
+             <a href="../static-demo.html" class="block py-2 text-neutral-700 hover:text-teal-700">Search</a>
              <a href="../index.html#publications" class="block py-2 text-neutral-700 hover:text-teal-700">Publications</a>
              <a href="../news.html" class="block py-2 text-neutral-700 hover:text-teal-700">News</a>
              <a href="../index.html#contact" class="block py-2 text-neutral-700 hover:text-teal-700">Contact</a>
@@ -74,7 +145,7 @@
                 </p>
                 <div class="mt-8">
                     <!-- Link back to the main collections page -->
-                    <a href="../curated-collections.html" class="text-sm text-teal-700 hover:text-teal-900 transition-colors">
+                    <a href="https://hudsonstreetlibrary.com/collection-explore.html" class="text-sm text-teal-700 hover:text-teal-900 transition-colors">
                         <i class="fas fa-arrow-left mr-1"></i> Back to All Collections
                     </a>
                 </div>
@@ -85,20 +156,20 @@
             <!-- ====================== -->
             <section class="mb-12 md:mb-16 lg:mb-20">
                 <!-- Link the hero section if desired -->
-                <a href="#" class="block group">
+                <div class="block group cursor-pointer" onclick="openLightbox('../imgs/posters/Dylan_poster.JPG', 'Bob Dylan Concert Poster - Richard Prince')">
                     <div class="relative hero-image-container aspect-[16/9] sm:aspect-[2/1] lg:aspect-[2.5/1] bg-gray-300 rounded-lg overflow-hidden">
                         <!-- Hero Image updated for Posters/Paper -->
-                        <img src="https://placehold.co/1200x600/e2e8f0/64748b.webp?text=Featured\nPoster"
-                             alt="Featured poster or graphic design item" <!-- Alt text updated -->
-                             class="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105">
+                        <img src="../imgs/posters/Dylan_poster.JPG"
+                             alt="Bob Dylan Concert Poster - Featured"
+                             class="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105 clickable-image">
                     </div>
                      <div class="mt-4 px-2">
                         <!-- Hero Title placeholder -->
-                        <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">[Featured Poster/Design Title]</h2>
+                        <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">Bob Dylan Concert Poster</h2>
                         <!-- Hero Description placeholder -->
-                        <p class="text-sm sm:text-base text-gray-600 mt-1">[Optional short description, e.g., Designer, Event, Year]</p>
+                        <p class="text-sm sm:text-base text-gray-600 mt-1">Richard Prince - Bob Dylan</p>
                     </div>
-                </a>
+                </div>
             </section>
             <!-- ==================== -->
             <!-- === HERO SECTION END === -->
@@ -109,70 +180,142 @@
             <!-- NOTE: Aspect ratio for items might need adjustment from 3/4 for posters -->
             <div id="item-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 md:gap-8">
 
-                <!-- === START: Placeholder Item Structure 1 === -->
-                <!-- === DUPLICATE AND CUSTOMIZE THIS BLOCK FOR EACH ITEM === -->
+                <!-- Buffalo 66 Poster -->
                 <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="#" class="block">
-                         <!-- Consider changing aspect ratio for posters, e.g., aspect-[2/3] -->
+                    <div class="block cursor-pointer" onclick="openLightbox('../imgs/posters/Buffalo66_poster.JPG', 'Buffalo 66 Movie Poster (1998)')">
                         <div class="relative overflow-hidden aspect-[2/3] bg-gray-200">
-                            <!-- Placeholder Image updated -->
-                            <img src="https://placehold.co/300x450/eeeeee/cccccc.webp?text=Poster+1"
-                                 alt="Placeholder Poster 1 - Placeholder Designer 1" <!-- Alt text updated -->
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                            <img src="../imgs/posters/Buffalo66_poster.JPG"
+                                 alt="Buffalo 66 Movie Poster"
+                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 clickable-image">
                         </div>
                         <div class="p-3 sm:p-4">
-                            <!-- Title updated -->
                             <h3 class="text-base font-semibold text-gray-800 truncate group-hover:text-teal-600 transition-colors">
-                                Placeholder Poster 1
+                                Buffalo 66
                             </h3>
-                            <!-- Designer/Info updated -->
-                            <p class="text-sm text-gray-500 mt-1 truncate">Placeholder Designer 1</p>
-                            <p class="text-xs text-gray-400 mt-1">YYYY</p>
+                            <p class="text-sm text-gray-500 mt-1 truncate">Movie Poster</p>
+                            <p class="text-xs text-gray-400 mt-1">1998</p>
                         </div>
-                    </a>
+                    </div>
                 </article>
-                <!-- === END: Placeholder Item Structure 1 === -->
 
-                <!-- === START: Placeholder Item Structure 2 === -->
+                <!-- Bob Dylan Poster -->
                 <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                     <a href="#" class="block">
+                     <div class="block cursor-pointer" onclick="openLightbox('../imgs/posters/Dylan_poster.JPG', 'Bob Dylan Concert Poster')">
                          <div class="relative overflow-hidden aspect-[2/3] bg-gray-200">
-                            <img src="https://placehold.co/300x450/e0e0e0/bbbbbb.webp?text=Poster+2"
-                                 alt="Placeholder Poster 2 - Placeholder Designer 2"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                            <img src="../imgs/posters/Dylan_poster.JPG"
+                                 alt="Bob Dylan Concert Poster"
+                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 clickable-image">
                         </div>
                         <div class="p-3 sm:p-4">
                             <h3 class="text-base font-semibold text-gray-800 truncate group-hover:text-teal-600 transition-colors">
-                                Placeholder Poster 2
+                                Bob Dylan
                             </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Placeholder Designer 2</p>
-                            <p class="text-xs text-gray-400 mt-1">YYYY</p>
+                            <p class="text-sm text-gray-500 mt-1 truncate">Concert Poster</p>
                         </div>
-                    </a>
+                    </div>
                 </article>
-                <!-- === END: Placeholder Item Structure 2 === -->
 
-                <!-- === START: Placeholder Item Structure 3 === -->
+                <!-- E. Payton Poster -->
                 <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                     <a href="#" class="block">
+                     <div class="block cursor-pointer" onclick="openLightbox('../imgs/posters/EPayton_Poster.JPG', 'E. Payton Exhibition Poster')">
                         <div class="relative overflow-hidden aspect-[2/3] bg-gray-200">
-                            <img src="https://placehold.co/300x450/dddddd/aaaaaa.webp?text=Poster+3"
-                                 alt="Placeholder Poster 3 - Placeholder Designer 3"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                            <img src="../imgs/posters/EPayton_Poster.JPG"
+                                 alt="E. Payton Exhibition Poster"
+                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 clickable-image">
                         </div>
                         <div class="p-3 sm:p-4">
                             <h3 class="text-base font-semibold text-gray-800 truncate group-hover:text-teal-600 transition-colors">
-                                Placeholder Poster 3
+                                E. Payton
                             </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Placeholder Designer 3</p>
-                            <p class="text-xs text-gray-400 mt-1">YYYY</p>
+                            <p class="text-sm text-gray-500 mt-1 truncate">Exhibition Poster</p>
                         </div>
-                    </a>
+                    </div>
                 </article>
-                <!-- === END: Placeholder Item Structure 3 === -->
 
-                <!-- === Add more actual <article> blocks here, replacing placeholders === -->
+                <!-- Jeff Wall Poster -->
+                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                     <div class="block cursor-pointer" onclick="openLightbox('../imgs/posters/JeffWall_poster.JPG', 'Jeff Wall Exhibition Poster')">
+                        <div class="relative overflow-hidden aspect-[2/3] bg-gray-200">
+                            <img src="../imgs/posters/JeffWall_poster.JPG"
+                                 alt="Jeff Wall Exhibition Poster"
+                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 clickable-image">
+                        </div>
+                        <div class="p-3 sm:p-4">
+                            <h3 class="text-base font-semibold text-gray-800 truncate group-hover:text-teal-600 transition-colors">
+                                Jeff Wall
+                            </h3>
+                            <p class="text-sm text-gray-500 mt-1 truncate">Exhibition Poster</p>
+                        </div>
+                    </div>
+                </article>
 
+                <!-- Richard Prince Poster -->
+                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                     <div class="block cursor-pointer" onclick="openLightbox('../imgs/posters/RichardPrince_poster.JPG', 'Richard Prince Exhibition Poster')">
+                        <div class="relative overflow-hidden aspect-[2/3] bg-gray-200">
+                            <img src="../imgs/posters/RichardPrince_poster.JPG"
+                                 alt="Richard Prince Exhibition Poster"
+                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 clickable-image">
+                        </div>
+                        <div class="p-3 sm:p-4">
+                            <h3 class="text-base font-semibold text-gray-800 truncate group-hover:text-teal-600 transition-colors">
+                                Richard Prince
+                            </h3>
+                            <p class="text-sm text-gray-500 mt-1 truncate">Exhibition Poster</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Permanent Paper 1 -->
+                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                     <div class="block cursor-pointer" onclick="openLightbox('../imgs/posters/PermPaper_poster.JPG', 'Permanent Paper Exhibition Poster')">
+                        <div class="relative overflow-hidden aspect-[2/3] bg-gray-200">
+                            <img src="../imgs/posters/PermPaper_poster.JPG"
+                                 alt="Permanent Paper Exhibition Poster"
+                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 clickable-image">
+                        </div>
+                        <div class="p-3 sm:p-4">
+                            <h3 class="text-base font-semibold text-gray-800 truncate group-hover:text-teal-600 transition-colors">
+                                Permanent Paper
+                            </h3>
+                            <p class="text-sm text-gray-500 mt-1 truncate">Exhibition Poster</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Permanent Paper 2 -->
+                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                     <div class="block cursor-pointer" onclick="openLightbox('../imgs/posters/PermPaper2_poster.JPG', 'Permanent Paper II Exhibition Poster')">
+                        <div class="relative overflow-hidden aspect-[2/3] bg-gray-200">
+                            <img src="../imgs/posters/PermPaper2_poster.JPG"
+                                 alt="Permanent Paper Exhibition Poster 2"
+                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 clickable-image">
+                        </div>
+                        <div class="p-3 sm:p-4">
+                            <h3 class="text-base font-semibold text-gray-800 truncate group-hover:text-teal-600 transition-colors">
+                                Permanent Paper II
+                            </h3>
+                            <p class="text-sm text-gray-500 mt-1 truncate">Exhibition Poster</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Permanent Paper 3 -->
+                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                     <div class="block cursor-pointer" onclick="openLightbox('../imgs/posters/PermPaper3_poster.JPG', 'Permanent Paper III Exhibition Poster')">
+                        <div class="relative overflow-hidden aspect-[2/3] bg-gray-200">
+                            <img src="../imgs/posters/PermPaper3_poster.JPG"
+                                 alt="Permanent Paper Exhibition Poster 3"
+                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 clickable-image">
+                        </div>
+                        <div class="p-3 sm:p-4">
+                            <h3 class="text-base font-semibold text-gray-800 truncate group-hover:text-teal-600 transition-colors">
+                                Permanent Paper III
+                            </h3>
+                            <p class="text-sm text-gray-500 mt-1 truncate">Exhibition Poster</p>
+                        </div>
+                    </div>
+                </article>
 
             </div> <!-- End Item Grid -->
 
@@ -196,7 +339,8 @@
                         <ul class="space-y-2 text-neutral-400">
                             <li><a href="../index.html" class="hover:text-white">Home</a></li>
                             <li><a href="../index.html#about" class="hover:text-white">About</a></li>
-                             <li><a href="../curated-collections.html" class="hover:text-white">Collections</a></li>
+                             <li><a href="https://hudsonstreetlibrary.com/collection-explore.html" class="hover:text-white">Collections</a></li>
+                            <li><a href="../static-demo.html" class="hover:text-white">Search</a></li>
                             <li><a href="../index.html#publications" class="hover:text-white">Publications</a></li>
                             <li><a href="../news.html" class="hover:text-white">News</a></li>
                             <li><a href="../index.html#contact" class="hover:text-white">Contact</a></li>
@@ -223,6 +367,15 @@
             </div>
         </div>
     </footer>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="lightbox">
+        <span class="lightbox-close">&times;</span>
+        <div class="lightbox-content">
+            <img id="lightbox-img" src="" alt="">
+            <div id="lightbox-caption" class="lightbox-caption"></div>
+        </div>
+    </div>
 
     <script>
         // Mobile Menu Toggle Logic
@@ -261,6 +414,46 @@
                    }
                 }
             });
+        });
+
+        // Lightbox functionality
+        function openLightbox(imageSrc, caption) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxCaption = document.getElementById('lightbox-caption');
+            
+            lightboxImg.src = imageSrc;
+            lightboxImg.alt = caption;
+            lightboxCaption.textContent = caption;
+            lightbox.classList.add('active');
+            
+            // Prevent body scroll when lightbox is open
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close lightbox functionality
+        const lightbox = document.getElementById('lightbox');
+        const closeBtn = document.querySelector('.lightbox-close');
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        closeBtn.addEventListener('click', closeLightbox);
+
+        // Close lightbox when clicking outside the image
+        lightbox.addEventListener('click', function(e) {
+            if (e.target === lightbox || e.target.classList.contains('lightbox-content')) {
+                closeLightbox();
+            }
+        });
+
+        // Close lightbox with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+                closeLightbox();
+            }
         });
     </script>
 
