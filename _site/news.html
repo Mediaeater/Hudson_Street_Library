@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News & Updates | Hudson Street Library</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+        
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Montserrat', sans-serif; }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Playfair Display', serif; }
+        
+        .nav-item::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 1px;
+            background: #0f766e;
+            transition: width .3s;
+        }
+        .nav-item:hover::after { width: 100%; }
+        
+        .news-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .news-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .category-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .category-acquisitions { background-color: #dbeafe; color: #1e40af; }
+        .category-collections { background-color: #d1fae5; color: #065f46; }
+        .category-announcements { background-color: #fef3c7; color: #92400e; }
+        
+        .featured-badge {
+            background-color: #0f766e;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    
+    <!-- Standard Site Header -->
+    <header class="sticky top-0 w-full bg-white z-50 py-4 shadow-md">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-between items-center">
+                <a href="index.html" class="text-xl sm:text-2xl font-bold tracking-tight text-teal-900">HUDSON STREET LIBRARY</a>
+                <nav id="main-nav" class="hidden md:flex space-x-6 lg:space-x-8 items-center text-neutral-700 text-sm lg:text-base">
+                    <a href="index.html#about" class="nav-item hover:text-teal-700">About</a>
+                    <a href="collection-explore.html" class="nav-item hover:text-teal-700">Collections</a>
+                    <a href="index.html#publications" class="nav-item hover:text-teal-700">Publications</a>
+                    <a href="news.html" class="nav-item hover:text-teal-700 font-semibold text-teal-700">News</a>
+                    <a href="index.html#contact" class="nav-item hover:text-teal-700">Contact</a>
+                </nav>
+                <button class="md:hidden focus:outline-none text-teal-800" aria-label="Toggle menu" aria-controls="mobile-nav-menu" aria-expanded="false">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <nav id="mobile-nav-menu" class="hidden md:hidden absolute top-full left-0 right-0 bg-white shadow-lg px-6 py-4 space-y-3 flex-col z-40">
+            <a href="index.html#about" class="block py-2 text-neutral-700 hover:text-teal-700">About</a>
+            <a href="collection-explore.html" class="block py-2 text-neutral-700 hover:text-teal-700">Collections</a>
+            <a href="index.html#publications" class="block py-2 text-neutral-700 hover:text-teal-700">Publications</a>
+            <a href="news.html" class="block py-2 text-neutral-700 hover:text-teal-700 font-semibold text-teal-700">News</a>
+            <a href="index.html#contact" class="block py-2 text-neutral-700 hover:text-teal-700">Contact</a>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+            
+            <!-- Page Header -->
+            <div class="text-center mb-12 md:mb-16">
+                <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">News & Updates</h1>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Latest acquisitions, announcements, and updates from Hudson Street Library
+                </p>
+            </div>
+            
+            <!-- Featured News -->
+            
+            
+            <section class="mb-16">
+                <h2 class="text-2xl font-bold mb-8 text-gray-900">Featured</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <article class="news-card bg-white rounded-lg overflow-hidden border border-gray-200">
+                        
+                        <div class="aspect-[16/9] overflow-hidden bg-gray-200">
+                            <img src="/imgs/collage/collage-v3.png" alt="New Additions to Collage Collection" class="w-full h-full object-cover">
+                        </div>
+                        
+                        <div class="p-6">
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="category-badge category-acquisitions">acquisitions</span>
+                                <span class="featured-badge category-badge">Featured</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2 text-gray-900">New Additions to Collage Collection</h3>
+                            <p class="text-sm text-gray-500 mb-3">2024-12-15</p>
+                            <p class="text-gray-600 mb-4">We&#39;re excited to announce three significant additions to our collage collection, featuring works that explore the intersection of photography and assemblage.</p>
+                            <button onclick="showFullArticle(1)" class="text-teal-700 hover:text-teal-900 font-medium text-sm">
+                                Read more <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+                    </article>
+                    
+                    <article class="news-card bg-white rounded-lg overflow-hidden border border-gray-200">
+                        
+                        <div class="aspect-[16/9] overflow-hidden bg-gray-200">
+                            <img src="/imgs/comme/comme-hero.png" alt="Comme des Garçons: Six Magazine Archive" class="w-full h-full object-cover">
+                        </div>
+                        
+                        <div class="p-6">
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="category-badge category-acquisitions">acquisitions</span>
+                                <span class="featured-badge category-badge">Featured</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2 text-gray-900">Comme des Garçons: Six Magazine Archive</h3>
+                            <p class="text-sm text-gray-500 mb-3">2024-11-20</p>
+                            <p class="text-gray-600 mb-4">Rare complete set of Comme des Garçons&#39; Six magazine (1988-1991) now available for viewing.</p>
+                            <button onclick="showFullArticle(4)" class="text-teal-700 hover:text-teal-900 font-medium text-sm">
+                                Read more <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+                    </article>
+                    
+                </div>
+            </section>
+            
+            
+            <!-- All News -->
+            <section>
+                <h2 class="text-2xl font-bold mb-8 text-gray-900">All Updates</h2>
+                <div class="space-y-6">
+                    
+                    <article class="news-card bg-white rounded-lg overflow-hidden border border-gray-200">
+                        <div class="p-6 md:flex md:gap-6">
+                            
+                            <div class="flex-shrink-0 mb-4 md:mb-0">
+                                <div class="w-full md:w-48 h-32 overflow-hidden rounded-lg bg-gray-200">
+                                    <img src="/imgs/collage/collage-v3.png" alt="New Additions to Collage Collection" class="w-full h-full object-cover">
+                                </div>
+                            </div>
+                            
+                            <div class="flex-grow">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <span class="category-badge category-acquisitions">acquisitions</span>
+                                    <span class="text-sm text-gray-500">2024-12-15</span>
+                                </div>
+                                <h3 class="text-lg font-bold mb-2 text-gray-900">New Additions to Collage Collection</h3>
+                                <p class="text-gray-600 mb-3">We&#39;re excited to announce three significant additions to our collage collection, featuring works that explore the intersection of photography and assemblage.</p>
+                                <button onclick="showFullArticle(1)" class="text-teal-700 hover:text-teal-900 font-medium text-sm">
+                                    Read more <i class="fas fa-arrow-right ml-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                    
+                    <article class="news-card bg-white rounded-lg overflow-hidden border border-gray-200">
+                        <div class="p-6 md:flex md:gap-6">
+                            
+                            <div class="flex-shrink-0 mb-4 md:mb-0">
+                                <div class="w-full md:w-48 h-32 overflow-hidden rounded-lg bg-gray-200">
+                                    <img src="/imgs/posters/Dylan_poster.JPG" alt="Poster Collection Now Online" class="w-full h-full object-cover">
+                                </div>
+                            </div>
+                            
+                            <div class="flex-grow">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <span class="category-badge category-collections">collections</span>
+                                    <span class="text-sm text-gray-500">2024-12-10</span>
+                                </div>
+                                <h3 class="text-lg font-bold mb-2 text-gray-900">Poster Collection Now Online</h3>
+                                <p class="text-gray-600 mb-3">Browse our newly digitized collection of vintage concert posters, exhibition announcements, and graphic design ephemera.</p>
+                                <button onclick="showFullArticle(2)" class="text-teal-700 hover:text-teal-900 font-medium text-sm">
+                                    Read more <i class="fas fa-arrow-right ml-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                    
+                    <article class="news-card bg-white rounded-lg overflow-hidden border border-gray-200">
+                        <div class="p-6 md:flex md:gap-6">
+                            
+                            <div class="flex-grow">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <span class="category-badge category-announcements">announcements</span>
+                                    <span class="text-sm text-gray-500">2024-12-01</span>
+                                </div>
+                                <h3 class="text-lg font-bold mb-2 text-gray-900">Holiday Hours</h3>
+                                <p class="text-gray-600 mb-3">The library will maintain special hours during the holiday season. Please check our schedule before visiting.</p>
+                                <button onclick="showFullArticle(3)" class="text-teal-700 hover:text-teal-900 font-medium text-sm">
+                                    Read more <i class="fas fa-arrow-right ml-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                    
+                    <article class="news-card bg-white rounded-lg overflow-hidden border border-gray-200">
+                        <div class="p-6 md:flex md:gap-6">
+                            
+                            <div class="flex-shrink-0 mb-4 md:mb-0">
+                                <div class="w-full md:w-48 h-32 overflow-hidden rounded-lg bg-gray-200">
+                                    <img src="/imgs/comme/comme-hero.png" alt="Comme des Garçons: Six Magazine Archive" class="w-full h-full object-cover">
+                                </div>
+                            </div>
+                            
+                            <div class="flex-grow">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <span class="category-badge category-acquisitions">acquisitions</span>
+                                    <span class="text-sm text-gray-500">2024-11-20</span>
+                                </div>
+                                <h3 class="text-lg font-bold mb-2 text-gray-900">Comme des Garçons: Six Magazine Archive</h3>
+                                <p class="text-gray-600 mb-3">Rare complete set of Comme des Garçons&#39; Six magazine (1988-1991) now available for viewing.</p>
+                                <button onclick="showFullArticle(4)" class="text-teal-700 hover:text-teal-900 font-medium text-sm">
+                                    Read more <i class="fas fa-arrow-right ml-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                    
+                    <article class="news-card bg-white rounded-lg overflow-hidden border border-gray-200">
+                        <div class="p-6 md:flex md:gap-6">
+                            
+                            <div class="flex-shrink-0 mb-4 md:mb-0">
+                                <div class="w-full md:w-48 h-32 overflow-hidden rounded-lg bg-gray-200">
+                                    <img src="/imgs/ephemera/ephemera.jpg" alt="New Ephemera Acquisitions" class="w-full h-full object-cover">
+                                </div>
+                            </div>
+                            
+                            <div class="flex-grow">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <span class="category-badge category-acquisitions">acquisitions</span>
+                                    <span class="text-sm text-gray-500">2024-11-15</span>
+                                </div>
+                                <h3 class="text-lg font-bold mb-2 text-gray-900">New Ephemera Acquisitions</h3>
+                                <p class="text-gray-600 mb-3">Recent additions to our ephemera collection include artist postcards, exhibition invitations, and photography fair materials.</p>
+                                <button onclick="showFullArticle(5)" class="text-teal-700 hover:text-teal-900 font-medium text-sm">
+                                    Read more <i class="fas fa-arrow-right ml-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                    
+                    <article class="news-card bg-white rounded-lg overflow-hidden border border-gray-200">
+                        <div class="p-6 md:flex md:gap-6">
+                            
+                            <div class="flex-grow">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <span class="category-badge category-announcements">announcements</span>
+                                    <span class="text-sm text-gray-500">2024-11-01</span>
+                                </div>
+                                <h3 class="text-lg font-bold mb-2 text-gray-900">Website Launch</h3>
+                                <p class="text-gray-600 mb-3">Hudson Street Library&#39;s collection is now searchable online, with detailed information about our holdings and visit policies.</p>
+                                <button onclick="showFullArticle(6)" class="text-teal-700 hover:text-teal-900 font-medium text-sm">
+                                    Read more <i class="fas fa-arrow-right ml-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                    
+                </div>
+            </section>
+            
+        </div>
+    </main>
+    
+    <!-- Article Modal -->
+    <div id="article-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center">
+                <h3 id="modal-title" class="text-xl font-bold text-gray-900"></h3>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div id="modal-meta" class="flex items-center gap-3 mb-4"></div>
+                <div id="modal-image" class="mb-6"></div>
+                <div id="modal-content" class="prose prose-gray max-w-none"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="bg-neutral-900 text-neutral-300 py-16">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between pb-12 border-b border-neutral-700">
+                <div class="mb-8 md:mb-0">
+                    <h3 class="text-2xl font-bold mb-4 text-white">HUDSON STREET LIBRARY</h3>
+                    <p class="text-neutral-400 max-w-xs">A specialized photography book collection in Manhattan's West Village.</p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+                    <div>
+                        <h4 class="font-semibold text-lg mb-4 text-neutral-100">Explore</h4>
+                        <ul class="space-y-2 text-neutral-400">
+                            <li><a href="index.html" class="hover:text-white">Home</a></li>
+                            <li><a href="index.html#about" class="hover:text-white">About</a></li>
+                            <li><a href="collection-explore.html" class="hover:text-white">Collections</a></li>
+                            <li><a href="index.html#publications" class="hover:text-white">Publications</a></li>
+                            <li><a href="news.html" class="hover:text-white">News</a></li>
+                            <li><a href="index.html#contact" class="hover:text-white">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-lg mb-4 text-neutral-100">Visit</h4>
+                        <ul class="space-y-2 text-neutral-400">
+                            <li><a href="index.html#contact" class="hover:text-white">Visit Policy</a></li>
+                            <li><a href="index.html#contact" class="hover:text-white">Location</a></li>
+                            <li><a href="index.html#contact" class="hover:text-white">Appointments</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-lg mb-4 text-neutral-100">Connect</h4>
+                        <ul class="space-y-2 text-neutral-400">
+                            <li><a href="#" class="hover:text-white">Instagram</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-12 text-center text-neutral-500 text-sm">
+                <p>© 2024 Hudson Street Library. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.querySelector('button.md\\:hidden');
+        const mobileNavMenu = document.getElementById('mobile-nav-menu');
+        
+        if (mobileMenuButton && mobileNavMenu) {
+            mobileMenuButton.addEventListener('click', function() {
+                const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+                mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+                mobileNavMenu.classList.toggle('hidden');
+                mobileNavMenu.classList.toggle('flex');
+                const icon = mobileMenuButton.querySelector('i');
+                if (icon) {
+                    icon.classList.toggle('fa-bars');
+                    icon.classList.toggle('fa-times');
+                }
+            });
+        }
+        
+        // News data
+        const newsData = [{"id":1,"date":"2024-12-15","title":"New Additions to Collage Collection","excerpt":"We're excited to announce three significant additions to our collage collection, featuring works that explore the intersection of photography and assemblage.","content":"We're excited to announce three significant additions to our collage collection. The Age of Collage series showcases contemporary artists pushing the boundaries of photographic collage, while works by Lotta Antonsson, Pacifico Silano, and Ray Johnson offer unique perspectives on this dynamic medium.","image":"/imgs/collage/collage-v3.png","category":"acquisitions","featured":true},{"id":2,"date":"2024-12-10","title":"Poster Collection Now Online","excerpt":"Browse our newly digitized collection of vintage concert posters, exhibition announcements, and graphic design ephemera.","content":"Our poster and paper collection is now available to browse online. This collection includes rare concert posters featuring Bob Dylan and Richard Prince, exhibition posters from Jeff Wall and E. Payton shows, and the complete Permanent Paper series. Each piece has been professionally photographed and cataloged for research purposes.","image":"/imgs/posters/Dylan_poster.JPG","category":"collections","featured":false},{"id":3,"date":"2024-12-01","title":"Holiday Hours","excerpt":"The library will maintain special hours during the holiday season. Please check our schedule before visiting.","content":"Please note our special holiday hours: December 24-25: Closed. December 31: Open 10am-2pm. January 1: Closed. Regular hours resume January 2, 2025. Appointments can still be scheduled for research visits during this period.","image":null,"category":"announcements","featured":false},{"id":4,"date":"2024-11-20","title":"Comme des Garçons: Six Magazine Archive","excerpt":"Rare complete set of Comme des Garçons' Six magazine (1988-1991) now available for viewing.","content":"Hudson Street Library has acquired a complete set of Comme des Garçons' influential Six magazine. Published between 1988 and 1991, these eight issues represent a crucial moment in fashion publishing, featuring photography by leading artists and Rei Kawakubo's radical vision for fashion communication. Available by appointment only.","image":"/imgs/comme/comme-hero.png","category":"acquisitions","featured":true},{"id":5,"date":"2024-11-15","title":"New Ephemera Acquisitions","excerpt":"Recent additions to our ephemera collection include artist postcards, exhibition invitations, and photography fair materials.","content":"This month's ephemera acquisitions showcase the often-overlooked materials that document photography culture: exhibition announcements, artist postcards, gallery invitations, and fair catalogs. These materials provide crucial context for understanding how photography has been presented and circulated. Highlights include materials from 1970s SoHo galleries and contemporary photography fairs.","image":"/imgs/ephemera/ephemera.jpg","category":"acquisitions","featured":false},{"id":6,"date":"2024-11-01","title":"Website Launch","excerpt":"Hudson Street Library's collection is now searchable online, with detailed information about our holdings and visit policies.","content":"We're pleased to announce the launch of our new website, making Hudson Street Library's collection more accessible to researchers worldwide. The site features detailed collection information, high-resolution images, and an appointment booking system. We'll be adding new features and collections regularly.","image":null,"category":"announcements","featured":false}];
+        
+        // Show full article in modal
+        function showFullArticle(id) {
+            const article = newsData.find(item => item.id === id);
+            if (!article) return;
+            
+            document.getElementById('modal-title').textContent = article.title;
+            
+            const metaHtml = `
+                <span class="category-badge category-${article.category}">${article.category}</span>
+                <span class="text-sm text-gray-500">${new Date(article.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            `;
+            document.getElementById('modal-meta').innerHTML = metaHtml;
+            
+            if (article.image) {
+                document.getElementById('modal-image').innerHTML = `
+                    <img src="${article.image}" alt="${article.title}" class="w-full rounded-lg">
+                `;
+            } else {
+                document.getElementById('modal-image').innerHTML = '';
+            }
+            
+            document.getElementById('modal-content').innerHTML = `<p>${article.content}</p>`;
+            document.getElementById('article-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Close modal
+        function closeModal() {
+            document.getElementById('article-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Close modal on outside click
+        document.getElementById('article-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+        
+        // Close modal with ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+    
+</body>
+</html>

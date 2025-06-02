@@ -1,0 +1,90 @@
+<h1>Hudson Street Library - CMS Architecture</h1>
+<h2>Current Architecture</h2>
+<p>The Hudson Street Library uses a <strong>headless CMS architecture</strong> with two main components:</p>
+<h3>1. Frontend (Static HTML + JavaScript)</h3>
+<ul>
+<li><strong>Location</strong>: Root directory (<code>/</code>)</li>
+<li><strong>Technology</strong>: Static HTML with vanilla JavaScript</li>
+<li><strong>Hosting</strong>: GitHub Pages</li>
+<li><strong>Key Files</strong>:
+<ul>
+<li><code>index.html</code>, <code>collection-explore.html</code>, etc. - Static HTML pages</li>
+<li><code>js/api.js</code> - API connection to Directus</li>
+<li><code>js/cms-integration.js</code> - Integrates CMS data into pages</li>
+<li><code>js/render-utils.js</code> - Utility functions for rendering</li>
+</ul>
+</li>
+</ul>
+<h3>2. Backend (Directus CMS)</h3>
+<ul>
+<li><strong>Location</strong>: <code>/cms</code> directory</li>
+<li><strong>Technology</strong>: Directus (headless CMS) with PostgreSQL</li>
+<li><strong>Hosting</strong>: Docker containers (local development)</li>
+<li><strong>Access</strong>: http://localhost:8055/admin</li>
+<li><strong>Key Features</strong>:
+<ul>
+<li>Collections: Books, Collections, New Acquisitions</li>
+<li>Import scripts for Google Sheets data</li>
+<li>RESTful API for frontend consumption</li>
+</ul>
+</li>
+</ul>
+<h2>Other Directories</h2>
+<h3><code>/frontend</code> Directory (Not Currently Used)</h3>
+<p>This contains a Next.js application that was started but is not currently deployed. It could be used as a future upgrade path if you want:</p>
+<ul>
+<li>Server-side rendering (SSR)</li>
+<li>Better SEO</li>
+<li>Dynamic routing</li>
+<li>Modern React development</li>
+</ul>
+<h3><code>/hudson-library-cms</code> Directory</h3>
+<p>This appears to be an incomplete/duplicate CMS setup and can be removed.</p>
+<h2>How It Works</h2>
+<ol>
+<li>
+<p><strong>Content Management</strong>:</p>
+<ul>
+<li>Editors log into Directus at http://localhost:8055/admin</li>
+<li>They create/edit books, collections, and acquisitions</li>
+</ul>
+</li>
+<li>
+<p><strong>Data Flow</strong>:</p>
+<ul>
+<li>Directus exposes data via REST API</li>
+<li>Static HTML pages load JavaScript files</li>
+<li>JavaScript fetches data from Directus API</li>
+<li>Data is rendered into the HTML dynamically</li>
+</ul>
+</li>
+<li>
+<p><strong>Deployment</strong>:</p>
+<ul>
+<li>Frontend: Automatically deployed via GitHub Pages</li>
+<li>Backend: Needs to be deployed to a server (currently local only)</li>
+</ul>
+</li>
+</ol>
+<h2>Production Considerations</h2>
+<p>For production, you'll need to:</p>
+<ol>
+<li><strong>Deploy Directus</strong> to a cloud provider (e.g., DigitalOcean, AWS, Heroku)</li>
+<li><strong>Update API URLs</strong> in <code>js/api.js</code> to point to production Directus</li>
+<li><strong>Configure CORS</strong> in Directus to allow requests from hudsonstreetlibrary.com</li>
+<li><strong>Set up SSL</strong> for the Directus instance</li>
+</ol>
+<h2>Recommended Next Steps</h2>
+<ol>
+<li><strong>Keep current architecture</strong> - It's working and simple</li>
+<li><strong>Deploy Directus to production</strong> - So content can be managed online</li>
+<li><strong>Remove unused directories</strong> - <code>/hudson-library-cms</code> can be deleted</li>
+<li><strong>Document the API endpoints</strong> - For future maintenance</li>
+</ol>
+<h2>Future Considerations</h2>
+<p>If you need more dynamic features in the future, consider:</p>
+<ul>
+<li>Migrating to the Next.js frontend in <code>/frontend</code></li>
+<li>Or using a static site generator like Astro or 11ty</li>
+<li>Both would provide better build-time optimization while keeping the Directus backend</li>
+</ul>

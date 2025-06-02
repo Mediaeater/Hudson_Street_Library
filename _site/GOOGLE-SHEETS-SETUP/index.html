@@ -1,0 +1,111 @@
+<h1>Google Sheets as Free CMS for Hudson Street Library</h1>
+<h2>Why Google Sheets?</h2>
+<ul>
+<li><strong>100% Free</strong> - No hosting costs</li>
+<li><strong>Easy to edit</strong> - Update books directly in spreadsheet</li>
+<li><strong>Real-time updates</strong> - Changes appear instantly on website</li>
+<li><strong>No server needed</strong> - Works with GitHub Pages</li>
+<li><strong>Collaborative</strong> - Multiple people can edit</li>
+</ul>
+<h2>Setup Instructions</h2>
+<h3>1. Create Google Sheet</h3>
+<ol>
+<li>Go to <a href="https://sheets.google.com">Google Sheets</a></li>
+<li>Create new spreadsheet</li>
+<li>Import your CSV file: File → Import → Upload → Select your CSV</li>
+<li>Name it &quot;Hudson Street Library Books&quot;</li>
+</ol>
+<h3>2. Make Sheet Public</h3>
+<ol>
+<li>Click &quot;Share&quot; button (top right)</li>
+<li>Change to &quot;Anyone with the link can view&quot;</li>
+<li>Copy the spreadsheet ID from URL:<pre><code>https://docs.google.com/spreadsheets/d/[SPREADSHEET_ID]/edit
+</code></pre>
+</li>
+</ol>
+<h3>3. Get Google API Key</h3>
+<ol>
+<li>Go to <a href="https://console.cloud.google.com">Google Cloud Console</a></li>
+<li>Create new project (or select existing)</li>
+<li>Enable Google Sheets API:
+<ul>
+<li>Go to &quot;APIs &amp; Services&quot; → &quot;Library&quot;</li>
+<li>Search &quot;Google Sheets API&quot;</li>
+<li>Click and Enable</li>
+</ul>
+</li>
+<li>Create API Key:
+<ul>
+<li>Go to &quot;APIs &amp; Services&quot; → &quot;Credentials&quot;</li>
+<li>Click &quot;Create Credentials&quot; → &quot;API Key&quot;</li>
+<li>Copy the API key</li>
+</ul>
+</li>
+</ol>
+<h3>4. Update Your Website</h3>
+<ol>
+<li>
+<p>Edit <code>js/google-sheets-api.js</code>:</p>
+<pre><code class="language-javascript">const SHEETS_CONFIG = {
+  spreadsheetId: 'YOUR_SPREADSHEET_ID_HERE',
+  apiKey: 'YOUR_API_KEY_HERE'
+};
+</code></pre>
+</li>
+<li>
+<p>Update your HTML files to use Google Sheets instead of Directus:</p>
+<pre><code class="language-html">&lt;script src=&quot;js/google-sheets-api.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+  // Fetch books from Google Sheets
+  GoogleSheetsAPI.fetchBooks({ limit: 10 })
+    .then(books =&gt; {
+      // Display books
+    });
+&lt;/script&gt;
+</code></pre>
+</li>
+</ol>
+<h2>Other Free Alternatives</h2>
+<h3>1. <strong>Netlify CMS</strong> (Free)</h3>
+<ul>
+<li>Git-based CMS</li>
+<li>Works perfectly with GitHub Pages</li>
+<li>Edit through web interface</li>
+<li>Saves directly to your repo</li>
+</ul>
+<h3>2. <strong>Airtable</strong> (Free tier)</h3>
+<ul>
+<li>1,200 records free</li>
+<li>Nice interface</li>
+<li>API access</li>
+<li>Good for your ~1,300 books</li>
+</ul>
+<h3>3. <strong>GitHub as CMS</strong></h3>
+<ul>
+<li>Store data as JSON files</li>
+<li>Edit directly on GitHub</li>
+<li>No API limits</li>
+<li>Version control built-in</li>
+</ul>
+<h3>4. <strong>Static JSON Files</strong></h3>
+<ul>
+<li>Convert your CSV to JSON</li>
+<li>Host on GitHub Pages</li>
+<li>Super fast (no API calls)</li>
+<li>Update by committing changes</li>
+</ul>
+<h2>Recommended Solution</h2>
+<p>For your use case with 1,321 books, I recommend:</p>
+<ol>
+<li><strong>Google Sheets</strong> for easy editing</li>
+<li><strong>Static JSON fallback</strong> for speed</li>
+<li><strong>GitHub Pages</strong> hosting (free)</li>
+</ol>
+<p>This gives you:</p>
+<ul>
+<li>Free hosting</li>
+<li>Easy updates</li>
+<li>Fast loading</li>
+<li>No server costs</li>
+<li>Reliable uptime</li>
+</ul>
