@@ -69,7 +69,7 @@ module.exports = function(eleventyConfig) {
     markdownTemplateEngine: "njk",
     htmlTemplateEngine: "njk",
     dataTemplateEngine: "njk",
-    templateFormats: [ "md", "njk", "html", "liquid" ]
+    templateFormats: [ "njk", "html", "liquid" ]
   };
 };
 console.log("--- DEBUG: [ALT CONFIG] Finished .eleventy.js configuration ---"); // Log end
