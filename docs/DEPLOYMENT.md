@@ -14,6 +14,8 @@ The Hudson Street Library website is now deployed using GitHub Actions and GitHu
    - Outputs static files to `_site/`
 4. **Deploy**: The built site is deployed to GitHub Pages
 
+**📋 For detailed pipeline documentation, see [GITHUB-ACTIONS-PIPELINE.md](GITHUB-ACTIONS-PIPELINE.md)**
+
 ## Important Notes
 
 - The `_site/` directory is **no longer tracked in git**

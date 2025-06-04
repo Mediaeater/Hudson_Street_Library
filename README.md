@@ -12,10 +12,13 @@ npm install
 npm start
 
 # Build the site
-npm build
+npm run build
 
 # Clean build directory
-npm clean
+npm run clean
+
+# Check deployment status
+npm run deploy:check
 ```
 
 Visit http://localhost:8080 when running the development server.
@@ -125,7 +128,13 @@ npm clean
 
 ## 📚 Documentation
 
+### Deployment & Operations
 - [Deployment Guide](docs/DEPLOYMENT.md) - How deployment works
+- [GitHub Actions Pipeline](docs/GITHUB-ACTIONS-PIPELINE.md) - Detailed CI/CD documentation
+- [Deployment Monitoring](docs/DEPLOYMENT-MONITORING.md) - Status monitoring and troubleshooting
+- [Quick Reference](docs/DEPLOYMENT-QUICK-REFERENCE.md) - Essential commands and links
+
+### Development
 - [Architecture Overview](docs/architecture/CMS-ARCHITECTURE.md) - System architecture
 - [Claude AI Guide](docs/architecture/CLAUDE.md) - AI assistant instructions
 - [Book Page Template](docs/guides/BOOK-PAGE-TEMPLATE.md) - Creating book pages
