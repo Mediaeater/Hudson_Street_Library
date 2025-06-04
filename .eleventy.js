@@ -1,42 +1,40 @@
-// .eleventy.js (Alternative Data Loading - FINAL ATTEMPT)
+// .eleventy.js - Updated for new src directory structure
 const { parse } = require("csv-parse/sync");
 const fs = require("fs");
-const path = require("path"); // Need path module
+const path = require("path");
 const slugify = require("slugify");
 
 module.exports = function(eleventyConfig) {
-  console.log("--- DEBUG: [ALT CONFIG] Running .eleventy.js configuration ---"); // Log start
+  console.log("--- Running Eleventy configuration ---");
 
-  // --- Load CSV Data Directly ---
-  const csvPath = path.join(__dirname, "_data/books.csv"); // Get absolute path
-  let bookData = []; // Initialize empty array
+  // --- Load CSV Data ---
+  const csvPath = path.join(__dirname, "src/_data/books.csv");
+  let bookData = [];
 
   try {
-    console.log(`--- DEBUG: [ALT CONFIG] Attempting to read CSV: ${csvPath}`);
-    if (fs.existsSync(csvPath)) { // Check if file exists
+    console.log(`--- Attempting to read CSV: ${csvPath}`);
+    if (fs.existsSync(csvPath)) {
       const contents = fs.readFileSync(csvPath, "utf8");
-      if (contents && contents.trim().length > 0) { // Check if contents not empty
+      if (contents && contents.trim().length > 0) {
         bookData = parse(contents, {
           columns: true,
           skip_empty_lines: true,
           trim: true,
         });
-        console.log(`--- DEBUG: [ALT CONFIG] Directly Parsed ${bookData.length} records from ${csvPath}`);
+        console.log(`--- Parsed ${bookData.length} records from ${csvPath}`);
       } else {
-         console.error(`--- DEBUG: [ALT CONFIG] CSV file is empty or only whitespace: ${csvPath}`);
+        console.error(`--- CSV file is empty: ${csvPath}`);
       }
     } else {
-       console.error(`--- DEBUG: [ALT CONFIG] CSV file does not exist: ${csvPath}`);
+      console.error(`--- CSV file does not exist: ${csvPath}`);
     }
   } catch (err) {
-    console.error(`--- DEBUG: [ALT CONFIG] Error Directly Parsing CSV: ${csvPath}`, err);
+    console.error(`--- Error parsing CSV: ${csvPath}`, err);
   }
 
   // --- Add Data Globally ---
-  // Make the loaded data available to templates under the name 'books'
   eleventyConfig.addGlobalData("books", bookData);
-  console.log(`--- DEBUG: [ALT CONFIG] Added 'books' global data with ${bookData.length} items.`);
-
+  console.log(`--- Added 'books' global data with ${bookData.length} items.`);
 
   // --- Add Slugify Filter ---
   eleventyConfig.addFilter("slugify", function(str) {
@@ -48,28 +46,28 @@ module.exports = function(eleventyConfig) {
     });
   });
 
-  // --- Passthrough Copy ---
-  eleventyConfig.addPassthroughCopy("imgs");
-  eleventyConfig.addPassthroughCopy("css");
-  eleventyConfig.addPassthroughCopy("collections");
-  eleventyConfig.addPassthroughCopy("index.html");
-  eleventyConfig.addPassthroughCopy("collection-explore.html");
-  eleventyConfig.addPassthroughCopy("recently_added.html");
+  // --- Passthrough Copy for assets ---
+  // Copy entire assets directory (images, js, css)
+  eleventyConfig.addPassthroughCopy("src/assets");
+  
+  // Copy CNAME for GitHub Pages
+  eleventyConfig.addPassthroughCopy("CNAME");
+  
+  // Copy .nojekyll to prevent Jekyll processing
+  eleventyConfig.addPassthroughCopy(".nojekyll");
 
-
-  // --- Define Input/Output Directories and Engines ---
+  // --- Define Input/Output Directories ---
   return {
     dir: {
-      input: ".",
+      input: "src",
       output: "_site",
       includes: "_includes",
       layouts: "_includes/layouts",
-      data: "_data" // Still good practice to define
+      data: "_data"
     },
     markdownTemplateEngine: "njk",
     htmlTemplateEngine: "njk",
     dataTemplateEngine: "njk",
-    templateFormats: [ "njk", "html", "liquid" ]
+    templateFormats: ["njk", "html", "liquid", "md"]
   };
 };
-console.log("--- DEBUG: [ALT CONFIG] Finished .eleventy.js configuration ---"); // Log end

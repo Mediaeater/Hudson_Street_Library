@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Books Display</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .book { border: 1px solid #ddd; padding: 10px; margin: 10px 0; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Hudson Street Library - Books Test</h1>
+    <div id="status">Loading...</div>
+    <div id="books"></div>
+    
+    <script src="config.js"></script>
+    <script src="/assets/js/api.js"></script>
+    <script>
+        async function displayBooks() {
+            const statusEl = document.getElementById('status');
+            const booksEl = document.getElementById('books');
+            
+            try {
+                // Test authentication
+                await authenticate();
+                statusEl.innerHTML = '<p class="success">✅ Authentication successful</p>';
+                
+                // Fetch books
+                const books = await fetchBooks({ limit: 10 });
+                statusEl.innerHTML += `<p class="success">✅ Found ${books.length} books in the system</p>`;
+                
+                // Display books
+                if (books.length > 0) {
+                    booksEl.innerHTML = '<h2>First 10 Books:</h2>';
+                    books.forEach(book => {
+                        booksEl.innerHTML += `
+                            <div class="book">
+                                <h3>${book.title || 'Untitled'}</h3>
+                                <p><strong>Author:</strong> ${book.author_first_name || ''} ${book.author_last_name || ''}</p>
+                                <p><strong>Publisher:</strong> ${book.publisher || 'Unknown'}</p>
+                                <p><strong>ISBN:</strong> ${book.isbn || 'N/A'}</p>
+                                <p><strong>Price:</strong> $${book.price || '0'}</p>
+                            </div>
+                        `;
+                    });
+                } else {
+                    booksEl.innerHTML = '<p>No books found</p>';
+                }
+                
+            } catch (error) {
+                statusEl.innerHTML = `<p class="error">❌ Error: ${error.message}</p>`;
+                console.error(error);
+            }
+        }
+        
+        // Run when page loads
+        displayBooks();
+    </script>
+</body>
+</html>
