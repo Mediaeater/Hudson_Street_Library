@@ -11,10 +11,10 @@ src/books/
 │   ├── black-photographers/  # Black Photographers
 │   ├── books-on-books/   # Books on Books
 │   ├── collage/          # Collage Collections
-│   ├── comme-des-garcons/ # Comme des Garçons Related
 │   ├── ephemera/         # Ephemera
-│   ├── fashion/          # Fashion (general)
-│   ├── matsuda-fashion/  # Matsuda Fashion Catalogs
+│   ├── fashion/          # Fashion (general and subdirectories)
+│   │   ├── comme-des-garcons/ # Comme des Garçons Related
+│   │   └── matsuda-fashion/  # Matsuda Fashion Catalogs
 │   ├── music-photobooks/ # Music Photobooks
 │   ├── music/            # Music (general)
 │   ├── nyc/              # NYC Photobooks
