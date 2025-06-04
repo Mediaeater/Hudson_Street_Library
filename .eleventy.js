@@ -3,6 +3,7 @@ const { parse } = require("csv-parse/sync");
 const fs = require("fs");
 const path = require("path");
 const slugify = require("slugify");
+const Image = require("@11ty/eleventy-img");
 
 module.exports = function(eleventyConfig) {
   console.log("--- Running Eleventy configuration ---");
@@ -45,6 +46,62 @@ module.exports = function(eleventyConfig) {
       remove: /["]/g,
     });
   });
+
+  // --- Image Processing Function ---
+  async function imageShortcode(src, alt, sizes = "100vw", className = "") {
+    let metadata = await Image(src, {
+      widths: [300, 600, 900, 1200],
+      formats: ["webp", "jpeg"],
+      outputDir: "./_site/assets/images/optimized/",
+      urlPath: "/assets/images/optimized/",
+      filenameFormat: function (id, src, width, format, options) {
+        const extension = path.extname(src);
+        const name = path.basename(src, extension);
+        return `${name}-${width}w.${format}`;
+      }
+    });
+
+    let imageAttributes = {
+      alt,
+      sizes,
+      loading: "lazy",
+      decoding: "async",
+      class: className
+    };
+
+    return Image.generateHTML(metadata, imageAttributes);
+  }
+
+  // --- Add Image Shortcode ---
+  eleventyConfig.addNunjucksAsyncShortcode("image", imageShortcode);
+  eleventyConfig.addLiquidShortcode("image", imageShortcode);
+
+  // --- Thumbnail Generator Function ---
+  async function thumbnailShortcode(src, alt, className = "thumbnail") {
+    let metadata = await Image(src, {
+      widths: [150, 300],
+      formats: ["webp", "jpeg"],
+      outputDir: "./_site/assets/images/thumbnails/",
+      urlPath: "/assets/images/thumbnails/",
+      filenameFormat: function (id, src, width, format, options) {
+        const extension = path.extname(src);
+        const name = path.basename(src, extension);
+        return `${name}-thumb-${width}w.${format}`;
+      }
+    });
+
+    let imageAttributes = {
+      alt,
+      loading: "lazy",
+      decoding: "async",
+      class: className
+    };
+
+    return Image.generateHTML(metadata, imageAttributes);
+  }
+
+  // --- Add Thumbnail Shortcode ---
+  eleventyConfig.addNunjucksAsyncShortcode("thumbnail", thumbnailShortcode);
 
   // --- Passthrough Copy for assets ---
   // Copy entire assets directory (images, js, css)

@@ -1,0 +1,27 @@
+{#
+  Book Thumbnail Component
+  Usage: {% include "components/book-thumbnail.njk", src: "path/to/cover.jpg", title: "Book Title", author: "Author Name" %}
+#}
+
+<div class="book-thumbnail group {{ className or 'max-w-xs' }}">
+  {% if src %}
+    <div class="overflow-hidden rounded-lg shadow-md group-hover:shadow-lg transition-shadow">
+      {% thumbnail src, alt or (title + " by " + author), "book-cover w-full" %}
+    </div>
+  {% else %}
+    <div class="bg-gray-200 aspect-[3/4] rounded-lg flex items-center justify-center text-gray-500">
+      <i class="fas fa-book text-3xl"></i>
+    </div>
+  {% endif %}
+  
+  {% if title or author %}
+    <div class="mt-3 px-1">
+      {% if title %}
+        <h3 class="font-semibold text-gray-900 text-sm leading-tight line-clamp-2">{{ title }}</h3>
+      {% endif %}
+      {% if author %}
+        <p class="text-gray-600 text-xs mt-1">{{ author }}</p>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>

@@ -1,0 +1,12 @@
+{#
+  Optimized Image Component
+  Usage: {% include "components/optimized-image.njk", src: "path/to/image.jpg", alt: "Alt text", className: "css-classes" %}
+#}
+
+{% if src %}
+  {% image src, alt, sizes, className %}
+{% else %}
+  <div class="bg-gray-200 {{ className or 'w-full h-48' }} flex items-center justify-center text-gray-500">
+    <i class="fas fa-image text-2xl"></i>
+  </div>
+{% endif %}
