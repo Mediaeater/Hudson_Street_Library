@@ -1,0 +1,32 @@
+{#
+  Collection Hero Component
+  Usage: {% include "components/collection-hero.njk", image: "path/to/hero.jpg", title: "Collection Name", description: "Description" %}
+#}
+
+<section class="collection-hero {{ className or 'mb-12 md:mb-16 lg:mb-20' }}">
+  <div class="relative group">
+    <div class="aspect-[16/9] sm:aspect-[2/1] lg:aspect-[2.5/1] bg-gray-300 rounded-lg overflow-hidden shadow-lg">
+      {% if image %}
+        {% image image, title + " collection", "(min-width: 1024px) 80vw, 100vw", "w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105" %}
+      {% else %}
+        <div class="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
+          <div class="text-center text-gray-600">
+            <i class="fas fa-images text-4xl mb-2"></i>
+            <p class="text-lg font-medium">{{ title or "Collection" }}</p>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+    
+    {% if title or description %}
+      <div class="mt-6 px-2">
+        {% if title %}
+          <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">{{ title }}</h2>
+        {% endif %}
+        {% if description %}
+          <p class="text-base sm:text-lg text-gray-600 leading-relaxed">{{ description }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</section>
