@@ -221,7 +221,7 @@ function getPageSlug() {
 function initPage() {
   const path = window.location.pathname;
   
-  if (path.includes('collection-explore.html') || path.includes('curated-collections.html')) {
+  if (path.includes('collection-explore.html')) {
     // Collections page
     initCollectionsPage();
   } else if (path.includes('collections/')) {
