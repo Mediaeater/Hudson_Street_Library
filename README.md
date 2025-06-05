@@ -43,7 +43,9 @@ docs/                # Documentation
 ├── guides/         # How-to guides
 └── DEPLOYMENT.md   # Deployment instructions
 
-scripts/            # Utility scripts
+scripts/            # Utility scripts and automation
+├── image-pipeline/ # Automated image processing system
+└── news-pipeline/  # Automated news generation system
 .github/            # GitHub Actions workflows
 └── workflows/      # Automated build and deploy
 ```
@@ -94,6 +96,27 @@ Edit `src/_data/news.json` with the news item structure:
 2. Use existing templates as reference
 3. Commit and push - the site will build automatically
 
+### Using Automated Pipelines
+
+#### Image Pipeline
+```bash
+# Process new images
+node scripts/image-pipeline/cli.js upload --path ./new-images --recursive
+node scripts/image-pipeline/cli.js process
+
+# Find missing book covers
+node scripts/image-pipeline/cli.js find --missing --download --limit 10
+```
+
+#### News Pipeline
+```bash
+# Generate news for new book
+node scripts/news-pipeline/cli.js generate-single --title "Book Title" --author "Author"
+
+# Process CSV updates
+node scripts/news-pipeline/cli.js process-csv --file _data/books.csv
+```
+
 ## 🔧 Local Development
 
 ```bash
@@ -118,6 +141,9 @@ npm clean
 - **Fast Development**: Live reload during local development
 - **Modern Structure**: Organized source files in `src/` directory
 - **Comprehensive Docs**: Everything documented in `docs/`
+- **Image Pipeline**: Automated 4-stage image processing (Upload → API → Optimize → Categorize)
+- **News Pipeline**: Automated news generation for new book acquisitions
+- **Performance Optimized**: Responsive images with WebP format and lazy loading
 
 ## 🚨 Important Notes
 
@@ -127,6 +153,10 @@ npm clean
 4. **Images**: Referenced as `/assets/images/...` in HTML
 
 ## 📚 Documentation
+
+### Automated Systems
+- [Image System Documentation](IMAGE-SYSTEM-DOCUMENTATION.md) - Complete image pipeline and optimization
+- [News Pipeline Documentation](NEWS-PIPELINE-DOCUMENTATION.md) - Automated news generation system
 
 ### Deployment & Operations
 - [Deployment Guide](docs/DEPLOYMENT.md) - How deployment works
