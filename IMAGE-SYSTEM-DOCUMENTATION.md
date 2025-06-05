@@ -1,6 +1,6 @@
 # Hudson Street Library - Complete Image System Documentation
 
-This document provides comprehensive documentation for the complete image management system at Hudson Street Library, covering both the automated processing pipeline and the optimization system.
+This document provides comprehensive documentation for the complete image management system at Hudson Street Library, covering both the automated processing pipeline and the optimization system. Implemented in January 2025, this system transforms manual image management into an automated, intelligent, and scalable digital asset management platform.
 
 ## 🚀 Quick Start
 
@@ -212,6 +212,24 @@ Generates small thumbnails (150px, 300px) optimized for quick loading.
 ```
 
 ## 📁 File Organization
+
+### Recent Reorganization (January 2025)
+
+The fashion-related collections were restructured for better organization and discoverability:
+
+**Changes Made:**
+- Moved Comme des Garçons images from `/imgs/comme/` to `/imgs/fashion/comme-des-garcons/`
+- Moved Matsuda fashion catalog image to `/imgs/fashion/matsuda/`
+- Updated all HTML files with new image paths
+- Maintained all existing functionality while improving organization
+
+**Files Updated:**
+- `comme-des-garcons.html` (13 image references updated)
+- `matsuda-fashion-catalogs.html`
+- `collection-explore.html`
+- `index.html`
+- `test-image-optimization.html`
+- Various `_site/` output files
 
 ### Recommended Directory Structure
 

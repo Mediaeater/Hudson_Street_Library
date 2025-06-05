@@ -4,7 +4,14 @@ This document provides comprehensive documentation for the automated news genera
 
 ## Overview
 
-The news pipeline system automatically generates news items when books are added to the collection, creating a seamless workflow from book acquisition to public announcement. The system integrates with the existing CSV database and collection structure.
+The news pipeline system automatically generates news items when books are added to the collection, creating a seamless workflow from book acquisition to public announcement. Implemented in January 2025, this system integrates with the existing CSV database and collection structure to provide automated announcements for new acquisitions, collection updates, and library announcements.
+
+**Key Features Implemented:**
+- **7-Step Workflow**: Complete automation from database addition to site integration
+- **Smart Categorization**: Automatic collection detection based on book subjects and keywords
+- **Featured Logic**: Intelligent highlighting of significant acquisitions
+- **CLI Tools**: Comprehensive command-line interface for testing and manual operations
+- **Integration**: Seamless connection with existing Eleventy build process and GitHub Pages deployment
 
 ## System Architecture
 
