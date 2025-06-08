@@ -130,9 +130,6 @@ class ImageCategorizer {
   async categorizeByContent(imagePath, context = {}) {
     console.log(`🔍 Analyzing image content...`);
     
-    // This is a placeholder for future ML/AI-based image content analysis
-    // Could integrate with services like Google Cloud Vision, AWS Rekognition, etc.
-    
     try {
       // Check if image is in a specific directory that gives us hints
       const relativePath = path.relative(this.config.directories.assets, imagePath);
@@ -144,16 +141,154 @@ class ImageCategorizer {
         return pathParts[0];
       }
 
-      // TODO: Implement actual content analysis
-      // - OCR for text in images
-      // - Object detection
-      // - Style analysis
-      // - Color analysis
+      // Basic content analysis based on file characteristics
+      const contentHints = await this.analyzeImageCharacteristics(imagePath);
+      if (contentHints.length > 0) {
+        console.log(`🎨 Content analysis suggests: ${contentHints.join(', ')}`);
+        
+        // Return the first valid category found
+        for (const hint of contentHints) {
+          if (this.isValidCategory(hint)) {
+            return hint;
+          }
+        }
+      }
       
       return null;
       
     } catch (error) {
       console.log(`⚠️  Content analysis failed: ${error.message}`);
+      return null;
+    }
+  }
+
+  async analyzeImageCharacteristics(imagePath) {
+    const hints = [];
+    
+    try {
+      const stats = await fs.stat(imagePath);
+      const buffer = await fs.readFile(imagePath);
+      
+      // Basic file size and dimension analysis
+      const fileSize = stats.size;
+      const filename = path.basename(imagePath).toLowerCase();
+      
+      // Large files might be high-quality art/fashion images
+      if (fileSize > 5 * 1024 * 1024) { // > 5MB
+        hints.push('art', 'fashion');
+      }
+      
+      // Aspect ratio analysis (if we can get dimensions)
+      const dimensions = await this.getImageDimensions(buffer, imagePath);
+      if (dimensions) {
+        const aspectRatio = dimensions.width / dimensions.height;
+        
+        // Square or near-square images often album covers or fashion
+        if (aspectRatio >= 0.9 && aspectRatio <= 1.1) {
+          hints.push('music', 'fashion');
+        }
+        
+        // Wide landscape images might be NYC photography
+        if (aspectRatio > 1.5) {
+          hints.push('nyc', 'posters-and-paper');
+        }
+        
+        // Portrait orientation might be book covers
+        if (aspectRatio < 0.8) {
+          hints.push('books-on-books');
+        }
+        
+        // Very large images might be posters
+        if (dimensions.width > 2000 || dimensions.height > 2000) {
+          hints.push('posters-and-paper', 'art');
+        }
+      }
+      
+      // File naming pattern analysis
+      if (filename.includes('poster') || filename.includes('print')) {
+        hints.push('posters-and-paper');
+      }
+      
+      if (filename.includes('cover') || filename.includes('book')) {
+        hints.push('books-on-books');
+      }
+      
+      if (filename.includes('fashion') || filename.includes('style')) {
+        hints.push('fashion');
+      }
+      
+      if (filename.includes('nyc') || filename.includes('newyork') || filename.includes('manhattan')) {
+        hints.push('nyc');
+      }
+      
+      if (filename.includes('music') || filename.includes('album') || filename.includes('concert')) {
+        hints.push('music');
+      }
+      
+      if (filename.includes('collage') || filename.includes('mixed')) {
+        hints.push('collage');
+      }
+      
+      if (filename.includes('art') || filename.includes('gallery')) {
+        hints.push('art');
+      }
+      
+      if (filename.includes('queer') || filename.includes('lgbt') || filename.includes('pride')) {
+        hints.push('queer');
+      }
+      
+      return [...new Set(hints)]; // Remove duplicates
+      
+    } catch (error) {
+      console.log(`⚠️  Image characteristics analysis failed: ${error.message}`);
+      return [];
+    }
+  }
+
+  async getImageDimensions(buffer, imagePath) {
+    try {
+      const ext = path.extname(imagePath).toLowerCase();
+      
+      if (ext === '.jpg' || ext === '.jpeg') {
+        return this.extractJPEGDimensions(buffer);
+      }
+      
+      if (ext === '.png') {
+        return this.extractPNGDimensions(buffer);
+      }
+      
+      return null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  extractJPEGDimensions(buffer) {
+    try {
+      for (let i = 0; i < buffer.length - 4; i++) {
+        if (buffer[i] === 0xFF && (buffer[i + 1] === 0xC0 || buffer[i + 1] === 0xC2)) {
+          const height = buffer.readUInt16BE(i + 5);
+          const width = buffer.readUInt16BE(i + 7);
+          return { width, height };
+        }
+      }
+      return null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  extractPNGDimensions(buffer) {
+    try {
+      if (buffer.length >= 24 && 
+          buffer[0] === 0x89 && buffer[1] === 0x50 && 
+          buffer[2] === 0x4E && buffer[3] === 0x47) {
+        const width = buffer.readUInt32BE(16);
+        const height = buffer.readUInt32BE(20);
+        return { width, height };
+      }
+      return null;
+    } catch (error) {
       return null;
     }
   }

@@ -147,9 +147,9 @@ npm clean
 
 ## 🚨 Important Notes
 
-1. **Do NOT commit the `_site/` directory** - it's automatically built
-2. **GitHub Pages Source**: Must be set to "GitHub Actions" in repository settings
-3. **All source files**: Now live in the `src/` directory
+1. **The `_site/` directory is automatically built** by GitHub Actions - no manual building required
+2. **GitHub Pages Source**: Must be set to "GitHub Actions" in repository settings  
+3. **All source files**: Live in the `src/` directory
 4. **Images**: Referenced as `/assets/images/...` in HTML
 
 ## 📚 Documentation

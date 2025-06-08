@@ -112,10 +112,26 @@
                 <div class="md:col-span-1">
                     <div class="sticky top-28"> <!-- Sticky positioning for cover -->
                         <div class="aspect-[3/4] bg-gray-200 rounded-md shadow-lg overflow-hidden">
-                            <!-- Image path using 'IMAGE' column -->
-                            <img src="/imgs/books/{{ book.IMAGE }}"
-                                 alt="Cover of {{ book.Title }}"
-                                 class="w-full h-full object-cover">
+                            {% if book.Image and book.Image.trim() %}
+                                <!-- Image using corrected path -->
+                                <img src="/assets/images/books/{{ book.Image }}"
+                                     alt="Cover of {{ book.Title | escape }}"
+                                     class="w-full h-full object-cover"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <!-- Fallback content for missing images -->
+                                <div class="w-full h-full flex flex-col items-center justify-center text-gray-500 bg-gray-100" style="display:none;">
+                                    <i class="fas fa-book text-4xl mb-2"></i>
+                                    <p class="text-sm text-center px-4">{{ book.Title | escape }}</p>
+                                    <p class="text-xs text-gray-400 mt-1">{{ book['Author, First'] }} {{ book['Author, Last'] }}</p>
+                                </div>
+                            {% else %}
+                                <!-- No image available - show placeholder -->
+                                <div class="w-full h-full flex flex-col items-center justify-center text-gray-500 bg-gray-100">
+                                    <i class="fas fa-book text-4xl mb-2"></i>
+                                    <p class="text-sm text-center px-4">{{ book.Title | escape }}</p>
+                                    <p class="text-xs text-gray-400 mt-1">{{ book['Author, First'] }} {{ book['Author, Last'] }}</p>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -164,7 +180,7 @@
                      <div class="mt-8 pt-6 border-t border-gray-200">
                          <h3 class="text-2xl font-semibold title-font mb-3">Summary</h3>
                          <div class="prose max-w-none text-gray-700 leading-relaxed">
-                            {{ book.Summary | safe }} {# Use | safe if summary might contain HTML #}
+                            {{ book.Summary | escape }} {# Remove | safe to prevent XSS attacks #}
                          </div>
                      </div>
                      {% endif %}
