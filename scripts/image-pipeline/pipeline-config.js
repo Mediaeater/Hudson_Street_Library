@@ -1,5 +1,6 @@
 // Image Pipeline Configuration
 const path = require('path');
+const collectionsConfig = require('../shared/collections-config');
 
 module.exports = {
   // Directory structure
@@ -11,25 +12,8 @@ module.exports = {
     thumbnails: path.join(__dirname, '../../_site/assets/images/thumbnails')
   },
 
-  // Collection mapping for automatic categorization
-  collections: {
-    'art': ['art', 'painting', 'sculpture', 'gallery', 'exhibition'],
-    'black-photographers': ['black', 'african', 'diaspora', 'civil rights'],
-    'books-on-books': ['bibliography', 'meta', 'publishing', 'book design'],
-    'collage': ['collage', 'assemblage', 'mixed media', 'photomontage'],
-    'ephemera': ['ephemera', 'postcards', 'invitations', 'flyers'],
-    'fashion': ['fashion', 'style', 'clothing', 'runway', 'designer'],
-    'fashion/comme-des-garcons': ['comme', 'rei kawakubo', 'cdg', 'six magazine'],
-    'fashion/matsuda': ['matsuda', 'japanese fashion'],
-    'music': ['music', 'concert', 'album', 'musician', 'band'],
-    'music-photobooks': ['music photography', 'concert photography'],
-    'nyc': ['new york', 'manhattan', 'brooklyn', 'nyc', 'urban'],
-    'posters-and-paper': ['poster', 'print', 'graphic design', 'announcement'],
-    'queer': ['lgbt', 'queer', 'gay', 'lesbian', 'trans', 'pride'],
-    'recently-added': [],
-    'small-books-big-images': ['large format', 'oversized'],
-    'woman-viewing-woman': ['female', 'women', 'feminist', 'gender']
-  },
+  // Collection mapping from shared configuration
+  collections: collectionsConfig.collections,
 
   // Image optimization settings
   optimization: {

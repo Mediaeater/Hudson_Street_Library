@@ -1,6 +1,7 @@
 // Automated News Generation System
 const fs = require('fs').promises;
 const path = require('path');
+const collectionsConfig = require('../shared/collections-config');
 
 class NewsGenerator {
   constructor(config = {}) {
@@ -216,38 +217,15 @@ class NewsGenerator {
   inferCollection(bookData) {
     const { subjects, title, author_last_name, summary } = bookData;
     
-    // Collection inference logic
+    // Collection inference logic using shared collections config
     const allText = [
       title || '',
       author_last_name || '',
       (subjects || []).join(' '),
       summary || ''
-    ].join(' ').toLowerCase();
+    ].join(' ');
 
-    // Collection keyword mapping (reuse from pipeline config)
-    const collections = {
-      'art': ['art', 'painting', 'sculpture', 'gallery', 'exhibition'],
-      'black-photographers': ['black', 'african', 'diaspora', 'civil rights'],
-      'books-on-books': ['bibliography', 'meta', 'publishing', 'book design'],
-      'collage': ['collage', 'assemblage', 'mixed media', 'photomontage'],
-      'fashion': ['fashion', 'style', 'clothing', 'runway', 'designer'],
-      'comme-des-garcons': ['comme', 'rei kawakubo', 'cdg', 'six magazine'],
-      'matsuda-fashion': ['matsuda', 'japanese fashion'],
-      'music': ['music', 'concert', 'album', 'musician', 'band'],
-      'music-photobooks': ['music photography', 'concert photography'],
-      'nyc': ['new york', 'manhattan', 'brooklyn', 'nyc', 'urban'],
-      'posters-and-paper': ['poster', 'print', 'graphic design', 'announcement'],
-      'queer': ['lgbt', 'queer', 'gay', 'lesbian', 'trans', 'pride'],
-      'woman-viewing-woman': ['female', 'women', 'feminist', 'gender']
-    };
-
-    for (const [collection, keywords] of Object.entries(collections)) {
-      if (keywords.some(keyword => allText.includes(keyword))) {
-        return collection;
-      }
-    }
-
-    return 'general';
+    return collectionsConfig.inferCollection(allText);
   }
 
   formatAuthorName(firstName, lastName) {

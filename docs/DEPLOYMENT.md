@@ -18,9 +18,9 @@ The Hudson Street Library website is now deployed using GitHub Actions and GitHu
 
 ## Important Notes
 
-- The `_site/` directory is **no longer tracked in git**
-- All builds happen automatically in GitHub Actions
-- The site is served from the GitHub Pages environment
+- The `_site/` directory is **automatically built by GitHub Actions**
+- No manual building or committing of built files required
+- The site is served directly from GitHub Pages environment
 
 ## Local Development
 
@@ -73,9 +73,10 @@ You can monitor deployments:
 
 1. **Clean Repository**: No built files in version control
 2. **Automated Builds**: No manual building required
-3. **Consistency**: Same build process for everyone
+3. **Consistency**: Same build process for everyone  
 4. **History**: Can see build logs and deployment history
 5. **Rollback**: Easy to revert to previous versions
+6. **Zero Maintenance**: Push changes and GitHub handles the rest
 
 ## Custom Domain (if applicable)
 

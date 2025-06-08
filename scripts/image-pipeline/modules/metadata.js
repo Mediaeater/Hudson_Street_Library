@@ -30,8 +30,15 @@ class MetadataProcessor {
       const filenameMetadata = this.extractFromFilename(imagePath);
       Object.assign(metadata, filenameMetadata);
 
-      // TODO: Add EXIF extraction for more detailed metadata
-      // This would require an EXIF library like 'exifr' or 'piexifjs'
+      // Extract EXIF data if available
+      try {
+        const exifData = await this.extractEXIF(imagePath);
+        if (exifData) {
+          Object.assign(metadata, exifData);
+        }
+      } catch (error) {
+        console.log(`⚠️  EXIF extraction failed: ${error.message}`);
+      }
       
       console.log(`✅ Extracted basic metadata`);
       return metadata;
@@ -185,6 +192,78 @@ class MetadataProcessor {
 
     console.log(`✅ Metadata enriched with book data`);
     return enriched;
+  }
+
+  async extractEXIF(imagePath) {
+    // Basic EXIF extraction without external dependencies
+    // This is a simplified implementation - a full EXIF library would be better
+    try {
+      const stats = await fs.stat(imagePath);
+      const buffer = await fs.readFile(imagePath);
+      
+      const exifData = {
+        exif: {}
+      };
+      
+      // Basic image dimensions extraction for JPEG
+      if (path.extname(imagePath).toLowerCase() === '.jpg' || 
+          path.extname(imagePath).toLowerCase() === '.jpeg') {
+        const dimensions = this.extractJPEGDimensions(buffer);
+        if (dimensions) {
+          exifData.dimensions = dimensions;
+          exifData.exif.imageWidth = dimensions.width;
+          exifData.exif.imageHeight = dimensions.height;
+        }
+      }
+      
+      // Basic PNG dimensions
+      if (path.extname(imagePath).toLowerCase() === '.png') {
+        const dimensions = this.extractPNGDimensions(buffer);
+        if (dimensions) {
+          exifData.dimensions = dimensions;
+          exifData.exif.imageWidth = dimensions.width;
+          exifData.exif.imageHeight = dimensions.height;
+        }
+      }
+      
+      return exifData;
+      
+    } catch (error) {
+      console.log(`⚠️  Basic image info extraction failed: ${error.message}`);
+      return null;
+    }
+  }
+
+  extractJPEGDimensions(buffer) {
+    try {
+      // Look for SOF (Start of Frame) markers in JPEG
+      for (let i = 0; i < buffer.length - 4; i++) {
+        if (buffer[i] === 0xFF && (buffer[i + 1] === 0xC0 || buffer[i + 1] === 0xC2)) {
+          const height = buffer.readUInt16BE(i + 5);
+          const width = buffer.readUInt16BE(i + 7);
+          return { width, height };
+        }
+      }
+      return null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  extractPNGDimensions(buffer) {
+    try {
+      // PNG signature check
+      if (buffer.length >= 24 && 
+          buffer[0] === 0x89 && buffer[1] === 0x50 && 
+          buffer[2] === 0x4E && buffer[3] === 0x47) {
+        const width = buffer.readUInt32BE(16);
+        const height = buffer.readUInt32BE(20);
+        return { width, height };
+      }
+      return null;
+    } catch (error) {
+      return null;
+    }
   }
 
   extractYearFromDate(dateString) {

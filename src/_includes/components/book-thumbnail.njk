@@ -1,27 +1,82 @@
 {#
-  Book Thumbnail Component
-  Usage: {% include "components/book-thumbnail.njk", src: "path/to/cover.jpg", title: "Book Title", author: "Author Name" %}
+  Enhanced Book Thumbnail Component with XSS protection and fallbacks
+  Usage: {% include "components/book-thumbnail.njk", book: bookData, size: "medium" %}
+  Parameters:
+  - book: Book object from CSV
+  - size: "small", "medium", "large" (optional, defaults to medium)
+  - className: Additional CSS classes (optional)
 #}
 
-<div class="book-thumbnail group {{ className or 'max-w-xs' }}">
-  {% if src %}
-    <div class="overflow-hidden rounded-lg shadow-md group-hover:shadow-lg transition-shadow">
-      {% thumbnail src, alt or (title + " by " + author), "book-cover w-full" %}
-    </div>
-  {% else %}
-    <div class="bg-gray-200 aspect-[3/4] rounded-lg flex items-center justify-center text-gray-500">
-      <i class="fas fa-book text-3xl"></i>
-    </div>
-  {% endif %}
+{% set thumbnailSize = size or 'medium' %}
+{% set bookTitle = book.Title or book.title or 'Untitled' %}
+{% set bookAuthor = (book['Author, First'] + ' ' + book['Author, Last']) if book['Author, First'] or book['Author, Last'] else (book.author or '') %}
+{% set imageField = book.Image or book.cover_image %}
+
+{% if thumbnailSize == 'small' %}
+  {% set containerClass = 'w-20 h-24' %}
+  {% set iconSize = 'text-lg' %}
+  {% set titleSize = 'text-xs' %}
+{% elif thumbnailSize == 'large' %}
+  {% set containerClass = 'w-48 h-64' %}
+  {% set iconSize = 'text-4xl' %}
+  {% set titleSize = 'text-sm' %}
+{% else %}
+  {% set containerClass = 'w-32 h-40' %}
+  {% set iconSize = 'text-2xl' %}
+  {% set titleSize = 'text-xs' %}
+{% endif %}
+
+<div class="book-thumbnail group {{ className or '' }}">
+  <div class="relative {{ containerClass }} bg-gray-200 rounded-lg overflow-hidden shadow-md group-hover:shadow-lg transition-shadow">
+    {% if imageField and imageField.trim() %}
+      <!-- Image with multiple fallback paths -->
+      <img src="/assets/images/books/{{ imageField | escape }}" 
+           alt="Cover of {{ bookTitle | escape }}"
+           class="w-full h-full object-cover"
+           onerror="handleImageError(this, '{{ imageField | escape }}', '{{ bookTitle | escape }}', '{{ bookAuthor | escape }}')">
+    {% else %}
+      <!-- No image - styled placeholder -->
+      <div class="w-full h-full flex flex-col items-center justify-center text-gray-500 bg-gray-100 p-2">
+        <i class="fas fa-book {{ iconSize }} mb-1"></i>
+        <p class="{{ titleSize }} text-center leading-tight px-1">{{ bookTitle | escape | truncate(25) }}</p>
+        {% if bookAuthor %}
+          <p class="text-xs text-gray-400 mt-1 text-center">{{ bookAuthor | escape | truncate(20) }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
   
-  {% if title or author %}
-    <div class="mt-3 px-1">
-      {% if title %}
-        <h3 class="font-semibold text-gray-900 text-sm leading-tight line-clamp-2">{{ title }}</h3>
-      {% endif %}
-      {% if author %}
-        <p class="text-gray-600 text-xs mt-1">{{ author }}</p>
+  {% if showMeta != false %}
+    <div class="mt-2 px-1">
+      <h3 class="{{ titleSize }} font-medium text-gray-900 leading-tight line-clamp-2">{{ bookTitle | escape }}</h3>
+      {% if bookAuthor %}
+        <p class="text-xs text-gray-600 mt-1">{{ bookAuthor | escape }}</p>
       {% endif %}
     </div>
   {% endif %}
 </div>
+
+<script>
+// Handle image loading errors with multiple fallback attempts
+function handleImageError(img, filename, title, author) {
+  if (!img.dataset.attempted) {
+    // First fallback: try covers directory
+    img.dataset.attempted = 'covers';
+    img.src = `/assets/images/covers/${filename}`;
+  } else if (img.dataset.attempted === 'covers') {
+    // Second fallback: try assets root
+    img.dataset.attempted = 'assets';
+    img.src = `/assets/images/${filename}`;
+  } else {
+    // Final fallback: show placeholder
+    img.style.display = 'none';
+    img.parentNode.innerHTML = `
+      <div class="w-full h-full flex flex-col items-center justify-center text-gray-500 bg-gray-100 p-2">
+        <i class="fas fa-book text-2xl mb-1"></i>
+        <p class="text-xs text-center leading-tight px-1">${title}</p>
+        ${author ? `<p class="text-xs text-gray-400 mt-1 text-center">${author}</p>` : ''}
+      </div>
+    `;
+  }
+}
+</script>
