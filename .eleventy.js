@@ -107,8 +107,9 @@ module.exports = function(eleventyConfig) {
   // Copy entire assets directory (images, js, css)
   eleventyConfig.addPassthroughCopy("src/assets");
   
-  // Copy data files for search functionality (commented out - data moved to src/_data)
-  // eleventyConfig.addPassthroughCopy("data");
+  // Copy data files for search functionality
+  eleventyConfig.addPassthroughCopy({"src/_data/books.csv": "cms/data/books.csv"});
+  eleventyConfig.addPassthroughCopy({"data": "data"});
   
   // Copy CNAME for GitHub Pages
   eleventyConfig.addPassthroughCopy("CNAME");
