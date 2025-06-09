@@ -22,6 +22,27 @@
             transition: width .3s;
         }
         .nav-item:hover::after { width: 100%; }
+        
+        .line-clamp-1 {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
     </style>
 </head>
 <body class="bg-white text-neutral-800">
@@ -105,6 +126,24 @@
                 </div>
             </div>
             
+            <!-- Additional Filters Row -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                    <label for="cover-filter" class="block text-sm font-medium text-neutral-700 mb-2">Cover Availability</label>
+                    <select id="cover-filter" class="w-full px-3 py-2 border border-neutral-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+                        <option value="">All Books</option>
+                        <option value="with-covers">Books with Covers</option>
+                        <option value="without-covers">Books without Covers</option>
+                    </select>
+                </div>
+                <div class="flex items-end">
+                    <label class="flex items-center space-x-2 text-sm">
+                        <input type="checkbox" id="visual-browse" class="rounded border-neutral-300 text-teal-600 focus:ring-teal-500">
+                        <span class="text-neutral-700">Visual Browse Mode</span>
+                    </label>
+                </div>
+            </div>
+            
             <div class="mt-4 flex justify-between items-center">
                 <button id="clear-filters" class="text-sm text-teal-700 hover:text-teal-900 underline">
                     Clear all filters
@@ -147,8 +186,10 @@ class BookSearch {
         this.filters = {
             publisher: '',
             year: '',
-            collection: ''
+            collection: '',
+            cover: ''
         };
+        this.visualBrowse = false;
         this.sortBy = 'title';
         
         this.init();
@@ -296,6 +337,8 @@ class BookSearch {
         const publisherFilter = document.getElementById('publisher-filter');
         const yearFilter = document.getElementById('year-filter');
         const collectionFilter = document.getElementById('collection-filter');
+        const coverFilter = document.getElementById('cover-filter');
+        const visualBrowseCheckbox = document.getElementById('visual-browse');
         const clearFilters = document.getElementById('clear-filters');
         const prevPage = document.getElementById('prev-page');
         const nextPage = document.getElementById('next-page');
@@ -326,6 +369,17 @@ class BookSearch {
         collectionFilter.addEventListener('change', (e) => {
             this.filters.collection = e.target.value;
             this.currentPage = 1;
+            this.performSearch();
+        });
+        
+        coverFilter.addEventListener('change', (e) => {
+            this.filters.cover = e.target.value;
+            this.currentPage = 1;
+            this.performSearch();
+        });
+        
+        visualBrowseCheckbox.addEventListener('change', (e) => {
+            this.visualBrowse = e.target.checked;
             this.performSearch();
         });
         
@@ -384,9 +438,12 @@ class BookSearch {
         document.getElementById('publisher-filter').value = '';
         document.getElementById('year-filter').value = '';
         document.getElementById('collection-filter').value = '';
+        document.getElementById('cover-filter').value = '';
+        document.getElementById('visual-browse').checked = false;
         
         this.searchTerm = '';
-        this.filters = { publisher: '', year: '', collection: '' };
+        this.filters = { publisher: '', year: '', collection: '', cover: '' };
+        this.visualBrowse = false;
         this.sortBy = 'title';
         this.currentPage = 1;
         this.performSearch();
@@ -422,6 +479,17 @@ class BookSearch {
             // Collection filter
             if (this.filters.collection && book.collection_grouping !== this.filters.collection) {
                 return false;
+            }
+            
+            // Cover availability filter
+            if (this.filters.cover) {
+                const hasCover = this.generateCoverImagePath(book) !== '/assets/images/placeholder-book.svg';
+                if (this.filters.cover === 'with-covers' && !hasCover) {
+                    return false;
+                }
+                if (this.filters.cover === 'without-covers' && hasCover) {
+                    return false;
+                }
             }
             
             return true;
@@ -476,11 +544,77 @@ class BookSearch {
             return;
         }
         
-        resultsContainer.innerHTML = pageBooks.map(book => this.renderBookCard(book)).join('');
+        if (this.visualBrowse) {
+            resultsContainer.innerHTML = this.renderVisualGrid(pageBooks);
+        } else {
+            resultsContainer.innerHTML = pageBooks.map(book => this.renderBookCard(book)).join('');
+        }
     }
     
+    renderVisualGrid(books) {
+        return `
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                ${books.map(book => this.renderVisualCard(book)).join('')}
+            </div>
+        `;
+    }
+    
+    renderVisualCard(book) {
+        const imageUrl = this.generateCoverImagePath(book);
+        const hasRealCover = imageUrl !== '/assets/images/placeholder-book.svg';
+        const author = (book.author_full_name && book.author_full_name !== 'NULL') ? book.author_full_name : 'Unknown Author';
+        
+        return `
+            <div class="group cursor-pointer" onclick="this.classList.toggle('expanded')">
+                <div class="aspect-[3/4] relative overflow-hidden rounded-lg border ${hasRealCover ? 'border-neutral-200 shadow-sm' : 'border-neutral-100'}">
+                    <img src="${imageUrl}" 
+                         alt="${this.escapeHtml(book.title)}"
+                         class="w-full h-full object-cover ${hasRealCover ? '' : 'opacity-40'} group-hover:scale-105 transition-transform duration-300"
+                         onerror="this.src='/assets/images/placeholder-book.svg'"
+                         loading="lazy">
+                    ${hasRealCover ? '' : '<div class="absolute inset-0 flex items-center justify-center bg-neutral-50 bg-opacity-80"><i class="fas fa-book text-neutral-400 text-2xl"></i></div>'}
+                </div>
+                <div class="mt-2 text-center">
+                    <h4 class="text-sm font-medium text-neutral-900 line-clamp-2 group-hover:text-teal-700 transition-colors">
+                        ${this.escapeHtml(book.title.length > 40 ? book.title.substring(0, 40) + '...' : book.title)}
+                    </h4>
+                    <p class="text-xs text-neutral-600 mt-1 line-clamp-1">
+                        ${this.escapeHtml(author.length > 30 ? author.substring(0, 30) + '...' : author)}
+                    </p>
+                    ${book.publication_year && book.publication_year !== 'NULL' ? `<p class="text-xs text-neutral-500 mt-1">${book.publication_year}</p>` : ''}
+                </div>
+            </div>
+        `;
+    }
+    
+    generateCoverImagePath(book) {
+        // First check if book already has a valid image_url
+        if (book.image_url && 
+            book.image_url !== 'NULL' && 
+            book.image_url !== '' && 
+            book.image_url !== null &&
+            book.image_url !== 'null') {
+            return book.image_url;
+        }
+        
+        // Generate cover path from acquired images using the same naming convention
+        // as our acquisition script: Author_Title_ISBN.jpg
+        const author = (book.author_full_name || book.author_last || 'Unknown').replace(/[^a-zA-Z0-9.-]/g, '_');
+        const title = (book.title || 'Untitled').replace(/[^a-zA-Z0-9.-]/g, '_');
+        const isbn = (book.isbn_asin || '').replace(/[^a-zA-Z0-9.-]/g, '_');
+        
+        if (isbn && isbn !== 'NULL' && isbn !== '') {
+            const coverFileName = `${author}_${title}_${isbn}`.replace(/_+/g, '_').replace(/^_|_$/g, '').substring(0, 100) + '.jpg';
+            return `/assets/images/books/${coverFileName}`;
+        }
+        
+        // Fallback to placeholder
+        return '/assets/images/placeholder-book.svg';
+    }
+
     renderBookCard(book) {
-        const imageUrl = book.image_url || '/assets/images/placeholder-book.svg';
+        const imageUrl = this.generateCoverImagePath(book);
+        const hasRealCover = imageUrl !== '/assets/images/placeholder-book.svg';
         
         // Fix price formatting - handle NULL and empty values
         let price = '';
@@ -500,11 +634,13 @@ class BookSearch {
         return `
             <div class="bg-white border border-neutral-200 rounded-lg p-6 hover:shadow-md transition-shadow">
                 <div class="flex flex-col md:flex-row gap-6">
-                    <div class="md:w-32 md:flex-shrink-0">
+                    <div class="md:w-32 md:flex-shrink-0 relative">
                         <img src="${imageUrl}" 
                              alt="${this.escapeHtml(book.title)}"
-                             class="w-full h-40 md:h-48 object-cover rounded border"
-                             onerror="this.src='/assets/images/placeholder-book.svg'">
+                             class="w-full h-40 md:h-48 object-cover rounded border ${hasRealCover ? 'shadow-sm' : 'opacity-50'}"
+                             onerror="this.src='/assets/images/placeholder-book.svg'"
+                             loading="lazy">
+                        ${hasRealCover ? '<div class="absolute top-2 right-2 bg-teal-600 text-white text-xs px-2 py-1 rounded opacity-75">Cover Available</div>' : ''}
                     </div>
                     <div class="flex-1">
                         <h3 class="text-xl font-semibold text-teal-900 mb-2">
