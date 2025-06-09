@@ -124,6 +124,67 @@
         @media (min-width: 769px) {
             .mobile-nav-button { display: none; }
         }
+
+        /* Lightbox Styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox.active {
+            display: flex;
+            opacity: 1;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .lightbox-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            background: none;
+            border: none;
+            transition: color 0.3s ease;
+        }
+
+        .lightbox-close:hover {
+            color: #ccc;
+        }
+
+        .lightbox-caption {
+            position: absolute;
+            bottom: -40px;
+            left: 0;
+            right: 0;
+            color: white;
+            text-align: center;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
@@ -132,14 +193,14 @@
     <header class="sticky top-0 w-full bg-white z-50 py-4 shadow-md">
         <div class="container mx-auto px-6">
             <div class="flex justify-between items-center">
-                <a href="/" class="text-xl sm:text-2xl font-bold tracking-tight text-teal-900">HUDSON STREET LIBRARY</a>
+                <a href="../../../../index.html" class="text-xl sm:text-2xl font-bold tracking-tight text-teal-900">HUDSON STREET LIBRARY</a>
                 <nav class="desktop-nav hidden md:flex space-x-6 lg:space-x-8 items-center text-neutral-700 text-sm lg:text-base">
-                    <a href="../index.html#about" class="nav-item hover:text-teal-700">About</a>
-                    <a href="/collection-explore.html" class="nav-item hover:text-teal-700">Collections</a>
-                    <a href="../static-demo.html" class="nav-item hover:text-teal-700">Search</a>
-                    <a href="../index.html#publications" class="nav-item hover:text-teal-700">Publications</a>
-                    <a href="../news.html" class="nav-item hover:text-teal-700">News</a>
-                    <a href="../index.html#contact" class="nav-item hover:text-teal-700">Contact</a>
+                    <a href="../../../../index.html#about" class="nav-item hover:text-teal-700">About</a>
+                    <a href="../../../../collection-explore.html" class="nav-item hover:text-teal-700">Collections</a>
+                    <a href="../../../../static-demo.html" class="nav-item hover:text-teal-700">Search</a>
+                    <a href="../../../../index.html#publications" class="nav-item hover:text-teal-700">Publications</a>
+                    <a href="../../../../news.html" class="nav-item hover:text-teal-700">News</a>
+                    <a href="../../../../index.html#contact" class="nav-item hover:text-teal-700">Contact</a>
                 </nav>
                 <button class="mobile-nav-button md:hidden focus:outline-none text-teal-800" aria-label="Toggle menu">
                     <i class="fas fa-bars text-xl"></i>
@@ -148,12 +209,12 @@
             <!-- Mobile Menu -->
             <nav class="mobile-menu">
                 <div class="px-6 py-4 space-y-3">
-                    <a href="../index.html#about" class="block py-2 text-neutral-700 hover:text-teal-700">About</a>
-                    <a href="/collection-explore.html" class="block py-2 text-neutral-700 hover:text-teal-700">Collections</a>
-                    <a href="../static-demo.html" class="block py-2 text-neutral-700 hover:text-teal-700">Search</a>
-                    <a href="../index.html#publications" class="block py-2 text-neutral-700 hover:text-teal-700">Publications</a>
-                    <a href="../news.html" class="block py-2 text-neutral-700 hover:text-teal-700">News</a>
-                    <a href="../index.html#contact" class="block py-2 text-neutral-700 hover:text-teal-700">Contact</a>
+                    <a href="../../../../index.html#about" class="block py-2 text-neutral-700 hover:text-teal-700">About</a>
+                    <a href="../../../../collection-explore.html" class="block py-2 text-neutral-700 hover:text-teal-700">Collections</a>
+                    <a href="../../../../static-demo.html" class="block py-2 text-neutral-700 hover:text-teal-700">Search</a>
+                    <a href="../../../../index.html#publications" class="block py-2 text-neutral-700 hover:text-teal-700">Publications</a>
+                    <a href="../../../../news.html" class="block py-2 text-neutral-700 hover:text-teal-700">News</a>
+                    <a href="../../../../index.html#contact" class="block py-2 text-neutral-700 hover:text-teal-700">Contact</a>
                 </div>
             </nav>
         </div>
@@ -162,32 +223,59 @@
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 max-w-7xl">
         <!-- Breadcrumb -->
         <nav class="breadcrumb mb-6" aria-label="Breadcrumb">
-            <a href="/">Home</a> / 
-            <a href="/collection-explore.html">Collections</a> / 
+            <a href="../../../../index.html">Home</a> / 
+            <a href="../../../../collection-explore.html">Collections</a> / 
             <span class="text-gray-500">Physique</span>
         </nav>
 
         <!-- Back Button -->
-        <a href="/collection-explore.html" class="back-button mb-8">
+        <a href="../../../../collection-explore.html" class="back-button mb-8">
             <i class="fas fa-arrow-left"></i>
             <span>Back to Collections</span>
         </a>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-            <!-- Left Column: Book Cover -->
+            <!-- Left Column: Book Cover and Images -->
             <div class="book-cover-section">
-                <img src="/assets/images/queer/vince-aletti-physique.jpg" 
-                     alt="Physique by Vince Aletti book cover" 
-                     class="w-full rounded-lg shadow-xl object-cover">
+                <!-- Main Book Cover -->
+                <div class="mb-8">
+                    <img src="/assets/images/queer/vince-aletti-physique.jpg" 
+                         alt="Physique by Vince Aletti book cover" 
+                         class="w-full rounded-lg shadow-xl object-cover cursor-pointer"
+                         onclick="openLightbox('/assets/images/queer/vince-aletti-physique.jpg', this.alt)"
+                         loading="lazy">
+                </div>
+                
+                <!-- Additional Images Gallery -->
+                <div class="space-y-4">
+                    <h4 class="text-lg font-semibold text-gray-800 text-center">Additional Views</h4>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="aspect-[3/4] overflow-hidden rounded-lg shadow-lg">
+                            <img src="/assets/images/queer/vince-aletti-physique-ver.jpg" 
+                                 alt="Physique by Vince Aletti - interior pages" 
+                                 class="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
+                                 onclick="openLightbox('/assets/images/queer/vince-aletti-physique-ver.jpg', this.alt)"
+                                 loading="lazy">
+                        </div>
+                        <div class="aspect-[3/4] overflow-hidden rounded-lg shadow-lg">
+                            <img src="/assets/images/queer/vince-aletti-physique-ver-verso.jpg" 
+                                 alt="Physique by Vince Aletti - back cover and spine" 
+                                 class="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
+                                 onclick="openLightbox('/assets/images/queer/vince-aletti-physique-ver-verso.jpg', this.alt)"
+                                 loading="lazy">
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 text-center italic">Click on any image to view larger</p>
+                </div>
                 
                 <!-- Collections Links -->
-                <div class="mt-6 text-center">
+                <div class="mt-8 text-center">
                     <p class="text-sm text-gray-600 mb-2">Part of these collections:</p>
-                    <a href="../../../collections/queering-the-collection.html" class="collection-link">
+                    <a href="../../../../collections/queering-the-collection.html" class="collection-link">
                         <i class="fas fa-folder-open mr-1"></i>Queering the Collection
                     </a>
                     <br>
-                    <a href="../../../collections/art-books-collection.html" class="collection-link">
+                    <a href="../../../../collections/art-books-collection.html" class="collection-link">
                         <i class="fas fa-folder-open mr-1"></i>Art Books Collection
                     </a>
                 </div>
@@ -210,6 +298,8 @@
                             <p><span class="details-label">Format:</span>Embossed flexibound</p>
                             <p><span class="details-label">Dimensions:</span>25 x 30 cm</p>
                             <p><span class="details-label">Pages:</span>224 pages</p>
+                            <p><span class="details-label">Library Edition:</span><span class="text-teal-700 font-medium">Regular & Special Edition</span></p>
+                            <p><span class="details-label">Condition:</span>Both copies inscribed and dated, NYC</p>
                         </div>
                     </div>
 
@@ -226,30 +316,58 @@
                     <!-- Related Books by Author -->
                     <div>
                         <h3 class="detail-section-title text-lg font-semibold text-gray-800">Other Books by Vince Aletti in Our Collection</h3>
-                        <div class="space-y-3">
-                            <div class="border-l-4 border-teal-700 pl-4 py-2 hover:bg-gray-50 transition-colors">
-                                <a href="#" class="block">
-                                    <h4 class="font-semibold text-gray-800 hover:text-teal-700">The Drawer</h4>
-                                    <p class="text-sm text-gray-600">A collection exploring personal archives and intimate collections</p>
-                                </a>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-start space-x-3">
+                                    <img src="/assets/images/queer/vince-aletti-the-drawer-cover.jpg" 
+                                         alt="The Drawer by Vince Aletti cover" 
+                                         class="w-16 h-20 object-cover rounded shadow-sm flex-shrink-0"
+                                         loading="lazy">
+                                    <div class="flex-1">
+                                        <h4 class="font-semibold text-gray-800 hover:text-teal-700 mb-1">The Drawer</h4>
+                                        <p class="text-xs text-gray-600 mb-1">Self Publish, Be Happy, 2022</p>
+                                        <p class="text-sm text-gray-600">Visual diary of ephemera and tearsheets from Aletti's collection</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="border-l-4 border-teal-700 pl-4 py-2 hover:bg-gray-50 transition-colors">
-                                <a href="#" class="block">
-                                    <h4 class="font-semibold text-gray-800 hover:text-teal-700">Male</h4>
-                                    <p class="text-sm text-gray-600">Photography celebrating masculinity and male form</p>
-                                </a>
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-start space-x-3">
+                                    <img src="/assets/images/queer/vince-aletti-male-cover.jpg" 
+                                         alt="Male by Vince Aletti cover" 
+                                         class="w-16 h-20 object-cover rounded shadow-sm flex-shrink-0"
+                                         loading="lazy">
+                                    <div class="flex-1">
+                                        <h4 class="font-semibold text-gray-800 hover:text-teal-700 mb-1">Male: From the Collection of Vince Aletti</h4>
+                                        <p class="text-xs text-gray-600 mb-1">PPP Editions, 2010</p>
+                                        <p class="text-sm text-gray-600">Photography celebrating the male form across decades</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="border-l-4 border-teal-700 pl-4 py-2 hover:bg-gray-50 transition-colors">
-                                <a href="#" class="block">
-                                    <h4 class="font-semibold text-gray-800 hover:text-teal-700">Issues</h4>
-                                    <p class="text-sm text-gray-600">A survey of independent magazines and zine culture</p>
-                                </a>
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-start space-x-3">
+                                    <img src="/assets/images/queer/vince-aletti-issues-cover.jpg" 
+                                         alt="Issues by Vince Aletti cover" 
+                                         class="w-16 h-20 object-cover rounded shadow-sm flex-shrink-0"
+                                         loading="lazy">
+                                    <div class="flex-1">
+                                        <h4 class="font-semibold text-gray-800 hover:text-teal-700 mb-1">Issues: A History of Photography in Fashion Magazines</h4>
+                                        <p class="text-xs text-gray-600 mb-1">Phaidon, 2019</p>
+                                        <p class="text-sm text-gray-600">Chronicle of fashion photography through magazine history</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="border-l-4 border-teal-700 pl-4 py-2 hover:bg-gray-50 transition-colors">
-                                <a href="#" class="block">
-                                    <h4 class="font-semibold text-gray-800 hover:text-teal-700">The Disco Files</h4>
-                                    <p class="text-sm text-gray-600">Chronicles of disco culture through photography and ephemera</p>
-                                </a>
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-start space-x-3">
+                                    <img src="/assets/images/queer/vince-aletti-disco-files-cover.jpg" 
+                                         alt="The Disco Files by Vince Aletti cover" 
+                                         class="w-16 h-20 object-cover rounded shadow-sm flex-shrink-0"
+                                         loading="lazy">
+                                    <div class="flex-1">
+                                        <h4 class="font-semibold text-gray-800 hover:text-teal-700 mb-1">The Disco Files 1973-78</h4>
+                                        <p class="text-xs text-gray-600 mb-1">DJhistory.com, 2009</p>
+                                        <p class="text-sm text-gray-600">Week-by-week chronicle of NYC's underground disco scene</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -280,6 +398,15 @@
         </div>
     </main>
 
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
+        <div class="lightbox-content">
+            <button class="lightbox-close" onclick="closeLightbox(event)">&times;</button>
+            <img id="lightbox-image" class="lightbox-image" src="" alt="">
+            <div id="lightbox-caption" class="lightbox-caption"></div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-neutral-900 text-neutral-300 py-16 mt-16">
         <div class="container mx-auto px-6">
@@ -292,21 +419,21 @@
                     <div>
                         <h4 class="font-semibold text-lg mb-4 text-neutral-100">Explore</h4>
                         <ul class="space-y-2 text-neutral-400">
-                            <li><a href="/" class="hover:text-white">Home</a></li>
-                            <li><a href="../index.html#about" class="hover:text-white">About</a></li>
-                            <li><a href="/collection-explore.html" class="hover:text-white">Collections</a></li>
-                            <li><a href="../static-demo.html" class="hover:text-white">Search</a></li>
-                            <li><a href="../index.html#publications" class="hover:text-white">Publications</a></li>
-                            <li><a href="../news.html" class="hover:text-white">News</a></li>
-                            <li><a href="../index.html#contact" class="hover:text-white">Contact</a></li>
+                            <li><a href="../../../../index.html" class="hover:text-white">Home</a></li>
+                            <li><a href="../../../../index.html#about" class="hover:text-white">About</a></li>
+                            <li><a href="../../../../collection-explore.html" class="hover:text-white">Collections</a></li>
+                            <li><a href="../../../../static-demo.html" class="hover:text-white">Search</a></li>
+                            <li><a href="../../../../index.html#publications" class="hover:text-white">Publications</a></li>
+                            <li><a href="../../../../news.html" class="hover:text-white">News</a></li>
+                            <li><a href="../../../../index.html#contact" class="hover:text-white">Contact</a></li>
                         </ul>
                     </div>
                     <div>
                         <h4 class="font-semibold text-lg mb-4 text-neutral-100">Visit</h4>
                         <ul class="space-y-2 text-neutral-400">
-                            <li><a href="../index.html#contact" class="hover:text-white">Visit Policy</a></li>
-                            <li><a href="../index.html#contact" class="hover:text-white">Location</a></li>
-                            <li><a href="../index.html#contact" class="hover:text-white">Appointments</a></li>
+                            <li><a href="../../../../index.html#contact" class="hover:text-white">Visit Policy</a></li>
+                            <li><a href="../../../../index.html#contact" class="hover:text-white">Location</a></li>
+                            <li><a href="../../../../index.html#contact" class="hover:text-white">Appointments</a></li>
                         </ul>
                     </div>
                     <div>
@@ -336,6 +463,50 @@
                 icon.classList.toggle('fa-times');
             });
         }
+
+        // Lightbox functionality
+        function openLightbox(imageSrc, imageAlt) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImage = document.getElementById('lightbox-image');
+            const lightboxCaption = document.getElementById('lightbox-caption');
+            
+            lightboxImage.src = imageSrc;
+            lightboxImage.alt = imageAlt;
+            lightboxCaption.textContent = imageAlt;
+            
+            lightbox.style.display = 'flex';
+            setTimeout(() => {
+                lightbox.classList.add('active');
+            }, 10);
+            
+            // Prevent body scroll when lightbox is open
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox(event) {
+            const lightbox = document.getElementById('lightbox');
+            
+            // Only close if clicking the background or close button
+            if (event.target === lightbox || event.target.classList.contains('lightbox-close')) {
+                lightbox.classList.remove('active');
+                setTimeout(() => {
+                    lightbox.style.display = 'none';
+                }, 300);
+                
+                // Restore body scroll
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Close lightbox with Escape key
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                const lightbox = document.getElementById('lightbox');
+                if (lightbox.classList.contains('active')) {
+                    closeLightbox({ target: lightbox });
+                }
+            }
+        });
     </script>
 
 </body>
