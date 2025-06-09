@@ -162,24 +162,51 @@ class BookSearch {
     }
     
     async loadBooks() {
+        console.log('Starting to load books...');
+        
+        // Force CSV loading for now since JSON is empty
+        return await this.loadBooksFromCSV();
+        
+        /* 
         try {
             const response = await fetch('/data/books.json');
             if (!response.ok) {
-                // Fallback to CSV if JSON doesn't exist
+                console.log('JSON not found, trying CSV');
                 return await this.loadBooksFromCSV();
             }
-            this.books = await response.json();
+            const jsonData = await response.json();
+            console.log('Loaded JSON data:', jsonData.length, 'items');
+            
+            if (!jsonData || jsonData.length === 0) {
+                console.log('JSON is empty, trying CSV');
+                return await this.loadBooksFromCSV();
+            }
+            
+            this.books = jsonData;
         } catch (error) {
             console.warn('Failed to load books.json, trying CSV:', error);
             await this.loadBooksFromCSV();
         }
+        */
     }
     
     async loadBooksFromCSV() {
         try {
+            console.log('Fetching CSV from /cms/data/books.csv...');
             const response = await fetch('/cms/data/books.csv');
+            console.log('CSV response status:', response.status);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
             const csvText = await response.text();
+            console.log('CSV text length:', csvText.length);
+            console.log('First 200 chars:', csvText.substring(0, 200));
+            
             this.books = this.parseCSV(csvText);
+            console.log('Final books array length:', this.books.length);
+            
         } catch (error) {
             console.error('Failed to load books data:', error);
             this.displayError('Failed to load book collection. Please try again later.');
