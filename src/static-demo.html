@@ -187,47 +187,41 @@ class BookSearch {
     }
     
     parseCSV(csvText) {
-        const lines = csvText.split('\n');
-        const headers = lines[0].split(',').map(h => h.replace(/"/g, '').trim());
-        const books = [];
-        
-        for (let i = 1; i < lines.length; i++) {
-            const line = lines[i].trim();
-            if (!line) continue;
+        try {
+            const lines = csvText.split('\n').filter(line => line.trim());
+            if (lines.length < 2) return [];
             
-            const values = this.parseCSVLine(line);
-            if (values.length >= headers.length) {
-                const book = {};
-                headers.forEach((header, index) => {
-                    book[header] = values[index] ? values[index].replace(/"/g, '').trim() : '';
-                });
-                books.push(book);
-            }
-        }
-        
-        return books;
-    }
-    
-    parseCSVLine(line) {
-        const result = [];
-        let current = '';
-        let inQuotes = false;
-        
-        for (let i = 0; i < line.length; i++) {
-            const char = line[i];
+            // Simple regex-based CSV parsing for quoted fields
+            const csvRegex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
+            const headers = lines[0].split(csvRegex).map(h => h.replace(/^"|"$/g, '').trim());
+            const books = [];
             
-            if (char === '"') {
-                inQuotes = !inQuotes;
-            } else if (char === ',' && !inQuotes) {
-                result.push(current);
-                current = '';
-            } else {
-                current += char;
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                const values = line.split(csvRegex).map(v => v.replace(/^"|"$/g, '').trim());
+                
+                if (values.length >= headers.length - 2) { // Allow some flexibility
+                    const book = {};
+                    headers.forEach((header, index) => {
+                        book[header] = values[index] || '';
+                    });
+                    
+                    // Only add if has essential fields
+                    if (book.title && book.author_full_name) {
+                        books.push(book);
+                    }
+                }
             }
+            
+            console.log(`Parsed ${books.length} books from CSV`);
+            return books;
+            
+        } catch (error) {
+            console.error('CSV parsing error:', error);
+            return [];
         }
-        
-        result.push(current);
-        return result;
     }
     
     setupEventListeners() {
