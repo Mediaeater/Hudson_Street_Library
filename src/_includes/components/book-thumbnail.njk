@@ -46,10 +46,6 @@
         <p class="text-xs text-gray-400 mt-1 text-center">{{ bookAuthor | escape | truncate(20) }}</p>
       {% endif %}
     </div>
-    <!-- Cover available indicator -->
-    <div class="cover-indicator absolute top-1 right-1 bg-teal-600 text-white text-xs px-1 py-0.5 rounded opacity-75" style="display:none;">
-      <i class="fas fa-image"></i>
-    </div>
   </div>
   
   {% if showMeta != false %}
@@ -93,10 +89,6 @@ function showThumbnailPlaceholder(img) {
   if (placeholder && placeholder.classList.contains('thumbnail-placeholder')) {
     placeholder.style.display = 'flex';
   }
-  const indicator = img.parentNode.querySelector('.cover-indicator');
-  if (indicator) {
-    indicator.style.display = 'none';
-  }
 }
 
 // Initialize thumbnail images when DOM loads
@@ -108,13 +100,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (coverPath) {
       img.src = coverPath;
-      // Show indicator if it's not a placeholder
-      if (coverPath !== '/assets/images/placeholder-book.svg') {
-        const indicator = img.parentNode.querySelector('.cover-indicator');
-        if (indicator) {
-          indicator.style.display = 'block';
-        }
-      }
     } else {
       showThumbnailPlaceholder(img);
     }
