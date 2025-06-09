@@ -188,40 +188,79 @@ class BookSearch {
     
     parseCSV(csvText) {
         try {
+            // Use Papa Parse-like simple CSV parsing
             const lines = csvText.split('\n').filter(line => line.trim());
-            if (lines.length < 2) return [];
+            if (lines.length < 2) {
+                console.error('CSV has insufficient data');
+                return [];
+            }
             
-            // Simple regex-based CSV parsing for quoted fields
-            const csvRegex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
-            const headers = lines[0].split(csvRegex).map(h => h.replace(/^"|"$/g, '').trim());
+            // Parse headers
+            const headerLine = lines[0];
+            const headers = this.parseCSVRow(headerLine);
+            console.log('CSV Headers:', headers);
+            
             const books = [];
             
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line) continue;
                 
-                const values = line.split(csvRegex).map(v => v.replace(/^"|"$/g, '').trim());
+                const values = this.parseCSVRow(line);
                 
-                if (values.length >= headers.length - 2) { // Allow some flexibility
+                if (values.length >= 5) { // At least 5 fields
                     const book = {};
                     headers.forEach((header, index) => {
                         book[header] = values[index] || '';
                     });
                     
-                    // Only add if has essential fields
-                    if (book.title && book.author_full_name) {
+                    // Only add if has title
+                    if (book.title && book.title !== 'NULL') {
                         books.push(book);
                     }
                 }
             }
             
-            console.log(`Parsed ${books.length} books from CSV`);
+            console.log(`Successfully parsed ${books.length} books from CSV`);
+            if (books.length > 0) {
+                console.log('Sample book:', books[0]);
+            }
             return books;
             
         } catch (error) {
             console.error('CSV parsing error:', error);
             return [];
         }
+    }
+    
+    parseCSVRow(row) {
+        const result = [];
+        let current = '';
+        let inQuotes = false;
+        
+        for (let i = 0; i < row.length; i++) {
+            const char = row[i];
+            const nextChar = row[i + 1];
+            
+            if (char === '"') {
+                if (inQuotes && nextChar === '"') {
+                    // Escaped quote
+                    current += '"';
+                    i++; // Skip next quote
+                } else {
+                    // Toggle quote state
+                    inQuotes = !inQuotes;
+                }
+            } else if (char === ',' && !inQuotes) {
+                result.push(current.trim());
+                current = '';
+            } else {
+                current += char;
+            }
+        }
+        
+        result.push(current.trim());
+        return result;
     }
     
     setupEventListeners() {
