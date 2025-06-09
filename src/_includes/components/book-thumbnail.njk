@@ -11,6 +11,7 @@
 {% set bookTitle = book.Title or book.title or 'Untitled' %}
 {% set bookAuthor = (book['Author, First'] + ' ' + book['Author, Last']) if book['Author, First'] or book['Author, Last'] else (book.author or '') %}
 {% set imageField = book.Image or book.cover_image %}
+{% set bookISBN = book.ISBN or book.isbn_asin or '' %}
 
 {% if thumbnailSize == 'small' %}
   {% set containerClass = 'w-20 h-24' %}
@@ -28,22 +29,27 @@
 
 <div class="book-thumbnail group {{ className or '' }}">
   <div class="relative {{ containerClass }} bg-gray-200 rounded-lg overflow-hidden shadow-md group-hover:shadow-lg transition-shadow">
-    {% if imageField and imageField.trim() %}
-      <!-- Image with multiple fallback paths -->
-      <img src="/assets/images/books/{{ imageField | escape }}" 
-           alt="Cover of {{ bookTitle | escape }}"
-           class="w-full h-full object-cover"
-           onerror="handleImageError(this, '{{ imageField | escape }}', '{{ bookTitle | escape }}', '{{ bookAuthor | escape }}')">
-    {% else %}
-      <!-- No image - styled placeholder -->
-      <div class="w-full h-full flex flex-col items-center justify-center text-gray-500 bg-gray-100 p-2">
-        <i class="fas fa-book {{ iconSize }} mb-1"></i>
-        <p class="{{ titleSize }} text-center leading-tight px-1">{{ bookTitle | escape | truncate(25) }}</p>
-        {% if bookAuthor %}
-          <p class="text-xs text-gray-400 mt-1 text-center">{{ bookAuthor | escape | truncate(20) }}</p>
-        {% endif %}
-      </div>
-    {% endif %}
+    <img class="thumbnail-image w-full h-full object-cover" 
+         alt="Cover of {{ bookTitle | escape }}"
+         data-title="{{ bookTitle | escape }}"
+         data-author="{{ bookAuthor | escape }}"
+         data-isbn="{{ bookISBN | escape }}"
+         data-image-field="{{ imageField | escape }}"
+         style="display:none;"
+         onload="this.style.display='block'; this.nextElementSibling.style.display='none';"
+         onerror="showThumbnailPlaceholder(this)">
+    <!-- Placeholder shown initially and on error -->
+    <div class="thumbnail-placeholder w-full h-full flex flex-col items-center justify-center text-gray-500 bg-gray-100 p-2">
+      <i class="fas fa-book {{ iconSize }} mb-1"></i>
+      <p class="{{ titleSize }} text-center leading-tight px-1">{{ bookTitle | escape | truncate(25) }}</p>
+      {% if bookAuthor %}
+        <p class="text-xs text-gray-400 mt-1 text-center">{{ bookAuthor | escape | truncate(20) }}</p>
+      {% endif %}
+    </div>
+    <!-- Cover available indicator -->
+    <div class="cover-indicator absolute top-1 right-1 bg-teal-600 text-white text-xs px-1 py-0.5 rounded opacity-75" style="display:none;">
+      <i class="fas fa-image"></i>
+    </div>
   </div>
   
   {% if showMeta != false %}
@@ -57,26 +63,61 @@
 </div>
 
 <script>
-// Handle image loading errors with multiple fallback attempts
-function handleImageError(img, filename, title, author) {
-  if (!img.dataset.attempted) {
-    // First fallback: try covers directory
-    img.dataset.attempted = 'covers';
-    img.src = `/assets/images/covers/${filename}`;
-  } else if (img.dataset.attempted === 'covers') {
-    // Second fallback: try assets root
-    img.dataset.attempted = 'assets';
-    img.src = `/assets/images/${filename}`;
-  } else {
-    // Final fallback: show placeholder
-    img.style.display = 'none';
-    img.parentNode.innerHTML = `
-      <div class="w-full h-full flex flex-col items-center justify-center text-gray-500 bg-gray-100 p-2">
-        <i class="fas fa-book text-2xl mb-1"></i>
-        <p class="text-xs text-center leading-tight px-1">${title}</p>
-        ${author ? `<p class="text-xs text-gray-400 mt-1 text-center">${author}</p>` : ''}
-      </div>
-    `;
+// Generate cover path using our acquisition naming convention
+function generateThumbnailCoverPath(img) {
+  const imageField = img.dataset.imageField;
+  const title = img.dataset.title;
+  const author = img.dataset.author;
+  const isbn = img.dataset.isbn;
+  
+  // If there's an existing image field, try that first
+  if (imageField && imageField.trim() && imageField !== 'null') {
+    return `/assets/images/books/${imageField}`;
+  }
+  
+  // Generate path from our acquired covers
+  if (isbn && isbn !== 'NULL' && isbn !== '' && isbn !== 'null') {
+    const cleanAuthor = author.replace(/[^a-zA-Z0-9.-]/g, '_');
+    const cleanTitle = title.replace(/[^a-zA-Z0-9.-]/g, '_');
+    const cleanISBN = isbn.replace(/[^a-zA-Z0-9.-]/g, '_');
+    const coverFileName = `${cleanAuthor}_${cleanTitle}_${cleanISBN}`.replace(/_+/g, '_').replace(/^_|_$/g, '').substring(0, 100) + '.jpg';
+    return `/assets/images/books/${coverFileName}`;
+  }
+  
+  return null;
+}
+
+function showThumbnailPlaceholder(img) {
+  img.style.display = 'none';
+  const placeholder = img.nextElementSibling;
+  if (placeholder && placeholder.classList.contains('thumbnail-placeholder')) {
+    placeholder.style.display = 'flex';
+  }
+  const indicator = img.parentNode.querySelector('.cover-indicator');
+  if (indicator) {
+    indicator.style.display = 'none';
   }
 }
+
+// Initialize thumbnail images when DOM loads
+document.addEventListener('DOMContentLoaded', function() {
+  const thumbnailImages = document.querySelectorAll('.thumbnail-image');
+  
+  thumbnailImages.forEach(function(img) {
+    const coverPath = generateThumbnailCoverPath(img);
+    
+    if (coverPath) {
+      img.src = coverPath;
+      // Show indicator if it's not a placeholder
+      if (coverPath !== '/assets/images/placeholder-book.svg') {
+        const indicator = img.parentNode.querySelector('.cover-indicator');
+        if (indicator) {
+          indicator.style.display = 'block';
+        }
+      }
+    } else {
+      showThumbnailPlaceholder(img);
+    }
+  });
+});
 </script>

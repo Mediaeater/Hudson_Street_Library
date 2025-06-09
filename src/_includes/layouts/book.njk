@@ -76,6 +76,7 @@
                     <!-- Fixed paths -->
                     <a href="/index.html#about" class="nav-item hover:text-teal-700">About</a>
                     <a href="/collection-explore.html" class="nav-item hover:text-teal-700">Collections</a>
+                    <a href="/static-demo.html" class="nav-item hover:text-teal-700">Search</a>
                     <a href="/index.html#publications" class="nav-item hover:text-teal-700">Publications</a>
                     <a href="/news.html" class="nav-item hover:text-teal-700">News</a>
                     <a href="/index.html#contact" class="nav-item hover:text-teal-700">Contact</a>
@@ -89,6 +90,7 @@
         <nav id="mobile-nav-menu-book" class="hidden md:hidden absolute top-full left-0 right-0 bg-white shadow-lg px-6 py-4 space-y-3 flex-col z-40">
              <a href="/index.html#about" class="block py-2 text-neutral-700 hover:text-teal-700">About</a>
              <a href="/collection-explore.html" class="block py-2 text-neutral-700 hover:text-teal-700">Collections</a>
+             <a href="/static-demo.html" class="block py-2 text-neutral-700 hover:text-teal-700">Search</a>
              <a href="/index.html#publications" class="block py-2 text-neutral-700 hover:text-teal-700">Publications</a>
              <a href="/news.html" class="block py-2 text-neutral-700 hover:text-teal-700">News</a>
              <a href="/index.html#contact" class="block py-2 text-neutral-700 hover:text-teal-700">Contact</a>
@@ -111,28 +113,67 @@
                 <!-- Left Column: Cover Image -->
                 <div class="md:col-span-1">
                     <div class="sticky top-28"> <!-- Sticky positioning for cover -->
-                        <div class="aspect-[3/4] bg-gray-200 rounded-md shadow-lg overflow-hidden">
-                            {% if book.Image and book.Image.trim() %}
-                                <!-- Image using corrected path -->
-                                <img src="/assets/images/books/{{ book.Image }}"
-                                     alt="Cover of {{ book.Title | escape }}"
-                                     class="w-full h-full object-cover"
-                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                <!-- Fallback content for missing images -->
-                                <div class="w-full h-full flex flex-col items-center justify-center text-gray-500 bg-gray-100" style="display:none;">
-                                    <i class="fas fa-book text-4xl mb-2"></i>
-                                    <p class="text-sm text-center px-4">{{ book.Title | escape }}</p>
-                                    <p class="text-xs text-gray-400 mt-1">{{ book['Author, First'] }} {{ book['Author, Last'] }}</p>
-                                </div>
-                            {% else %}
-                                <!-- No image available - show placeholder -->
-                                <div class="w-full h-full flex flex-col items-center justify-center text-gray-500 bg-gray-100">
-                                    <i class="fas fa-book text-4xl mb-2"></i>
-                                    <p class="text-sm text-center px-4">{{ book.Title | escape }}</p>
-                                    <p class="text-xs text-gray-400 mt-1">{{ book['Author, First'] }} {{ book['Author, Last'] }}</p>
-                                </div>
-                            {% endif %}
+                        <div class="aspect-[3/4] bg-gray-200 rounded-md shadow-lg overflow-hidden relative">
+                            <img id="book-cover-img"
+                                 alt="Cover of {{ book.Title | escape }}"
+                                 class="w-full h-full object-cover"
+                                 onerror="showPlaceholder()">
+                            <!-- Fallback content for missing images -->
+                            <div id="book-placeholder" class="w-full h-full flex flex-col items-center justify-center text-gray-500 bg-gray-100" style="display:none;">
+                                <i class="fas fa-book text-4xl mb-2"></i>
+                                <p class="text-sm text-center px-4">{{ book.Title | escape }}</p>
+                                <p class="text-xs text-gray-400 mt-1">{{ book['Author, First'] }} {{ book['Author, Last'] }}</p>
+                            </div>
+                            <!-- Cover available indicator -->
+                            <div id="cover-indicator" class="absolute top-2 right-2 bg-teal-600 text-white text-xs px-2 py-1 rounded opacity-75" style="display:none;">
+                                Cover Available
+                            </div>
                         </div>
+                        
+                        <script>
+                        function generateCoverImagePath() {
+                            // Extract book data from Nunjucks template
+                            const author = '{{ book["Author, First"] }} {{ book["Author, Last"] }}'.replace(/[^a-zA-Z0-9.-]/g, '_');
+                            const title = '{{ book.Title }}'.replace(/[^a-zA-Z0-9.-]/g, '_');
+                            const isbn = '{{ book.ISBN }}'.replace(/[^a-zA-Z0-9.-]/g, '_');
+                            
+                            // Check if we have existing image
+                            {% if book.Image and book.Image.trim() %}
+                                return '/assets/images/books/{{ book.Image }}';
+                            {% endif %}
+                            
+                            // Generate path from our acquired covers
+                            if (isbn && isbn !== 'NULL' && isbn !== '') {
+                                const coverFileName = `${author}_${title}_${isbn}`.replace(/_+/g, '_').replace(/^_|_$/g, '').substring(0, 100) + '.jpg';
+                                return `/assets/images/books/${coverFileName}`;
+                            }
+                            
+                            return null;
+                        }
+                        
+                        function showPlaceholder() {
+                            document.getElementById('book-cover-img').style.display = 'none';
+                            document.getElementById('book-placeholder').style.display = 'flex';
+                            document.getElementById('cover-indicator').style.display = 'none';
+                        }
+                        
+                        function loadBookCover() {
+                            const imgElement = document.getElementById('book-cover-img');
+                            const coverPath = generateCoverImagePath();
+                            
+                            if (coverPath) {
+                                imgElement.src = coverPath;
+                                if (coverPath !== '/assets/images/placeholder-book.svg') {
+                                    document.getElementById('cover-indicator').style.display = 'block';
+                                }
+                            } else {
+                                showPlaceholder();
+                            }
+                        }
+                        
+                        // Load cover when page loads
+                        document.addEventListener('DOMContentLoaded', loadBookCover);
+                        </script>
                     </div>
                 </div>
 
