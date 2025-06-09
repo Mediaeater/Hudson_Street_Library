@@ -124,10 +124,6 @@
                                 <p class="text-sm text-center px-4">{{ book.Title | escape }}</p>
                                 <p class="text-xs text-gray-400 mt-1">{{ book['Author, First'] }} {{ book['Author, Last'] }}</p>
                             </div>
-                            <!-- Cover available indicator -->
-                            <div id="cover-indicator" class="absolute top-2 right-2 bg-teal-600 text-white text-xs px-2 py-1 rounded opacity-75" style="display:none;">
-                                Cover Available
-                            </div>
                         </div>
                         
                         <script>
@@ -154,7 +150,6 @@
                         function showPlaceholder() {
                             document.getElementById('book-cover-img').style.display = 'none';
                             document.getElementById('book-placeholder').style.display = 'flex';
-                            document.getElementById('cover-indicator').style.display = 'none';
                         }
                         
                         function loadBookCover() {
@@ -163,9 +158,6 @@
                             
                             if (coverPath) {
                                 imgElement.src = coverPath;
-                                if (coverPath !== '/assets/images/placeholder-book.svg') {
-                                    document.getElementById('cover-indicator').style.display = 'block';
-                                }
                             } else {
                                 showPlaceholder();
                             }
