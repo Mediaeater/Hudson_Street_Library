@@ -1,0 +1,808 @@
+---
+layout: layouts/admin.njk
+title: Add New Book
+permalink: /admin/books/new/
+breadcrumbs:
+  - name: Dashboard
+    url: /admin/
+  - name: Books
+    url: /admin/books/
+  - name: Add New Book
+---
+
+<div class="max-w-6xl mx-auto space-y-6">
+    <!-- Workflow Header -->
+    <div class="bg-white p-6 rounded-lg shadow-sm">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Add New Book</h1>
+                <p class="text-gray-600 mt-1">Complete the workflow to add a book to your collection</p>
+            </div>
+            
+            <!-- Workflow Progress -->
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-teal-600 text-white rounded-full flex items-center justify-center text-sm font-medium step-indicator active" data-step="1">1</div>
+                    <span class="text-sm font-medium text-teal-600">Details</span>
+                </div>
+                <div class="w-8 h-0.5 bg-gray-300 step-connector"></div>
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-medium step-indicator" data-step="2">2</div>
+                    <span class="text-sm text-gray-600">Images</span>
+                </div>
+                <div class="w-8 h-0.5 bg-gray-300 step-connector"></div>
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-medium step-indicator" data-step="3">3</div>
+                    <span class="text-sm text-gray-600">Collections</span>
+                </div>
+                <div class="w-8 h-0.5 bg-gray-300 step-connector"></div>
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-medium step-indicator" data-step="4">4</div>
+                    <span class="text-sm text-gray-600">Preview</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="flex justify-between">
+            <div class="flex space-x-3">
+                <button type="button" id="save-draft-btn" class="btn-secondary">
+                    <i class="fas fa-save mr-2"></i>Save Draft
+                </button>
+                <button type="button" id="batch-mode-btn" class="btn-secondary">
+                    <i class="fas fa-layer-group mr-2"></i>Batch Mode
+                </button>
+            </div>
+            <div class="flex space-x-3">
+                <button type="button" id="prev-step-btn" class="btn-secondary hidden">
+                    <i class="fas fa-chevron-left mr-2"></i>Previous
+                </button>
+                <button type="button" id="next-step-btn" class="btn-primary">
+                    Next <i class="fas fa-chevron-right ml-2"></i>
+                </button>
+                <button type="button" id="publish-btn" class="btn-primary hidden">
+                    <i class="fas fa-check mr-2"></i>Publish Book
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Container -->
+    <form id="book-workflow-form" class="space-y-6">
+        
+        <!-- Step 1: Book Details -->
+        <div id="step-1" class="workflow-step active">
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h2 class="text-xl font-semibold text-gray-900 mb-6">Book Details</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Left Column -->
+                    <div class="space-y-6">
+                        <!-- Basic Information -->
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Basic Information</h3>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Title <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" id="title" name="title" required 
+                                           class="form-input w-full" 
+                                           placeholder="Enter book title"
+                                           autocomplete="off">
+                                    <div class="mt-1 text-sm text-gray-500">
+                                        <span id="title-counter">0</span>/500 characters
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="author_first" class="block text-sm font-medium text-gray-700 mb-2">
+                                            Author First Name
+                                        </label>
+                                        <input type="text" id="author_first" name="author_first" 
+                                               class="form-input w-full" 
+                                               placeholder="First name"
+                                               autocomplete="off">
+                                    </div>
+                                    <div>
+                                        <label for="author_last" class="block text-sm font-medium text-gray-700 mb-2">
+                                            Author Last Name
+                                        </label>
+                                        <input type="text" id="author_last" name="author_last" 
+                                               class="form-input w-full" 
+                                               placeholder="Last name"
+                                               autocomplete="off">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="publisher" class="block text-sm font-medium text-gray-700 mb-2">
+                                            Publisher
+                                        </label>
+                                        <input type="text" id="publisher" name="publisher" 
+                                               class="form-input w-full" 
+                                               placeholder="Publisher name"
+                                               list="publishers-list">
+                                        <datalist id="publishers-list">
+                                            <!-- Populated dynamically -->
+                                        </datalist>
+                                    </div>
+                                    <div>
+                                        <label for="publication_year" class="block text-sm font-medium text-gray-700 mb-2">
+                                            Publication Year
+                                        </label>
+                                        <input type="number" id="publication_year" name="publication_year" 
+                                               class="form-input w-full" 
+                                               min="1800" max="2030"
+                                               placeholder="YYYY">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label for="isbn" class="block text-sm font-medium text-gray-700 mb-2">
+                                        ISBN
+                                    </label>
+                                    <input type="text" id="isbn" name="isbn" 
+                                           class="form-input w-full" 
+                                           placeholder="ISBN-10 or ISBN-13"
+                                           pattern="[\d\-X]{10,17}">
+                                    <div class="mt-1 text-sm text-gray-500">
+                                        Enter ISBN to auto-populate book details
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Category & Subject Detection -->
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Category & Subjects</h3>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="detected-category" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Detected Category
+                                    </label>
+                                    <div id="detected-category" class="p-3 bg-gray-50 rounded border">
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-robot text-gray-400"></i>
+                                            <span class="text-sm text-gray-500">Category will be detected automatically based on title and description</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label for="subjects" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Subjects
+                                    </label>
+                                    <div id="subjects-container" class="space-y-2">
+                                        <input type="text" id="subjects-input" 
+                                               class="form-input w-full" 
+                                               placeholder="Type to add subjects..."
+                                               autocomplete="off">
+                                        <div id="subjects-tags" class="flex flex-wrap gap-2 min-h-[2rem]">
+                                            <!-- Subject tags will appear here -->
+                                        </div>
+                                        <div id="suggested-subjects" class="hidden">
+                                            <div class="text-sm text-gray-600 mb-2">Suggested subjects:</div>
+                                            <div class="flex flex-wrap gap-2" id="suggested-subjects-list">
+                                                <!-- Suggested subjects will appear here -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label for="tags" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Tags
+                                    </label>
+                                    <input type="text" id="tags" name="tags" 
+                                           class="form-input w-full" 
+                                           placeholder="Enter tags separated by commas">
+                                    <div class="mt-1 text-sm text-gray-500">
+                                        Separate multiple tags with commas
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="space-y-6">
+                        <!-- Physical Properties -->
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Physical Properties</h3>
+                            
+                            <div class="space-y-4">
+                                <div class="grid grid-cols-3 gap-4">
+                                    <div>
+                                        <label for="height_cm" class="block text-sm font-medium text-gray-700 mb-2">
+                                            Height (cm)
+                                        </label>
+                                        <input type="number" id="height_cm" name="height_cm" step="0.1"
+                                               class="form-input w-full" 
+                                               placeholder="0.0">
+                                    </div>
+                                    <div>
+                                        <label for="width_cm" class="block text-sm font-medium text-gray-700 mb-2">
+                                            Width (cm)
+                                        </label>
+                                        <input type="number" id="width_cm" name="width_cm" step="0.1"
+                                               class="form-input w-full" 
+                                               placeholder="0.0">
+                                    </div>
+                                    <div>
+                                        <label for="depth_cm" class="block text-sm font-medium text-gray-700 mb-2">
+                                            Depth (cm)
+                                        </label>
+                                        <input type="number" id="depth_cm" name="depth_cm" step="0.1"
+                                               class="form-input w-full" 
+                                               placeholder="0.0">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="page_count" class="block text-sm font-medium text-gray-700 mb-2">
+                                            Page Count
+                                        </label>
+                                        <input type="number" id="page_count" name="page_count" 
+                                               class="form-input w-full" 
+                                               placeholder="Number of pages">
+                                    </div>
+                                    <div>
+                                        <label for="binding_type" class="block text-sm font-medium text-gray-700 mb-2">
+                                            Binding Type
+                                        </label>
+                                        <select id="binding_type" name="binding_type" class="form-input w-full">
+                                            <option value="">Select binding</option>
+                                            <option value="hardcover">Hardcover</option>
+                                            <option value="paperback">Paperback</option>
+                                            <option value="spiral">Spiral</option>
+                                            <option value="saddle-stitched">Saddle-stitched</option>
+                                            <option value="perfect-bound">Perfect-bound</option>
+                                            <option value="case-bound">Case-bound</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Library Management -->
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Library Management</h3>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Status <span class="text-red-500">*</span>
+                                    </label>
+                                    <select id="status" name="status" class="form-input w-full" required>
+                                        <option value="available">Available</option>
+                                        <option value="checked_out">Checked Out</option>
+                                        <option value="reserved">Reserved</option>
+                                        <option value="missing">Missing</option>
+                                        <option value="damaged">Damaged</option>
+                                        <option value="repair">In Repair</option>
+                                    </select>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="location_shelf" class="block text-sm font-medium text-gray-700 mb-2">
+                                            Shelf Location
+                                        </label>
+                                        <input type="text" id="location_shelf" name="location_shelf" 
+                                               class="form-input w-full" 
+                                               placeholder="e.g., A1, B3">
+                                    </div>
+                                    <div>
+                                        <label for="location_section" class="block text-sm font-medium text-gray-700 mb-2">
+                                            Section
+                                        </label>
+                                        <input type="text" id="location_section" name="location_section" 
+                                               class="form-input w-full" 
+                                               placeholder="e.g., Photography, Art">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="acquisition_date" class="block text-sm font-medium text-gray-700 mb-2">
+                                            Acquisition Date
+                                        </label>
+                                        <input type="date" id="acquisition_date" name="acquisition_date" 
+                                               class="form-input w-full">
+                                    </div>
+                                    <div>
+                                        <label for="price_paid" class="block text-sm font-medium text-gray-700 mb-2">
+                                            Price Paid ($)
+                                        </label>
+                                        <input type="number" id="price_paid" name="price_paid" step="0.01"
+                                               class="form-input w-full" 
+                                               placeholder="0.00">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Content Description -->
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Content Description</h3>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="summary" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Summary
+                                    </label>
+                                    <textarea id="summary" name="summary" rows="3" 
+                                              class="form-input w-full" 
+                                              placeholder="Brief summary of the book content"></textarea>
+                                    <div class="mt-1 text-sm text-gray-500">
+                                        <span id="summary-counter">0</span>/500 characters
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Detailed Description
+                                    </label>
+                                    <textarea id="description" name="description" rows="4" 
+                                              class="form-input w-full" 
+                                              placeholder="Detailed description for the public catalog"></textarea>
+                                    <div class="mt-1 text-sm text-gray-500">
+                                        <span id="description-counter">0</span>/1000 characters
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Image Upload -->
+        <div id="step-2" class="workflow-step hidden">
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h2 class="text-xl font-semibold text-gray-900 mb-6">Book Images</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Cover Image Upload -->
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Cover Image</h3>
+                        
+                        <div id="cover-upload-area" class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors cursor-pointer">
+                            <input type="file" id="cover-image" name="cover_image" accept="image/*" class="hidden">
+                            <div id="upload-prompt">
+                                <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                                <div class="text-lg font-medium text-gray-900 mb-2">Upload Cover Image</div>
+                                <div class="text-sm text-gray-600 mb-4">
+                                    Drag and drop or click to browse
+                                </div>
+                                <div class="text-xs text-gray-500">
+                                    PNG, JPG, GIF up to 10MB
+                                </div>
+                            </div>
+                            
+                            <div id="upload-progress" class="hidden">
+                                <div class="text-lg font-medium text-gray-900 mb-4">Uploading...</div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div id="progress-bar" class="bg-teal-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                                </div>
+                                <div id="progress-text" class="text-sm text-gray-600 mt-2">0%</div>
+                            </div>
+                        </div>
+
+                        <!-- Alternative URL Input -->
+                        <div class="mt-4">
+                            <label for="cover_image_url" class="block text-sm font-medium text-gray-700 mb-2">
+                                Or enter image URL
+                            </label>
+                            <input type="url" id="cover_image_url" name="cover_image_url" 
+                                   class="form-input w-full" 
+                                   placeholder="https://example.com/book-cover.jpg">
+                        </div>
+
+                        <!-- Image Processing Options -->
+                        <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+                            <h4 class="text-sm font-medium text-gray-900 mb-3">Processing Options</h4>
+                            <div class="space-y-2">
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="auto-crop" name="auto_crop" checked class="mr-2 h-4 w-4 text-teal-600 border-gray-300 rounded">
+                                    <span class="text-sm text-gray-700">Auto-crop to book cover aspect ratio (3:4)</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="enhance-quality" name="enhance_quality" checked class="mr-2 h-4 w-4 text-teal-600 border-gray-300 rounded">
+                                    <span class="text-sm text-gray-700">Enhance image quality and contrast</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="remove-background" name="remove_background" class="mr-2 h-4 w-4 text-teal-600 border-gray-300 rounded">
+                                    <span class="text-sm text-gray-700">Remove background (experimental)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Image Preview -->
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Preview</h3>
+                        
+                        <div id="image-preview-container" class="space-y-4">
+                            <div id="no-image-preview" class="border border-gray-200 rounded-lg p-8 text-center">
+                                <i class="fas fa-image text-4xl text-gray-300 mb-4"></i>
+                                <div class="text-gray-500">No image uploaded</div>
+                            </div>
+                            
+                            <div id="image-preview" class="hidden">
+                                <div class="border border-gray-200 rounded-lg overflow-hidden">
+                                    <img id="preview-image" src="" alt="Cover preview" class="w-full h-auto">
+                                </div>
+                                
+                                <!-- Image Details -->
+                                <div id="image-details" class="mt-4 p-3 bg-gray-50 rounded text-sm">
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <span class="font-medium">Dimensions:</span>
+                                            <span id="image-dimensions">-</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-medium">File Size:</span>
+                                            <span id="image-size">-</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-medium">Format:</span>
+                                            <span id="image-format">-</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-medium">Aspect Ratio:</span>
+                                            <span id="image-ratio">-</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Image Actions -->
+                                <div class="mt-4 flex space-x-2">
+                                    <button type="button" id="rotate-left" class="btn-secondary text-sm">
+                                        <i class="fas fa-undo mr-1"></i>Rotate Left
+                                    </button>
+                                    <button type="button" id="rotate-right" class="btn-secondary text-sm">
+                                        <i class="fas fa-redo mr-1"></i>Rotate Right
+                                    </button>
+                                    <button type="button" id="remove-image" class="btn-secondary text-red-600 text-sm">
+                                        <i class="fas fa-trash mr-1"></i>Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Additional Images -->
+                        <div class="mt-8">
+                            <h4 class="text-sm font-medium text-gray-900 mb-3">Additional Images (Optional)</h4>
+                            <div id="additional-images" class="grid grid-cols-3 gap-3">
+                                <div class="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:border-gray-300" id="add-more-images">
+                                    <i class="fas fa-plus text-gray-400 text-lg mb-2"></i>
+                                    <div class="text-xs text-gray-500">Add Image</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Collection Assignment -->
+        <div id="step-3" class="workflow-step hidden">
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h2 class="text-xl font-semibold text-gray-900 mb-6">Collection Assignment</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Auto-Suggested Collections -->
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">
+                            <i class="fas fa-robot mr-2 text-teal-600"></i>Suggested Collections
+                        </h3>
+                        
+                        <div id="suggested-collections" class="space-y-3">
+                            <div class="text-center py-8 text-gray-500">
+                                <i class="fas fa-spinner fa-spin text-2xl mb-3"></i>
+                                <div>Analyzing book details...</div>
+                                <div class="text-sm">Suggestions will appear based on title, subjects, and description</div>
+                            </div>
+                        </div>
+
+                        <!-- Manual Collection Search -->
+                        <div class="mt-6">
+                            <h4 class="text-sm font-medium text-gray-900 mb-3">Search Collections</h4>
+                            <div class="relative">
+                                <input type="text" id="collection-search" 
+                                       class="form-input w-full pl-10" 
+                                       placeholder="Search collections...">
+                                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            </div>
+                            <div id="search-results" class="mt-3 max-h-40 overflow-y-auto hidden">
+                                <!-- Search results will appear here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Selected Collections -->
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Selected Collections</h3>
+                        
+                        <div id="selected-collections" class="space-y-3 min-h-[200px]">
+                            <div id="no-collections-selected" class="text-center py-8 text-gray-500">
+                                <i class="fas fa-layer-group text-4xl mb-3"></i>
+                                <div>No collections selected</div>
+                                <div class="text-sm">Books can be added to collections for better organization</div>
+                            </div>
+                        </div>
+
+                        <!-- Collection Category Summary -->
+                        <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+                            <h4 class="text-sm font-medium text-gray-900 mb-3">Collection Categories</h4>
+                            <div id="category-summary" class="flex flex-wrap gap-2">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    Photography: <span id="photography-count" class="ml-1">0</span>
+                                </span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                    Art: <span id="art-count" class="ml-1">0</span>
+                                </span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-pink-100 text-pink-800">
+                                    Fashion: <span id="fashion-count" class="ml-1">0</span>
+                                </span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    Ephemera: <span id="ephemera-count" class="ml-1">0</span>
+                                </span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                                    Design: <span id="design-count" class="ml-1">0</span>
+                                </span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                    Special: <span id="special-count" class="ml-1">0</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Feature Flags -->
+                        <div class="mt-6">
+                            <h4 class="text-sm font-medium text-gray-900 mb-3">Display Options</h4>
+                            <div class="space-y-3">
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="is_featured" value="1" 
+                                           class="mr-3 h-4 w-4 text-teal-600 border-gray-300 rounded">
+                                    <div>
+                                        <div class="font-medium text-gray-900">Featured Book</div>
+                                        <div class="text-sm text-gray-500">Display prominently on homepage</div>
+                                    </div>
+                                </label>
+                                
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="is_staff_pick" value="1" 
+                                           class="mr-3 h-4 w-4 text-teal-600 border-gray-300 rounded">
+                                    <div>
+                                        <div class="font-medium text-gray-900">Staff Pick</div>
+                                        <div class="text-sm text-gray-500">Include in staff recommendations</div>
+                                    </div>
+                                </label>
+                                
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="is_new_acquisition" value="1" checked
+                                           class="mr-3 h-4 w-4 text-teal-600 border-gray-300 rounded">
+                                    <div>
+                                        <div class="font-medium text-gray-900">New Acquisition</div>
+                                        <div class="text-sm text-gray-500">Show in recently added section</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Preview & Publish -->
+        <div id="step-4" class="workflow-step hidden">
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h2 class="text-xl font-semibold text-gray-900 mb-6">Preview & Publish</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Book Preview -->
+                    <div class="lg:col-span-2">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Book Preview</h3>
+                        
+                        <div id="book-preview" class="border border-gray-200 rounded-lg p-6">
+                            <!-- Book preview will be rendered here -->
+                            <div class="flex space-x-6">
+                                <div class="flex-shrink-0">
+                                    <img id="preview-cover" src="/assets/images/placeholder-book.svg" 
+                                         alt="Book cover" class="w-32 h-40 object-cover rounded-lg shadow-sm">
+                                </div>
+                                <div class="flex-1">
+                                    <h4 id="preview-title" class="text-xl font-bold text-gray-900 mb-2">Book Title</h4>
+                                    <p id="preview-author" class="text-lg text-gray-700 mb-3">Author Name</p>
+                                    <div class="space-y-2 text-sm text-gray-600">
+                                        <div><span class="font-medium">Publisher:</span> <span id="preview-publisher">-</span></div>
+                                        <div><span class="font-medium">Year:</span> <span id="preview-year">-</span></div>
+                                        <div><span class="font-medium">ISBN:</span> <span id="preview-isbn">-</span></div>
+                                        <div><span class="font-medium">Status:</span> <span id="preview-status">-</span></div>
+                                        <div><span class="font-medium">Location:</span> <span id="preview-location">-</span></div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <div class="font-medium text-gray-900 mb-2">Collections:</div>
+                                        <div id="preview-collections" class="flex flex-wrap gap-2">
+                                            <!-- Collection badges will appear here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <div class="font-medium text-gray-900 mb-2">Summary:</div>
+                                <p id="preview-summary" class="text-gray-700">-</p>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <div class="font-medium text-gray-900 mb-2">Description:</div>
+                                <p id="preview-description" class="text-gray-700">-</p>
+                            </div>
+                        </div>
+
+                        <!-- SEO Preview -->
+                        <div class="mt-6">
+                            <h4 class="text-lg font-medium text-gray-900 mb-4">SEO Preview</h4>
+                            <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                                <div class="text-blue-600 text-lg font-medium hover:underline cursor-pointer" id="seo-title">
+                                    Book Title - Hudson Street Library
+                                </div>
+                                <div class="text-green-700 text-sm" id="seo-url">
+                                    https://hudsonstreetlibrary.org/books/book-title
+                                </div>
+                                <div class="text-gray-700 text-sm mt-1" id="seo-description">
+                                    Book description will appear here in search results...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Publish Options -->
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Publish Options</h3>
+                        
+                        <div class="space-y-6">
+                            <!-- Publication Status -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-3">Publication Status</label>
+                                <div class="space-y-2">
+                                    <label class="flex items-center">
+                                        <input type="radio" name="publish_status" value="draft" class="mr-2">
+                                        <span class="text-sm">Save as Draft</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="radio" name="publish_status" value="published" checked class="mr-2">
+                                        <span class="text-sm">Publish Immediately</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="radio" name="publish_status" value="scheduled" class="mr-2">
+                                        <span class="text-sm">Schedule for Later</span>
+                                    </label>
+                                </div>
+                                
+                                <div id="schedule-date" class="mt-3 hidden">
+                                    <input type="datetime-local" name="publish_date" class="form-input w-full">
+                                </div>
+                            </div>
+
+                            <!-- Notifications -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-3">Notifications</label>
+                                <div class="space-y-2">
+                                    <label class="flex items-center">
+                                        <input type="checkbox" name="notify_staff" checked class="mr-2">
+                                        <span class="text-sm">Notify library staff</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" name="create_news_item" class="mr-2">
+                                        <span class="text-sm">Create news announcement</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" name="update_social" class="mr-2">
+                                        <span class="text-sm">Post to social media</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Final Checklist -->
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-700 mb-3">Pre-Publish Checklist</h4>
+                                <div class="space-y-2 text-sm">
+                                    <div class="flex items-center" id="check-title">
+                                        <i class="fas fa-check text-green-500 mr-2"></i>
+                                        <span>Title is complete</span>
+                                    </div>
+                                    <div class="flex items-center" id="check-status">
+                                        <i class="fas fa-check text-green-500 mr-2"></i>
+                                        <span>Status is set</span>
+                                    </div>
+                                    <div class="flex items-center" id="check-image">
+                                        <i class="fas fa-times text-red-500 mr-2"></i>
+                                        <span>Cover image uploaded</span>
+                                    </div>
+                                    <div class="flex items-center" id="check-collections">
+                                        <i class="fas fa-times text-red-500 mr-2"></i>
+                                        <span>Added to collections</span>
+                                    </div>
+                                    <div class="flex items-center" id="check-description">
+                                        <i class="fas fa-times text-red-500 mr-2"></i>
+                                        <span>Description provided</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="space-y-3">
+                                <button type="button" id="preview-public" class="w-full btn-secondary">
+                                    <i class="fas fa-eye mr-2"></i>Preview Public Page
+                                </button>
+                                <button type="button" id="duplicate-book" class="w-full btn-secondary">
+                                    <i class="fas fa-copy mr-2"></i>Duplicate for Similar Book
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden inputs for collections -->
+        <input type="hidden" name="collections" id="collections-input">
+        <input type="hidden" name="subjects_array" id="subjects-array-input">
+    </form>
+</div>
+
+<!-- Batch Mode Modal -->
+<div id="batch-mode-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+    <div class="flex min-h-screen items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-medium text-gray-900">Batch Book Import</h3>
+                    <button type="button" id="close-batch-modal" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div class="space-y-6">
+                    <!-- Import Options -->
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-900 mb-3">Import Method</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <button type="button" class="batch-import-method p-4 border-2 border-gray-200 rounded-lg hover:border-teal-300 text-center" data-method="csv">
+                                <i class="fas fa-file-csv text-2xl text-gray-600 mb-2"></i>
+                                <div class="font-medium">CSV Import</div>
+                                <div class="text-sm text-gray-500">Upload spreadsheet</div>
+                            </button>
+                            <button type="button" class="batch-import-method p-4 border-2 border-gray-200 rounded-lg hover:border-teal-300 text-center" data-method="isbn">
+                                <i class="fas fa-barcode text-2xl text-gray-600 mb-2"></i>
+                                <div class="font-medium">ISBN List</div>
+                                <div class="text-sm text-gray-500">Auto-fetch details</div>
+                            </button>
+                            <button type="button" class="batch-import-method p-4 border-2 border-gray-200 rounded-lg hover:border-teal-300 text-center" data-method="manual">
+                                <i class="fas fa-plus text-2xl text-gray-600 mb-2"></i>
+                                <div class="font-medium">Manual Entry</div>
+                                <div class="text-sm text-gray-500">Quick add multiple</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Import Content Area -->
+                    <div id="batch-import-content">
+                        <!-- Content will be loaded based on selected method -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/js/book-workflow.js"></script>

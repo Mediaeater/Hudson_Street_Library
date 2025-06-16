@@ -61,6 +61,7 @@ app.use('/assets', express.static(path.join(__dirname, '../src/assets')));
 
 // API Routes
 app.use('/admin/api/books', require('./api/books'));
+app.use('/admin/api/books', require('./api/books-workflow'));
 app.use('/admin/api/collections', require('./api/collections'));
 
 // Dashboard API endpoints
