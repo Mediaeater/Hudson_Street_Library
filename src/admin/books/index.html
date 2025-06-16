@@ -1,0 +1,451 @@
+---
+layout: layouts/admin.njk
+title: Manage Books
+permalink: /admin/books/
+breadcrumbs:
+  - name: Dashboard
+    url: /admin/
+  - name: Books
+---
+
+<div class="space-y-6">
+    <!-- Page Header -->
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Manage Books</h1>
+            <p class="text-gray-600 mt-1">{{ books | length if books else '0' }} books in the collection</p>
+        </div>
+        <div class="flex space-x-3">
+            <button onclick="importBooks()" class="btn-secondary">
+                <i class="fas fa-upload mr-2"></i>Import CSV
+            </button>
+            <a href="/admin/books/new" class="btn-primary">
+                <i class="fas fa-plus mr-2"></i>Add New Book
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+            <div class="flex items-center">
+                <div class="p-2 bg-green-100 rounded-lg">
+                    <i class="fas fa-check text-green-600"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm text-gray-600">Available</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ stats.available or '0' }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+            <div class="flex items-center">
+                <div class="p-2 bg-yellow-100 rounded-lg">
+                    <i class="fas fa-hand-paper text-yellow-600"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm text-gray-600">Checked Out</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ stats.checked_out or '0' }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+            <div class="flex items-center">
+                <div class="p-2 bg-blue-100 rounded-lg">
+                    <i class="fas fa-bookmark text-blue-600"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm text-gray-600">Reserved</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ stats.reserved or '0' }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+            <div class="flex items-center">
+                <div class="p-2 bg-red-100 rounded-lg">
+                    <i class="fas fa-exclamation-triangle text-red-600"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm text-gray-600">Issues</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ stats.issues or '0' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="bg-white p-6 rounded-lg shadow-sm">
+        <div class="flex flex-wrap gap-4 items-center">
+            <!-- Search -->
+            <div class="flex-1 min-w-64">
+                <div class="relative">
+                    <input type="text" id="search-books" placeholder="Search books..." 
+                           class="form-input w-full pl-10 pr-4">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+            </div>
+            
+            <!-- Status Filter -->
+            <select id="status-filter" class="form-input">
+                <option value="">All Statuses</option>
+                <option value="available">Available</option>
+                <option value="checked_out">Checked Out</option>
+                <option value="reserved">Reserved</option>
+                <option value="missing">Missing</option>
+                <option value="damaged">Damaged</option>
+            </select>
+            
+            <!-- Collection Filter -->
+            <select id="collection-filter" class="form-input">
+                <option value="">All Collections</option>
+                {% for collection in collections %}
+                <option value="{{ collection.id }}">{{ collection.name }}</option>
+                {% endfor %}
+            </select>
+            
+            <!-- Sort -->
+            <select id="sort-filter" class="form-input">
+                <option value="title_asc">Title A-Z</option>
+                <option value="title_desc">Title Z-A</option>
+                <option value="author_asc">Author A-Z</option>
+                <option value="date_desc">Newest First</option>
+                <option value="date_asc">Oldest First</option>
+            </select>
+            
+            <!-- Actions -->
+            <button onclick="exportBooks()" class="btn-secondary">
+                <i class="fas fa-download mr-2"></i>Export
+            </button>
+        </div>
+    </div>
+
+    <!-- Books Table -->
+    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200" id="books-table">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <input type="checkbox" id="select-all" class="h-4 w-4 text-teal-600 border-gray-300 rounded">
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Book
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Author
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Status
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Location
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Added
+                        </th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200" id="books-tbody">
+                    <!-- Books will be loaded here dynamically -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Loading State -->
+        <div id="loading-books" class="text-center py-12">
+            <i class="fas fa-spinner fa-spin text-2xl text-gray-400 mb-4"></i>
+            <p class="text-gray-500">Loading books...</p>
+        </div>
+        
+        <!-- Empty State -->
+        <div id="no-books" class="text-center py-12 hidden">
+            <i class="fas fa-book text-4xl text-gray-300 mb-4"></i>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">No books found</h3>
+            <p class="text-gray-500 mb-6">Get started by adding your first book to the collection.</p>
+            <a href="/admin/books/new" class="btn-primary">
+                <i class="fas fa-plus mr-2"></i>Add First Book
+            </a>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex items-center justify-between">
+        <div class="text-sm text-gray-700">
+            Showing <span id="showing-start">1</span> to <span id="showing-end">25</span> 
+            of <span id="total-books">0</span> books
+        </div>
+        
+        <div class="flex space-x-2" id="pagination">
+            <!-- Pagination buttons will be generated here -->
+        </div>
+    </div>
+</div>
+
+<!-- Bulk Actions Modal -->
+<div id="bulk-actions-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+    <div class="flex min-h-screen items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+            <div class="p-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Bulk Actions</h3>
+                <div class="space-y-3">
+                    <button onclick="bulkAction('delete')" class="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 rounded">
+                        <i class="fas fa-trash mr-2"></i>Delete Selected
+                    </button>
+                    <button onclick="bulkAction('export')" class="w-full text-left px-4 py-2 text-gray-600 hover:bg-gray-50 rounded">
+                        <i class="fas fa-download mr-2"></i>Export Selected
+                    </button>
+                    <button onclick="bulkAction('collection')" class="w-full text-left px-4 py-2 text-gray-600 hover:bg-gray-50 rounded">
+                        <i class="fas fa-layer-group mr-2"></i>Add to Collection
+                    </button>
+                </div>
+                <div class="mt-6 flex justify-end space-x-3">
+                    <button onclick="closeBulkModal()" class="btn-secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentPage = 1;
+let currentFilters = {};
+let selectedBooks = new Set();
+
+// Load books on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadBooks();
+    setupEventListeners();
+});
+
+// Setup event listeners
+function setupEventListeners() {
+    // Search
+    document.getElementById('search-books').addEventListener('input', debounce(filterBooks, 300));
+    
+    // Filters
+    document.getElementById('status-filter').addEventListener('change', filterBooks);
+    document.getElementById('collection-filter').addEventListener('change', filterBooks);
+    document.getElementById('sort-filter').addEventListener('change', filterBooks);
+    
+    // Select all checkbox
+    document.getElementById('select-all').addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('#books-tbody input[type="checkbox"]');
+        checkboxes.forEach(cb => {
+            cb.checked = this.checked;
+            if (this.checked) {
+                selectedBooks.add(cb.value);
+            } else {
+                selectedBooks.delete(cb.value);
+            }
+        });
+        updateBulkActions();
+    });
+}
+
+// Load books from API
+async function loadBooks(page = 1) {
+    const params = new URLSearchParams({
+        page: page,
+        limit: 25,
+        ...currentFilters
+    });
+    
+    try {
+        document.getElementById('loading-books').classList.remove('hidden');
+        
+        const response = await fetch(`/admin/api/books?${params}`);
+        const data = await response.json();
+        
+        renderBooks(data.books);
+        updatePagination(data.pagination);
+        updateStats(data.stats);
+        
+        document.getElementById('loading-books').classList.add('hidden');
+        
+        if (data.books.length === 0) {
+            document.getElementById('no-books').classList.remove('hidden');
+        } else {
+            document.getElementById('no-books').classList.add('hidden');
+        }
+    } catch (error) {
+        console.error('Error loading books:', error);
+        showToast('Error loading books', 'error');
+        document.getElementById('loading-books').classList.add('hidden');
+    }
+}
+
+// Render books in table
+function renderBooks(books) {
+    const tbody = document.getElementById('books-tbody');
+    tbody.innerHTML = '';
+    
+    books.forEach(book => {
+        const row = createBookRow(book);
+        tbody.appendChild(row);
+    });
+}
+
+// Create table row for a book
+function createBookRow(book) {
+    const row = document.createElement('tr');
+    row.className = 'hover:bg-gray-50';
+    
+    row.innerHTML = `
+        <td class="px-6 py-4 whitespace-nowrap">
+            <input type="checkbox" value="${book.id}" class="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                   onchange="handleBookSelect(this)">
+        </td>
+        <td class="px-6 py-4">
+            <div class="flex items-center">
+                <img class="h-16 w-12 object-cover rounded" 
+                     src="${book.cover_image_url || '/assets/images/placeholder-book.svg'}" 
+                     alt="${book.title}">
+                <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900">${book.title}</div>
+                    <div class="text-sm text-gray-500">${book.publisher || 'Unknown Publisher'} ${book.publication_year || ''}</div>
+                    ${book.isbn ? `<div class="text-xs text-gray-400">ISBN: ${book.isbn}</div>` : ''}
+                </div>
+            </div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900">${book.author_display || 'Unknown Author'}</div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+            <span class="status-badge status-${book.status}">${book.status.replace('_', ' ').toUpperCase()}</span>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${book.location_shelf || 'Unassigned'}
+            ${book.location_section ? `<br><small>${book.location_section}</small>` : ''}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${formatDate(book.created_at)}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+            <div class="flex justify-end space-x-2">
+                <a href="/admin/books/${book.id}" class="text-teal-600 hover:text-teal-900">
+                    <i class="fas fa-eye"></i>
+                </a>
+                <a href="/admin/books/${book.id}/edit" class="text-blue-600 hover:text-blue-900">
+                    <i class="fas fa-edit"></i>
+                </a>
+                <button onclick="deleteBook(${book.id})" class="text-red-600 hover:text-red-900">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </td>
+    `;
+    
+    return row;
+}
+
+// Filter books
+function filterBooks() {
+    currentFilters = {
+        search: document.getElementById('search-books').value,
+        status: document.getElementById('status-filter').value,
+        collection: document.getElementById('collection-filter').value,
+        sort: document.getElementById('sort-filter').value
+    };
+    
+    currentPage = 1;
+    loadBooks(currentPage);
+}
+
+// Handle book selection
+function handleBookSelect(checkbox) {
+    if (checkbox.checked) {
+        selectedBooks.add(checkbox.value);
+    } else {
+        selectedBooks.delete(checkbox.value);
+    }
+    updateBulkActions();
+}
+
+// Update bulk actions visibility
+function updateBulkActions() {
+    const bulkActionsButton = document.getElementById('bulk-actions-button');
+    if (selectedBooks.size > 0) {
+        if (!bulkActionsButton) {
+            const button = document.createElement('button');
+            button.id = 'bulk-actions-button';
+            button.className = 'btn-secondary';
+            button.innerHTML = `<i class="fas fa-cog mr-2"></i>Actions (${selectedBooks.size})`;
+            button.onclick = showBulkModal;
+            
+            const actionsContainer = document.querySelector('.flex.space-x-3');
+            actionsContainer.insertBefore(button, actionsContainer.firstChild);
+        } else {
+            bulkActionsButton.innerHTML = `<i class="fas fa-cog mr-2"></i>Actions (${selectedBooks.size})`;
+        }
+    } else if (bulkActionsButton) {
+        bulkActionsButton.remove();
+    }
+}
+
+// Utility functions
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+function formatDate(dateString) {
+    return new Date(dateString).toLocaleDateString();
+}
+
+// Additional functions for import, export, delete, etc.
+async function importBooks() {
+    // Implementation for CSV import
+    showToast('Import functionality coming soon!', 'info');
+}
+
+async function exportBooks() {
+    // Implementation for CSV export
+    showToast('Export functionality coming soon!', 'info');
+}
+
+async function deleteBook(bookId) {
+    if (confirm('Are you sure you want to delete this book?')) {
+        try {
+            const response = await fetch(`/admin/api/books/${bookId}`, {
+                method: 'DELETE'
+            });
+            
+            if (response.ok) {
+                showToast('Book deleted successfully', 'success');
+                loadBooks(currentPage);
+            } else {
+                showToast('Error deleting book', 'error');
+            }
+        } catch (error) {
+            showToast('Network error', 'error');
+        }
+    }
+}
+
+function showBulkModal() {
+    document.getElementById('bulk-actions-modal').classList.remove('hidden');
+}
+
+function closeBulkModal() {
+    document.getElementById('bulk-actions-modal').classList.add('hidden');
+}
+
+async function bulkAction(action) {
+    // Implementation for bulk actions
+    showToast(`Bulk ${action} functionality coming soon!`, 'info');
+    closeBulkModal();
+}
+</script>
