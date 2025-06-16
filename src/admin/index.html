@@ -117,22 +117,34 @@ permalink: /admin/
         <!-- Quick Actions Panel -->
         <div class="bg-white p-6 rounded-lg shadow-sm">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <a href="/admin/books/new" class="p-4 border border-gray-200 rounded-lg hover:border-teal-300 hover:bg-teal-50 transition-colors">
                     <div class="text-center">
                         <i class="fas fa-plus text-2xl text-teal-600 mb-2"></i>
                         <div class="text-sm font-medium text-gray-900">Add Book</div>
                     </div>
                 </a>
+                <button onclick="buildSite()" class="p-4 border border-gray-200 rounded-lg hover:border-orange-300 hover:bg-orange-50 transition-colors">
+                    <div class="text-center">
+                        <i class="fas fa-hammer text-2xl text-orange-600 mb-2"></i>
+                        <div class="text-sm font-medium text-gray-900">Build Site</div>
+                    </div>
+                </button>
+                <button onclick="deploySite()" class="p-4 border border-gray-200 rounded-lg hover:border-green-300 hover:bg-green-50 transition-colors">
+                    <div class="text-center">
+                        <i class="fas fa-rocket text-2xl text-green-600 mb-2"></i>
+                        <div class="text-sm font-medium text-gray-900">Deploy</div>
+                    </div>
+                </button>
                 <a href="/admin/collections/new" class="p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors">
                     <div class="text-center">
                         <i class="fas fa-layer-group text-2xl text-blue-600 mb-2"></i>
                         <div class="text-sm font-medium text-gray-900">New Collection</div>
                     </div>
                 </a>
-                <button onclick="showImportModal()" class="p-4 border border-gray-200 rounded-lg hover:border-green-300 hover:bg-green-50 transition-colors">
+                <button onclick="showImportModal()" class="p-4 border border-gray-200 rounded-lg hover:border-indigo-300 hover:bg-indigo-50 transition-colors">
                     <div class="text-center">
-                        <i class="fas fa-upload text-2xl text-green-600 mb-2"></i>
+                        <i class="fas fa-upload text-2xl text-indigo-600 mb-2"></i>
                         <div class="text-sm font-medium text-gray-900">Import CSV</div>
                     </div>
                 </button>
@@ -333,5 +345,66 @@ function showImportModal() {
 
 function generateReport() {
     showToast('Report generation coming soon!', 'info');
+}
+
+// Build site - generate static pages
+async function buildSite() {
+    const button = event.target.closest('button');
+    const originalHTML = button.innerHTML;
+    
+    try {
+        button.innerHTML = '<i class="fas fa-spinner fa-spin text-blue-600"></i><div class="ml-4"><h3 class="text-lg font-medium text-gray-900">Building...</h3><p class="text-sm text-gray-500">Generating static pages</p></div>';
+        button.disabled = true;
+        
+        const response = await fetch('/admin/api/build', {
+            method: 'POST'
+        });
+        
+        if (response.ok) {
+            showToast('Site built successfully! Static pages generated.', 'success');
+        } else {
+            const error = await response.json();
+            throw new Error(error.error || 'Build failed');
+        }
+    } catch (error) {
+        console.error('Build error:', error);
+        showToast('Build failed: ' + error.message, 'error');
+    } finally {
+        button.innerHTML = originalHTML;
+        button.disabled = false;
+    }
+}
+
+// Deploy site - build and push to git
+async function deploySite() {
+    const button = event.target.closest('button');
+    const originalHTML = button.innerHTML;
+    
+    if (!confirm('This will build the site and push changes to git. Continue?')) {
+        return;
+    }
+    
+    try {
+        button.innerHTML = '<i class="fas fa-spinner fa-spin text-green-600"></i><div class="ml-4"><h3 class="text-lg font-medium text-gray-900">Deploying...</h3><p class="text-sm text-gray-500">Building & pushing to git</p></div>';
+        button.disabled = true;
+        
+        const response = await fetch('/admin/api/deploy', {
+            method: 'POST'
+        });
+        
+        if (response.ok) {
+            showToast('Site deployed successfully! Changes pushed to git.', 'success');
+            refreshDashboard();
+        } else {
+            const error = await response.json();
+            throw new Error(error.error || 'Deploy failed');
+        }
+    } catch (error) {
+        console.error('Deploy error:', error);
+        showToast('Deploy failed: ' + error.message, 'error');
+    } finally {
+        button.innerHTML = originalHTML;
+        button.disabled = false;
+    }
 }
 </script>
