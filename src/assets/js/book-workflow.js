@@ -1056,7 +1056,7 @@ class BookWorkflow {
         // Update SEO preview
         const title = formData.get('title') || 'Book Title';
         document.getElementById('seo-title').textContent = `${title} - Hudson Street Library`;
-        document.getElementById('seo-url').textContent = `https://hudsonstreetlibrary.org/books/${this.generateSlug(title)}`;
+        document.getElementById('seo-url').textContent = `https://hudsonstreetlibrary.com/books/${this.generateSlug(title)}`;
         
         const description = formData.get('summary') || formData.get('description') || 'Book description will appear here in search results...';
         document.getElementById('seo-description').textContent = description.substring(0, 160) + (description.length > 160 ? '...' : '');

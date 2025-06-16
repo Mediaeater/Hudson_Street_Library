@@ -8,7 +8,7 @@ The Hudson Street Library Book Addition Workflow is a comprehensive, 4-step guid
 
 ### Accessing the Workflow
 
-1. **Login to Admin Panel**: Navigate to `https://hudsonstreetlibrary.org/admin`
+1. **Login to Admin Panel**: Navigate to `https://hudsonstreetlibrary.com/admin`
 2. **Go to Books Section**: Click "Books" in the sidebar navigation
 3. **Start New Book**: Click the "Add New Book" button
 
@@ -320,7 +320,7 @@ The Hudson Street Library Book Addition Workflow is a comprehensive, 4-step guid
 ### Getting Help
 - **User Guide**: This document for comprehensive instructions
 - **Video Tutorials**: Available in admin panel help section
-- **Email Support**: cms-support@hudsonstreetlibrary.org
+- **Email Support**: cms-support@hudsonstreetlibrary.com
 - **Phone Support**: Available during business hours
 
 ### Additional Resources

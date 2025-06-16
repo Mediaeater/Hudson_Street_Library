@@ -8,7 +8,7 @@ Welcome to the Hudson Street Library Content Management System! This guide will 
 
 ### Accessing the Admin Panel
 
-1. **URL**: Navigate to `https://hudsonstreetlibrary.org/admin`
+1. **URL**: Navigate to `https://hudsonstreetlibrary.com/admin`
 2. **Login**: Use your provided credentials
 3. **Dashboard**: You'll land on the main dashboard showing library statistics
 
@@ -307,7 +307,7 @@ Collections help organize books into themed groups like "Photography Books," "St
 ### Getting Help
 
 #### Support Channels
-- **Email**: cms-support@hudsonstreetlibrary.org
+- **Email**: cms-support@hudsonstreetlibrary.com
 - **Phone**: [Support phone number]
 - **Hours**: Monday-Friday, 9 AM - 5 PM EST
 
@@ -377,9 +377,9 @@ Collections help organize books into themed groups like "Photography Books," "St
 
 ## 📞 Support Information
 
-**Technical Support**: cms-support@hudsonstreetlibrary.org
-**Training Requests**: training@hudsonstreetlibrary.org
-**Feature Requests**: features@hudsonstreetlibrary.org
+**Technical Support**: cms-support@hudsonstreetlibrary.com
+**Training Requests**: training@hudsonstreetlibrary.com
+**Feature Requests**: features@hudsonstreetlibrary.com
 
 **Emergency Contact**: [Emergency phone number]
 **Office Hours**: Monday-Friday, 9 AM - 5 PM EST
