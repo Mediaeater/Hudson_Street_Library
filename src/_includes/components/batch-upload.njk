@@ -1,0 +1,414 @@
+<!-- Batch Upload Component -->
+<div class="batch-upload-component">
+    <!-- CSV Import Template -->
+    <div id="csv-import-template" class="hidden">
+        <div class="space-y-6">
+            <!-- File Upload Area -->
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors" id="csv-drop-zone">
+                <input type="file" id="csv-file-input" accept=".csv" class="hidden">
+                <div class="space-y-4">
+                    <div class="mx-auto w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-file-csv text-2xl text-gray-400"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900">Upload CSV File</h3>
+                        <p class="text-sm text-gray-600 mt-1">
+                            Drag and drop your CSV file here, or 
+                            <button type="button" class="text-teal-600 hover:text-teal-500 font-medium" onclick="document.getElementById('csv-file-input').click()">
+                                browse to upload
+                            </button>
+                        </p>
+                    </div>
+                    <div class="text-xs text-gray-500">
+                        Maximum file size: 5MB
+                    </div>
+                </div>
+            </div>
+
+            <!-- CSV Preview -->
+            <div id="csv-preview" class="hidden">
+                <h4 class="text-lg font-medium text-gray-900 mb-4">CSV Preview</h4>
+                <div class="bg-gray-50 rounded-lg p-4 max-h-64 overflow-auto">
+                    <table class="min-w-full divide-y divide-gray-200 text-sm" id="csv-preview-table">
+                        <!-- CSV data will be inserted here -->
+                    </table>
+                </div>
+                <div class="mt-4 flex items-center justify-between">
+                    <div class="text-sm text-gray-600">
+                        <span id="csv-row-count">0</span> rows found
+                        • <span id="csv-valid-count">0</span> valid
+                        • <span id="csv-error-count">0</span> errors
+                    </div>
+                    <div class="space-x-3">
+                        <button type="button" id="csv-validate" class="btn-secondary">
+                            <i class="fas fa-check-circle mr-2"></i>Validate Data
+                        </button>
+                        <button type="button" id="csv-import" class="btn-primary" disabled>
+                            <i class="fas fa-upload mr-2"></i>Import Books
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Validation Results -->
+            <div id="csv-validation-results" class="hidden">
+                <h4 class="text-lg font-medium text-gray-900 mb-4">Validation Results</h4>
+                
+                <!-- Errors -->
+                <div id="csv-errors" class="hidden mb-6">
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-exclamation-circle text-red-500 mr-2"></i>
+                            <h5 class="text-sm font-medium text-red-800">Validation Errors</h5>
+                        </div>
+                        <div id="csv-errors-list" class="space-y-2 text-sm text-red-700">
+                            <!-- Error items will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Warnings -->
+                <div id="csv-warnings" class="hidden mb-6">
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>
+                            <h5 class="text-sm font-medium text-yellow-800">Warnings</h5>
+                        </div>
+                        <div id="csv-warnings-list" class="space-y-2 text-sm text-yellow-700">
+                            <!-- Warning items will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Success Summary -->
+                <div id="csv-success" class="hidden">
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <div>
+                                <h5 class="text-sm font-medium text-green-800">Ready to Import</h5>
+                                <p class="text-sm text-green-700">
+                                    <span id="csv-ready-count">0</span> books are ready to be imported.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Import Progress -->
+            <div id="csv-import-progress" class="hidden">
+                <h4 class="text-lg font-medium text-gray-900 mb-4">Importing Books</h4>
+                <div class="space-y-4">
+                    <div class="bg-gray-200 rounded-full h-2">
+                        <div id="csv-progress-bar" class="bg-teal-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                    <div class="flex justify-between text-sm text-gray-600">
+                        <span id="csv-progress-text">Processing...</span>
+                        <span id="csv-progress-percent">0%</span>
+                    </div>
+                    <div id="csv-import-status" class="space-y-2 max-h-32 overflow-y-auto">
+                        <!-- Status messages will appear here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Import Results -->
+            <div id="csv-import-results" class="hidden">
+                <h4 class="text-lg font-medium text-gray-900 mb-4">Import Complete</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-bold text-green-600" id="import-success-count">0</div>
+                        <div class="text-sm text-green-800">Successfully Imported</div>
+                    </div>
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-bold text-yellow-600" id="import-warning-count">0</div>
+                        <div class="text-sm text-yellow-800">Imported with Warnings</div>
+                    </div>
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-bold text-red-600" id="import-error-count">0</div>
+                        <div class="text-sm text-red-800">Failed to Import</div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-end space-x-3">
+                    <button type="button" id="download-import-report" class="btn-secondary">
+                        <i class="fas fa-download mr-2"></i>Download Report
+                    </button>
+                    <button type="button" id="view-imported-books" class="btn-primary">
+                        <i class="fas fa-eye mr-2"></i>View Imported Books
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sample CSV Template -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div class="flex items-start">
+                    <i class="fas fa-info-circle text-blue-500 mr-3 mt-0.5"></i>
+                    <div>
+                        <h5 class="text-sm font-medium text-blue-800 mb-2">CSV Format Requirements</h5>
+                        <div class="text-sm text-blue-700 space-y-1">
+                            <p><strong>Required columns:</strong> title, status</p>
+                            <p><strong>Optional columns:</strong> author_first, author_last, publisher, publication_year, isbn, summary, description, tags, subjects, location_shelf, location_section</p>
+                            <p><strong>Note:</strong> Use comma-separated values for tags and subjects</p>
+                        </div>
+                        <button type="button" id="download-csv-template" class="mt-3 text-sm text-blue-600 hover:text-blue-500 font-medium">
+                            <i class="fas fa-download mr-1"></i>Download Sample Template
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ISBN Batch Import Template -->
+    <div id="isbn-import-template" class="hidden">
+        <div class="space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- ISBN Input -->
+                <div>
+                    <h4 class="text-lg font-medium text-gray-900 mb-4">ISBN List</h4>
+                    <textarea id="isbn-textarea" 
+                              class="form-input w-full h-64 font-mono text-sm" 
+                              placeholder="Enter one ISBN per line:&#10;&#10;9780123456789&#10;978-0-12-345678-9&#10;0123456789&#10;&#10;Both ISBN-10 and ISBN-13 formats are supported"></textarea>
+                    
+                    <div class="mt-3 flex items-center justify-between">
+                        <div class="text-sm text-gray-600">
+                            <span id="isbn-count">0</span> ISBNs entered
+                        </div>
+                        <button type="button" id="validate-isbn-list" class="btn-secondary">
+                            <i class="fas fa-check mr-2"></i>Validate ISBNs
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Default Settings -->
+                <div>
+                    <h4 class="text-lg font-medium text-gray-900 mb-4">Default Settings</h4>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="isbn-default-status" class="block text-sm font-medium text-gray-700 mb-2">
+                                Default Status
+                            </label>
+                            <select id="isbn-default-status" class="form-input w-full">
+                                <option value="available">Available</option>
+                                <option value="checked_out">Checked Out</option>
+                                <option value="reserved">Reserved</option>
+                                <option value="missing">Missing</option>
+                                <option value="damaged">Damaged</option>
+                                <option value="repair">In Repair</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="isbn-default-section" class="block text-sm font-medium text-gray-700 mb-2">
+                                Default Section
+                            </label>
+                            <input type="text" id="isbn-default-section" class="form-input w-full" 
+                                   placeholder="e.g., Photography, Art">
+                        </div>
+
+                        <div>
+                            <label for="isbn-default-shelf" class="block text-sm font-medium text-gray-700 mb-2">
+                                Default Shelf Location
+                            </label>
+                            <input type="text" id="isbn-default-shelf" class="form-input w-full" 
+                                   placeholder="e.g., A1, B3">
+                        </div>
+
+                        <div>
+                            <label class="flex items-center">
+                                <input type="checkbox" id="isbn-auto-collections" class="mr-2">
+                                <span class="text-sm text-gray-700">Auto-assign to collections based on category</span>
+                            </label>
+                        </div>
+
+                        <div>
+                            <label class="flex items-center">
+                                <input type="checkbox" id="isbn-new-acquisition" checked class="mr-2">
+                                <span class="text-sm text-gray-700">Mark as new acquisitions</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ISBN Validation Results -->
+            <div id="isbn-validation-results" class="hidden">
+                <h4 class="text-lg font-medium text-gray-900 mb-4">ISBN Validation</h4>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-bold text-green-600" id="isbn-valid-count">0</div>
+                        <div class="text-sm text-green-800">Valid ISBNs</div>
+                    </div>
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-bold text-red-600" id="isbn-invalid-count">0</div>
+                        <div class="text-sm text-red-800">Invalid ISBNs</div>
+                    </div>
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-bold text-blue-600" id="isbn-duplicate-count">0</div>
+                        <div class="text-sm text-blue-800">Already in Library</div>
+                    </div>
+                </div>
+
+                <!-- Invalid ISBNs -->
+                <div id="isbn-invalid-list" class="hidden mb-6">
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <h5 class="text-sm font-medium text-red-800 mb-3">Invalid ISBNs</h5>
+                        <div id="isbn-invalid-items" class="space-y-1 text-sm text-red-700 max-h-32 overflow-y-auto">
+                            <!-- Invalid ISBN items will be listed here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Proceed Button -->
+                <div class="flex justify-end">
+                    <button type="button" id="fetch-isbn-books" class="btn-primary" disabled>
+                        <i class="fas fa-download mr-2"></i>Fetch Book Details
+                    </button>
+                </div>
+            </div>
+
+            <!-- ISBN Fetch Progress -->
+            <div id="isbn-fetch-progress" class="hidden">
+                <h4 class="text-lg font-medium text-gray-900 mb-4">Fetching Book Details</h4>
+                <div class="space-y-4">
+                    <div class="bg-gray-200 rounded-full h-2">
+                        <div id="isbn-progress-bar" class="bg-teal-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                    <div class="flex justify-between text-sm text-gray-600">
+                        <span id="isbn-progress-text">Fetching book details...</span>
+                        <span id="isbn-progress-percent">0%</span>
+                    </div>
+                    <div id="isbn-fetch-status" class="space-y-1 max-h-32 overflow-y-auto text-sm">
+                        <!-- Status messages will appear here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ISBN Results -->
+            <div id="isbn-fetch-results" class="hidden">
+                <h4 class="text-lg font-medium text-gray-900 mb-4">Book Details Retrieved</h4>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-bold text-green-600" id="isbn-found-count">0</div>
+                        <div class="text-sm text-green-800">Details Found</div>
+                    </div>
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-bold text-yellow-600" id="isbn-partial-count">0</div>
+                        <div class="text-sm text-yellow-800">Partial Details</div>
+                    </div>
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-bold text-red-600" id="isbn-notfound-count">0</div>
+                        <div class="text-sm text-red-800">Not Found</div>
+                    </div>
+                </div>
+
+                <!-- Book Preview -->
+                <div class="bg-gray-50 rounded-lg p-4 mb-6 max-h-64 overflow-y-auto">
+                    <h5 class="text-sm font-medium text-gray-900 mb-3">Books Ready to Import</h5>
+                    <div id="isbn-books-preview" class="space-y-2">
+                        <!-- Book preview items will appear here -->
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-3">
+                    <button type="button" id="isbn-review-books" class="btn-secondary">
+                        <i class="fas fa-edit mr-2"></i>Review & Edit
+                    </button>
+                    <button type="button" id="isbn-import-books" class="btn-primary">
+                        <i class="fas fa-upload mr-2"></i>Import All Books
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manual Entry Template -->
+    <div id="manual-import-template" class="hidden">
+        <div class="space-y-6">
+            <div class="flex justify-between items-center">
+                <h4 class="text-lg font-medium text-gray-900">Quick Book Entry</h4>
+                <button type="button" id="add-manual-book-row" class="btn-secondary">
+                    <i class="fas fa-plus mr-2"></i>Add Book
+                </button>
+            </div>
+
+            <!-- Manual Books List -->
+            <div id="manual-books-container" class="space-y-4 max-h-96 overflow-y-auto">
+                <!-- Manual book entries will be added here -->
+            </div>
+
+            <!-- Bulk Actions -->
+            <div class="bg-gray-50 rounded-lg p-4">
+                <h5 class="text-sm font-medium text-gray-900 mb-3">Bulk Settings</h5>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="manual-bulk-status" class="block text-sm font-medium text-gray-700 mb-1">
+                            Apply Status to All
+                        </label>
+                        <select id="manual-bulk-status" class="form-input w-full">
+                            <option value="">Don't change</option>
+                            <option value="available">Available</option>
+                            <option value="checked_out">Checked Out</option>
+                            <option value="reserved">Reserved</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="manual-bulk-section" class="block text-sm font-medium text-gray-700 mb-1">
+                            Apply Section to All
+                        </label>
+                        <input type="text" id="manual-bulk-section" class="form-input w-full" 
+                               placeholder="e.g., Photography">
+                    </div>
+                    <div class="flex items-end">
+                        <button type="button" id="apply-bulk-settings" class="btn-secondary w-full">
+                            <i class="fas fa-magic mr-2"></i>Apply to All
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary and Actions -->
+            <div class="flex items-center justify-between p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div class="text-sm text-blue-800">
+                    <span id="manual-book-count">0</span> books ready to import
+                </div>
+                <div class="space-x-3">
+                    <button type="button" id="clear-manual-books" class="btn-secondary">
+                        <i class="fas fa-trash mr-2"></i>Clear All
+                    </button>
+                    <button type="button" id="save-manual-books" class="btn-primary" disabled>
+                        <i class="fas fa-save mr-2"></i>Save All Books
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Component-specific styles */
+.batch-upload-component .form-input {
+    @apply border border-gray-300 rounded-md px-3 py-2 text-sm;
+    @apply focus:ring-2 focus:ring-teal-500 focus:border-teal-500;
+}
+
+.batch-upload-component .btn-primary {
+    @apply bg-teal-600 text-white px-4 py-2 rounded-md font-medium;
+    @apply hover:bg-teal-700 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.batch-upload-component .btn-secondary {
+    @apply bg-white text-gray-700 px-4 py-2 rounded-md font-medium border border-gray-300;
+    @apply hover:bg-gray-50 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+#csv-drop-zone.dragover {
+    @apply border-teal-400 bg-teal-50;
+}
+</style>
