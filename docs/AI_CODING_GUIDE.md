@@ -383,7 +383,7 @@ OPENAI_API_KEY=your_key  # For category detection
 # Application
 NODE_ENV=production
 PORT=3001
-FRONTEND_URL=https://hudsonstreetlibrary.org
+FRONTEND_URL=https://hudsonstreetlibrary.com
 ```
 
 ### Docker Configuration

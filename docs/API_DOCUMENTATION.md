@@ -4,7 +4,7 @@
 
 The Hudson Street Library CMS provides a RESTful API for managing books, collections, media, and other content. This API powers the admin interface and can be used for integrations with external systems.
 
-**Base URL**: `https://hudsonstreetlibrary.org/admin/api`
+**Base URL**: `https://hudsonstreetlibrary.com/admin/api`
 **Authentication**: JWT Bearer tokens
 **Content Type**: `application/json` (except file uploads)
 **Rate Limiting**: 100 requests per minute per IP
@@ -727,7 +727,7 @@ Authorization: Bearer {token}
 ### JavaScript/Node.js
 ```javascript
 const api = new HudsonLibraryAPI({
-  baseURL: 'https://hudsonstreetlibrary.org/admin/api',
+  baseURL: 'https://hudsonstreetlibrary.com/admin/api',
   token: 'your-jwt-token'
 });
 
@@ -757,7 +757,7 @@ await api.books.update(newBook.id, {
 from hudson_library_api import HudsonLibraryAPI
 
 api = HudsonLibraryAPI(
-    base_url='https://hudsonstreetlibrary.org/admin/api',
+    base_url='https://hudsonstreetlibrary.com/admin/api',
     token='your-jwt-token'
 )
 
@@ -818,9 +818,9 @@ X-RateLimit-Reset: 1642275600
 
 ## 📞 Support
 
-**API Support**: api-support@hudsonstreetlibrary.org
-**Documentation Issues**: docs@hudsonstreetlibrary.org
-**Rate Limit Increases**: api-limits@hudsonstreetlibrary.org
+**API Support**: api-support@hudsonstreetlibrary.com
+**Documentation Issues**: docs@hudsonstreetlibrary.com
+**Rate Limit Increases**: api-limits@hudsonstreetlibrary.com
 
 ---
 

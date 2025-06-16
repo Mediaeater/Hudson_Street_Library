@@ -263,7 +263,7 @@ nano cms/.env
 sudo apt install certbot python3-certbot-nginx
 
 # Obtain SSL certificate
-sudo certbot --nginx -d staging.hudsonstreetlibrary.org
+sudo certbot --nginx -d staging.hudsonstreetlibrary.com
 ```
 
 ### 5. Nginx Configuration
@@ -276,16 +276,16 @@ sudo nano /etc/nginx/sites-available/hudson-library-staging
 ```nginx
 server {
     listen 80;
-    server_name staging.hudsonstreetlibrary.org;
+    server_name staging.hudsonstreetlibrary.com;
     return 301 https://$server_name$request_uri;
 }
 
 server {
     listen 443 ssl http2;
-    server_name staging.hudsonstreetlibrary.org;
+    server_name staging.hudsonstreetlibrary.com;
 
-    ssl_certificate /etc/letsencrypt/live/staging.hudsonstreetlibrary.org/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/staging.hudsonstreetlibrary.org/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/staging.hudsonstreetlibrary.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/staging.hudsonstreetlibrary.com/privkey.pem;
 
     # Static site (Eleventy)
     location / {
@@ -533,23 +533,23 @@ upstream hudson_cms {
 
 server {
     listen 80;
-    server_name hudsonstreetlibrary.org www.hudsonstreetlibrary.org;
-    return 301 https://hudsonstreetlibrary.org$request_uri;
+    server_name hudsonstreetlibrary.com www.hudsonstreetlibrary.com;
+    return 301 https://hudsonstreetlibrary.com$request_uri;
 }
 
 server {
     listen 443 ssl http2;
-    server_name www.hudsonstreetlibrary.org;
-    return 301 https://hudsonstreetlibrary.org$request_uri;
+    server_name www.hudsonstreetlibrary.com;
+    return 301 https://hudsonstreetlibrary.com$request_uri;
 }
 
 server {
     listen 443 ssl http2;
-    server_name hudsonstreetlibrary.org;
+    server_name hudsonstreetlibrary.com;
 
     # SSL Configuration
-    ssl_certificate /etc/letsencrypt/live/hudsonstreetlibrary.org/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/hudsonstreetlibrary.org/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/hudsonstreetlibrary.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/hudsonstreetlibrary.com/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384;
     ssl_prefer_server_ciphers off;
@@ -671,20 +671,20 @@ if ! curl -f http://localhost:3001/health > /dev/null 2>&1; then
     pm2 restart hudson-cms
     
     # Send alert (configure with your preferred method)
-    echo "Hudson Library CMS health check failed at $(date)" | mail -s "CMS Alert" admin@hudsonstreetlibrary.org
+    echo "Hudson Library CMS health check failed at $(date)" | mail -s "CMS Alert" admin@hudsonstreetlibrary.com
 fi
 
 # Check database connectivity
 if ! psql -h localhost -U hudson_library -d hudson_library -c "SELECT 1;" > /dev/null 2>&1; then
     echo "Database health check failed"
-    echo "Hudson Library database connection failed at $(date)" | mail -s "Database Alert" admin@hudsonstreetlibrary.org
+    echo "Hudson Library database connection failed at $(date)" | mail -s "Database Alert" admin@hudsonstreetlibrary.com
 fi
 
 # Check disk space
 DISK_USAGE=$(df /var/www/hudson-library | awk 'NR==2 {print $5}' | sed 's/%//')
 if [ $DISK_USAGE -gt 80 ]; then
     echo "Disk usage is at ${DISK_USAGE}%"
-    echo "Hudson Library server disk usage is at ${DISK_USAGE}% at $(date)" | mail -s "Disk Space Alert" admin@hudsonstreetlibrary.org
+    echo "Hudson Library server disk usage is at ${DISK_USAGE}% at $(date)" | mail -s "Disk Space Alert" admin@hudsonstreetlibrary.com
 fi
 ```
 
@@ -1183,7 +1183,7 @@ pm2 flush
 
 ## 📞 Support Contacts
 
-**DevOps Team**: devops@hudsonstreetlibrary.org
+**DevOps Team**: devops@hudsonstreetlibrary.com
 **Emergency Hotline**: +1-XXX-XXX-XXXX
 **On-Call Engineer**: Available 24/7 for production issues
 
