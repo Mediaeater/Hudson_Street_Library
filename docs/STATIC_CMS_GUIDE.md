@@ -293,3 +293,22 @@ The Hudson Street Library Static CMS provides:
 ✅ **Static output** - Fast, secure, deployable anywhere  
 
 **Perfect for content creators who want powerful features without database overhead!**
+
+---
+
+## 🔄 Migration from PostgreSQL
+
+**Previous System Removed**: All PostgreSQL database files, Docker configurations, and database-related dependencies have been completely removed from the project.
+
+**What Changed**:
+- ❌ Removed: PostgreSQL database, Docker setup, migration scripts
+- ❌ Removed: Database dependencies (`pg`, `bcrypt`, `jsonwebtoken`)  
+- ❌ Removed: Complex server setup and authentication
+- ✅ Added: Simple JSON file storage (`src/_data/*.json`)
+- ✅ Added: Static CMS with web interface (`static-server.js`)
+- ✅ Added: Git-based deployment workflow
+- ✅ Added: Eleventy static site generation
+
+**Data Migration**: Your existing book data remains available in `src/_data/books.csv` and `src/_data/books.json`. The static CMS reads from and writes to these files directly.
+
+**No Data Loss**: All your book records, collections, and content are preserved in the transition to the static system.

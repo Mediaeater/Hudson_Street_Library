@@ -7,6 +7,9 @@ const Image = require("@11ty/eleventy-img");
 
 module.exports = function(eleventyConfig) {
   console.log("--- Running Eleventy configuration ---");
+  
+  // Disable reserved data property checking to allow custom collections
+  eleventyConfig.setFreezeReservedData(false);
 
   // --- Load CSV Data ---
   const csvPath = path.join(__dirname, "src/_data/books.csv");
@@ -116,6 +119,9 @@ module.exports = function(eleventyConfig) {
   
   // Copy .nojekyll to prevent Jekyll processing
   eleventyConfig.addPassthroughCopy(".nojekyll");
+
+  // --- Ignore admin directory for static builds ---
+  eleventyConfig.ignores.add("src/admin/**");
 
   // --- Define Input/Output Directories ---
   return {
