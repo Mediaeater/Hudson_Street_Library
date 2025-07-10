@@ -3,6 +3,9 @@ const path = require('path');
 const https = require('https');
 const http = require('http');
 
+// Load environment variables
+require('dotenv').config();
+
 // Configuration
 const CSV_PATH = './src/_data/books.csv';
 const IMAGES_DIR = './src/assets/images/books';
