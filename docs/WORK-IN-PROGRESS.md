@@ -6,6 +6,13 @@
 
 **Status**: ✅ FIXED (but needs testing)
 
+### 🔴 404 Error: Missing placeholder-book.svg
+
+**Status**: ✅ FIXED (July 10, 2025)
+- Created `/src/assets/images/placeholder-book.svg`
+- Simple book icon with "No Cover Available" text
+- Commit: `2441755`
+
 **What was happening**: 
 - Placeholder images were strobing/flickering on pages with multiple books
 - Caused by duplicate JavaScript initialization in `book-thumbnail.njk`
