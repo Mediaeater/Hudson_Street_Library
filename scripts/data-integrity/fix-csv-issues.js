@@ -79,78 +79,78 @@ class CSVIntegrityFixer {
       let isFixed = false;
       
       // Fix 1: Empty or invalid titles
-      if (!record.Title || record.Title.trim() === '') {
-        if (record['Author, Last'] && record.Publisher) {
-          record.Title = `[Untitled work by ${record['Author, Last']}]`;
-          this.issues.emptyTitles.push({ row: i + 2, fixed: record.Title });
+      if (!record.title || record.title.trim() === '') {
+        if (record.author_last && record.publisher) {
+          record.title = `[Untitled work by ${record.author_last}]`;
+          this.issues.emptyTitles.push({ row: i + 2, fixed: record.title });
           isFixed = true;
         }
       }
       
       // Fix 2: Clean up author names
-      if (record['Author, Last']) {
-        record['Author, Last'] = this.cleanAuthorName(record['Author, Last']);
+      if (record.author_last) {
+        record.author_last = this.cleanAuthorName(record.author_last);
       }
-      if (record['Author, First']) {
-        record['Author, First'] = this.cleanAuthorName(record['Author, First']);
+      if (record.author_first) {
+        record.author_first = this.cleanAuthorName(record.author_first);
       }
       
       // Fix 3: Standardize ISBN format
-      if (record.ISBN) {
-        const cleanedISBN = this.cleanISBN(record.ISBN);
-        if (cleanedISBN !== record.ISBN) {
-          record.ISBN = cleanedISBN;
+      if (record.isbn_asin) {
+        const cleanedISBN = this.cleanISBN(record.isbn_asin);
+        if (cleanedISBN !== record.isbn_asin) {
+          record.isbn_asin = cleanedISBN;
           isFixed = true;
         }
         
         if (!this.isValidISBN(cleanedISBN)) {
-          this.issues.invalidISBNs.push({ row: i + 2, isbn: record.ISBN });
+          this.issues.invalidISBNs.push({ row: i + 2, isbn: record.isbn_asin });
         }
       }
       
       // Fix 4: Clean up summary text (remove dangerous characters)
-      if (record.Summary) {
-        const cleanedSummary = this.cleanSummary(record.Summary);
-        if (cleanedSummary !== record.Summary) {
-          record.Summary = cleanedSummary;
+      if (record.description) {
+        const cleanedSummary = this.cleanSummary(record.description);
+        if (cleanedSummary !== record.description) {
+          record.description = cleanedSummary;
           isFixed = true;
         }
       }
       
       // Fix 5: Standardize collection grouping
-      if (record['Collection Grouping']) {
-        const standardized = this.standardizeCollection(record['Collection Grouping']);
-        if (standardized !== record['Collection Grouping']) {
-          record['Collection Grouping'] = standardized;
+      if (record.collection_grouping) {
+        const standardized = this.standardizeCollection(record.collection_grouping);
+        if (standardized !== record.collection_grouping) {
+          record.collection_grouping = standardized;
           isFixed = true;
         }
       }
       
       // Fix 6: Clean up price formatting
-      if (record.Price) {
-        const cleanedPrice = this.cleanPrice(record.Price);
-        if (cleanedPrice !== record.Price) {
-          record.Price = cleanedPrice;
+      if (record.price_usd) {
+        const cleanedPrice = this.cleanPrice(record.price_usd);
+        if (cleanedPrice !== record.price_usd) {
+          record.price_usd = cleanedPrice;
           isFixed = true;
         }
       }
       
       // Fix 7: Validate image paths
-      if (record.Image) {
-        const cleanedImage = this.cleanImagePath(record.Image);
-        if (cleanedImage !== record.Image) {
-          record.Image = cleanedImage;
+      if (record.image_url) {
+        const cleanedImage = this.cleanImagePath(record.image_url);
+        if (cleanedImage !== record.image_url) {
+          record.image_url = cleanedImage;
           isFixed = true;
         }
       }
       
       // Check for duplicates (same title + author)
-      const recordKey = `${record.Title}_${record['Author, Last']}_${record['Author, First']}`.toLowerCase();
+      const recordKey = `${record.title}_${record.author_last}_${record.author_first}`.toLowerCase();
       if (seenRecords.has(recordKey)) {
         this.issues.duplicateRecords.push({
           row: i + 2,
-          title: record.Title,
-          author: `${record['Author, First']} ${record['Author, Last']}`
+          title: record.title,
+          author: `${record.author_first} ${record.author_last}`
         });
         // Skip duplicate, don't add to fixed records
         continue;
