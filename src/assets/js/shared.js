@@ -19,6 +19,7 @@ class HudsonStreetLibrary {
         this.initMobileMenu();
         this.initSmoothScrolling();
         this.initImageErrorHandling();
+        this.initBookThumbnails();
         this.updateCopyrightYear();
     }
 
@@ -67,6 +68,61 @@ class HudsonStreetLibrary {
                 }
             });
         });
+    }
+
+    // Initialize Book Thumbnails
+    initBookThumbnails() {
+        // Prevent duplicate initialization
+        if (this.thumbnailsInitialized) return;
+        this.thumbnailsInitialized = true;
+
+        const thumbnailImages = document.querySelectorAll('.thumbnail-image');
+        
+        thumbnailImages.forEach((img) => {
+            // Skip if already processed
+            if (img.dataset.processed === 'true') return;
+            img.dataset.processed = 'true';
+            
+            const coverPath = this.generateThumbnailCoverPath(img);
+            
+            if (coverPath) {
+                img.src = coverPath;
+            } else {
+                this.showThumbnailPlaceholder(img);
+            }
+        });
+    }
+
+    // Generate cover path using our acquisition naming convention
+    generateThumbnailCoverPath(img) {
+        const imageField = img.dataset.imageField;
+        const title = img.dataset.title;
+        const author = img.dataset.author;
+        const isbn = img.dataset.isbn;
+        
+        // If there's an existing image field, try that first
+        if (imageField && imageField.trim() && imageField !== 'null') {
+            return `/assets/images/books/${imageField}`;
+        }
+        
+        // Generate path from our acquired covers
+        if (isbn && isbn !== 'NULL' && isbn !== '' && isbn !== 'null') {
+            const cleanAuthor = author.replace(/[^a-zA-Z0-9.-]/g, '_');
+            const cleanTitle = title.replace(/[^a-zA-Z0-9.-]/g, '_');
+            const cleanISBN = isbn.replace(/[^a-zA-Z0-9.-]/g, '_');
+            const coverFileName = `${cleanAuthor}_${cleanTitle}_${cleanISBN}`.replace(/_+/g, '_').replace(/^_|_$/g, '').substring(0, 100) + '.jpg';
+            return `/assets/images/books/${coverFileName}`;
+        }
+        
+        return null;
+    }
+
+    showThumbnailPlaceholder(img) {
+        img.style.display = 'none';
+        const placeholder = img.nextElementSibling;
+        if (placeholder && placeholder.classList.contains('thumbnail-placeholder')) {
+            placeholder.style.display = 'flex';
+        }
     }
 
     // Global Image Error Handling
