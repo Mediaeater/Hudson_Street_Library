@@ -59,6 +59,24 @@ Created three new files with API options:
 - `/acquire-covers-enhanced.js` - Enhanced script with redirect handling
 - `/acquire-covers-free.js` - Script using only free APIs
 
+### API Keys Status
+
+✅ **Google Books API**: Configured and working
+✅ **DPLA API**: Configured and working  
+⏳ **Europeana API**: Not yet configured
+⏳ **LibraryThing API**: Not yet configured
+
+### Results So Far
+
+- **Initial covers**: 138
+- **Current covers**: 205 
+- **New covers added**: 67
+- **Coverage**: 15.4% of collection
+- **API Performance**: 
+  - Google Books: Excellent for books without ISBNs
+  - DPLA: Good for historical/cultural items
+  - Archive.org: Finding additional covers
+
 ### Next Steps to Continue
 
 #### 1. Test Placeholder Fix
@@ -68,13 +86,10 @@ npm start
 # Verify no flickering
 ```
 
-#### 2. Get Free API Keys (10 minutes)
-1. **Google Books API**:
-   - Go to https://console.cloud.google.com
-   - Create new project
-   - Enable "Books API"
-   - Create credentials (API Key)
-   - No credit card required
+#### 2. Get Remaining Free API Keys
+1. **Europeana API**:
+   - Register at https://pro.europeana.eu/page/apis
+   - Free key via email
 
 2. **DPLA API**:
    - Register at https://dp.la/developers
