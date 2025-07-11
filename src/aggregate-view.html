@@ -580,18 +580,22 @@ class BookSearch {
         }
         
         // Generate cover path from acquired images using the same naming convention
-        // as our acquisition script: Author_Title_ISBN.jpg
+        // as our acquisition script: Author_Title_ISBN.jpg or Author_Title_noISBN.jpg
         const author = (book.author_full_name || book.author_last || 'Unknown').replace(/[^a-zA-Z0-9.-]/g, '_');
         const title = (book.title || 'Untitled').replace(/[^a-zA-Z0-9.-]/g, '_');
         const isbn = (book.isbn_asin || '').replace(/[^a-zA-Z0-9.-]/g, '_');
         
+        // Try with ISBN if available
         if (isbn && isbn !== 'NULL' && isbn !== '') {
             const coverFileName = `${author}_${title}_${isbn}`.replace(/_+/g, '_').replace(/^_|_$/g, '').substring(0, 100) + '.jpg';
             return `/assets/images/books/${coverFileName}`;
+        } else {
+            // Try with noISBN suffix for books without ISBN
+            const coverFileName = `${author}_${title}_noISBN`.replace(/_+/g, '_').replace(/^_|_$/g, '').substring(0, 100) + '.jpg';
+            return `/assets/images/books/${coverFileName}`;
         }
         
-        // Fallback to placeholder
-        return '/assets/images/placeholder-book.svg';
+        // Note: The image tag will fallback to placeholder if this path doesn't exist
     }
 
     renderBookCard(book) {
