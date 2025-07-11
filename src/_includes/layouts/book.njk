@@ -142,6 +142,10 @@
                             if (isbn && isbn !== 'NULL' && isbn !== '') {
                                 const coverFileName = `${author}_${title}_${isbn}`.replace(/_+/g, '_').replace(/^_|_$/g, '').substring(0, 100) + '.jpg';
                                 return `/assets/images/books/${coverFileName}`;
+                            } else {
+                                // Try with noISBN suffix for books without ISBN
+                                const coverFileName = `${author}_${title}_noISBN`.replace(/_+/g, '_').replace(/^_|_$/g, '').substring(0, 100) + '.jpg';
+                                return `/assets/images/books/${coverFileName}`;
                             }
                             
                             return null;
