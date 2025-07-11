@@ -30,8 +30,6 @@ CREATE TABLE books (
   location_section VARCHAR(50),
   acquisition_date DATE,
   accession_number VARCHAR(50) UNIQUE,
-  price_paid DECIMAL(10,2),
-  current_value DECIMAL(10,2),
   condition_notes TEXT,
   
   -- Content & Classification

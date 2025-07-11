@@ -126,16 +126,7 @@ class CSVIntegrityFixer {
         }
       }
       
-      // Fix 6: Clean up price formatting
-      if (record.price_usd) {
-        const cleanedPrice = this.cleanPrice(record.price_usd);
-        if (cleanedPrice !== record.price_usd) {
-          record.price_usd = cleanedPrice;
-          isFixed = true;
-        }
-      }
-      
-      // Fix 7: Validate image paths
+      // Fix 6: Validate image paths
       if (record.image_url) {
         const cleanedImage = this.cleanImagePath(record.image_url);
         if (cleanedImage !== record.image_url) {
@@ -223,13 +214,6 @@ class CSVIntegrityFixer {
     return collection;
   }
 
-  cleanPrice(price) {
-    if (!price) return price;
-    return price
-      .replace(/[^\d.,]/g, '') // Keep only digits, periods, commas
-      .replace(/^[,.]/, '') // Remove leading punctuation
-      .trim();
-  }
 
   cleanImagePath(imagePath) {
     if (!imagePath) return imagePath;

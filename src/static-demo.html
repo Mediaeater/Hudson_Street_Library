@@ -616,14 +616,6 @@ class BookSearch {
         const imageUrl = this.generateCoverImagePath(book);
         const hasRealCover = imageUrl !== '/assets/images/placeholder-book.svg';
         
-        // Fix price formatting - handle NULL and empty values
-        let price = '';
-        if (book.price_usd && book.price_usd !== 'NULL' && book.price_usd !== '') {
-            const priceNum = parseFloat(book.price_usd);
-            if (!isNaN(priceNum)) {
-                price = `$${priceNum.toFixed(2)}`;
-            }
-        }
         
         const year = (book.publication_year && book.publication_year !== 'NULL') ? book.publication_year : '';
         const pages = (book.page_count && book.page_count !== 'NULL') ? `${book.page_count} pages` : '';
@@ -667,7 +659,6 @@ class BookSearch {
                                     ${this.escapeHtml(book.collection_grouping)}
                                 </span>
                             ` : '<span></span>'}
-                            ${price ? `<span class="text-lg font-semibold text-teal-700">${price}</span>` : ''}
                         </div>
                     </div>
                 </div>
