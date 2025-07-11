@@ -131,7 +131,6 @@ GET /books/{id}
   "location_section": "Photography",
   "accession_number": "HSL-2024-001",
   "acquisition_date": "2024-01-15",
-  "price_paid": 29.95,
   "summary": "A comprehensive overview of contemporary fashion photography.",
   "description": "This book showcases the work of 60 fashion photographers...",
   "tags": ["fashion", "photography", "contemporary"],
