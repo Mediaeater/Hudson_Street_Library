@@ -67,3 +67,34 @@ When books are in the collections subdirectories, they need to reference collect
 
 ## Template Usage
 Use `templates/BOOK-TEMPLATE.html` as the starting point for new book pages.
+
+## Search and Discovery Features
+
+### Clickable Metadata
+All book metadata is now interactive. Users can click on:
+- **Publisher** - See all books by that publisher
+- **Year** - See all books from that year
+- **Author** - See all books by that author
+- **Tags** - See all books with that tag
+- **Collection** - See all books in that collection
+
+### Aggregate Views
+The new aggregate view system (`/aggregate-view.html`) provides:
+- URL parameter-based filtering (e.g., `?filter=publisher&value=Steidl`)
+- Active filter display with clear button
+- Full search within filtered results
+- Additional filtering on top of aggregate views
+- Visual browse mode for image-focused exploration
+
+### Tag Analysis
+Current tag coverage statistics:
+- Only 241 books (18.5%) have tags
+- 154 unique tags identified
+- Top tags: Photography (11), NYC (11), Fashion (6)
+- Tag analysis reports available in `/tag-analysis/`
+
+### Book Cover Status
+- 757 books have covers (56.8% coverage)
+- Covers acquired from free APIs (Open Library, Google Books, DPLA, Archive.org)
+- Cover acquisition scripts available in project root
+- Missing covers use placeholder SVG
