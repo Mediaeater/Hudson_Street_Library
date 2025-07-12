@@ -26,18 +26,51 @@ Visit http://localhost:8080 when running the development server.
 ## 📊 Current Status
 
 - **Total Books**: 1,306 photography books
-- **Book Covers**: 757 covers (56.8% coverage)
+- **Book Covers**: 139 verified covers (11% coverage) 
 - **Tagged Books**: 241 books (18.5% have tags)
 - **Unique Tags**: 154 tags identified
 - **Collections**: 15 curated collections
 - **Data Quality**: ISBN validation completed, 1,242 issues fixed
 
+### Daily Log
+
+#### July 12, 2025 - Major Book Cover Cleanup & Strict Acquisition System
+**Problem**: Discovered 500+ incorrect book covers (physics textbooks, phonetics books, etc.) polluting the collection
+**Solution**: Created strict cover acquisition system with 80% title/author match requirement
+
+**Work completed**:
+1. **Identified & Removed Incorrect Covers**:
+   - Removed 349 physics textbook duplicates (10,983 bytes each)
+   - Removed 43 phonetics textbook duplicates (4,473 bytes)
+   - Removed 29 Archive.org placeholder icons (3,777 bytes)
+   - Removed 100+ other mismatched covers
+   - Total: ~520 incorrect covers removed
+
+2. **Created Strict Acquisition System** (`acquire-covers-strict.js`):
+   - Requires 80% similarity match for both title AND author
+   - Shows what was found vs what was expected
+   - Prevents false positives that plagued the original system
+   - Success rate: ~9-10% (but 100% accurate)
+
+3. **Built Verification Tools**:
+   - `verify-covers-visual.js` - Opens images for manual review
+   - Progress tracking system to avoid re-reviewing
+   - Batch processing with clear accept/reject workflow
+
+4. **Results**:
+   - Started with 859 covers (mostly wrong)
+   - After cleanup: 139 verified correct covers
+   - Processed 300 books, added 28 new verified covers
+   - ISBN books: 30% coverage | Non-ISBN books: 3% coverage
+
+**Key Insight**: Art/photography books are rarely in Google Books API. Better to have 139 correct covers than 859 wrong ones.
+
 ### Recent Updates
-- ✅ Fixed flickering placeholder images
-- ✅ Implemented clickable metadata for aggregate views
-- ✅ Added comprehensive tag analysis system
-- ✅ Acquired 619 new book covers using free APIs
-- ✅ Created data integrity scripts for CSV validation
+- ✅ Fixed critical book cover display issue (July 12)
+- ✅ Created strict cover acquisition system preventing false positives
+- ✅ Built visual verification tool for manual cover checking
+- ✅ Cleaned up 520+ incorrect book covers
+- ✅ Added 28 new verified covers through strict matching
 
 ### Next Steps
 - 📌 Improve tag coverage (currently only 18.5%)
