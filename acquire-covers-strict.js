@@ -14,8 +14,8 @@ const dotenv = require('dotenv').config({ quiet: true });
 // Configuration
 const BOOKS_CSV = './src/_data/books.csv';
 const COVERS_DIR = './src/assets/images/books';
-const DELAY_BETWEEN_CALLS = 2000;
-const DELAY_BETWEEN_BATCHES = 30000;
+const DELAY_BETWEEN_CALLS = 500;
+const DELAY_BETWEEN_BATCHES = 10000;
 const BATCH_SIZE = 25;
 const DEFAULT_LIMIT = 50;
 
