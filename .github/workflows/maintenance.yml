@@ -1,0 +1,62 @@
+name: Repository Maintenance
+
+on:
+  schedule:
+    # Run every Sunday at 2 AM UTC
+    - cron: '0 2 * * 0'
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Clean temporary files
+      run: |
+        find . -name '*.log' -not -path './node_modules/*' -delete
+        find . -name '*.tmp' -not -path './node_modules/*' -delete
+        find . -name '.DS_Store' -delete
+    
+    - name: Check for large files
+      run: |
+        echo "Files larger than 10MB:"
+        find . -type f -size +10M -not -path './.git/*' -not -path './node_modules/*' -exec ls -lh {} \;
+    
+    - name: Check for duplicate images
+      run: |
+        echo "Checking for potential duplicate images..."
+        find ./src/assets/images -type f -name "*.jpg" -exec md5sum {} \; | sort | uniq -d -w 32
+    
+    - name: Analyze repository size
+      run: |
+        echo "Repository size analysis:"
+        du -sh .git
+        du -sh node_modules || echo "No node_modules"
+        du -sh src/assets/images
+        du -sh archive || echo "No archive directory"
+    
+    - name: Create maintenance report
+      run: |
+        echo "# Maintenance Report - $(date)" > maintenance-report.md
+        echo "" >> maintenance-report.md
+        echo "## Repository Stats" >> maintenance-report.md
+        echo "- Total size: $(du -sh . | cut -f1)" >> maintenance-report.md
+        echo "- Image count: $(find ./src/assets/images -type f -name "*.jpg" | wc -l)" >> maintenance-report.md
+        echo "- CSV files: $(find . -name "*.csv" -not -path './node_modules/*' | wc -l)" >> maintenance-report.md
+        echo "" >> maintenance-report.md
+        echo "## Large Files (>5MB)" >> maintenance-report.md
+        find . -type f -size +5M -not -path './.git/*' -not -path './node_modules/*' -exec ls -lh {} \; >> maintenance-report.md || echo "None found" >> maintenance-report.md
+    
+    - name: Upload maintenance report
+      uses: actions/upload-artifact@v3
+      with:
+        name: maintenance-report
+        path: maintenance-report.md
+        retention-days: 30

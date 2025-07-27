@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
-const csv = require('csv-parser');
+const CSVHandler = require('./scripts/utils/csv-handler');
 
 /*
  * Consolidated Book Cover Acquisition Script
@@ -421,47 +421,37 @@ function matchesArtistFilter(book, artistFilter) {
 
 // Main acquisition function
 async function acquireCovers() {
-    const books = [];
     const errors = [];
     
-    // Read CSV file
-    return new Promise((resolve, reject) => {
-        fs.createReadStream(CSV_PATH)
-            .pipe(csv())
-            .on('data', (row) => {
-                try {
-                    // Check if book has missing cover (NULL or empty image_url)
-                    if (row.isbn_asin && row.isbn_asin.trim() && 
-                        (!row.image_url || row.image_url.trim() === '' || row.image_url.trim().toLowerCase() === 'null')) {
-                        
-                        const book = {
-                            title: row.title || 'Unknown Title',
-                            author: row.author_full_name || `${row.author_first || ''} ${row.author_last || ''}`.trim() || 'Unknown Author',
-                            authorLast: row.author_last || '',
-                            authorFirst: row.author_first || '',
-                            isbn: row.isbn_asin.trim(),
-                            year: row.publication_year || '',
-                            filename: cleanFilename(`${row.author_last || 'Unknown'}_${row.title || 'Unknown'}_${row.isbn_asin}`.replace(/\s+/g, '_')) + '.jpg'
-                        };
-                        
-                        // Apply artist filter if specified
-                        if (matchesArtistFilter(book, options.artist)) {
-                            books.push(book);
-                        }
-                    }
-                } catch (parseError) {
-                    errors.push({
-                        row: JSON.stringify(row),
-                        error: parseError.message
-                    });
-                }
+    try {
+        // Read CSV file using new handler
+        const allBooks = await CSVHandler.read(CSV_PATH);
+        
+        // Filter books that need covers
+        const books = allBooks
+            .filter(row => {
+                return row.isbn_asin && row.isbn_asin.trim() && 
+                    (!row.image_url || row.image_url.trim() === '' || row.image_url.trim().toLowerCase() === 'null');
             })
-            .on('end', async () => {
-                if (errors.length > 0) {
-                    console.log(`\nCSV Parsing Errors (${errors.length}):`, errors.slice(0, 5));
-                }
-                
-                console.log(`Found ${books.length} books with missing covers`);
+            .map(row => {
+                const book = {
+                    title: row.title || 'Unknown Title',
+                    author: row.author_full_name || `${row.author_first || ''} ${row.author_last || ''}`.trim() || 'Unknown Author',
+                    authorLast: row.author_last || '',
+                    authorFirst: row.author_first || '',
+                    isbn: row.isbn_asin.trim(),
+                    year: row.publication_year || '',
+                    filename: cleanFilename(`${row.author_last || 'Unknown'}_${row.title || 'Unknown'}_${row.isbn_asin}`.replace(/\s+/g, '_')) + '.jpg'
+                };
+                return book;
+            })
+            .filter(book => matchesArtistFilter(book, options.artist));
+        
+        if (errors.length > 0) {
+            console.log(`\nCSV Parsing Errors (${errors.length}):`, errors.slice(0, 5));
+        }
+        
+        console.log(`Found ${books.length} books with missing covers`);
                 if (options.artist) {
                     console.log(`Filtered to ${options.artist} books`);
                 }
@@ -595,13 +585,10 @@ async function acquireCovers() {
                     console.log(`\nFailed books saved to: ${failedBooksPath}`);
                 }
                 
-                resolve();
-            })
-            .on('error', (csvError) => {
-                console.error('CSV parsing error:', csvError);
-                reject(csvError);
-            });
-    });
+            } catch (error) {
+                console.error('Error processing covers:', error);
+                throw error;
+            }
 }
 
 // Run the acquisition

@@ -7,7 +7,12 @@
     "build": "eleventy",
     "clean": "rm -rf _site",
     "deploy:check": "./scripts/check-deployment.sh",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cleanup": "npm run cleanup:logs && npm run cleanup:temp && npm run cleanup:build",
+    "cleanup:logs": "find . -name '*.log' -not -path './node_modules/*' -not -path './_site/*' -delete",
+    "cleanup:temp": "rm -rf temp-processing incoming-images",
+    "cleanup:build": "rm -rf _site",
+    "prebuild": "npm run cleanup"
   },
   "repository": {
     "type": "git",
@@ -29,9 +34,5 @@
     "csv-stringify": "^6.4.5",
     "dotenv": "^17.2.0",
     "slugify": "^1.6.6"
-  },
-  "dependencies": {
-    "csv-parser": "^3.2.0",
-    "csv-writer": "^1.6.0"
   }
 }
