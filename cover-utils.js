@@ -2,7 +2,8 @@
 
 const fs = require('fs');
 const path = require('path');
-const csv = require('csv-parser');
+const CSVHandler = require('./scripts/utils/csv-handler');
+const ImageProcessor = require('./scripts/utils/image-processor');
 const { exec } = require('child_process');
 const util = require('util');
 const execPromise = util.promisify(exec);
@@ -95,16 +96,7 @@ Examples:
 
 // Helper function to read CSV data
 async function readBooksData() {
-    const books = [];
-    return new Promise((resolve, reject) => {
-        fs.createReadStream(CSV_PATH)
-            .pipe(csv())
-            .on('data', (row) => {
-                books.push(row);
-            })
-            .on('end', () => resolve(books))
-            .on('error', reject);
-    });
+    return await CSVHandler.read(CSV_PATH);
 }
 
 // Helper function to get all cover files

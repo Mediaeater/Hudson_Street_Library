@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { parse } = require('csv-parse/sync');
+const CSVHandler = require('./scripts/utils/csv-handler');
 
 // Configuration
 const CSV_PATH = './src/_data/books.csv';
@@ -31,16 +31,11 @@ function extractTags(tagString) {
 }
 
 // Main aggregation function
-function aggregateByTags() {
+async function aggregateByTags() {
     console.log('📚 Aggregating Hudson Street Library books by tags...\n');
     
     // Read and parse CSV properly
-    const csvContent = fs.readFileSync(CSV_PATH, 'utf8');
-    const books = parse(csvContent, {
-        columns: true,
-        skip_empty_lines: true,
-        relax_quotes: true
-    });
+    const books = await CSVHandler.read(CSV_PATH);
     
     console.log(`Total books: ${books.length}\n`);
     
@@ -275,22 +270,17 @@ function findUntaggedBooksWithCovers(books) {
 }
 
 // Run the aggregation
-try {
-    aggregateByTags();
-    
-    // Also find books that have covers but no tags
-    const csvContent = fs.readFileSync(CSV_PATH, 'utf8');
-    const books = parse(csvContent, {
-        columns: true,
-        skip_empty_lines: true,
-        relax_quotes: true
-    });
-    findUntaggedBooksWithCovers(books);
-    
-    console.log('\n✨ Tag aggregation complete!');
-    console.log(`📁 Results saved in: ${OUTPUT_DIR}/`);
-} catch (error) {
-    console.error('Error:', error.message);
-    console.error('\nMake sure csv-parse is installed:');
-    console.error('npm install csv-parse');
-}
+(async () => {
+    try {
+        await aggregateByTags();
+        
+        // Also find books that have covers but no tags
+        const books = await CSVHandler.read(CSV_PATH);
+        findUntaggedBooksWithCovers(books);
+        
+        console.log('\n✨ Tag aggregation complete!');
+        console.log(`📁 Results saved in: ${OUTPUT_DIR}/`);
+    } catch (error) {
+        console.error('Error:', error.message);
+    }
+})();
