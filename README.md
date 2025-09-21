@@ -214,8 +214,8 @@ npm clean
 ## 📚 Documentation
 
 ### Automated Systems
-- [Image System Documentation](IMAGE-SYSTEM-DOCUMENTATION.md) - Complete image pipeline and optimization
-- [News Pipeline Documentation](NEWS-PIPELINE-DOCUMENTATION.md) - Automated news generation system
+- [Image System Documentation](docs/IMAGE-SYSTEM-DOCUMENTATION.md) - Complete image pipeline and optimization
+- [News Pipeline Documentation](docs/NEWS-PIPELINE-DOCUMENTATION.md) - Automated news generation system
 
 ### Deployment & Operations
 - [Deployment Guide](docs/DEPLOYMENT.md) - How deployment works
@@ -225,7 +225,7 @@ npm clean
 
 ### Development
 - [Architecture Overview](docs/architecture/CMS-ARCHITECTURE.md) - System architecture
-- [Claude AI Guide](docs/architecture/CLAUDE.md) - AI assistant instructions
+- [Claude AI Guide](docs/architecture/OLD-CLAUDE.md) - AI assistant instructions
 - [Book Page Template](docs/guides/BOOK-PAGE-TEMPLATE.md) - Creating book pages
 - [Aggregate Views](docs/AGGREGATE-VIEWS.md) - Clickable metadata and filtering system
 - [API Documentation](docs/API_DOCUMENTATION.md) - Book cover APIs and integration
