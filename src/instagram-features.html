@@ -1,0 +1,160 @@
+---
+layout: layouts/base.njk
+title: Instagram Featured Books
+description: Books featured on @hudson_street_library Instagram
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Featured Books - Hudson Street Library</title>
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .instagram-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+        .instagram-book {
+            text-align: center;
+        }
+        .instagram-book img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border: 1px solid #e5e5e5;
+            transition: transform 0.2s;
+        }
+        .instagram-book:hover img {
+            transform: scale(1.05);
+        }
+        .instagram-stats {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            margin-bottom: 3rem;
+        }
+        .instagram-cta {
+            background: #f3f4f6;
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        .instagram-icon {
+            background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+{% include "components/site-header.njk" %}
+
+<main class="container mx-auto px-6 py-12">
+    <div class="max-w-6xl mx-auto">
+
+        <!-- Header Section -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold mb-4">
+                <i class="fab fa-instagram instagram-icon"></i>
+                Instagram Featured Books
+            </h1>
+            <p class="text-xl text-gray-600">
+                Follow <a href="https://www.instagram.com/hudson_street_library"
+                         target="_blank"
+                         class="text-teal-600 hover:text-teal-700 font-semibold">
+                    @hudson_street_library
+                </a> for daily photography book discoveries
+            </p>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="instagram-stats">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div>
+                    <div class="text-3xl font-bold">{{ instagramBooks.books | length }}</div>
+                    <div class="text-sm opacity-90">Books Featured</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold">1,306</div>
+                    <div class="text-sm opacity-90">Total Collection</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold">Daily</div>
+                    <div class="text-sm opacity-90">New Posts</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instructions for Manual Update -->
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-8">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-info-circle text-yellow-400"></i>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-yellow-700">
+                        <strong>Note:</strong> To add books from Instagram, manually update the
+                        <code>src/_data/instagram-books.json</code> file with the book details from your posts.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Books Grid -->
+        <div class="instagram-grid">
+            {% for book in instagramBooks.books %}
+            {% if book.title %}
+            <div class="instagram-book">
+                <a href="{{ book.post_url or '#' }}" target="_blank" class="block">
+                    <img src="/assets/images/books/{{ book.author | replace(' ', '_') }}_{{ book.title | replace(' ', '_') }}_{{ book.isbn }}.jpg"
+                         alt="{{ book.title }}"
+                         onerror="this.src='/assets/images/placeholder-book.jpg'">
+                    <h3 class="font-semibold mt-2 text-sm">{{ book.title }}</h3>
+                    <p class="text-gray-600 text-xs">{{ book.author }}</p>
+                    {% if book.post_date %}
+                    <p class="text-gray-400 text-xs mt-1">Posted: {{ book.post_date }}</p>
+                    {% endif %}
+                </a>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- CTA Section -->
+        <div class="instagram-cta">
+            <h2 class="text-2xl font-bold mb-4">Follow Our Journey</h2>
+            <p class="text-gray-600 mb-6">
+                Discover rare photography books, behind-the-scenes glimpses of our collection,
+                and connect with fellow photography book enthusiasts.
+            </p>
+            <a href="https://www.instagram.com/hudson_street_library"
+               target="_blank"
+               class="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-full hover:opacity-90 transition">
+                <i class="fab fa-instagram"></i>
+                Follow @hudson_street_library
+            </a>
+        </div>
+
+    </div>
+</main>
+
+{% include "components/site-footer.njk" %}
+
+<script>
+// Add Instagram embed script if needed
+window.addEventListener('load', function() {
+    // Optional: Add Instagram embed functionality
+});
+</script>
+
+</body>
+</html>
