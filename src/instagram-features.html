@@ -1,16 +1,10 @@
----
-layout: layouts/base.njk
-title: Instagram Featured Books
-description: Books featured on @hudson_street_library Instagram
----
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instagram Featured Books - Hudson Street Library</title>
-    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .instagram-grid {
@@ -115,9 +109,10 @@ description: Books featured on @hudson_street_library Instagram
             {% if book.title %}
             <div class="instagram-book">
                 <a href="{{ book.post_url or '#' }}" target="_blank" class="block">
-                    <img src="/assets/images/books/{{ book.author | replace(' ', '_') }}_{{ book.title | replace(' ', '_') }}_{{ book.isbn }}.jpg"
-                         alt="{{ book.title }}"
-                         onerror="this.src='/assets/images/placeholder-book.jpg'">
+                    <!-- Book cover placeholder -->
+                    <div class="w-full h-72 bg-gray-200 flex items-center justify-center">
+                        <i class="fas fa-book text-4xl text-gray-400"></i>
+                    </div>
                     <h3 class="font-semibold mt-2 text-sm">{{ book.title }}</h3>
                     <p class="text-gray-600 text-xs">{{ book.author }}</p>
                     {% if book.post_date %}
