@@ -12,7 +12,9 @@
     "cleanup:logs": "find . -name '*.log' -not -path './node_modules/*' -not -path './_site/*' -delete",
     "cleanup:temp": "rm -rf temp-processing incoming-images",
     "cleanup:build": "rm -rf _site",
-    "prebuild": "npm run cleanup"
+    "prebuild": "npm run cleanup",
+    "lint:docs": "node scripts/lint-documentation.js",
+    "lint": "npm run lint:docs"
   },
   "repository": {
     "type": "git",
@@ -33,6 +35,7 @@
     "csv-parse": "^5.6.0",
     "csv-stringify": "^6.4.5",
     "dotenv": "^17.2.0",
+    "glob": "^11.0.3",
     "slugify": "^1.6.6"
   }
 }

@@ -1,0 +1,43 @@
+{
+  "name": "Hudson Street Library Documentation Standards",
+  "version": "1.0.0",
+  "description": "Documentation standards to enforce consolidated documentation hub usage",
+  "rules": {
+    "consolidatedDocumentationHub": {
+      "enabled": true,
+      "description": "All documentation must be placed in the consolidated /docs directory",
+      "allowedPaths": [
+        "docs/*.md",
+        "docs/**/*.md",
+        "README.md",
+        "CLAUDE_README.md",
+        "src/books/README.md"
+      ],
+      "exceptions": [
+        "**/node_modules/**",
+        "**/_site/**",
+        "**/temp-processing/**"
+      ]
+    },
+    "noRootMarkdown": {
+      "enabled": true,
+      "description": "Avoid creating ad-hoc markdown files in the root directory",
+      "exceptions": [
+        "README.md",
+        "CLAUDE_README.md"
+      ]
+    },
+    "noSourceMarkdown": {
+      "enabled": true,
+      "description": "Avoid creating markdown files within source code directories",
+      "exceptions": [
+        "src/books/README.md"
+      ]
+    }
+  },
+  "enforcement": {
+    "preCommitHook": true,
+    "ciPipeline": true,
+    "warningLevel": "error"
+  }
+}
