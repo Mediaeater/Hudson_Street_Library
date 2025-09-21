@@ -39,7 +39,7 @@ node acquire-covers-respectful.js --limit 50
 
 ### 📁 KEY FILES TO KNOW
 
-1. **CURRENT-STATUS.md** - Yesterday's successful approach documentation
+1. **docs/CURRENT-STATUS.md** - Yesterday's successful approach documentation
 2. **acquire-covers-respectful.js** - The ONLY cover acquisition script to use
 3. **src/_data/books.csv** - Book database (1,306 entries)
 4. **src/_includes/layouts/book.njk** - How individual book pages work
@@ -91,7 +91,7 @@ node acquire-covers-respectful.js --limit 50
 
 ### 📝 DOCUMENTATION
 - **README.md** - General project info
-- **CURRENT-STATUS.md** - What worked yesterday
+- **docs/CURRENT-STATUS.md** - What worked yesterday
 - **docs/** - Detailed documentation
 - **This file** - What Claude Code needs to know
 
@@ -104,7 +104,7 @@ node acquire-covers-respectful.js --limit 50
 5. **Ask before creating new approaches**
 
 ### ⏰ LAST SUCCESSFUL APPROACH
-See CURRENT-STATUS.md for what worked on July 10, 2025:
+See docs/CURRENT-STATUS.md for what worked on July 10, 2025:
 - Used acquire-covers-respectful.js
 - Added 418 covers in one day
 - Zero cost using free APIs
