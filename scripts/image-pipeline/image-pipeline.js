@@ -1,6 +1,7 @@
 // Main Image Pipeline Controller
 const fs = require('fs').promises;
 const path = require('path');
+const CSVHandler = require('../utils/csv-handler');
 const config = require('./pipeline-config');
 const ImageUploader = require('./modules/uploader');
 const ImageFinder = require('./modules/finder');
@@ -241,15 +242,11 @@ class ImagePipeline {
     const csvPath = path.join(__dirname, '../../src/_data/books.csv');
     
     try {
-      // Read existing CSV
-      const csvContent = await fs.readFile(csvPath, 'utf8');
-      const { parse } = require('csv-parse/sync');
-      const stringify = require('csv-stringify/sync');
-      
-      const records = parse(csvContent, {
-        columns: true,
-        skip_empty_lines: true
-      });
+      // Read existing CSV using enhanced handler
+      const csvResult = await CSVHandler.readBooks(csvPath);
+      const records = csvResult.data;
+
+      console.log(`CSV read stats: ${csvResult.stats.validRows} valid, ${csvResult.stats.correctedRows} corrected`);
       
       const isbn = bookInfo?.isbn || metadata?.isbn;
       const title = bookInfo?.title || metadata?.title;
@@ -305,9 +302,14 @@ class ImagePipeline {
         console.log(`📝 Created new record: ${newRecord.title}`);
       }
       
-      // Write updated CSV
-      const updatedCsv = stringify(records, { header: true });
-      await fs.writeFile(csvPath, updatedCsv);
+      // Write updated CSV using enhanced handler
+      const writeResult = await CSVHandler.write(csvPath, records);
+      if (!writeResult.success) {
+        throw new Error(`Failed to write CSV: ${writeResult.errors.join(', ')}`);
+      }
+      if (writeResult.backup) {
+        console.log(`📁 Created backup: ${writeResult.backup}`);
+      }
       
       console.log(`✅ Books CSV updated`);
       

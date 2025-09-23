@@ -2,15 +2,20 @@
 
 const fs = require('fs').promises;
 const path = require('path');
-const { parse } = require('csv-parse/sync');
+const CSVHandler = require('./utils/csv-handler');
 
 async function checkMissingCovers() {
   try {
-    // Read books CSV
-    const csvContent = await fs.readFile(path.join(__dirname, '../src/_data/books.csv'), 'utf8');
-    const books = parse(csvContent, { columns: true });
+    // Read books CSV using enhanced handler
+    const csvResult = await CSVHandler.readBooks();
+    const books = csvResult.data;
+
+    if (csvResult.errors.length > 0) {
+      console.log(`CSV had ${csvResult.errors.length} warnings/errors`);
+    }
     
     console.log(`Total books in CSV: ${books.length}`);
+    console.log(`CSV stats: ${csvResult.stats.validRows} valid, ${csvResult.stats.correctedRows} corrected, ${csvResult.stats.invalidRows} invalid`);
     
     // Get all image files in books directory
     const imageDir = path.join(__dirname, '../src/assets/images/books');

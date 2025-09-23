@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { promisify } = require('util');
 const sizeOf = promisify(require('image-size'));
+const { getGlobalLogger } = require('./logger');
 
 /**
  * Unified image processing utilities for Hudson Street Library
@@ -13,6 +14,7 @@ class ImageProcessor {
     static MIN_SIZE = 3000; // 3KB minimum
     static MAX_SIZE = 5000000; // 5MB maximum
     static MIN_DIMENSIONS = { width: 200, height: 300 };
+    static logger = getGlobalLogger();
 
     /**
      * Validate image file
@@ -74,6 +76,15 @@ class ImageProcessor {
         } catch (error) {
             result.valid = false;
             result.errors.push(`Validation error: ${error.message}`);
+            this.logger.warn('Image validation error', { filePath, error: error.message });
+        }
+
+        if (!result.valid) {
+            this.logger.warn('Image validation failed', {
+                filePath,
+                errors: result.errors,
+                fileSize: result.stats.size
+            });
         }
 
         return result;
@@ -85,8 +96,12 @@ class ImageProcessor {
      * @returns {Object} Validation summary
      */
     static async validateDirectory(dirPath) {
+        this.logger.info(`Validating directory: ${dirPath}`);
+
         const files = fs.readdirSync(dirPath)
             .filter(file => this.VALID_FORMATS.includes(path.extname(file).toLowerCase()));
+
+        this.logger.debug(`Found ${files.length} image files to validate`, { dirPath, fileCount: files.length });
 
         const results = {
             total: files.length,
@@ -96,6 +111,8 @@ class ImageProcessor {
             errors: [],
             details: []
         };
+
+        const batchId = this.logger.startBatch('directory-validation', files.length);
 
         for (const file of files) {
             const filePath = path.join(dirPath, file);
@@ -116,6 +133,23 @@ class ImageProcessor {
                 ...validation
             });
         }
+
+        this.logger.endBatch(batchId, {
+            total: results.total,
+            valid: results.valid,
+            invalid: results.invalid,
+            warnings: results.warnings
+        });
+
+        this.logger.success(`Directory validation completed`, {
+            dirPath,
+            summary: {
+                total: results.total,
+                valid: results.valid,
+                invalid: results.invalid,
+                validationRate: results.total > 0 ? `${Math.round((results.valid / results.total) * 100)}%` : '0%'
+            }
+        });
 
         return results;
     }

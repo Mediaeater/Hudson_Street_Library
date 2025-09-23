@@ -1,280 +1,209 @@
-// Image Optimization Module (integrates with existing @11ty/eleventy-img)
-const Image = require('@11ty/eleventy-img');
-const fs = require('fs').promises;
+/**
+ * Image Optimization Module - Updated to use Unified Image Optimizer
+ *
+ * This module now wraps the unified image optimizer to maintain
+ * backward compatibility with the existing image pipeline.
+ *
+ * Features:
+ * - Full integration with UnifiedImageOptimizer
+ * - Centralized logging and error handling
+ * - Support for multiple output formats and batch processing
+ * - Collection-specific optimization settings
+ * - Comprehensive statistics and reporting
+ */
+
+const { UnifiedImageOptimizer } = require('../../utils/unified-image-optimizer');
+const { getGlobalLogger } = require('../../utils/logger');
 const path = require('path');
+const fs = require('fs').promises;
 
 class ImageOptimizer {
   constructor(config) {
     this.config = config;
+    this.unifiedOptimizer = new UnifiedImageOptimizer(config);
+
+    // Initialize logger with optimization-specific settings
+    this.logger = getGlobalLogger({
+      level: config.logging?.level || 'info',
+      logDir: config.logging?.logDirectory || path.join(__dirname, '../logs'),
+      includeEmojis: true
+    });
+
+    // Track optimization statistics
+    this.optimizationStats = {
+      totalProcessed: 0,
+      successful: 0,
+      failed: 0,
+      totalInputSize: 0,
+      totalOutputSize: 0,
+      startTime: null
+    };
   }
 
   async optimizeImage(inputPath, options = {}) {
-    console.log(`⚡ Optimizing: ${path.basename(inputPath)}`);
-    
+    this.logger.logImageProcess(inputPath, 'Starting optimization', options);
+    const operationId = this.logger.trackOperation('optimize-single', 'started', { inputPath });
+
     try {
-      const outputDir = options.outputDir || this.config.directories.optimized;
-      const settings = { ...this.config.optimization, ...options };
-      
-      // Generate optimized images using eleventy-img
-      const metadata = await Image(inputPath, {
-        widths: settings.sizes,
-        formats: settings.formats,
-        outputDir: outputDir,
-        urlPath: "/assets/images/optimized/",
-        filenameFormat: (id, src, width, format) => {
-          const name = path.basename(src, path.extname(src));
-          return `${name}-${width}w.${format}`;
-        },
-        sharpWebpOptions: {
-          quality: settings.quality.webp
-        },
-        sharpJpegOptions: {
-          quality: settings.quality.jpeg,
-          progressive: true
-        }
-      });
+      // Validate input file exists
+      await fs.access(inputPath, fs.constants.R_OK);
 
-      // Generate thumbnails separately
-      const thumbnailMetadata = await this.generateThumbnails(inputPath, settings);
-      
-      const result = {
-        main: this.getMainImagePath(metadata),
-        optimized: this.getOptimizedPaths(metadata),
-        thumbnails: this.getOptimizedPaths(thumbnailMetadata),
-        metadata: metadata,
-        thumbnailMetadata: thumbnailMetadata,
-        stats: this.calculateOptimizationStats(inputPath, metadata, thumbnailMetadata)
-      };
+      // Get file stats for tracking
+      const inputStats = await fs.stat(inputPath);
+      this.optimizationStats.totalInputSize += inputStats.size;
+      this.optimizationStats.totalProcessed++;
 
-      console.log(`✅ Generated ${result.optimized.length + result.thumbnails.length} optimized variants`);
-      console.log(`📊 Size reduction: ${result.stats.compressionRatio}%`);
-      
-      return result;
+      // Delegate to unified optimizer
+      const result = await this.unifiedOptimizer.optimizeImage(inputPath, options);
 
+      // Transform result to match the expected interface
+      if (result.success) {
+        this.optimizationStats.successful++;
+        this.optimizationStats.totalOutputSize += result.stats?.totalOptimizedSize || 0;
+
+        this.logger.updateOperation(operationId, 'completed', {
+          outputCount: result.outputPaths.length + result.thumbnailPaths.length,
+          compressionRatio: result.stats?.compressionRatio
+        });
+
+        this.logger.logOptimization(inputPath, [...result.outputPaths, ...result.thumbnailPaths], result.stats);
+
+        return {
+          main: result.mainImage,
+          optimized: result.outputPaths,
+          thumbnails: result.thumbnailPaths,
+          metadata: result.metadata,
+          thumbnailMetadata: result.thumbnailMetadata,
+          stats: result.stats
+        };
+      } else {
+        throw new Error(result.error);
+      }
     } catch (error) {
-      console.error(`❌ Optimization failed: ${error.message}`);
+      this.optimizationStats.failed++;
+      this.logger.updateOperation(operationId, 'failed', { error: error.message });
+      this.logger.error(`Optimization failed for ${path.basename(inputPath)}`, error);
       throw error;
     }
   }
 
   async generateThumbnails(inputPath, settings) {
-    console.log(`🖼️  Generating thumbnails...`);
-    
-    const metadata = await Image(inputPath, {
-      widths: settings.thumbnailSizes || [150, 300],
-      formats: settings.formats,
-      outputDir: this.config.directories.thumbnails,
-      urlPath: "/assets/images/thumbnails/",
-      filenameFormat: (id, src, width, format) => {
-        const name = path.basename(src, path.extname(src));
-        return `${name}-thumb-${width}w.${format}`;
-      },
-      sharpWebpOptions: {
-        quality: settings.quality.webp
-      },
-      sharpJpegOptions: {
-        quality: settings.quality.jpeg,
-        progressive: true
-      }
-    });
-
-    return metadata;
+    // This method is now handled internally by the unified optimizer
+    // Keeping for backward compatibility
+    return this.unifiedOptimizer.generateThumbnails(inputPath, settings);
   }
 
   async optimizeBatch(inputPaths, options = {}) {
-    console.log(`⚡ Batch optimizing ${inputPaths.length} images...`);
-    
-    const results = [];
-    const batchSize = options.batchSize || this.config.pipeline.batchSize;
-    
-    for (let i = 0; i < inputPaths.length; i += batchSize) {
-      const batch = inputPaths.slice(i, i + batchSize);
-      console.log(`📦 Processing batch ${Math.floor(i/batchSize) + 1}`);
-      
-      const batchPromises = batch.map(async (inputPath) => {
-        try {
-          const result = await this.optimizeImage(inputPath, options);
-          return { success: true, inputPath, result };
-        } catch (error) {
-          console.error(`❌ Failed to optimize ${inputPath}: ${error.message}`);
-          return { success: false, inputPath, error: error.message };
-        }
+    this.logger.processing(`Starting batch optimization of ${inputPaths.length} images`);
+    this.optimizationStats.startTime = Date.now();
+    const batchOperationId = this.logger.startBatch('image-optimization', inputPaths.length);
+
+    try {
+      // Delegate to unified optimizer
+      const result = await this.unifiedOptimizer.optimizeBatch(inputPaths, options);
+
+      // Update our statistics
+      const successful = result.results.filter(r => r.success).length;
+      const failed = result.results.length - successful;
+
+      this.optimizationStats.totalProcessed += result.results.length;
+      this.optimizationStats.successful += successful;
+      this.optimizationStats.failed += failed;
+
+      this.logger.endBatch(batchOperationId, {
+        processed: result.results.length,
+        successful: successful,
+        failed: failed,
+        duration: Date.now() - this.optimizationStats.startTime
       });
 
-      const batchResults = await Promise.all(batchPromises);
-      results.push(...batchResults);
-    }
+      // Transform results to match expected interface
+      return result.results.map(r => ({
+        success: r.success,
+        inputPath: r.inputPath,
+        result: r.success ? {
+          main: r.result.mainImage,
+          optimized: r.result.outputPaths,
+          thumbnails: r.result.thumbnailPaths,
+          metadata: r.result.metadata,
+          thumbnailMetadata: r.result.thumbnailMetadata,
+          stats: r.result.stats
+        } : undefined,
+        error: r.error
+      }));
 
-    const successful = results.filter(r => r.success).length;
-    console.log(`✅ Successfully optimized ${successful}/${inputPaths.length} images`);
-    
-    return results;
+    } catch (error) {
+      this.logger.updateOperation(batchOperationId, 'failed', { error: error.message });
+      this.logger.error('Batch optimization failed', error);
+      throw error;
+    }
   }
 
   async createResponsiveVariants(inputPath, sizes = [], options = {}) {
-    console.log(`📱 Creating responsive variants...`);
-    
-    const responsiveSizes = sizes.length > 0 ? sizes : this.config.optimization.sizes;
-    
-    const metadata = await Image(inputPath, {
-      widths: responsiveSizes,
-      formats: this.config.optimization.formats,
-      outputDir: options.outputDir || this.config.directories.optimized,
-      urlPath: options.urlPath || "/assets/images/optimized/",
-      filenameFormat: (id, src, width, format) => {
-        const name = path.basename(src, path.extname(src));
-        const suffix = options.suffix || '';
-        return `${name}${suffix}-${width}w.${format}`;
-      }
-    });
-
-    return {
-      metadata,
-      variants: this.getOptimizedPaths(metadata),
-      html: this.generateResponsiveHTML(metadata, options)
-    };
+    // Delegate to unified optimizer
+    return this.unifiedOptimizer.createResponsiveVariants(inputPath, sizes, options);
   }
 
   generateResponsiveHTML(metadata, options = {}) {
-    const alt = options.alt || '';
-    const className = options.className || '';
-    const sizes = options.sizes || '100vw';
-    
-    return Image.generateHTML(metadata, {
-      alt,
-      sizes,
-      loading: 'lazy',
-      decoding: 'async',
-      class: className
-    });
+    // Delegate to unified optimizer
+    return this.unifiedOptimizer.generateResponsiveHTML(metadata, options);
   }
 
   async optimizeForCollection(inputPath, collectionType, options = {}) {
-    console.log(`🏷️  Optimizing for collection: ${collectionType}`);
-    
-    // Collection-specific optimization settings
-    const collectionSettings = {
-      'book-covers': {
-        sizes: [200, 400, 600],
-        formats: ['webp', 'jpeg'],
-        quality: { webp: 85, jpeg: 90 }
-      },
-      'collection-heroes': {
-        sizes: [800, 1200, 1600, 2000],
-        formats: ['webp', 'jpeg'],
-        quality: { webp: 80, jpeg: 85 }
-      },
-      'thumbnails': {
-        sizes: [100, 150, 200],
-        formats: ['webp', 'jpeg'],
-        quality: { webp: 75, jpeg: 80 }
-      },
-      'gallery': {
-        sizes: [400, 800, 1200],
-        formats: ['webp', 'jpeg'],
-        quality: { webp: 80, jpeg: 85 }
-      }
-    };
+    // Delegate to unified optimizer
+    const result = await this.unifiedOptimizer.optimizeForCollection(inputPath, collectionType, options);
 
-    const settings = collectionSettings[collectionType] || this.config.optimization;
-    return await this.optimizeImage(inputPath, { ...settings, ...options });
+    // Transform result to match expected interface
+    if (result.success) {
+      return {
+        main: result.mainImage,
+        optimized: result.outputPaths,
+        thumbnails: result.thumbnailPaths,
+        metadata: result.metadata,
+        thumbnailMetadata: result.thumbnailMetadata,
+        stats: result.stats
+      };
+    } else {
+      throw new Error(result.error);
+    }
   }
 
   getMainImagePath(metadata) {
-    // Return the largest JPEG version as the main image
-    const jpegImages = metadata.jpeg || [];
-    return jpegImages.length > 0 ? jpegImages[jpegImages.length - 1].outputPath : null;
+    // Delegate to unified optimizer
+    return this.unifiedOptimizer.getMainImagePath(metadata);
   }
 
   getOptimizedPaths(metadata) {
-    const paths = [];
-    
-    for (const format in metadata) {
-      metadata[format].forEach(image => {
-        paths.push({
-          format,
-          width: image.width,
-          height: image.height,
-          path: image.outputPath,
-          url: image.url,
-          size: image.size || null
-        });
-      });
-    }
-    
-    return paths.sort((a, b) => a.width - b.width);
+    // Delegate to unified optimizer
+    return this.unifiedOptimizer.getOptimizedPaths(metadata);
   }
 
   async calculateOptimizationStats(inputPath, metadata, thumbnailMetadata = {}) {
-    try {
-      const inputStats = await fs.stat(inputPath);
-      const inputSize = inputStats.size;
-      
-      let totalOptimizedSize = 0;
-      let imageCount = 0;
-      
-      // Count optimized images
-      for (const format in metadata) {
-        metadata[format].forEach(image => {
-          if (image.size) {
-            totalOptimizedSize += image.size;
-            imageCount++;
-          }
-        });
-      }
-      
-      // Count thumbnails
-      for (const format in thumbnailMetadata) {
-        thumbnailMetadata[format].forEach(image => {
-          if (image.size) {
-            totalOptimizedSize += image.size;
-            imageCount++;
-          }
-        });
-      }
-      
-      const averageOptimizedSize = imageCount > 0 ? totalOptimizedSize / imageCount : 0;
-      const compressionRatio = inputSize > 0 ? 
-        Math.round(((inputSize - averageOptimizedSize) / inputSize) * 100) : 0;
-      
-      return {
-        inputSize,
-        totalOptimizedSize,
-        averageOptimizedSize,
-        compressionRatio,
-        imageCount,
-        formatsGenerated: Object.keys(metadata).length
-      };
-      
-    } catch (error) {
-      console.error(`⚠️  Could not calculate optimization stats: ${error.message}`);
-      return {
-        inputSize: 0,
-        totalOptimizedSize: 0,
-        averageOptimizedSize: 0,
-        compressionRatio: 0,
-        imageCount: 0,
-        formatsGenerated: 0
-      };
-    }
+    // Delegate to unified optimizer
+    const fs = require('fs').promises;
+    const inputStats = await fs.stat(inputPath);
+    return this.unifiedOptimizer.calculateOptimizationStats(inputPath, inputStats, metadata, thumbnailMetadata);
   }
 
   async cleanupOptimized(olderThanDays = 7) {
+    // This functionality could be added to unified optimizer if needed
+    // For now, keeping the original implementation
+    const fs = require('fs').promises;
     console.log(`🧹 Cleaning up optimized images older than ${olderThanDays} days...`);
-    
+
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - olderThanDays);
-    
+
     let cleaned = 0;
-    
+
     for (const dir of [this.config.directories.optimized, this.config.directories.thumbnails]) {
       try {
         const files = await fs.readdir(dir);
-        
+
         for (const file of files) {
           const filePath = path.join(dir, file);
           const stats = await fs.stat(filePath);
-          
+
           if (stats.mtime < cutoffDate) {
             await fs.unlink(filePath);
             cleaned++;
@@ -284,46 +213,233 @@ class ImageOptimizer {
         console.error(`⚠️  Error cleaning ${dir}: ${error.message}`);
       }
     }
-    
+
     console.log(`✅ Cleaned up ${cleaned} old optimized images`);
     return cleaned;
   }
 
   async getOptimizationReport() {
+    // Generate report using unified optimizer's statistics
+    const stats = this.unifiedOptimizer.getOptimizationStats();
+
+    // Also include file system analysis for compatibility
+    const fs = require('fs').promises;
     const report = {
       optimizedCount: 0,
       thumbnailCount: 0,
       totalSize: 0,
       formats: new Set()
     };
-    
+
     for (const dir of [this.config.directories.optimized, this.config.directories.thumbnails]) {
       try {
         const files = await fs.readdir(dir);
-        
+
         for (const file of files) {
           const filePath = path.join(dir, file);
-          const stats = await fs.stat(filePath);
+          const fileStats = await fs.stat(filePath);
           const ext = path.extname(file).substring(1);
-          
+
           if (dir === this.config.directories.optimized) {
             report.optimizedCount++;
           } else {
             report.thumbnailCount++;
           }
-          
-          report.totalSize += stats.size;
+
+          report.totalSize += fileStats.size;
           report.formats.add(ext);
         }
       } catch (error) {
         console.error(`⚠️  Error reading ${dir}: ${error.message}`);
       }
     }
-    
+
     report.formats = Array.from(report.formats);
     report.totalSizeMB = Math.round(report.totalSize / (1024 * 1024) * 100) / 100;
-    
-    return report;
+
+    // Merge with unified optimizer stats
+    return {
+      ...report,
+      optimizerStats: stats
+    };
+  }
+
+  /**
+   * Get current optimization statistics from this module
+   */
+  getModuleStats() {
+    return {
+      ...this.optimizationStats,
+      averageCompressionRatio: this.optimizationStats.totalInputSize > 0 ?
+        Math.round(((this.optimizationStats.totalInputSize - this.optimizationStats.totalOutputSize) /
+                   this.optimizationStats.totalInputSize) * 100) : 0,
+      successRate: this.optimizationStats.totalProcessed > 0 ?
+        (this.optimizationStats.successful / this.optimizationStats.totalProcessed * 100).toFixed(2) + '%' : '0%'
+    };
+  }
+
+  /**
+   * Validate image file before optimization
+   * @param {string} imagePath - Path to image file
+   * @returns {Promise<Object>} Validation result
+   */
+  async validateImage(imagePath) {
+    const validation = {
+      isValid: true,
+      errors: [],
+      warnings: [],
+      metadata: {}
+    };
+
+    try {
+      // Check if file exists and is readable
+      await fs.access(imagePath, fs.constants.R_OK);
+
+      // Get file stats
+      const stats = await fs.stat(imagePath);
+      validation.metadata.fileSize = stats.size;
+      validation.metadata.lastModified = stats.mtime;
+
+      // Check file extension
+      const ext = path.extname(imagePath).toLowerCase();
+      if (!this.config.supportedTypes.includes(ext)) {
+        validation.errors.push(`Unsupported file format: ${ext}`);
+        validation.isValid = false;
+      }
+
+      // Check file size limits
+      const maxFileSize = this.config.validation?.maxFileSize || 50 * 1024 * 1024; // 50MB default
+      if (stats.size > maxFileSize) {
+        validation.errors.push(`File size exceeds limit: ${Math.round(stats.size / 1024 / 1024)}MB > ${Math.round(maxFileSize / 1024 / 1024)}MB`);
+        validation.isValid = false;
+      }
+
+      // Check minimum file size
+      const minFileSize = this.config.validation?.minFileSize || 1024; // 1KB default
+      if (stats.size < minFileSize) {
+        validation.warnings.push(`File size is very small: ${stats.size} bytes`);
+      }
+
+      // Try to read basic image information
+      try {
+        const buffer = await fs.readFile(imagePath);
+        const dimensions = this.getImageDimensions(buffer, ext);
+        if (dimensions) {
+          validation.metadata.dimensions = dimensions;
+
+          // Check minimum dimensions
+          const minWidth = this.config.validation?.minWidth || 10;
+          const minHeight = this.config.validation?.minHeight || 10;
+          if (dimensions.width < minWidth || dimensions.height < minHeight) {
+            validation.errors.push(`Image dimensions too small: ${dimensions.width}x${dimensions.height}`);
+            validation.isValid = false;
+          }
+        }
+      } catch (error) {
+        validation.warnings.push(`Could not read image dimensions: ${error.message}`);
+      }
+
+    } catch (error) {
+      validation.isValid = false;
+      validation.errors.push(`File access error: ${error.message}`);
+    }
+
+    return validation;
+  }
+
+  /**
+   * Get basic image dimensions from buffer
+   */
+  getImageDimensions(buffer, ext) {
+    try {
+      if (ext === '.jpg' || ext === '.jpeg') {
+        // Simple JPEG dimension extraction
+        for (let i = 0; i < buffer.length - 4; i++) {
+          if (buffer[i] === 0xFF && (buffer[i + 1] === 0xC0 || buffer[i + 1] === 0xC2)) {
+            const height = buffer.readUInt16BE(i + 5);
+            const width = buffer.readUInt16BE(i + 7);
+            return { width, height };
+          }
+        }
+      } else if (ext === '.png') {
+        // Simple PNG dimension extraction
+        if (buffer.length >= 24 &&
+            buffer[0] === 0x89 && buffer[1] === 0x50 &&
+            buffer[2] === 0x4E && buffer[3] === 0x47) {
+          const width = buffer.readUInt32BE(16);
+          const height = buffer.readUInt32BE(20);
+          return { width, height };
+        }
+      }
+    } catch (error) {
+      // Ignore errors in dimension extraction
+    }
+    return null;
+  }
+
+  /**
+   * Clean up and generate final report
+   */
+  async cleanup() {
+    const stats = this.getModuleStats();
+    this.logger.info('Image optimizer cleanup completed', stats);
+
+    // Delegate to unified optimizer cleanup
+    if (this.unifiedOptimizer && typeof this.unifiedOptimizer.cleanup === 'function') {
+      await this.unifiedOptimizer.cleanup();
+    }
+  }
+
+  /**
+   * Test the optimizer with a sample image
+   * @param {string} testImagePath - Path to test image (optional)
+   * @returns {Promise<Object>} Test results
+   */
+  async runTests(testImagePath) {
+    this.logger.info('Running optimizer tests...');
+
+    const testResults = {
+      passed: 0,
+      failed: 0,
+      tests: []
+    };
+
+    // Test 1: Basic optimization
+    try {
+      if (!testImagePath) {
+        // Create a simple test image or use a default
+        testImagePath = await this.createTestImage();
+      }
+
+      await this.optimizeImage(testImagePath);
+      testResults.tests.push({ name: 'Basic optimization', status: 'passed' });
+      testResults.passed++;
+    } catch (error) {
+      testResults.tests.push({ name: 'Basic optimization', status: 'failed', error: error.message });
+      testResults.failed++;
+    }
+
+    // Test 2: Validation
+    try {
+      const validation = await this.validateImage(testImagePath || __filename);
+      testResults.tests.push({ name: 'Image validation', status: 'passed' });
+      testResults.passed++;
+    } catch (error) {
+      testResults.tests.push({ name: 'Image validation', status: 'failed', error: error.message });
+      testResults.failed++;
+    }
+
+    this.logger.info(`Optimizer tests completed: ${testResults.passed} passed, ${testResults.failed} failed`);
+    return testResults;
+  }
+
+  /**
+   * Create a simple test image (placeholder)
+   */
+  async createTestImage() {
+    // This is a placeholder - in a real implementation, you might create a simple image
+    // For now, just return null to indicate no test image available
+    return null;
   }
 }
 

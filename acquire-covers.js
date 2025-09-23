@@ -4,6 +4,12 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const CSVHandler = require('./scripts/utils/csv-handler');
+const { generateStandardFilename, IMAGE_CONFIG } = require('./scripts/utils/image-core');
+const { getGlobalLogger } = require('./scripts/utils/logger');
+const { directories, apis, rateLimiting, validation } = require('./scripts/config/image-config');
+
+// Initialize logger
+const logger = getGlobalLogger({ level: 'info' });
 
 /*
  * Consolidated Book Cover Acquisition Script
@@ -424,11 +430,12 @@ async function acquireCovers() {
     const errors = [];
     
     try {
-        // Read CSV file using new handler
-        const allBooks = await CSVHandler.read(CSV_PATH);
+        // Read CSV file using enhanced handler
+        const csvResult = await CSVHandler.readBooks(CSV_PATH);
+        console.log(`CSV read stats: ${csvResult.stats.validRows} valid, ${csvResult.stats.correctedRows} corrected, ${csvResult.stats.invalidRows} invalid`);
         
         // Filter books that need covers
-        const books = allBooks
+        const books = csvResult.data
             .filter(row => {
                 return row.isbn_asin && row.isbn_asin.trim() && 
                     (!row.image_url || row.image_url.trim() === '' || row.image_url.trim().toLowerCase() === 'null');
@@ -441,14 +448,14 @@ async function acquireCovers() {
                     authorFirst: row.author_first || '',
                     isbn: row.isbn_asin.trim(),
                     year: row.publication_year || '',
-                    filename: cleanFilename(`${row.author_last || 'Unknown'}_${row.title || 'Unknown'}_${row.isbn_asin}`.replace(/\s+/g, '_')) + '.jpg'
+                    filename: generateStandardFilename(row)
                 };
                 return book;
             })
             .filter(book => matchesArtistFilter(book, options.artist));
         
-        if (errors.length > 0) {
-            console.log(`\nCSV Parsing Errors (${errors.length}):`, errors.slice(0, 5));
+        if (csvResult.errors.length > 0) {
+            console.log(`\nCSV Parsing Errors (${csvResult.errors.length}):`, csvResult.errors.slice(0, 5));
         }
         
         console.log(`Found ${books.length} books with missing covers`);

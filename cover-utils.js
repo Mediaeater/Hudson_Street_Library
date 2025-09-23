@@ -4,8 +4,14 @@ const fs = require('fs');
 const path = require('path');
 const CSVHandler = require('./scripts/utils/csv-handler');
 const ImageProcessor = require('./scripts/utils/image-processor');
+const { generateStandardFilename, sanitizeFilename, validateImage, checkImageExists, IMAGE_CONFIG } = require('./scripts/utils/image-core');
+const { getGlobalLogger } = require('./scripts/utils/logger');
+const { directories } = require('./scripts/config/image-config');
 const { exec } = require('child_process');
 const util = require('util');
+
+// Initialize logger
+const logger = getGlobalLogger({ level: 'info' });
 const execPromise = util.promisify(exec);
 
 /*
@@ -51,8 +57,9 @@ for (let i = 1; i < args.length; i++) {
 }
 
 // Configuration
-const CSV_PATH = './src/_data/books.csv';
-const IMAGES_DIR = './src/assets/images/books';
+// Use centralized configuration
+const CSV_PATH = directories.csvPath;
+const IMAGES_DIR = directories.books;
 const THUMBNAIL_DIR = './thumbnails';
 
 // Show help
@@ -175,7 +182,7 @@ async function analyzeCovers() {
         // Check if cover matches any book
         let matched = false;
         for (const book of books) {
-            const expectedFilename = `${book.author_last || 'Unknown'}_${book.title || 'Unknown'}_${book.isbn_asin || ''}`.replace(/[^a-zA-Z0-9.-]/g, '_').replace(/_+/g, '_') + '.jpg';
+            const expectedFilename = generateStandardFilename(book);
             if (cover.filename.toLowerCase() === expectedFilename.toLowerCase()) {
                 matched = true;
                 break;
@@ -350,7 +357,7 @@ async function fixFilenames() {
             const book = bookMap.get(isbn);
             
             if (book) {
-                const newFilename = `${book.author_last || 'Unknown'}_${book.title || 'Unknown'}_${isbn}`.replace(/[^a-zA-Z0-9.-]/g, '_').replace(/_+/g, '_') + '.jpg';
+                const newFilename = generateStandardFilename({ ...book, isbn_asin: isbn });
                 
                 if (newFilename !== cover.filename) {
                     fixes.push({
