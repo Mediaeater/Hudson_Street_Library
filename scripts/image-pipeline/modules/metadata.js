@@ -1,16 +1,47 @@
 // Metadata Processing Module
 const fs = require('fs').promises;
 const path = require('path');
+const { getGlobalLogger } = require('../../utils/logger');
 
 class MetadataProcessor {
   constructor(config) {
     this.config = config;
+
+    // Initialize logger
+    this.logger = getGlobalLogger({
+      level: config.logging?.level || 'info',
+      logDir: config.logging?.logDirectory || path.join(__dirname, '../logs'),
+      includeEmojis: true
+    });
+
+    // Statistics tracking
+    this.stats = {
+      totalProcessed: 0,
+      successful: 0,
+      failed: 0,
+      avgMetadataScore: 0,
+      fieldsFound: {
+        title: 0,
+        author: 0,
+        isbn: 0,
+        year: 0
+      },
+      lastProcessedAt: null
+    };
+
+    this.logger.info('MetadataProcessor initialized');
   }
 
   async extractFromImage(imagePath) {
-    console.log(`📝 Extracting metadata from: ${path.basename(imagePath)}`);
-    
+    const operationId = this.logger.trackOperation('extract-metadata', 'started', { imagePath });
+    this.logger.logImageProcess(imagePath, 'Starting metadata extraction');
+
     try {
+      // Validate input
+      if (!imagePath || !await this.fileExists(imagePath)) {
+        throw new Error(`Image file does not exist: ${imagePath}`);
+      }
+
       const metadata = {
         filename: path.basename(imagePath),
         originalPath: imagePath,
@@ -26,25 +57,54 @@ class MetadataProcessor {
       metadata.createdAt = stats.birthtime;
       metadata.modifiedAt = stats.mtime;
 
+      this.logger.debug('Basic file metadata extracted', {
+        fileSize: metadata.fileSize,
+        format: metadata.format
+      });
+
       // Extract from filename patterns
-      const filenameMetadata = this.extractFromFilename(imagePath);
-      Object.assign(metadata, filenameMetadata);
+      try {
+        const filenameMetadata = this.extractFromFilename(imagePath);
+        Object.assign(metadata, filenameMetadata);
+        this.logger.debug('Filename metadata extracted', filenameMetadata);
+      } catch (error) {
+        this.logger.warn('Filename metadata extraction failed', { error: error.message });
+      }
 
       // Extract EXIF data if available
       try {
         const exifData = await this.extractEXIF(imagePath);
         if (exifData) {
           Object.assign(metadata, exifData);
+          this.logger.debug('EXIF data extracted', { hasExif: true });
         }
       } catch (error) {
-        console.log(`⚠️  EXIF extraction failed: ${error.message}`);
+        this.logger.debug('EXIF extraction failed (this is normal for many images)', { error: error.message });
       }
-      
-      console.log(`✅ Extracted basic metadata`);
+
+      // Check for sidecar metadata
+      try {
+        const sidecarData = await this.extractFromSidecar(imagePath);
+        if (sidecarData && Object.keys(sidecarData).length > 0) {
+          Object.assign(metadata, sidecarData);
+          this.logger.info('Sidecar metadata found and merged');
+        }
+      } catch (error) {
+        this.logger.debug('No sidecar metadata found (this is normal)');
+      }
+
+      // Update statistics
+      this.updateStats(metadata, true);
+      this.logger.updateOperation(operationId, 'completed', { extractedFields: Object.keys(metadata).length });
+      this.logger.success('Metadata extraction completed', { fieldsExtracted: Object.keys(metadata).length });
+
       return metadata;
 
     } catch (error) {
-      console.error(`❌ Metadata extraction failed: ${error.message}`);
+      this.updateStats(null, false);
+      this.logger.updateOperation(operationId, 'failed', { error: error.message });
+      this.logger.error(`Metadata extraction failed for ${path.basename(imagePath)}`, error);
+
       return {
         filename: path.basename(imagePath),
         originalPath: imagePath,
@@ -457,6 +517,382 @@ class MetadataProcessor {
     console.log(`✅ Exported metadata for ${rows.length - 1} images to ${outputPath}`);
     
     return outputPath;
+  }
+
+  /**
+   * Helper method to check if file exists
+   */
+  async fileExists(filePath) {
+    try {
+      await fs.access(filePath, fs.constants.F_OK);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Update internal statistics
+   */
+  updateStats(metadata, success) {
+    this.stats.totalProcessed++;
+    this.stats.lastProcessedAt = new Date().toISOString();
+
+    if (success && metadata) {
+      this.stats.successful++;
+
+      // Track field presence
+      if (metadata.title) this.stats.fieldsFound.title++;
+      if (metadata.author_last_name) this.stats.fieldsFound.author++;
+      if (metadata.isbn) this.stats.fieldsFound.isbn++;
+      if (metadata.year) this.stats.fieldsFound.year++;
+    } else {
+      this.stats.failed++;
+    }
+  }
+
+  /**
+   * Get module statistics
+   */
+  getModuleStats() {
+    const successRate = this.stats.totalProcessed > 0 ?
+      (this.stats.successful / this.stats.totalProcessed * 100).toFixed(2) + '%' : '0%';
+
+    return {
+      ...this.stats,
+      successRate,
+      fieldCoverageRates: {
+        title: this.stats.successful > 0 ? (this.stats.fieldsFound.title / this.stats.successful * 100).toFixed(1) + '%' : '0%',
+        author: this.stats.successful > 0 ? (this.stats.fieldsFound.author / this.stats.successful * 100).toFixed(1) + '%' : '0%',
+        isbn: this.stats.successful > 0 ? (this.stats.fieldsFound.isbn / this.stats.successful * 100).toFixed(1) + '%' : '0%',
+        year: this.stats.successful > 0 ? (this.stats.fieldsFound.year / this.stats.successful * 100).toFixed(1) + '%' : '0%'
+      }
+    };
+  }
+
+  /**
+   * Enhanced EXIF extraction with better error handling
+   */
+  async extractEnhancedEXIF(imagePath) {
+    try {
+      const buffer = await fs.readFile(imagePath);
+      const ext = path.extname(imagePath).toLowerCase();
+
+      const exifData = {
+        exif: {},
+        technical: {}
+      };
+
+      // Basic dimensions for common formats
+      const dimensions = this.extractImageDimensions(buffer, ext);
+      if (dimensions) {
+        exifData.dimensions = dimensions;
+        exifData.technical.imageWidth = dimensions.width;
+        exifData.technical.imageHeight = dimensions.height;
+        exifData.technical.aspectRatio = (dimensions.width / dimensions.height).toFixed(2);
+        exifData.technical.megapixels = ((dimensions.width * dimensions.height) / 1000000).toFixed(1);
+      }
+
+      // Color space analysis for JPEG
+      if (ext === '.jpg' || ext === '.jpeg') {
+        const colorSpace = this.analyzeJPEGColorSpace(buffer);
+        if (colorSpace) {
+          exifData.technical.colorSpace = colorSpace;
+        }
+      }
+
+      // File format specific metadata
+      exifData.technical.format = ext.substring(1).toUpperCase();
+      exifData.technical.fileSize = buffer.length;
+      exifData.technical.fileSizeFormatted = this.formatFileSize(buffer.length);
+
+      return exifData;
+
+    } catch (error) {
+      this.logger.debug('Enhanced EXIF extraction failed', { error: error.message });
+      return null;
+    }
+  }
+
+  /**
+   * Extract image dimensions from buffer with support for multiple formats
+   */
+  extractImageDimensions(buffer, ext) {
+    try {
+      if (ext === '.jpg' || ext === '.jpeg') {
+        return this.extractJPEGDimensions(buffer);
+      } else if (ext === '.png') {
+        return this.extractPNGDimensions(buffer);
+      } else if (ext === '.webp') {
+        return this.extractWebPDimensions(buffer);
+      } else if (ext === '.gif') {
+        return this.extractGIFDimensions(buffer);
+      }
+    } catch (error) {
+      this.logger.debug(`Dimension extraction failed for ${ext}`, { error: error.message });
+    }
+    return null;
+  }
+
+  /**
+   * Extract WebP dimensions
+   */
+  extractWebPDimensions(buffer) {
+    try {
+      // WebP signature: 'RIFF' + size + 'WEBP'
+      if (buffer.length >= 30 &&
+          buffer.toString('ascii', 0, 4) === 'RIFF' &&
+          buffer.toString('ascii', 8, 12) === 'WEBP') {
+
+        // Simple WebP format (VP8)
+        if (buffer.toString('ascii', 12, 16) === 'VP8 ') {
+          const width = buffer.readUInt16LE(26) & 0x3FFF;
+          const height = buffer.readUInt16LE(28) & 0x3FFF;
+          return { width, height };
+        }
+      }
+    } catch (error) {
+      // Ignore errors
+    }
+    return null;
+  }
+
+  /**
+   * Extract GIF dimensions
+   */
+  extractGIFDimensions(buffer) {
+    try {
+      // GIF signature: 'GIF87a' or 'GIF89a'
+      if (buffer.length >= 10 &&
+          (buffer.toString('ascii', 0, 6) === 'GIF87a' ||
+           buffer.toString('ascii', 0, 6) === 'GIF89a')) {
+        const width = buffer.readUInt16LE(6);
+        const height = buffer.readUInt16LE(8);
+        return { width, height };
+      }
+    } catch (error) {
+      // Ignore errors
+    }
+    return null;
+  }
+
+  /**
+   * Analyze JPEG color space
+   */
+  analyzeJPEGColorSpace(buffer) {
+    try {
+      // Look for color space markers in JPEG
+      for (let i = 0; i < buffer.length - 10; i++) {
+        if (buffer[i] === 0xFF && buffer[i + 1] === 0xEE) {
+          // Adobe marker found - might contain color space info
+          return 'Adobe RGB';
+        }
+      }
+      // Default assumption for JPEG
+      return 'sRGB';
+    } catch (error) {
+      return null;
+    }
+  }
+
+  /**
+   * Format file size for human readability
+   */
+  formatFileSize(bytes) {
+    const units = ['B', 'KB', 'MB', 'GB'];
+    let size = bytes;
+    let unitIndex = 0;
+
+    while (size >= 1024 && unitIndex < units.length - 1) {
+      size /= 1024;
+      unitIndex++;
+    }
+
+    return `${size.toFixed(1)} ${units[unitIndex]}`;
+  }
+
+  /**
+   * Validate metadata completeness
+   */
+  validateMetadataCompleteness(metadata) {
+    const validation = {
+      isComplete: true,
+      score: 0,
+      missing: [],
+      present: [],
+      recommendations: []
+    };
+
+    const essentialFields = [
+      { field: 'title', weight: 25, description: 'Book title' },
+      { field: 'author_last_name', weight: 20, description: 'Author surname' },
+      { field: 'isbn', weight: 20, description: 'ISBN identifier' },
+      { field: 'year', weight: 15, description: 'Publication year' },
+      { field: 'publisher', weight: 10, description: 'Publisher name' },
+      { field: 'dimensions', weight: 10, description: 'Image dimensions' }
+    ];
+
+    for (const { field, weight, description } of essentialFields) {
+      if (metadata[field] && metadata[field] !== null && metadata[field] !== '') {
+        validation.score += weight;
+        validation.present.push({ field, description, weight });
+      } else {
+        validation.missing.push({ field, description, weight });
+        validation.isComplete = false;
+      }
+    }
+
+    // Add recommendations based on missing fields
+    if (validation.missing.length > 0) {
+      validation.recommendations = validation.missing.map(item =>
+        `Consider adding ${item.description} (${item.field}) for better metadata completeness`
+      );
+    }
+
+    return validation;
+  }
+
+  /**
+   * Batch metadata extraction with progress tracking
+   */
+  async extractMetadataBatch(imagePaths, options = {}) {
+    this.logger.processing(`Starting batch metadata extraction for ${imagePaths.length} images`);
+    const batchOperationId = this.logger.startBatch('metadata-extraction', imagePaths.length);
+
+    const results = [];
+    const batchSize = options.batchSize || 10;
+
+    try {
+      for (let i = 0; i < imagePaths.length; i += batchSize) {
+        const batch = imagePaths.slice(i, i + batchSize);
+
+        const batchResults = await Promise.all(
+          batch.map(async (imagePath, index) => {
+            try {
+              const metadata = await this.extractFromImage(imagePath);
+              return {
+                success: true,
+                imagePath,
+                metadata,
+                validation: this.validateMetadataCompleteness(metadata)
+              };
+            } catch (error) {
+              return {
+                success: false,
+                imagePath,
+                error: error.message
+              };
+            }
+          })
+        );
+
+        results.push(...batchResults);
+
+        // Progress update
+        const processed = Math.min(i + batchSize, imagePaths.length);
+        this.logger.processing(`Processed ${processed}/${imagePaths.length} images`);
+      }
+
+      const successful = results.filter(r => r.success).length;
+      this.logger.endBatch(batchOperationId, {
+        processed: results.length,
+        successful,
+        failed: results.length - successful
+      });
+
+      return {
+        success: true,
+        results,
+        summary: {
+          total: imagePaths.length,
+          successful,
+          failed: results.length - successful,
+          averageScore: successful > 0 ?
+            results.filter(r => r.success).reduce((sum, r) => sum + r.validation.score, 0) / successful : 0
+        }
+      };
+
+    } catch (error) {
+      this.logger.updateOperation(batchOperationId, 'failed', { error: error.message });
+      throw error;
+    }
+  }
+
+  /**
+   * Run tests to verify metadata processor functionality
+   */
+  async runTests() {
+    this.logger.info('Running metadata processor tests...');
+
+    const testResults = {
+      passed: 0,
+      failed: 0,
+      tests: []
+    };
+
+    // Test 1: Filename parsing
+    try {
+      const testPath = '/test/Author_Name-Book_Title.jpg';
+      const result = this.extractFromFilename(testPath);
+      if (result.title && result.author_last_name) {
+        testResults.tests.push({ name: 'Filename parsing', status: 'passed' });
+        testResults.passed++;
+      } else {
+        testResults.tests.push({ name: 'Filename parsing', status: 'failed', error: 'Could not extract title or author' });
+        testResults.failed++;
+      }
+    } catch (error) {
+      testResults.tests.push({ name: 'Filename parsing', status: 'failed', error: error.message });
+      testResults.failed++;
+    }
+
+    // Test 2: ISBN validation
+    try {
+      const validISBN = this.isValidISBN('9780123456789');
+      const invalidISBN = this.isValidISBN('invalid');
+      if (validISBN && !invalidISBN) {
+        testResults.tests.push({ name: 'ISBN validation', status: 'passed' });
+        testResults.passed++;
+      } else {
+        testResults.tests.push({ name: 'ISBN validation', status: 'failed', error: 'ISBN validation logic error' });
+        testResults.failed++;
+      }
+    } catch (error) {
+      testResults.tests.push({ name: 'ISBN validation', status: 'failed', error: error.message });
+      testResults.failed++;
+    }
+
+    // Test 3: Metadata validation
+    try {
+      const testMetadata = {
+        title: 'Test Book',
+        author_last_name: 'Author',
+        isbn: '9780123456789',
+        year: 2023
+      };
+      const validation = this.validateMetadataCompleteness(testMetadata);
+      if (validation.score > 0) {
+        testResults.tests.push({ name: 'Metadata validation', status: 'passed' });
+        testResults.passed++;
+      } else {
+        testResults.tests.push({ name: 'Metadata validation', status: 'failed', error: 'Metadata validation failed' });
+        testResults.failed++;
+      }
+    } catch (error) {
+      testResults.tests.push({ name: 'Metadata validation', status: 'failed', error: error.message });
+      testResults.failed++;
+    }
+
+    this.logger.info(`Metadata processor tests completed: ${testResults.passed} passed, ${testResults.failed} failed`);
+    return testResults;
+  }
+
+  /**
+   * Clean up and generate final report
+   */
+  async cleanup() {
+    const stats = this.getModuleStats();
+    this.logger.info('Metadata processor cleanup completed', stats);
   }
 }
 

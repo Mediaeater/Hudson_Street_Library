@@ -1,9 +1,9 @@
 // .eleventy.js - Updated for new src directory structure
-const { parse } = require("csv-parse/sync");
 const fs = require("fs");
 const path = require("path");
 const slugify = require("slugify");
 const Image = require("@11ty/eleventy-img");
+const CSVHandler = require("./scripts/utils/csv-handler");
 
 module.exports = function(eleventyConfig) {
   console.log("--- Running Eleventy configuration ---");
@@ -18,16 +18,17 @@ module.exports = function(eleventyConfig) {
   try {
     console.log(`--- Attempting to read CSV: ${csvPath}`);
     if (fs.existsSync(csvPath)) {
-      const contents = fs.readFileSync(csvPath, "utf8");
-      if (contents && contents.trim().length > 0) {
-        bookData = parse(contents, {
-          columns: true,
-          skip_empty_lines: true,
-          trim: true,
+      const csvResult = CSVHandler.readBooksSync(csvPath);
+      bookData = csvResult.data;
+
+      console.log(`--- Parsed ${bookData.length} records from ${csvPath}`);
+      console.log(`--- CSV stats: ${csvResult.stats.validRows} valid, ${csvResult.stats.correctedRows} corrected, ${csvResult.stats.invalidRows} invalid`);
+
+      if (csvResult.errors.length > 0) {
+        console.log(`--- CSV had ${csvResult.errors.length} warnings/errors`);
+        csvResult.errors.slice(0, 3).forEach(error => {
+          console.log(`    Row ${error.row}: ${error.message || error.warnings?.join(', ')}`);
         });
-        console.log(`--- Parsed ${bookData.length} records from ${csvPath}`);
-      } else {
-        console.error(`--- CSV file is empty: ${csvPath}`);
       }
     } else {
       console.error(`--- CSV file does not exist: ${csvPath}`);

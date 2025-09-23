@@ -1,57 +1,39 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
-const { parse } = require('csv-parse/sync');
-const { stringify } = require('csv-stringify/sync');
+const CSVHandler = require('./utils/csv-handler');
 
-function fixCsvFormatting(inputFile, outputFile) {
+async function fixCsvFormatting(inputFile, outputFile) {
   console.log(`🔧 Fixing CSV formatting for ${inputFile}...`);
-  
+
   try {
-    // Read the CSV file
-    const csvContent = fs.readFileSync(inputFile, 'utf8');
-    
-    // Parse CSV with relaxed column count
-    const records = parse(csvContent, {
-      columns: true,
-      skip_empty_lines: true,
-      trim: true,
-      relax_column_count: true, // Allow inconsistent column counts
-      quote: '"',
-      escape: '"'
-    });
+    // Read the CSV file using enhanced handler (which already handles these issues)
+    const csvResult = await CSVHandler.read(inputFile);
+    const records = csvResult.data;
     
     console.log(`📊 Parsed ${records.length} records`);
-    
-    // Get the expected columns from the first record
-    const expectedColumns = Object.keys(records[0]);
-    console.log(`🔍 Expected ${expectedColumns.length} columns:`, expectedColumns.slice(0, 5), '...');
-    
-    // Fix each record to ensure all columns exist
-    const fixedRecords = records.map((record, index) => {
-      const fixedRecord = {};
-      
-      // Ensure all expected columns exist
-      expectedColumns.forEach(column => {
-        if (record.hasOwnProperty(column)) {
-          fixedRecord[column] = record[column];
-        } else {
-          fixedRecord[column] = 'NULL'; // Default value for missing columns
-        }
+    console.log(`📈 Stats: ${csvResult.stats.validRows} valid, ${csvResult.stats.correctedRows} corrected, ${csvResult.stats.invalidRows} invalid`);
+
+    if (csvResult.errors.length > 0) {
+      console.log(`⚠️  Found ${csvResult.errors.length} issues (warnings/errors)`);
+      csvResult.errors.slice(0, 5).forEach((error, index) => {
+        console.log(`  ${index + 1}. Row ${error.row}: ${error.message || error.warnings?.join(', ')}`);
       });
-      
-      return fixedRecord;
-    });
+    }
+
+    // Records are already cleaned and validated by the enhanced handler
+    const fixedRecords = records;
     
-    // Write the fixed CSV
-    const fixedCsv = stringify(fixedRecords, {
-      header: true,
-      quoted: true,
-      quoted_empty: true,
-      escape: '"'
-    });
-    
-    fs.writeFileSync(outputFile, fixedCsv);
+    // Write the fixed CSV using enhanced handler
+    const writeResult = await CSVHandler.write(outputFile, fixedRecords);
+
+    if (!writeResult.success) {
+      throw new Error(`Failed to write fixed CSV: ${writeResult.errors.join(', ')}`);
+    }
+
+    if (writeResult.backup) {
+      console.log(`💾 Created backup: ${writeResult.backup}`);
+    }
     
     console.log(`✅ Fixed CSV written to ${outputFile}`);
     console.log(`📈 Total records: ${fixedRecords.length}`);
@@ -68,8 +50,8 @@ function fixCsvFormatting(inputFile, outputFile) {
 if (require.main === module) {
   const inputFile = process.argv[2] || 'src/_data/HSL-CLEAN.csv';
   const outputFile = process.argv[3] || 'src/_data/books.csv';
-  
-  fixCsvFormatting(inputFile, outputFile);
+
+  fixCsvFormatting(inputFile, outputFile).catch(console.error);
 }
 
 module.exports = { fixCsvFormatting };

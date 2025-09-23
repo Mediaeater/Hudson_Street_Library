@@ -1,77 +1,145 @@
 // Image Categorization and Organization Module
 const fs = require('fs').promises;
 const path = require('path');
+const { getGlobalLogger } = require('../../utils/logger');
 
 class ImageCategorizer {
   constructor(config) {
     this.config = config;
     this.categories = config.collections;
+
+    // Initialize logger
+    this.logger = getGlobalLogger({
+      level: config.logging?.level || 'info',
+      logDir: config.logging?.logDirectory || path.join(__dirname, '../logs'),
+      includeEmojis: true
+    });
+
+    // Statistics tracking
+    this.stats = {
+      totalProcessed: 0,
+      successful: 0,
+      failed: 0,
+      categoryCounts: {},
+      lastProcessedAt: null
+    };
+
+    this.logger.info('ImageCategorizer initialized', {
+      availableCategories: Object.keys(this.categories).length,
+      categories: Object.keys(this.categories)
+    });
   }
 
   async categorizeImage(imagePath, context = {}) {
-    console.log(`🏷️  Categorizing: ${path.basename(imagePath)}`);
-    
-    const { metadata, bookInfo, manual } = context;
-    
-    // If manually specified, use that
-    if (manual && this.isValidCategory(manual)) {
-      console.log(`✅ Manual category: ${manual}`);
-      return manual;
-    }
+    const operationId = this.logger.trackOperation('categorize-image', 'started', { imagePath });
+    this.logger.logImageProcess(imagePath, 'Starting categorization', context);
 
-    // Try different categorization methods
-    const methods = [
-      () => this.categorizeByBookInfo(bookInfo),
-      () => this.categorizeByMetadata(metadata),
-      () => this.categorizeByFilename(imagePath),
-      () => this.categorizeByContent(imagePath, context)
-    ];
+    try {
+      const { metadata, bookInfo, manual } = context;
 
-    for (const method of methods) {
-      try {
-        const category = await method();
-        if (category && this.isValidCategory(category)) {
-          console.log(`✅ Categorized as: ${category}`);
-          return category;
-        }
-      } catch (error) {
-        console.log(`⚠️  Categorization method failed: ${error.message}`);
-        continue;
+      // Validate input
+      if (!imagePath || !await this.fileExists(imagePath)) {
+        throw new Error(`Image file does not exist: ${imagePath}`);
       }
-    }
 
-    // Default to general if no category found
-    console.log(`⚠️  No specific category found, using 'general'`);
-    return 'general';
+      // If manually specified, use that
+      if (manual && this.isValidCategory(manual)) {
+        this.logger.success(`Manual category assigned: ${manual}`);
+        this.updateStats(manual, true);
+        this.logger.updateOperation(operationId, 'completed', { category: manual, method: 'manual' });
+        return manual;
+      }
+
+      // Try different categorization methods
+      const methods = [
+        { name: 'bookInfo', fn: () => this.categorizeByBookInfo(bookInfo) },
+        { name: 'metadata', fn: () => this.categorizeByMetadata(metadata) },
+        { name: 'filename', fn: () => this.categorizeByFilename(imagePath) },
+        { name: 'content', fn: () => this.categorizeByContent(imagePath, context) }
+      ];
+
+      for (const method of methods) {
+        try {
+          this.logger.debug(`Trying categorization method: ${method.name}`);
+          const category = await method.fn();
+
+          if (category && this.isValidCategory(category)) {
+            this.logger.success(`Categorized as: ${category}`, { method: method.name });
+            this.updateStats(category, true);
+            this.logger.updateOperation(operationId, 'completed', { category, method: method.name });
+            return category;
+          }
+        } catch (error) {
+          this.logger.warn(`Categorization method '${method.name}' failed`, { error: error.message });
+          continue;
+        }
+      }
+
+      // Default to general if no category found
+      this.logger.warn('No specific category found, using default', { defaultCategory: 'general' });
+      this.updateStats('general', true);
+      this.logger.updateOperation(operationId, 'completed', { category: 'general', method: 'default' });
+      return 'general';
+
+    } catch (error) {
+      this.updateStats(null, false);
+      this.logger.updateOperation(operationId, 'failed', { error: error.message });
+      this.logger.error(`Categorization failed for ${path.basename(imagePath)}`, error);
+      throw error;
+    }
   }
 
   async categorizeByBookInfo(bookInfo) {
-    if (!bookInfo) return null;
-    
-    console.log(`🔍 Analyzing book info...`);
-    
-    const { title, authors, categories, description, subjects } = bookInfo;
-    const searchText = [
-      title,
-      ...(authors || []),
-      ...(categories || []),
-      description,
-      ...(subjects || [])
-    ].filter(Boolean).join(' ').toLowerCase();
-
-    // Check each collection's keywords
-    for (const [collection, keywords] of Object.entries(this.categories)) {
-      if (keywords.length === 0) continue; // Skip collections without keywords
-      
-      for (const keyword of keywords) {
-        if (searchText.includes(keyword.toLowerCase())) {
-          console.log(`📚 Matched "${keyword}" → ${collection}`);
-          return collection;
-        }
-      }
+    if (!bookInfo) {
+      this.logger.debug('No book info provided for categorization');
+      return null;
     }
 
-    return null;
+    this.logger.debug('Analyzing book information for categorization', {
+      hasTitle: !!bookInfo.title,
+      hasAuthors: !!(bookInfo.authors?.length),
+      hasCategories: !!(bookInfo.categories?.length),
+      hasDescription: !!bookInfo.description
+    });
+
+    try {
+      const { title, authors, categories, description, subjects } = bookInfo;
+      const searchText = [
+        title,
+        ...(authors || []),
+        ...(categories || []),
+        description,
+        ...(subjects || [])
+      ].filter(Boolean).join(' ').toLowerCase();
+
+      if (!searchText.trim()) {
+        this.logger.warn('Book info contains no searchable text');
+        return null;
+      }
+
+      // Check each collection's keywords
+      for (const [collection, keywords] of Object.entries(this.categories)) {
+        if (!keywords || keywords.length === 0) continue; // Skip collections without keywords
+
+        for (const keyword of keywords) {
+          if (searchText.includes(keyword.toLowerCase())) {
+            this.logger.info(`Book info matched keyword "${keyword}"`, {
+              collection,
+              keyword,
+              matchedIn: 'bookInfo'
+            });
+            return collection;
+          }
+        }
+      }
+
+      this.logger.debug('No matching keywords found in book info');
+      return null;
+
+    } catch (error) {
+      this.logger.error('Error during book info categorization', error);
+      return null;
+    }
   }
 
   async categorizeByMetadata(metadata) {
@@ -497,16 +565,16 @@ class ImageCategorizer {
 
   async getCategoryStats() {
     const stats = {};
-    
+
     for (const category of this.getAvailableCategories()) {
       const categoryDir = path.join(this.config.directories.assets, category);
-      
+
       try {
         const files = await fs.readdir(categoryDir);
-        const imageFiles = files.filter(file => 
+        const imageFiles = files.filter(file =>
           this.config.supportedTypes.includes(path.extname(file).toLowerCase())
         );
-        
+
         stats[category] = {
           count: imageFiles.length,
           files: imageFiles
@@ -514,12 +582,178 @@ class ImageCategorizer {
       } catch (error) {
         stats[category] = {
           count: 0,
-          files: []
+          files: [],
+          error: error.message
         };
       }
     }
-    
+
     return stats;
+  }
+
+  /**
+   * Helper method to check if file exists
+   */
+  async fileExists(filePath) {
+    try {
+      await fs.access(filePath, fs.constants.F_OK);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Update internal statistics
+   */
+  updateStats(category, success) {
+    this.stats.totalProcessed++;
+    this.stats.lastProcessedAt = new Date().toISOString();
+
+    if (success) {
+      this.stats.successful++;
+      if (category) {
+        this.stats.categoryCounts[category] = (this.stats.categoryCounts[category] || 0) + 1;
+      }
+    } else {
+      this.stats.failed++;
+    }
+  }
+
+  /**
+   * Get module statistics
+   */
+  getModuleStats() {
+    const successRate = this.stats.totalProcessed > 0 ?
+      (this.stats.successful / this.stats.totalProcessed * 100).toFixed(2) + '%' : '0%';
+
+    return {
+      ...this.stats,
+      successRate,
+      mostUsedCategory: Object.keys(this.stats.categoryCounts).reduce((a, b) =>
+        this.stats.categoryCounts[a] > this.stats.categoryCounts[b] ? a : b, null)
+    };
+  }
+
+  /**
+   * Validate categorizer configuration
+   */
+  validateConfig() {
+    const validation = {
+      isValid: true,
+      errors: [],
+      warnings: []
+    };
+
+    // Check if categories are defined
+    if (!this.categories || Object.keys(this.categories).length === 0) {
+      validation.errors.push('No categories defined in configuration');
+      validation.isValid = false;
+    }
+
+    // Check if directories exist
+    if (!this.config.directories?.assets) {
+      validation.errors.push('Assets directory not configured');
+      validation.isValid = false;
+    }
+
+    // Check supported types
+    if (!this.config.supportedTypes || this.config.supportedTypes.length === 0) {
+      validation.warnings.push('No supported file types defined');
+    }
+
+    return validation;
+  }
+
+  /**
+   * Run tests to verify categorizer functionality
+   */
+  async runTests() {
+    this.logger.info('Running categorizer tests...');
+
+    const testResults = {
+      passed: 0,
+      failed: 0,
+      tests: []
+    };
+
+    // Test 1: Configuration validation
+    try {
+      const configValidation = this.validateConfig();
+      if (configValidation.isValid) {
+        testResults.tests.push({ name: 'Configuration validation', status: 'passed' });
+        testResults.passed++;
+      } else {
+        testResults.tests.push({
+          name: 'Configuration validation',
+          status: 'failed',
+          error: configValidation.errors.join(', ')
+        });
+        testResults.failed++;
+      }
+    } catch (error) {
+      testResults.tests.push({
+        name: 'Configuration validation',
+        status: 'failed',
+        error: error.message
+      });
+      testResults.failed++;
+    }
+
+    // Test 2: Category validation
+    try {
+      const validCategories = this.getAvailableCategories();
+      if (validCategories.length > 0) {
+        testResults.tests.push({ name: 'Category validation', status: 'passed' });
+        testResults.passed++;
+      } else {
+        testResults.tests.push({
+          name: 'Category validation',
+          status: 'failed',
+          error: 'No valid categories available'
+        });
+        testResults.failed++;
+      }
+    } catch (error) {
+      testResults.tests.push({
+        name: 'Category validation',
+        status: 'failed',
+        error: error.message
+      });
+      testResults.failed++;
+    }
+
+    // Test 3: Book info categorization
+    try {
+      const testBookInfo = {
+        title: 'Test Book',
+        authors: ['Test Author'],
+        categories: ['test'],
+        description: 'A test book for testing'
+      };
+
+      await this.categorizeByBookInfo(testBookInfo);
+      testResults.tests.push({ name: 'Book info categorization', status: 'passed' });
+      testResults.passed++;
+    } catch (error) {
+      testResults.tests.push({
+        name: 'Book info categorization',
+        status: 'failed',
+        error: error.message
+      });
+      testResults.failed++;
+    }
+
+    this.logger.info(`Categorizer tests completed: ${testResults.passed} passed, ${testResults.failed} failed`);
+    return testResults;
+  }
+
+  /**
+   * Clean up and generate final report
+   */
+  async cleanup() {
+    const stats = this.getModuleStats();
+    this.logger.info('Image categorizer cleanup completed', stats);
   }
 }
 
