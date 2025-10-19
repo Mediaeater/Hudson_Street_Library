@@ -108,15 +108,31 @@ class DatabaseMigration {
         // Check if database already exists and has data
         if (fs.existsSync(this.options.dbPath)) {
             const tempDb = new LibraryDatabase(this.options.dbPath, { verbose: false });
-            await tempDb.initialize();
-            const stats = tempDb.getStats();
-            tempDb.close();
 
-            if (stats.books.total > 0) {
-                const proceed = await this.confirmOverwrite(stats.books.total);
-                if (!proceed) {
-                    throw new Error('Migration cancelled by user');
+            try {
+                await tempDb.initialize();
+
+                // Check if tables exist before getting stats
+                const tables = tempDb.db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all();
+                console.log('Existing tables:', tables.map(t => t.name));
+
+                if (tables.some(t => t.name === 'books')) {
+                    const stats = tempDb.getStats();
+
+                    if (stats.books.total > 0) {
+                        const proceed = await this.confirmOverwrite(stats.books.total);
+                        if (!proceed) {
+                            throw new Error('Migration cancelled by user');
+                        }
+                    }
+                } else {
+                    console.log('Books table not found in database, will be created during migration');
                 }
+            } catch (error) {
+                console.error('Error checking existing database:', error.message);
+                // Continue with migration if database check fails
+            } finally {
+                tempDb.close();
             }
         }
 

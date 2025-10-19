@@ -914,24 +914,66 @@ class LibraryDatabase {
     getStats() {
         this.ensureInitialized();
 
+        // Check if tables exist before querying
+        const tablesResult = this.db.prepare(
+            "SELECT COUNT(*) as count FROM sqlite_master WHERE type='table' AND name IN ('books', 'covers', 'api_cache')"
+        ).get();
+        const tablesExist = tablesResult ? tablesResult.count : 0;
+
+        if (tablesExist === 0) {
+            // Return empty stats if no tables exist
+            return {
+                books: { total: 0, withCovers: 0, withoutCovers: 0 },
+                covers: { total: 0, complete: 0, pending: 0, failed: 0 },
+                cache: { entries: 0, expired: 0 },
+                database: {
+                    size: this.getDatabaseSize(),
+                    lastVacuum: this.getLastVacuum(),
+                    pageCount: this.db.pragma('page_count'),
+                    pageSize: this.db.pragma('page_size'),
+                    journalMode: this.db.pragma('journal_mode'),
+                    foreignKeys: this.db.pragma('foreign_keys')
+                }
+            };
+        }
+
         const bookCountStmt = this.statements.get('getBookCount');
         const coverCountStmt = this.statements.get('getCoverCount');
 
+        // Safely get results with null checks for both statements and results
+        const bookCountResult = bookCountStmt ? bookCountStmt.get() : null;
+        const coverCountResult = coverCountStmt ? coverCountStmt.get() : null;
+
         const stats = {
             books: {
-                total: bookCountStmt.get().count,
-                withCovers: coverCountStmt.get().count,
+                total: bookCountResult ? bookCountResult.count : 0,
+                withCovers: coverCountResult ? coverCountResult.count : 0,
                 withoutCovers: 0
             },
             covers: {
-                total: this.db.prepare('SELECT COUNT(*) as count FROM covers').get().count,
-                complete: coverCountStmt.get().count,
-                pending: this.db.prepare('SELECT COUNT(*) as count FROM covers WHERE status = "pending"').get().count,
-                failed: this.db.prepare('SELECT COUNT(*) as count FROM covers WHERE status = "failed"').get().count
+                total: (() => {
+                    const result = this.db.prepare('SELECT COUNT(*) as count FROM covers').get();
+                    return result ? result.count : 0;
+                })(),
+                complete: coverCountResult ? coverCountResult.count : 0,
+                pending: (() => {
+                    const result = this.db.prepare('SELECT COUNT(*) as count FROM covers WHERE status = \'pending\'').get();
+                    return result ? result.count : 0;
+                })(),
+                failed: (() => {
+                    const result = this.db.prepare('SELECT COUNT(*) as count FROM covers WHERE status = \'failed\'').get();
+                    return result ? result.count : 0;
+                })()
             },
             cache: {
-                entries: this.db.prepare('SELECT COUNT(*) as count FROM api_cache').get().count,
-                expired: this.db.prepare('SELECT COUNT(*) as count FROM api_cache WHERE expires_at <= CURRENT_TIMESTAMP').get().count
+                entries: (() => {
+                    const result = this.db.prepare('SELECT COUNT(*) as count FROM api_cache').get();
+                    return result ? result.count : 0;
+                })(),
+                expired: (() => {
+                    const result = this.db.prepare('SELECT COUNT(*) as count FROM api_cache WHERE expires_at <= CURRENT_TIMESTAMP').get();
+                    return result ? result.count : 0;
+                })()
             },
             database: {
                 size: this.getDatabaseSize(),
