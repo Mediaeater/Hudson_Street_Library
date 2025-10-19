@@ -204,31 +204,7 @@ class BookSearch {
     
     async loadBooks() {
         console.log('Starting to load books...');
-        
-        // Force CSV loading for now since JSON is empty
         return await this.loadBooksFromCSV();
-        
-        /* 
-        try {
-            const response = await fetch('/data/books.json');
-            if (!response.ok) {
-                console.log('JSON not found, trying CSV');
-                return await this.loadBooksFromCSV();
-            }
-            const jsonData = await response.json();
-            console.log('Loaded JSON data:', jsonData.length, 'items');
-            
-            if (!jsonData || jsonData.length === 0) {
-                console.log('JSON is empty, trying CSV');
-                return await this.loadBooksFromCSV();
-            }
-            
-            this.books = jsonData;
-        } catch (error) {
-            console.warn('Failed to load books.json, trying CSV:', error);
-            await this.loadBooksFromCSV();
-        }
-        */
     }
     
     async loadBooksFromCSV() {
