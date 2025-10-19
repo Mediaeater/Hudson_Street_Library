@@ -213,6 +213,15 @@ npm clean
 
 ## 📚 Documentation
 
+**📖 [Complete Documentation Index](docs/INDEX.md)** - Central hub for all documentation
+
+### Quick Links
+- [Development Workflow Guide](docs/DEVELOPMENT-WORKFLOW.md) - Complete development guide for new developers
+- [Frontend Development](docs/FRONTEND-DEVELOPMENT.md) - JavaScript, CSS, and template system
+- [Build System](docs/BUILD-SYSTEM.md) - How Eleventy builds the site
+- [Template System](docs/TEMPLATE-SYSTEM.md) - Working with Nunjucks templates
+- [Troubleshooting Guide](docs/TROUBLESHOOTING.md) - Common problems and solutions
+
 ### Automated Systems
 - [Image System Documentation](docs/IMAGE-SYSTEM-DOCUMENTATION.md) - Complete image pipeline and optimization
 - [News Pipeline Documentation](docs/NEWS-PIPELINE-DOCUMENTATION.md) - Automated news generation system
@@ -224,13 +233,16 @@ npm clean
 - [Quick Reference](docs/DEPLOYMENT-QUICK-REFERENCE.md) - Essential commands and links
 
 ### Development
-- [Architecture Overview](docs/architecture/CMS-ARCHITECTURE.md) - System architecture
-- [Claude AI Guide](docs/architecture/OLD-CLAUDE.md) - AI assistant instructions
-- [Book Page Template](docs/guides/BOOK-PAGE-TEMPLATE.md) - Creating book pages
-- [Aggregate Views](docs/AGGREGATE-VIEWS.md) - Clickable metadata and filtering system
+- [Architecture Overview](docs/architecture/SYSTEM-OVERVIEW.md) - System architecture
+- [Data Structures](docs/DATA-STRUCTURES.md) - Database schema and data formats
+- [Security Documentation](docs/SECURITY.md) - Security practices and guidelines
+- [Testing Guide](docs/TESTING-GUIDE.md) - Testing framework and procedures
 - [API Documentation](docs/API_DOCUMENTATION.md) - Book cover APIs and integration
+- [Aggregate Views](docs/AGGREGATE-VIEWS.md) - Clickable metadata and filtering system
 
 ### User Guides
+- [Book Workflow Guide](docs/BOOK_WORKFLOW_GUIDE.md) - Adding and managing books
+- [Content Manager Guide](docs/CONTENT_MANAGER_GUIDE.md) - Using the CMS
 - [Quick Start: Search](docs/QUICK-START-SEARCH.md) - How to use search and browse features
 
 ## 🆘 Troubleshooting
