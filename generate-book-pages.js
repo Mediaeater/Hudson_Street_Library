@@ -83,9 +83,10 @@ function generateBookPage(book, template) {
   html = html.replace(/\[AUTHOR NAME\]/g, book.author_full_name || 'Unknown Author');
   html = html.replace(/\[AUTHOR\]/g, book.author_last || 'Unknown');
 
-  // Image filename
+  // Image filename - use relative path from _site/books/{slug}/ to _site/assets/
   const imageFilename = createImageFilename(book.title, book.author_last, book.isbn_asin);
-  html = html.replace(/\[FILENAME\]\.jpg/g, imageFilename);
+  // Path should be ../../assets/images/books/ from _site/books/{slug}/index.html
+  html = html.replace(/src="\/assets\/images\/books\/\[FILENAME\]\.jpg"/g, `src="../../assets/images/books/${imageFilename}"`);
 
   // Publisher with link
   const publisherName = book.publisher || 'Not specified';
