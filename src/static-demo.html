@@ -565,31 +565,37 @@ class BookSearch {
     
     generateCoverImagePath(book) {
         // First check if book already has a valid image_url
-        if (book.image_url && 
-            book.image_url !== 'NULL' && 
-            book.image_url !== '' && 
+        if (book.image_url &&
+            book.image_url !== 'NULL' &&
+            book.image_url !== '' &&
             book.image_url !== null &&
             book.image_url !== 'null') {
             return book.image_url;
         }
-        
+
         // Generate cover path from acquired images using the same naming convention
-        // as our acquisition script: Author_Title_ISBN.jpg or Author_Title_noISBN.jpg
-        const author = (book.author_full_name || book.author_last || 'Unknown').replace(/[^a-zA-Z0-9.-]/g, '_');
+        // as our acquisition script: AuthorLast_Title_ISBN.jpg
+        // MUST use author_last (not author_full_name) to match the actual cover filenames
+        const authorLast = (book.author_last || 'Unknown').replace(/[^a-zA-Z0-9.-]/g, '_');
         const title = (book.title || 'Untitled').replace(/[^a-zA-Z0-9.-]/g, '_');
-        const isbn = (book.isbn_asin || '').replace(/[^a-zA-Z0-9.-]/g, '_');
-        
-        // Try with ISBN if available
-        if (isbn && isbn !== 'NULL' && isbn !== '') {
-            const coverFileName = `${author}_${title}_${isbn}`.replace(/_+/g, '_').replace(/^_|_$/g, '').substring(0, 100) + '.jpg';
-            return `/assets/images/books/${coverFileName}`;
+        const isbn = (book.isbn_asin || '').replace(/[^a-zA-Z0-9.-]/g, '_').replace(/[-\s]/g, '');
+
+        // Build filename and sanitize (matching image-core.js logic)
+        let filename;
+        if (isbn && isbn !== 'NULL' && isbn !== '' && isbn !== 'null') {
+            filename = `${authorLast}_${title}_${isbn}`;
         } else {
-            // Try with noISBN suffix for books without ISBN
-            const coverFileName = `${author}_${title}_noISBN`.replace(/_+/g, '_').replace(/^_|_$/g, '').substring(0, 100) + '.jpg';
-            return `/assets/images/books/${coverFileName}`;
+            filename = `${authorLast}_${title}_noISBN`;
         }
-        
-        // Note: The image tag will fallback to placeholder if this path doesn't exist
+
+        // Sanitize and truncate
+        const sanitized = filename
+            .replace(/[^a-zA-Z0-9.-]/g, '_')
+            .replace(/_+/g, '_')
+            .replace(/^_|_$/g, '')
+            .substring(0, 100);
+
+        return `/assets/images/books/${sanitized}.jpg`;
     }
 
     generateBookPageUrl(book) {
