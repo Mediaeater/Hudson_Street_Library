@@ -94,7 +94,11 @@ function generateBookPage(book, template) {
 
   // Publisher with link
   const publisherName = book.publisher || 'Not specified';
-  const publisherLink = book.publisher_url
+  const hasValidUrl = book.publisher_url &&
+                      book.publisher_url !== 'NULL' &&
+                      book.publisher_url !== 'null' &&
+                      book.publisher_url.trim() !== '';
+  const publisherLink = hasValidUrl
     ? `<a href="${book.publisher_url}" target="_blank" class="text-teal-700 hover:text-teal-900 underline">${publisherName}</a>`
     : publisherName;
 
