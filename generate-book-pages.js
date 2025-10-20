@@ -79,7 +79,7 @@ function generateSubjectTags(tags) {
 }
 
 // Main function to generate book page
-function generateBookPage(book, template) {
+function generateBookPage(book, template, allBooks = []) {
   let html = template;
 
   // Replace placeholders
@@ -115,10 +115,23 @@ function generateBookPage(book, template) {
   html = html.replace(/\[Language\]/g, 'English'); // Default to English
   html = html.replace(/\[Edition info\]/g, book.edition_printrun || 'Not specified');
 
-  // Description
-  const description = book.description
-    ? `<p>${book.description}</p>`
-    : '<p>No description available.</p>';
+  // Description - split into paragraphs at sentence breaks for better readability
+  let description;
+  if (book.description) {
+    // Split description into sentences and group into paragraphs (roughly 2-3 sentences per paragraph)
+    const sentences = book.description.match(/[^.!?]+[.!?]+/g) || [book.description];
+    const paragraphs = [];
+
+    // Group sentences into paragraphs (3 sentences per paragraph)
+    for (let i = 0; i < sentences.length; i += 3) {
+      const paragraphSentences = sentences.slice(i, i + 3);
+      paragraphs.push(`<p>${paragraphSentences.join(' ').trim()}</p>`);
+    }
+
+    description = paragraphs.join('\n                            ');
+  } else {
+    description = '<p>No description available.</p>';
+  }
   html = html.replace(/<p>\[First paragraph of description\]<\/p>\s*<p>\[Second paragraph if needed\]<\/p>\s*<p>\[Third paragraph if needed\]<\/p>/g, description);
 
   // Contributors section - only show if there are contributors
@@ -191,11 +204,52 @@ function generateBookPage(book, template) {
     '<span class="availability-badge available">Available for Viewing</span>'
   );
 
-  // Remove "Related Books" sections for now (these would require database queries)
-  html = html.replace(
-    /<!-- Related Books by Author -->[\s\S]*?<\/div>\s*<\/div>\s*<!-- Related Books by Subject/,
-    '<!-- Related Books by Subject'
-  );
+  // Find other books by the same author (but not this book)
+  const otherBooksByAuthor = allBooks.filter(b =>
+    b.author_last === book.author_last &&
+    b.title !== book.title &&
+    b.title &&
+    b.title !== 'NULL'
+  ).slice(0, 5); // Limit to 5 books
+
+  // Generate "Other Books by This Author" section if there are other books
+  if (otherBooksByAuthor.length > 0) {
+    const otherBooksHTML = otherBooksByAuthor.map(otherBook => {
+      const slug = createSlug(otherBook.author_last, otherBook.title);
+      const shortDesc = otherBook.description && otherBook.description !== 'NULL'
+        ? otherBook.description.substring(0, 100) + '...'
+        : `Published ${otherBook.publication_year || 'date unknown'}`;
+
+      return `<div class="border-l-4 border-teal-700 pl-4 py-2 hover:bg-gray-50 transition-colors">
+                                <a href="../${slug}/" class="block">
+                                    <h4 class="font-semibold text-gray-800 hover:text-teal-700">${otherBook.title}</h4>
+                                    <p class="text-sm text-gray-600">${shortDesc}</p>
+                                </a>
+                            </div>`;
+    }).join('\n                        ');
+
+    // Replace the "Related Books by Author" placeholder with actual content
+    html = html.replace(
+      /<!-- Related Books by Author -->[\s\S]*?<\/div>\s*<\/div>\s*<!-- Related Books by Subject/,
+      `<!-- Other Books by This Author -->
+                    <div>
+                        <h3 class="detail-section-title text-lg font-semibold text-gray-800">Other Books by ${book.author_full_name} in Our Collection</h3>
+                        <div class="space-y-3">
+                            ${otherBooksHTML}
+                        </div>
+                    </div>
+
+                    <!-- Related Books by Subject`
+    );
+  } else {
+    // Remove the section if no other books by this author
+    html = html.replace(
+      /<!-- Related Books by Author -->[\s\S]*?<\/div>\s*<\/div>\s*<!-- Related Books by Subject/,
+      '<!-- Related Books by Subject'
+    );
+  }
+
+  // Remove "Related Books by Subject" section (keep this for now)
   html = html.replace(
     /<!-- Related Books by Subject[\s\S]*?<\/div>\s*<\/div>\s*<!-- Library Information/,
     '<!-- Library Information'
@@ -241,8 +295,8 @@ async function main() {
               fs.mkdirSync(bookDir, { recursive: true });
             }
 
-            // Generate HTML
-            const html = generateBookPage(book, template);
+            // Generate HTML with access to all books for related books section
+            const html = generateBookPage(book, template, books);
 
             // Write file
             const outputPath = path.join(bookDir, 'index.html');
