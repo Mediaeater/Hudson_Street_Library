@@ -592,6 +592,22 @@ class BookSearch {
         // Note: The image tag will fallback to placeholder if this path doesn't exist
     }
 
+    generateBookPageUrl(book) {
+        // Generate URL slug matching the generate-book-pages.js script
+        // Format: /books/{author_last}_{title}/
+        const author = (book.author_last || 'unknown')
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '_')
+            .replace(/^_+|_+$/g, '');
+
+        const title = (book.title || 'untitled')
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '_')
+            .replace(/^_+|_+$/g, '');
+
+        return `/books/${author}_${title}/`;
+    }
+
     renderBookCard(book) {
         const imageUrl = this.generateCoverImagePath(book);
         const hasRealCover = imageUrl !== '/assets/images/placeholder-book.svg';
@@ -615,7 +631,9 @@ class BookSearch {
                     </div>
                     <div class="flex-1">
                         <h3 class="text-xl font-semibold text-teal-900 mb-2">
-                            ${this.escapeHtml(book.title)}
+                            <a href="${this.generateBookPageUrl(book)}" class="hover:text-teal-700 transition-colors">
+                                ${this.escapeHtml(book.title)}
+                            </a>
                         </h3>
                         <p class="text-neutral-700 mb-2">
                             by ${this.escapeHtml(author)}
