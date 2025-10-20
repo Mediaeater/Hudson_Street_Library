@@ -37,8 +37,9 @@
         .subject-tag {
             display: inline-block;
             padding: 0.25rem 0.75rem;
-            background-color: #e6fffa;
+            background-color: transparent;
             color: #0f766e;
+            border: 1px solid #d1d5db;
             border-radius: 9999px;
             font-size: 0.875rem;
             margin: 0.25rem;
@@ -46,8 +47,9 @@
         }
 
         .subject-tag:hover {
-            background-color: #99f6e4;
+            background-color: #f3f4f6;
             color: #115e59;
+            border-color: #9ca3af;
         }
 
         .collection-badge {
@@ -129,25 +131,26 @@
                         <script>
                         function generateCoverImagePath() {
                             // Extract book data from Nunjucks template
-                            const author = '{{ book["Author, First"] }} {{ book["Author, Last"] }}'.replace(/[^a-zA-Z0-9.-]/g, '_');
-                            const title = '{{ book.Title }}'.replace(/[^a-zA-Z0-9.-]/g, '_');
-                            const isbn = '{{ book.ISBN }}'.replace(/[^a-zA-Z0-9.-]/g, '_');
-                            
-                            // Check if we have existing image
-                            {% if book.Image and book.Image.trim() %}
-                                return '/assets/images/books/{{ book.Image }}';
+                            const authorLast = '{{ book.author_last }}'.replace(/[^a-zA-Z0-9.-]/g, '_');
+                            const title = '{{ book.title }}'.replace(/[^a-zA-Z0-9.-]/g, '_');
+                            const isbn = '{{ book.isbn_asin }}'.replace(/[^a-zA-Z0-9.-]/g, '_').replace(/[-\s]/g, '');
+
+                            // Check if we have existing image_url
+                            {% if book.image_url and book.image_url.trim() %}
+                                return '/assets/images/books/{{ book.image_url }}';
                             {% endif %}
-                            
-                            // Generate path from our acquired covers
-                            if (isbn && isbn !== 'NULL' && isbn !== '') {
-                                const coverFileName = `${author}_${title}_${isbn}`.replace(/_+/g, '_').replace(/^_|_$/g, '').substring(0, 100) + '.jpg';
+
+                            // Generate path from our acquired covers using the standard format:
+                            // AuthorLast_Title_ISBN.jpg
+                            if (isbn && isbn !== 'NULL' && isbn !== '' && isbn !== 'null') {
+                                const coverFileName = `${authorLast}_${title}_${isbn}`.replace(/_+/g, '_').replace(/^_|_$/g, '').substring(0, 100) + '.jpg';
                                 return `/assets/images/books/${coverFileName}`;
                             } else {
                                 // Try with noISBN suffix for books without ISBN
-                                const coverFileName = `${author}_${title}_noISBN`.replace(/_+/g, '_').replace(/^_|_$/g, '').substring(0, 100) + '.jpg';
+                                const coverFileName = `${authorLast}_${title}_noISBN`.replace(/_+/g, '_').replace(/^_|_$/g, '').substring(0, 100) + '.jpg';
                                 return `/assets/images/books/${coverFileName}`;
                             }
-                            
+
                             return null;
                         }
                         

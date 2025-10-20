@@ -23,20 +23,24 @@ function createSlug(author, title) {
   return combined;
 }
 
+// Helper function to sanitize filename (matches image-core.js logic)
+function sanitizeFilename(str) {
+  return str
+    // Replace spaces and other special chars with underscores (keep alphanumeric, dots, hyphens)
+    .replace(/[^a-zA-Z0-9.-]/g, '_')
+    // Collapse multiple underscores
+    .replace(/_+/g, '_')
+    // Remove leading/trailing underscores
+    .replace(/^_|_$/g, '');
+}
+
 // Helper function to create image filename from title and ISBN
+// Matches the format used by book-api-client: AuthorLast_Title_ISBN.jpg
 function createImageFilename(title, author, isbn) {
-  // Clean and format the filename similar to the pattern in the data
-  const cleanTitle = title
-    .replace(/[:\-,]/g, '_')
-    .replace(/\s+/g, '_')
-    .replace(/[()]/g, '')
-    .replace(/_+/g, '_');
-
-  const cleanAuthor = author
-    .replace(/[,]/g, '')
-    .replace(/\s+/g, '_');
-
-  return `${cleanAuthor}_${cleanTitle}_${isbn}.jpg`;
+  const filename = `${author}_${title}_${isbn}`;
+  const sanitized = sanitizeFilename(filename);
+  // Apply length limit (100 chars as per image-core.js config)
+  return sanitized.substring(0, 100) + '.jpg';
 }
 
 // Helper function to format dimensions
