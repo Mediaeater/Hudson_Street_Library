@@ -17,7 +17,6 @@ This is a **file-based content management system** that requires **no PostgreSQL
 ```
 Hudson Street Library Static CMS
 ├── 💾 Data Storage (JSON files)
-│   ├── src/_data/books.json      - Book records
 │   └── src/_data/libraryCollections.json - Collection data
 ├── 🌐 Web Interface
 │   ├── Admin Dashboard           - Library statistics & controls
@@ -75,29 +74,6 @@ Open your browser to: **http://localhost:3001/admin**
 ❌ **Not for high-traffic real-time apps**  
 
 ## 📊 Data Management
-
-### Books Data (`src/_data/books.json`)
-```json
-{
-  "books": [
-    {
-      "id": "sample-book-1640533650123",
-      "title": "Sample Photography Book",
-      "author_first": "John",
-      "author_last": "Doe", 
-      "status": "available",
-      "bookCollections": ["photography"],
-      "created_at": "2025-06-16T12:15:50.123Z",
-      "updated_at": "2025-06-16T12:15:50.123Z"
-    }
-  ],
-  "metadata": {
-    "lastUpdated": "2025-06-16T12:15:50.123Z",
-    "totalBooks": 1,
-    "version": "1.0.0"
-  }
-}
-```
 
 ### Collections Data (`src/_data/libraryCollections.json`)
 ```json
@@ -210,7 +186,6 @@ npm run clean
 │   └── .env                   # Environment config
 ├── src/
 │   ├── _data/
-│   │   ├── books.json         # Book records
 │   │   └── libraryCollections.json # Collections
 │   ├── admin/
 │   │   ├── index.html         # Admin dashboard
@@ -309,6 +284,6 @@ The Hudson Street Library Static CMS provides:
 - ✅ Added: Git-based deployment workflow
 - ✅ Added: Eleventy static site generation
 
-**Data Migration**: Your existing book data remains available in `src/_data/books.csv` and `src/_data/books.json`. The static CMS reads from and writes to these files directly.
+**Data Migration**: Your existing book data remains available in `src/_data/books.csv`. The static CMS reads from and writes to these files directly.
 
 **No Data Loss**: All your book records, collections, and content are preserved in the transition to the static system.
