@@ -28,10 +28,7 @@ const DEFAULT_CONFIG = {
         googleBooks: 'https://www.googleapis.com/books/v1/volumes?q={query}',
         openLibrary: 'https://openlibrary.org/api/books?bibkeys=ISBN:{isbn}&format=json&jscmd=data',
         worldcat: 'https://covers.oclc.org/ImageWebSvc/oCoverView.asmx/getCoverView?isbn={isbn}&size=L&format=jpg',
-        libraryThing: {
-            cover: 'https://www.librarything.com/devkey/{apikey}/large/isbn/{isbn}',
-            bookData: 'https://www.librarything.com/services/rest/1.1/?method=librarything.ck.getwork&isbn={isbn}&apikey={apikey}'
-        }
+        libraryThing: 'https://covers.librarything.com/devkey/large/isbn/{isbn}'
     },
 
     // Rate limiting settings
@@ -203,11 +200,26 @@ class APICache {
 }
 
 /**
+ * Deep merge two objects
+ */
+function deepMerge(target, source) {
+    const result = { ...target };
+    for (const key in source) {
+        if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+            result[key] = deepMerge(target[key] || {}, source[key]);
+        } else {
+            result[key] = source[key];
+        }
+    }
+    return result;
+}
+
+/**
  * Main BookAPIClient class
  */
 class BookAPIClient {
     constructor(config = {}) {
-        this.config = { ...DEFAULT_CONFIG, ...config };
+        this.config = deepMerge(DEFAULT_CONFIG, config);
         this.rateLimiter = new RateLimiter(this.config.rateLimit);
         this.cache = new APICache(this.config.cache);
         this.stats = {
@@ -222,7 +234,12 @@ class BookAPIClient {
      * Make HTTP request with retry logic and rate limiting
      */
     async makeRequest(url, options = {}) {
-        const config = { ...this.config.request, ...options };
+        // Merge options with defaults, ensuring userAgent is properly set
+        const config = {
+            userAgent: this.config.request.userAgent,
+            timeout: this.config.request.timeout,
+            ...options
+        };
         let lastError;
 
         for (let attempt = 1; attempt <= this.config.retry.maxRetries; attempt++) {
@@ -530,12 +547,6 @@ class BookAPIClient {
             return { found: false, source: 'LibraryThing', reason: 'No valid ISBN provided' };
         }
 
-        // Check for API key
-        const apiKey = process.env.LIBRARY_THING_API_KEY;
-        if (!apiKey) {
-            return { found: false, source: 'LibraryThing', reason: 'API key not configured' };
-        }
-
         const cacheKey = `librarything_${book.isbn}`;
         const cached = this.cache.get(cacheKey);
 
@@ -545,85 +556,35 @@ class BookAPIClient {
         }
 
         try {
-            // First, try to get book data for validation and metadata
-            const bookDataUrl = this.config.apis.libraryThing.bookData
-                .replace('{isbn}', book.isbn)
-                .replace('{apikey}', apiKey);
+            // Get API key from environment or use 'devkey' for free tier
+            const apiKey = process.env.LIBRARY_THING_API_KEY || 'devkey';
 
-            let metadata = {};
-            let hasBookData = false;
+            const coverUrl = this.config.apis.libraryThing
+                .replace('devkey', apiKey)
+                .replace('{isbn}', book.isbn);
 
-            try {
-                const bookDataResponse = await this.makeRequest(bookDataUrl);
+            // LibraryThing covers are direct image URLs, test with HEAD request
+            await this._testImageUrl(coverUrl);
 
-                // LibraryThing API returns XML, but we'll handle JSON if they provide it
-                // For now, we'll focus on the cover URL which is more reliable
-                if (bookDataResponse && bookDataResponse.ltml && bookDataResponse.ltml.item) {
-                    const item = bookDataResponse.ltml.item;
-                    metadata = {
-                        title: item.title,
-                        author: item.author,
-                        isbn: item.isbn,
-                        commonknowledge: item.commonknowledge
-                    };
-                    hasBookData = true;
+            const result = {
+                found: true,
+                source: 'LibraryThing',
+                imageUrl: coverUrl,
+                metadata: {
+                    isbn: book.isbn
                 }
-            } catch (bookDataError) {
-                console.log(`  LibraryThing book data API warning: ${bookDataError.message}`);
-                // Continue with cover attempt even if book data fails
-            }
+            };
 
-            // Try to get cover image
-            const coverUrl = this.config.apis.libraryThing.cover
-                .replace('{isbn}', book.isbn)
-                .replace('{apikey}', apiKey);
-
-            // LibraryThing covers are direct image URLs, so we test by making a HEAD request
-            try {
-                // For cover images, we need to make a different kind of request
-                await this._testImageUrl(coverUrl);
-
-                const result = {
-                    found: true,
-                    source: 'LibraryThing',
-                    imageUrl: coverUrl,
-                    metadata: {
-                        isbn: book.isbn,
-                        hasBookData,
-                        ...metadata
-                    }
-                };
-
-                this.cache.set(cacheKey, result);
-                return result;
-
-            } catch (coverError) {
-                console.log(`  LibraryThing cover API error: ${coverError.message}`);
-
-                // If we have book data but no cover, still return a partial result
-                if (hasBookData) {
-                    const result = {
-                        found: false,
-                        source: 'LibraryThing',
-                        reason: 'Cover not available, but book data found',
-                        metadata: {
-                            isbn: book.isbn,
-                            hasBookData: true,
-                            ...metadata
-                        }
-                    };
-                    this.cache.set(cacheKey, result);
-                    return result;
-                }
-
-                const result = { found: false, source: 'LibraryThing', error: coverError.message };
-                this.cache.set(cacheKey, result);
-                return result;
-            }
+            this.cache.set(cacheKey, result);
+            return result;
 
         } catch (error) {
-            console.log(`  LibraryThing API error: ${error.message}`);
-            const result = { found: false, source: 'LibraryThing', error: error.message };
+            console.log(`  LibraryThing cover API error: ${error.message}`);
+            const result = {
+                found: false,
+                source: 'LibraryThing',
+                reason: error.message
+            };
             this.cache.set(cacheKey, result);
             return result;
         }
