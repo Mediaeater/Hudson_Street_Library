@@ -8,157 +8,252 @@ permalink: /404.html
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page Not Found | Hudson Street Library</title>
     <link rel="stylesheet" href="/assets/css/styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Montserrat:wght@700;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: #fdfdfb;
+            background-color: #14b8a6;
+            color: #1f2937;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        .title-font {
-            font-family: 'Playfair Display', serif;
+        /* Grid system - library shelf dividers */
+        .grid-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            z-index: 1;
         }
 
-        .shelf-illustration {
-            opacity: 0;
-            animation: fadeIn 0.8s ease-out forwards;
+        .grid-line {
+            border-right: 2px solid rgba(31, 41, 55, 0.15);
+            position: relative;
         }
 
-        .book-spine {
-            transition: transform 0.3s ease;
-            cursor: pointer;
+        /* Header navigation */
+        .nav-header {
+            position: relative;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
-        .book-spine:hover {
-            transform: translateY(-8px);
+        .nav-header a {
+            color: #1f2937;
+            text-decoration: none;
+            transition: opacity 0.2s;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .nav-header a:hover {
+            opacity: 0.7;
         }
 
-        .search-input {
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        .logo {
+            font-size: 0.875rem;
         }
 
-        .search-input:focus {
-            outline: none;
-            border-color: #14b8a6;
-            box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+        .nav-links {
+            display: flex;
+            gap: 2rem;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #14b8a6, #0d9488);
-            transition: all 0.3s ease;
+        /* Main content */
+        .content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 2rem;
         }
 
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #0d9488, #0f766e);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(20, 184, 166, 0.2);
+        /* Lost text */
+        .lost-text {
+            font-size: 3rem;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 2rem;
+            color: #1f2937;
         }
 
-        .nav-link {
-            transition: color 0.2s ease;
+        /* Call number styling */
+        .call-number-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 0;
         }
 
-        .nav-link:hover {
-            color: #14b8a6;
+        .dewey-label {
+            font-family: 'Courier Prime', monospace;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1rem;
+            letter-spacing: 0.1em;
+        }
+
+        .call-number {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .number {
+            font-size: clamp(8rem, 20vw, 16rem);
+            font-weight: 900;
+            line-height: 0.9;
+            color: #1f2937;
+        }
+
+        .classification-text {
+            font-family: 'Courier Prime', monospace;
+            font-size: 1.125rem;
+            color: #1f2937;
+            margin-bottom: 3rem;
+            max-width: 500px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        /* Back to home link */
+        .back-link {
+            align-self: flex-end;
+            font-size: 2.5rem;
+            font-weight: 900;
+            line-height: 1;
+            color: #1f2937;
+            text-decoration: none;
+            text-align: right;
+            transition: opacity 0.2s;
+            margin-top: auto;
+        }
+
+        .back-link:hover {
+            opacity: 0.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .lost-text {
+                font-size: 2rem;
+            }
+
+            .number {
+                font-size: clamp(4rem, 15vw, 8rem);
+            }
+
+            .call-number {
+                gap: 1rem;
+            }
+
+            .back-link {
+                font-size: 1.75rem;
+            }
+
+            .classification-text {
+                font-size: 1rem;
+                padding: 0 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content {
+                padding: 1rem;
+            }
+
+            .nav-header {
+                padding: 1rem;
+            }
+
+            .call-number {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+<body>
+    <!-- Grid background -->
+    <div class="grid-container">
+        <div class="grid-line"></div>
+        <div class="grid-line"></div>
+        <div class="grid-line"></div>
+        <div class="grid-line"></div>
+        <div class="grid-line"></div>
+        <div class="grid-line"></div>
+        <div class="grid-line"></div>
+        <div class="grid-line"></div>
+        <div class="grid-line"></div>
+        <div class="grid-line"></div>
+    </div>
 
-{% include "components/site-header.njk" %}
-
-<main class="flex-grow flex items-center justify-center px-6 py-16">
-    <div class="max-w-4xl mx-auto text-center">
-
-        <!-- Bookshelf Illustration -->
-        <div class="shelf-illustration mb-12">
-            <div class="flex justify-center items-end gap-2 mb-8 max-w-2xl mx-auto">
-                <div class="book-spine bg-gradient-to-b from-red-700 to-red-800 w-12 h-40 rounded-sm shadow-md"></div>
-                <div class="book-spine bg-gradient-to-b from-blue-700 to-blue-800 w-12 h-48 rounded-sm shadow-md"></div>
-                <div class="book-spine bg-gradient-to-b from-green-700 to-green-800 w-12 h-44 rounded-sm shadow-md"></div>
-                <div class="book-spine bg-gradient-to-b from-purple-700 to-purple-800 w-12 h-36 rounded-sm shadow-md"></div>
-                <div class="book-spine bg-gradient-to-b from-teal-700 to-teal-800 w-12 h-52 rounded-sm shadow-md flex items-center justify-center">
-                    <span class="text-white text-6xl font-bold">?</span>
-                </div>
-                <div class="book-spine bg-gradient-to-b from-yellow-700 to-yellow-800 w-12 h-38 rounded-sm shadow-md"></div>
-                <div class="book-spine bg-gradient-to-b from-pink-700 to-pink-800 w-12 h-46 rounded-sm shadow-md"></div>
-                <div class="book-spine bg-gradient-to-b from-indigo-700 to-indigo-800 w-12 h-42 rounded-sm shadow-md"></div>
-                <div class="book-spine bg-gradient-to-b from-orange-700 to-orange-800 w-12 h-50 rounded-sm shadow-md"></div>
+    <!-- Content -->
+    <div class="content">
+        <!-- Header navigation -->
+        <nav class="nav-header">
+            <a href="/" class="logo">Hudson Street Library</a>
+            <div class="nav-links">
+                <a href="/collection-explore.html">Collections</a>
+                <a href="/static-demo/">Search</a>
+                <a href="/news.html">News</a>
             </div>
-            <div class="h-1 bg-gradient-to-r from-transparent via-gray-300 to-transparent max-w-2xl mx-auto"></div>
+        </nav>
+
+        <!-- Lost text -->
+        <div class="lost-text">
+            NOT IN<br>
+            CATALOG?
         </div>
 
-        <!-- Error Message -->
-        <div class="mb-12">
-            <h1 class="title-font text-7xl md:text-8xl font-bold text-gray-900 mb-4">404</h1>
-            <h2 class="title-font text-3xl md:text-4xl font-semibold text-teal-900 mb-6">Not in the Catalog</h2>
-            <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-                This page seems to have been checked out permanently, returned to the wrong shelf,
-                or perhaps it never existed in our collection.
-            </p>
-        </div>
+        <!-- Call number section -->
+        <div class="call-number-section">
+            <div class="dewey-label">DEWEY DECIMAL CLASSIFICATION</div>
 
-        <!-- Search Box -->
-        <div class="mb-12">
-            <form action="/static-demo/" method="get" class="max-w-xl mx-auto">
-                <div class="flex flex-col sm:flex-row gap-3">
-                    <input
-                        type="text"
-                        name="q"
-                        placeholder="Search the collection..."
-                        class="search-input flex-grow px-6 py-4 border-2 border-gray-300 rounded-lg text-base"
-                        aria-label="Search the collection"
-                    >
-                    <button
-                        type="submit"
-                        class="btn-primary px-8 py-4 text-white font-medium rounded-lg shadow-lg"
-                    >
-                        <i class="fas fa-search mr-2"></i>Search
-                    </button>
-                </div>
-            </form>
-        </div>
+            <div class="call-number">
+                <span class="number">4</span>
+                <span class="number">0</span>
+                <span class="number">4</span>
+            </div>
 
-        <!-- Quick Links -->
-        <div class="border-t border-gray-200 pt-8">
-            <p class="text-sm text-gray-500 mb-6">You might be looking for:</p>
-            <div class="flex flex-wrap justify-center gap-4">
-                <a href="/" class="nav-link inline-flex items-center gap-2 px-5 py-3 border-2 border-gray-300 rounded-lg hover:border-teal-500 text-gray-700 font-medium transition-all">
-                    <i class="fas fa-home"></i>
-                    <span>Home</span>
-                </a>
-                <a href="/collection-explore.html" class="nav-link inline-flex items-center gap-2 px-5 py-3 border-2 border-gray-300 rounded-lg hover:border-teal-500 text-gray-700 font-medium transition-all">
-                    <i class="fas fa-layer-group"></i>
-                    <span>Collections</span>
-                </a>
-                <a href="/static-demo.html" class="nav-link inline-flex items-center gap-2 px-5 py-3 border-2 border-gray-300 rounded-lg hover:border-teal-500 text-gray-700 font-medium transition-all">
-                    <i class="fas fa-search"></i>
-                    <span>Browse All Books</span>
-                </a>
-                <a href="/news.html" class="nav-link inline-flex items-center gap-2 px-5 py-3 border-2 border-gray-300 rounded-lg hover:border-teal-500 text-gray-700 font-medium transition-all">
-                    <i class="fas fa-newspaper"></i>
-                    <span>News</span>
-                </a>
+            <div class="classification-text">
+                404.000 — ERROR: PAGE NOT FOUND<br>
+                <br>
+                This page has been misshelved, checked out permanently,<br>
+                or removed from the collection.
             </div>
         </div>
 
+        <!-- Back to home -->
+        <a href="/" class="back-link">
+            BACK TO<br>
+            HOME
+        </a>
     </div>
-</main>
-
-<footer class="bg-white border-t border-gray-200 py-8 mt-auto">
-    <div class="container mx-auto px-6 text-center">
-        <p class="text-sm text-gray-500">
-            &copy; 2025 Hudson Street Library. A curated collection in New York's West Village.
-        </p>
-    </div>
-</footer>
-
 </body>
 </html>
