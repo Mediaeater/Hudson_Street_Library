@@ -119,11 +119,12 @@
                             <img id="book-cover-img"
                                  alt="Cover of {{ book.Title | escape }}"
                                  class="w-full h-full object-cover"
+                                 style="display:none;"
                                  onerror="showPlaceholder()">
                             <!-- Fallback content for missing images -->
-                            <div id="book-placeholder" class="w-full h-full flex flex-col items-center justify-center text-gray-500 bg-gray-100" style="display:none;">
+                            <div id="book-placeholder" class="absolute inset-0 w-full h-full flex flex-col items-center justify-center text-gray-500 bg-gray-100">
                                 <i class="fas fa-book text-4xl mb-2"></i>
-                                <p class="text-sm text-center px-4">{{ book.Title | escape }}</p>
+                                <p class="text-sm text-center px-4 font-medium">{{ book.Title | escape }}</p>
                                 <p class="text-xs text-gray-400 mt-1">{{ book['Author, First'] }} {{ book['Author, Last'] }}</p>
                             </div>
                         </div>
@@ -158,12 +159,18 @@
                             document.getElementById('book-cover-img').style.display = 'none';
                             document.getElementById('book-placeholder').style.display = 'flex';
                         }
-                        
+
+                        function showImage() {
+                            document.getElementById('book-cover-img').style.display = 'block';
+                            document.getElementById('book-placeholder').style.display = 'none';
+                        }
+
                         function loadBookCover() {
                             const imgElement = document.getElementById('book-cover-img');
                             const coverPath = generateCoverImagePath();
-                            
+
                             if (coverPath) {
+                                imgElement.onload = showImage;
                                 imgElement.src = coverPath;
                             } else {
                                 showPlaceholder();
@@ -202,9 +209,13 @@
                         {% if book.Location %}<p><span class="details-label">Location:</span> {{ book.Location }}</p>{% endif %}
                         {% if book.Date %}<p><span class="details-label">Date:</span> {{ book.Date }}</p>{% endif %}
                         {# Language not in schema #}
-                        {% if book['Edition/Printrun'] %}
-                        <p><span class="details-label">Edition/Format:</span> {{ book['Edition/Printrun'] }}</p> {# Mapping Edition as Format #}
+                        <p><span class="details-label">Edition/Format:</span>
+                        {% if book['Edition/Printrun'] and book['Edition/Printrun'] != 'NULL' %}
+                            {{ book['Edition/Printrun'] }}
+                        {% else %}
+                            First Edition
                         {% endif %}
+                        </p>
                         {% if book.Size %}<p><span class="details-label">Dimensions:</span> {{ book.Size }}</p>{% endif %}
                         {% if book.ISBN %}<p><span class="details-label">ISBN:</span> {{ book.ISBN }}</p>{% endif %} {# Displaying combined ISBN #}
                         {% if book.Contributors %}<p><span class="details-label">Contributors:</span> {{ book.Contributors }}</p>{% endif %}
