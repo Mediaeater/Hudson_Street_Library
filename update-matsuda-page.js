@@ -114,8 +114,15 @@ const catalogHTML = matsudaCatalogs.map((cat, index) => {
     return `                <!-- === START: Matsuda Catalogue ${volNum} === -->
                 <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
                     <a href="/books/Matsuda_${cat.id}" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200 flex items-center justify-center">
-                            <span class="text-gray-400 text-lg font-medium">Vol.${volNum}</span>
+                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                            <img src="/assets/images/fashion/matsuda/${imageFilename}"
+                                 alt="${displayTitle}"
+                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                 onload="this.style.display='block'"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
+                                <span class="text-gray-400 text-lg font-medium">Vol.${volNum}</span>
+                            </div>
                         </div>
                         <div class="p-3 sm:p-4">
                             <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
