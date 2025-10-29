@@ -196,7 +196,8 @@ function generateBookPage(book, template, allBooks = []) {
   html = html.replace(/\[CLASSIFICATION_LINKS\]/g, classificationLinksHTML);
 
   // Library information
-  html = html.replace(/\[Date\/Status\]/g, 'Original Collection');
+  const accessionDate = !isNullOrEmpty(book.accession_no) ? book.accession_no : 'Original Collection';
+  html = html.replace(/\[Date\/Status\]/g, accessionDate);
   html = html.replace(/\[Condition notes if special\]/g, 'Excellent');
 
   // Special notes (signed, first edition, etc.)
