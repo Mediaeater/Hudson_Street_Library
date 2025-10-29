@@ -87,10 +87,27 @@ function generateBookPage(book, template, allBooks = []) {
   html = html.replace(/\[AUTHOR NAME\]/g, book.author_full_name || 'Unknown Author');
   html = html.replace(/\[AUTHOR\]/g, book.author_last || 'Unknown');
 
-  // Image filename - use relative path from _site/books/{slug}/ to _site/assets/
-  const imageFilename = createImageFilename(book.title, book.author_last, book.isbn_asin);
-  // Path should be ../../assets/images/books/ from _site/books/{slug}/index.html
-  html = html.replace(/src="\/assets\/images\/books\/\[FILENAME\]\.jpg"/g, `src="../../assets/images/books/${imageFilename}"`);
+  // Check if book has a valid cover image
+  const hasValidImage = book.image_url &&
+                       book.image_url !== 'NULL' &&
+                       book.image_url !== 'null' &&
+                       book.image_url.trim() !== '';
+
+  if (hasValidImage) {
+    // Try to load real cover
+    const imageFilename = createImageFilename(book.title, book.author_last, book.isbn_asin);
+    const imagePath = `../../assets/images/books/${imageFilename}`;
+    html = html.replace(/\[IMAGE_PATH\]/g, imagePath);
+    html = html.replace(/\[OPACITY_CLASS\]/g, 'opacity-100');
+    html = html.replace(/\[BORDER_CLASS\]/g, 'border-neutral-200');
+    html = html.replace(/\[OVERLAY_HTML\]/g, '');
+  } else {
+    // Use placeholder directly - don't even try to load non-existent image
+    html = html.replace(/\[IMAGE_PATH\]/g, '../../assets/images/placeholder-book.svg');
+    html = html.replace(/\[OPACITY_CLASS\]/g, 'opacity-40');
+    html = html.replace(/\[BORDER_CLASS\]/g, 'border-neutral-100');
+    html = html.replace(/\[OVERLAY_HTML\]/g, '<div class="absolute inset-0 flex items-center justify-center bg-neutral-50 bg-opacity-80"><i class="fas fa-book text-neutral-400 text-4xl"></i></div>');
+  }
 
   // Publisher with link
   const publisherName = book.publisher || 'Not specified';

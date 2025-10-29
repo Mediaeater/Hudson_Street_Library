@@ -58,10 +58,14 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
             <!-- Left Column: Book Cover -->
             <div class="book-cover-section">
-                <img src="/assets/images/books/[FILENAME].jpg" 
-                     alt="[BOOK TITLE] by [AUTHOR] book cover" 
-                     class="w-full rounded-lg shadow-xl object-cover">
-                
+                <div class="aspect-[3/4] relative overflow-hidden rounded-lg shadow-xl [BORDER_CLASS]">
+                    <img src="[IMAGE_PATH]"
+                         alt=""
+                         class="w-full h-full object-cover [OPACITY_CLASS]"
+                         onerror="this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-40'); this.classList.remove('opacity-100'); var overlay = this.nextElementSibling; if(overlay) overlay.style.display='flex';">
+                    [OVERLAY_HTML]
+                </div>
+
                 <!-- Collections Links -->
                 <div class="mt-6 text-center">
                     <p class="text-sm text-gray-600 mb-2">Part of these collections:</p>
