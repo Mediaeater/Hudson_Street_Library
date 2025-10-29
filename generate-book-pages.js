@@ -198,7 +198,7 @@ function generateBookPage(book, template, allBooks = []) {
   // Library information
   const accessionDate = !isNullOrEmpty(book.accession_no) ? book.accession_no : 'Original Collection';
   html = html.replace(/\[Date\/Status\]/g, accessionDate);
-  html = html.replace(/\[Condition notes if special\]/g, 'Excellent');
+  html = html.replace(/\[Condition notes if special\]/g, 'New');
 
   // Special notes (signed, first edition, etc.)
   let specialNotes = [];
