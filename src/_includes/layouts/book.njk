@@ -130,28 +130,13 @@
                         
                         <script>
                         function generateCoverImagePath() {
-                            // Extract book data from Nunjucks template
-                            const authorLast = '{{ book.author_last }}'.replace(/[^a-zA-Z0-9.-]/g, '_');
-                            const title = '{{ book.title }}'.replace(/[^a-zA-Z0-9.-]/g, '_');
-                            const isbn = '{{ book.isbn_asin }}'.replace(/[^a-zA-Z0-9.-]/g, '_').replace(/[-\s]/g, '');
-
-                            // Check if we have existing image_url
-                            {% if book.image_url and book.image_url.trim() %}
+                            // Only return a path if we have an explicit image_url set
+                            // This prevents 404 errors for books without covers
+                            {% if book.image_url and book.image_url.trim() and book.image_url != 'NULL' %}
                                 return '/assets/images/books/{{ book.image_url }}';
+                            {% else %}
+                                return null;
                             {% endif %}
-
-                            // Generate path from our acquired covers using the standard format:
-                            // AuthorLast_Title_ISBN.jpg
-                            if (isbn && isbn !== 'NULL' && isbn !== '' && isbn !== 'null') {
-                                const coverFileName = `${authorLast}_${title}_${isbn}`.replace(/_+/g, '_').replace(/^_|_$/g, '').substring(0, 100) + '.jpg';
-                                return `/assets/images/books/${coverFileName}`;
-                            } else {
-                                // Try with NULL suffix for books without ISBN
-                                const coverFileName = `${authorLast}_${title}_NULL`.replace(/_+/g, '_').replace(/^_|_$/g, '').substring(0, 100) + '.jpg';
-                                return `/assets/images/books/${coverFileName}`;
-                            }
-
-                            return null;
                         }
                         
                         function showPlaceholder() {
