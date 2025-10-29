@@ -118,9 +118,8 @@
                         <div class="aspect-[3/4] bg-gray-200 rounded-md shadow-lg overflow-hidden relative">
                             <img id="book-cover-img"
                                  alt="Cover of {{ book.Title | escape }}"
-                                 class="w-full h-full object-cover"
-                                 style="display:none;"
-                                 onerror="showPlaceholder()">
+                                 class="w-full h-full object-cover absolute inset-0"
+                                 style="display:none;">
                             <!-- Fallback content for missing images -->
                             <div id="book-placeholder" class="absolute inset-0 w-full h-full flex flex-col items-center justify-center text-gray-500 bg-gray-100">
                                 <i class="fas fa-book text-4xl mb-2"></i>
@@ -170,9 +169,12 @@
                             const coverPath = generateCoverImagePath();
 
                             if (coverPath) {
+                                // Set both handlers BEFORE setting src
                                 imgElement.onload = showImage;
+                                imgElement.onerror = showPlaceholder;
                                 imgElement.src = coverPath;
                             } else {
+                                // No path, keep placeholder visible
                                 showPlaceholder();
                             }
                         }
