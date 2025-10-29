@@ -186,22 +186,16 @@ function generateBookPage(book, template, allBooks = []) {
     );
   }
 
-  // Subject tags
-  const tags = getTags(book.tags);
-  const subjectTagsHTML = generateSubjectTags(tags);
-  html = html.replace(
-    /<a href="\/static-demo\.html\?tag=\[TAG\]"[^>]*>\[Tag Name\]<\/a>\s*<!-- Keep to 3-7 tags maximum -->/g,
-    subjectTagsHTML
-  );
-
-  // Collection grouping
-  const collection = book.collection_grouping || 'Photography';
-  const collectionSlug = collection.toLowerCase().replace(/\s+/g, '-');
-  html = html.replace(/\[COLLECTION-SLUG\]/g, collectionSlug);
-  html = html.replace(/\[Collection Name\]/g, collection);
+  // Classification links (replacing collection grouping)
+  const classificationCategories = book.classification_categories || book.classification || 'Photography';
+  const classifications = classificationCategories.split(';').map(c => c.trim()).filter(c => c);
+  const classificationLinksHTML = classifications.map(classification => {
+    const slug = classification.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    return `<a href="/static-demo/?classification=${encodeURIComponent(classification)}" class="collection-link"><i class="fas fa-folder-open mr-1"></i>${classification}</a>`;
+  }).join('\n                    ');
+  html = html.replace(/\[CLASSIFICATION_LINKS\]/g, classificationLinksHTML);
 
   // Library information
-  html = html.replace(/\[Classification\]/g, book.classification || 'Photography');
   html = html.replace(/\[Date\/Status\]/g, 'Original Collection');
   html = html.replace(/\[Condition notes if special\]/g, 'Excellent');
 
