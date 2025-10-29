@@ -74,7 +74,7 @@ function generateSubjectTags(tags) {
 
   return limitedTags.map(tag => {
     const tagSlug = tag.toLowerCase().replace(/\s+/g, '-');
-    return `<a href="/static-demo.html?tag=${encodeURIComponent(tag)}" class="subject-tag">${tag}</a>`;
+    return `<a href="/static-demo/?tag=${encodeURIComponent(tag)}" class="subject-tag">${tag}</a>`;
   }).join('\n                            ');
 }
 
