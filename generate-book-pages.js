@@ -106,11 +106,11 @@ function generateBookPage(book, template, allBooks = []) {
     html = html.replace(/\[BORDER_CLASS\]/g, 'border-neutral-200');
     html = html.replace(/\[OVERLAY_HTML\]/g, '');
   } else {
-    // Use placeholder directly - don't even try to load non-existent image
+    // Use placeholder directly - SVG already contains book icon and "No Cover Available" text
     html = html.replace(/\[IMAGE_PATH\]/g, '../../assets/images/placeholder-book.svg');
-    html = html.replace(/\[OPACITY_CLASS\]/g, 'opacity-40');
+    html = html.replace(/\[OPACITY_CLASS\]/g, 'opacity-100');
     html = html.replace(/\[BORDER_CLASS\]/g, 'border-neutral-100');
-    html = html.replace(/\[OVERLAY_HTML\]/g, '<div class="absolute inset-0 flex items-center justify-center bg-neutral-50 bg-opacity-80"><i class="fas fa-book text-neutral-400 text-4xl"></i></div>');
+    html = html.replace(/\[OVERLAY_HTML\]/g, ''); // No overlay needed - SVG has it all
   }
 
   // Publisher with link
