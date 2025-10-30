@@ -88,15 +88,19 @@ function generateBookPage(book, template, allBooks = []) {
   html = html.replace(/\[AUTHOR\]/g, book.author_last || 'Unknown');
 
   // Check if book has a valid cover image
-  const hasValidImage = book.image_url &&
+  const hasValidImageUrl = book.image_url &&
                        book.image_url !== 'NULL' &&
                        book.image_url !== 'null' &&
                        book.image_url.trim() !== '';
 
-  if (hasValidImage) {
-    // Try to load real cover
-    const imageFilename = createImageFilename(book.title, book.author_last, book.isbn_asin);
-    const imagePath = `../../assets/images/books/${imageFilename}`;
+  if (hasValidImageUrl) {
+    // Use the image_url from CSV (absolute path like /assets/images/books/...)
+    // Convert to relative path for book pages (which are 2 levels deep: /books/slug/)
+    let imagePath = book.image_url;
+    if (imagePath.startsWith('/')) {
+      // Remove leading slash and prepend ../.. to go up 2 levels
+      imagePath = '../..' + imagePath; // Convert /assets/... to ../../assets/...
+    }
     html = html.replace(/\[IMAGE_PATH\]/g, imagePath);
     html = html.replace(/\[OPACITY_CLASS\]/g, 'opacity-100');
     html = html.replace(/\[BORDER_CLASS\]/g, 'border-neutral-200');
