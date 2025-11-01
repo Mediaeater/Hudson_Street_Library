@@ -87,6 +87,19 @@ function generateBookPage(book, template, allBooks = []) {
   html = html.replace(/\[AUTHOR NAME\]/g, book.author_full_name || 'Unknown Author');
   html = html.replace(/\[AUTHOR\]/g, book.author_last || 'Unknown');
 
+  // Author with link
+  const authorName = book.author_full_name || 'Unknown Author';
+  const hasValidArtistUrl = book.artist_url &&
+                            book.artist_url !== 'NULL' &&
+                            book.artist_url !== 'null' &&
+                            book.artist_url.trim() !== '';
+  const authorLink = hasValidArtistUrl
+    ? `<a href="${book.artist_url}" target="_blank" class="text-teal-700 hover:text-teal-900 underline">${authorName}</a>`
+    : authorName;
+
+  // Replace author link placeholder
+  html = html.replace(/\[AUTHOR_LINK\]/g, authorLink);
+
   // Check if book has a valid cover image
   const hasValidImageUrl = book.image_url &&
                        book.image_url !== 'NULL' &&
@@ -232,15 +245,47 @@ function generateBookPage(book, template, allBooks = []) {
   if (otherBooksByAuthor.length > 0) {
     const otherBooksHTML = otherBooksByAuthor.map(otherBook => {
       const slug = createSlug(otherBook.author_last, otherBook.title);
-      const shortDesc = otherBook.description && otherBook.description !== 'NULL'
-        ? otherBook.description.substring(0, 100) + '...'
-        : `Published ${otherBook.publication_year || 'date unknown'}`;
 
-      return `<div class="border-l-4 border-teal-700 pl-4 py-2 hover:bg-gray-50 transition-colors">
-                                <a href="../${slug}/" class="block">
-                                    <h4 class="font-semibold text-gray-800 hover:text-teal-700">${otherBook.title}</h4>
-                                    <p class="text-sm text-gray-600">${shortDesc}</p>
-                                </a>
+      // Truncate description to ~120 characters
+      let shortDesc;
+      if (otherBook.description && otherBook.description !== 'NULL') {
+        const desc = otherBook.description.substring(0, 120);
+        shortDesc = desc + (otherBook.description.length > 120 ? '...' : '');
+      } else {
+        shortDesc = `Published ${otherBook.publication_year || 'date unknown'}`;
+      }
+
+      // Handle book cover image
+      const hasValidImageUrl = otherBook.image_url &&
+                               otherBook.image_url !== 'NULL' &&
+                               otherBook.image_url !== 'null' &&
+                               otherBook.image_url.trim() !== '';
+
+      let imagePath;
+      if (hasValidImageUrl) {
+        // Convert absolute path to relative path for book pages (2 levels deep)
+        imagePath = otherBook.image_url.startsWith('/')
+          ? '../..' + otherBook.image_url
+          : otherBook.image_url;
+      } else {
+        imagePath = '../../assets/images/placeholder-book.svg';
+      }
+
+      const publisherYear = [otherBook.publisher, otherBook.publication_year]
+        .filter(v => v && v !== 'NULL' && v !== 'null')
+        .join(' • ') || 'Publisher unknown';
+
+      return `<div class="flex gap-4 hover:bg-gray-50 p-3 -m-3 rounded transition-colors">
+                                <div class="flex-shrink-0 w-20 h-28 bg-gray-100 rounded-sm shadow overflow-hidden">
+                                    <img src="${imagePath}" alt="Cover of ${otherBook.title}" class="w-full h-full object-cover">
+                                </div>
+                                <div class="flex-1">
+                                    <a href="../${slug}/" class="block">
+                                        <h4 class="font-semibold text-gray-900 mb-1 hover:text-teal-700">${otherBook.title}</h4>
+                                        <p class="text-sm text-gray-600 mb-2">${publisherYear}</p>
+                                        <p class="text-sm text-gray-700 line-clamp-2">${shortDesc}</p>
+                                    </a>
+                                </div>
                             </div>`;
     }).join('\n                        ');
 
