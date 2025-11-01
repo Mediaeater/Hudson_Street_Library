@@ -7,15 +7,97 @@
     <title>[BOOK TITLE] | Hudson Street Library Collection</title>
     <link rel="stylesheet" href="../../assets/css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Inter:wght@300;400;500;600&display=swap');
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .serif {
+            font-family: 'Libre Baskerville', Georgia, serif;
+        }
+
+        /* Museum catalog typography */
+        .book-title {
+            font-size: 3rem;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.75rem;
+        }
+
+        .book-author {
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 0.01em;
+            color: #6b7280;
+        }
+
+        .section-heading {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #374151;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .field-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #9ca3af;
+            min-width: 140px;
+            display: inline-block;
+        }
+
+        .field-value {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #1f2937;
+        }
+
+        .description-text {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            color: #374151;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, #e5e7eb, transparent);
+            margin: 3rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .book-title {
+                font-size: 2rem;
+            }
+            .book-author {
+                font-size: 1.25rem;
+            }
+        }
+
+        @media print {
+            .no-print { display: none; }
+            body { font-size: 12pt; }
+            .book-title { font-size: 24pt; page-break-after: avoid; }
+        }
+    </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-white text-gray-800">
 
     <!-- Standard Header -->
-    <header class="sticky top-0 w-full bg-white z-50 py-4 shadow-md">
+    <header class="no-print sticky top-0 w-full bg-white/95 backdrop-blur-sm z-50 py-4 border-b border-gray-100">
         <div class="container mx-auto px-6">
             <div class="flex justify-between items-center">
-                <a href="../../" class="text-xl sm:text-2xl font-bold tracking-tight text-teal-900">HUDSON STREET LIBRARY</a>
-                <nav class="desktop-nav hidden md:flex space-x-6 lg:space-x-8 items-center text-neutral-700 text-sm lg:text-base">
+                <a href="../../" class="text-lg font-semibold tracking-tight text-gray-900">HUDSON STREET LIBRARY</a>
+                <nav class="desktop-nav hidden md:flex space-x-8 items-center text-gray-700 text-sm">
                     <a href="../../#about" class="nav-item hover:text-teal-700">About</a>
                     <a href="../../collection-explore.html" class="nav-item hover:text-teal-700">Collections</a>
                     <a href="../../static-demo/" class="nav-item hover:text-teal-700">Search</a>
@@ -41,164 +123,195 @@
         </div>
     </header>
 
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 max-w-7xl">
+    <main class="container mx-auto px-6 lg:px-12 py-12 max-w-7xl">
         <!-- Breadcrumb -->
-        <nav class="breadcrumb mb-6" aria-label="Breadcrumb">
-            <a href="../../">Home</a> /
-            <a href="../../collection-explore.html">Collections</a> /
-            <span class="text-gray-500">[BOOK TITLE]</span>
+        <nav class="no-print breadcrumb mb-8 text-sm text-gray-500" aria-label="Breadcrumb">
+            <a href="../../" class="hover:text-gray-700">Home</a>
+            <span class="mx-2">/</span>
+            <a href="../../collection-explore.html" class="hover:text-gray-700">Collections</a>
+            <span class="mx-2">/</span>
+            <span class="text-gray-900">[BOOK TITLE]</span>
         </nav>
 
-        <!-- Back Button -->
-        <a href="../../static-demo/" class="back-button mb-8">
-            <i class="fas fa-arrow-left"></i>
-            <span>Back to Search</span>
-        </a>
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+            <!-- Left Column: Book Cover (5 columns on large screens) -->
+            <div class="lg:col-span-5">
+                <div class="sticky top-24">
+                    <div class="aspect-[3/4] relative overflow-hidden rounded-sm shadow-2xl [BORDER_CLASS]">
+                        <img src="[IMAGE_PATH]"
+                             alt=""
+                             class="w-full h-full object-cover [OPACITY_CLASS]"
+                             onerror="this.src='../../assets/images/placeholder-book.svg'; this.classList.add('opacity-40'); this.classList.remove('opacity-100'); var overlay = this.nextElementSibling; if(overlay) overlay.style.display='flex';">
+                        [OVERLAY_HTML]
+                    </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-            <!-- Left Column: Book Cover -->
-            <div class="book-cover-section">
-                <div class="aspect-[3/4] relative overflow-hidden rounded-lg shadow-xl [BORDER_CLASS]">
-                    <img src="[IMAGE_PATH]"
-                         alt=""
-                         class="w-full h-full object-contain [OPACITY_CLASS]"
-                         onerror="this.src='../../assets/images/placeholder-book.svg'; this.classList.add('opacity-40'); this.classList.remove('opacity-100'); var overlay = this.nextElementSibling; if(overlay) overlay.style.display='flex';">
-                    [OVERLAY_HTML]
+                    <!-- Quick Actions (print, share, etc.) -->
+                    <div class="no-print mt-6 flex gap-4 text-sm">
+                        <button onclick="window.print()" class="flex items-center gap-2 text-gray-600 hover:text-gray-900">
+                            <i class="fas fa-print"></i>
+                            <span>Print</span>
+                        </button>
+                        <button class="flex items-center gap-2 text-gray-600 hover:text-gray-900">
+                            <i class="fas fa-share-alt"></i>
+                            <span>Share</span>
+                        </button>
+                    </div>
                 </div>
-
-                <!-- Collections Links -->
-                <div class="mt-6 text-center">
-                    <p class="text-sm text-gray-600 mb-2">Part of these collections:</p>
-                    [CLASSIFICATION_LINKS]
-                </div>
-
-                <!-- Availability Status removed -->
             </div>
 
-            <!-- Right Column: Book Details -->
-            <div>
-                <h1 class="text-3xl md:text-4xl font-bold mb-4">[BOOK TITLE]</h1>
-                <p class="text-xl text-gray-600 mb-8">by [AUTHOR NAME]</p>
-
-                <!-- Book Details -->
-                <div class="space-y-6">
-                    <!-- Publishing Information -->
-                    <div>
-                        <h3 class="detail-section-title text-lg font-semibold text-gray-800">Publishing Details</h3>
-                        <div class="space-y-2 text-sm md:text-base">
-                            <p><span class="details-label">Publisher:</span><a href="[PUBLISHER URL]" target="_blank" class="text-teal-700 hover:text-teal-900 underline">[Publisher Name]</a></p>
-                            <p><span class="details-label">Publication Date:</span>[Date]</p>
-                            <p><span class="details-label">ISBN:</span>[ISBN]</p>
-                            <p><span class="details-label">Format:</span>[Format]</p>
-                            <p><span class="details-label">Dimensions:</span>[Dimensions]</p>
-                            <p><span class="details-label">Pages:</span>[Number] pages</p>
-                            <p><span class="details-label">Language:</span>[Language]</p>
-                            <p><span class="details-label">Edition:</span>[Edition info]</p>
-                        </div>
-                    </div>
-
-                    <!-- Contributors (New - only show if applicable) -->
-                    <div>
-                        <h3 class="detail-section-title text-lg font-semibold text-gray-800">Contributors</h3>
-                        <div class="space-y-2 text-sm md:text-base">
-                            <p><span class="details-label">Editor:</span>[Editor Name]</p>
-                            <p><span class="details-label">Introduction by:</span>[Name]</p>
-                            <p><span class="details-label">Designer:</span>[Designer Name]</p>
-                            <p><span class="details-label">Translator:</span>[Translator Name]</p>
-                        </div>
-                    </div>
-
-                    <!-- Summary -->
-                    <div>
-                        <h3 class="detail-section-title text-lg font-semibold text-gray-800">About This Book</h3>
-                        <div class="prose prose-gray max-w-none">
-                            <p>[First paragraph of description]</p>
-                            <p>[Second paragraph if needed]</p>
-                            <p>[Third paragraph if needed]</p>
-                        </div>
-                    </div>
-
-                    <!-- Related Books by Author -->
-                    <div>
-                        <h3 class="detail-section-title text-lg font-semibold text-gray-800">Other Books by [AUTHOR] in Our Collection</h3>
-                        <div class="space-y-3">
-                            <div class="border-l-4 border-teal-700 pl-4 py-2 hover:bg-gray-50 transition-colors">
-                                <a href="#" class="block">
-                                    <h4 class="font-semibold text-gray-800 hover:text-teal-700">[Book Title]</h4>
-                                    <p class="text-sm text-gray-600">[Brief description]</p>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Related Books by Subject (New) -->
-                    <div>
-                        <h3 class="detail-section-title text-lg font-semibold text-gray-800">Related Books in Collection</h3>
-                        <div class="space-y-3">
-                            <div class="border-l-4 border-gray-300 pl-4 py-2 hover:bg-gray-50 transition-colors">
-                                <a href="#" class="block">
-                                    <h4 class="font-semibold text-gray-800 hover:text-teal-700">[Book Title]</h4>
-                                    <p class="text-sm text-gray-600">by [Author] • [Brief description]</p>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Library Information -->
-                    <div>
-                        <h3 class="detail-section-title text-lg font-semibold text-gray-800">Library Information</h3>
-                        <div class="space-y-2 text-sm md:text-base">
-                            <p><span class="details-label">Location:</span>Hudson Street Library, NYC</p>
-                            <p><span class="details-label">Acquisition:</span>[Date/Status]</p>
-                            <p><span class="details-label">Condition:</span>[Condition notes if special]</p>
-                            <p><span class="details-label">Special Notes:</span>[Signed, First Edition, etc.]</p>
-                        </div>
-                    </div>
+            <!-- Right Column: Book Details (7 columns on large screens) -->
+            <div class="lg:col-span-7">
+                <!-- Title & Author -->
+                <div class="mb-12">
+                    <h1 class="book-title serif">[BOOK TITLE]</h1>
+                    <p class="book-author">by [AUTHOR_LINK]</p>
                 </div>
+
+                <!-- Publishing Information -->
+                <section class="mb-12">
+                    <h2 class="section-heading">Publication Details</h2>
+                    <div class="space-y-3">
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Publisher</span>
+                            <span class="field-value">
+                                <a href="[PUBLISHER URL]" target="_blank" class="text-teal-700 hover:text-teal-900 underline">[Publisher Name]</a>
+                            </span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Published</span>
+                            <span class="field-value">[Date]</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">ISBN</span>
+                            <span class="field-value">[ISBN]</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Format</span>
+                            <span class="field-value">[Format]</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Dimensions</span>
+                            <span class="field-value">[Dimensions]</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Pages</span>
+                            <span class="field-value">[Number] pages</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Language</span>
+                            <span class="field-value">[Language]</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Edition</span>
+                            <span class="field-value">[Edition info]</span>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <!-- Contributors (only show if applicable) -->
+                <section class="mb-12">
+                    <h2 class="section-heading">Contributors</h2>
+                    <div class="space-y-3">
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Editor</span>
+                            <span class="field-value">[Editor Name]</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Introduction by</span>
+                            <span class="field-value">[Name]</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Designer</span>
+                            <span class="field-value">[Designer Name]</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Translator</span>
+                            <span class="field-value">[Translator Name]</span>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <!-- About This Book -->
+                <section class="mb-12">
+                    <h2 class="section-heading">About This Book</h2>
+                    <div class="description-text space-y-4">
+                        <p>[First paragraph of description]</p>
+                        <p>[Second paragraph if needed]</p>
+                        <p>[Third paragraph if needed]</p>
+                    </div>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <!-- Classification -->
+                <section class="mb-12">
+                    <h2 class="section-heading">Classification</h2>
+                    <div class="flex flex-wrap gap-2">
+                        [CLASSIFICATION_LINKS]
+                    </div>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <!-- Library Information -->
+                <section class="mb-12">
+                    <h2 class="section-heading">Library Information</h2>
+                    <div class="space-y-3">
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Location</span>
+                            <span class="field-value">Hudson Street Library, NYC</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Acquisition</span>
+                            <span class="field-value">[Date/Status]</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Condition</span>
+                            <span class="field-value">[Condition notes if special]</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Special Notes</span>
+                            <span class="field-value">[Signed, First Edition, etc.]</span>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <!-- Related Books by Author -->
+                <section class="mb-12">
+                    <h2 class="section-heading">Other Books by [AUTHOR] in Our Collection</h2>
+                    <div class="space-y-6">
+                        <div class="flex gap-4 hover:bg-gray-50 p-3 -m-3 rounded transition-colors">
+                            <div class="flex-shrink-0 w-20 h-28 bg-gray-100 rounded-sm shadow overflow-hidden">
+                                <img src="[THUMBNAIL_PATH]"
+                                     alt="Cover of [Book Title]"
+                                     class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex-1">
+                                <a href="[BOOK_URL]" class="block">
+                                    <h4 class="font-semibold text-gray-900 mb-1 hover:text-teal-700">[Book Title]</h4>
+                                    <p class="text-sm text-gray-600 mb-2">[Publisher] • [Year]</p>
+                                    <p class="text-sm text-gray-700 line-clamp-2">[Brief description]</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
             </div>
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-neutral-900 text-neutral-300 py-16 mt-16">
-        <div class="container mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between pb-12 border-b border-neutral-700">
-                <div class="mb-8 md:mb-0">
-                    <h3 class="text-2xl font-bold mb-4 text-white">HUDSON STREET LIBRARY</h3>
-                    <p class="text-neutral-400 max-w-xs">A curated collection of art, photography, zines, and ephemera, privately held in a former printing house in New York's West Village.</p>
-                </div>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
-                    <div>
-                        <h4 class="font-semibold text-lg mb-4 text-neutral-100">Explore</h4>
-                        <ul class="space-y-2 text-neutral-400">
-                            <li><a href="../../" class="hover:text-white">Home</a></li>
-                            <li><a href="../../#about" class="hover:text-white">About</a></li>
-                            <li><a href="../../collection-explore.html" class="hover:text-white">Collections</a></li>
-                            <li><a href="../../static-demo/" class="hover:text-white">Search</a></li>
-                            <li><a href="../../#publications" class="hover:text-white">Publications</a></li>
-                            <li><a href="../../collections/recently_added.html" class="hover:text-white">News</a></li>
-                            <li><a href="../../#contact" class="hover:text-white">Contact</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="font-semibold text-lg mb-4 text-neutral-100">Visit</h4>
-                        <ul class="space-y-2 text-neutral-400">
-                            <li><a href="../../#contact" class="hover:text-white">Visit Policy</a></li>
-                            <li><a href="../../#contact" class="hover:text-white">Location</a></li>
-                            <li><a href="../../#contact" class="hover:text-white">Appointments</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="font-semibold text-lg mb-4 text-neutral-100">Connect</h4>
-                        <ul class="space-y-2 text-neutral-400">
-                            <li><a href="#" class="hover:text-white">Instagram</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="pt-12 text-center text-neutral-500 text-sm">
-                <p>© 2024 Hudson Street Library. All rights reserved.</p>
-            </div>
+    <footer class="no-print bg-gray-50 border-t border-gray-100 mt-24 py-12">
+        <div class="container mx-auto px-6 text-center text-sm text-gray-600">
+            <p>© 2025 Hudson Street Library. A private collection in New York's West Village.</p>
         </div>
     </footer>
 
