@@ -291,21 +291,20 @@ function generateBookPage(book, template, allBooks = []) {
 
     // Replace the "Related Books by Author" placeholder with actual content
     html = html.replace(
-      /<!-- Related Books by Author -->[\s\S]*?<\/div>\s*<\/div>\s*<!-- Related Books by Subject/,
-      `<!-- Other Books by This Author -->
-                    <div>
-                        <h3 class="detail-section-title text-lg font-semibold text-gray-800">Other Books by ${book.author_full_name} in Our Collection</h3>
-                        <div class="space-y-3">
-                            ${otherBooksHTML}
-                        </div>
+      /<!-- Related Books by Author -->[\s\S]*?<\/section>\s*<!-- Related Books by Subject/,
+      `<!-- Related Books by Author -->
+                <section class="mb-12">
+                    <h2 class="section-heading">Other Books by ${book.author_full_name} in Our Collection</h2>
+                    <div class="space-y-6">
+                        ${otherBooksHTML}
                     </div>
-
-                    <!-- Related Books by Subject`
+                </section>
+                <!-- Related Books by Subject`
     );
   } else {
     // Remove the section if no other books by this author
     html = html.replace(
-      /<!-- Related Books by Author -->[\s\S]*?<\/div>\s*<\/div>\s*<!-- Related Books by Subject/,
+      /<!-- Related Books by Author -->[\s\S]*?<\/section>\s*<!-- Related Books by Subject/,
       '<!-- Related Books by Subject'
     );
   }
