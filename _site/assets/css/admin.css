@@ -1,0 +1,446 @@
+/**
+ * Admin Interface Styles
+ * Extends Tailwind CSS with custom components for the admin workflow
+ */
+
+/* Workflow Steps */
+.workflow-step {
+    display: none;
+}
+
+.workflow-step.active {
+    display: block;
+}
+
+.step-indicator {
+    transition: all 0.3s ease;
+}
+
+.step-indicator.active {
+    transform: scale(1.1);
+}
+
+.step-connector {
+    transition: background-color 0.3s ease;
+}
+
+/* Form Components */
+.form-input {
+    @apply border border-gray-300 rounded-md px-3 py-2 text-sm;
+    @apply focus:ring-2 focus:ring-teal-500 focus:border-teal-500;
+    transition: all 0.2s ease;
+}
+
+.form-input:focus {
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+}
+
+.form-input.error {
+    @apply border-red-500;
+}
+
+.form-input.error:focus {
+    @apply ring-red-500 border-red-500;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.btn-primary {
+    @apply bg-teal-600 text-white px-4 py-2 rounded-md font-medium;
+    @apply hover:bg-teal-700 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary {
+    @apply bg-white text-gray-700 px-4 py-2 rounded-md font-medium border border-gray-300;
+    @apply hover:bg-gray-50 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+    transition: all 0.2s ease;
+}
+
+/* Image Upload */
+.upload-area {
+    transition: all 0.3s ease;
+}
+
+.upload-area.dragover {
+    @apply border-teal-400 bg-teal-50;
+    transform: scale(1.02);
+}
+
+.image-preview {
+    position: relative;
+    overflow: hidden;
+}
+
+.image-preview img {
+    transition: transform 0.3s ease;
+}
+
+.image-preview:hover img {
+    transform: scale(1.05);
+}
+
+.image-actions {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 0.5rem;
+    border-radius: 0 0 0 0.5rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.image-preview:hover .image-actions {
+    opacity: 1;
+}
+
+/* Collection Suggestions */
+.collection-suggestion {
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.collection-suggestion:hover {
+    @apply border-teal-300 bg-teal-50;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.collection-suggestion.selected {
+    @apply border-teal-500 bg-teal-100;
+}
+
+.collection-checkbox {
+    transition: all 0.2s ease;
+}
+
+.collection-suggestion:hover .collection-checkbox {
+    transform: scale(1.1);
+}
+
+/* Subject Tags */
+.subject-tag {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm bg-teal-100 text-teal-800;
+    transition: all 0.2s ease;
+}
+
+.subject-tag:hover {
+    @apply bg-teal-200;
+    transform: scale(1.05);
+}
+
+.subject-tag button {
+    @apply ml-2 text-teal-600 hover:text-teal-800;
+    transition: color 0.2s ease;
+}
+
+/* Progress Indicators */
+.progress-bar {
+    @apply h-2 bg-teal-600 rounded-full;
+    transition: width 0.3s ease;
+}
+
+.progress-container {
+    @apply w-full bg-gray-200 rounded-full h-2;
+}
+
+/* Status Badges */
+.status-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.status-available {
+    @apply bg-green-100 text-green-800;
+}
+
+.status-checked-out {
+    @apply bg-yellow-100 text-yellow-800;
+}
+
+.status-reserved {
+    @apply bg-blue-100 text-blue-800;
+}
+
+.status-missing {
+    @apply bg-red-100 text-red-800;
+}
+
+.status-damaged {
+    @apply bg-orange-100 text-orange-800;
+}
+
+.status-repair {
+    @apply bg-purple-100 text-purple-800;
+}
+
+/* Category Colors */
+.category-photography {
+    @apply text-blue-600 bg-blue-100;
+}
+
+.category-art {
+    @apply text-purple-600 bg-purple-100;
+}
+
+.category-fashion {
+    @apply text-pink-600 bg-pink-100;
+}
+
+.category-ephemera {
+    @apply text-green-600 bg-green-100;
+}
+
+.category-design {
+    @apply text-indigo-600 bg-indigo-100;
+}
+
+.category-special {
+    @apply text-yellow-600 bg-yellow-100;
+}
+
+/* Batch Import */
+.batch-import-method {
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.batch-import-method:hover {
+    @apply border-teal-300 bg-teal-50;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.batch-import-method.selected {
+    @apply border-teal-500 bg-teal-100;
+}
+
+/* Character Counters */
+.character-counter {
+    @apply text-sm text-gray-500;
+    transition: color 0.2s ease;
+}
+
+.character-counter.warning {
+    @apply text-yellow-600;
+}
+
+.character-counter.error {
+    @apply text-red-600;
+}
+
+/* Auto-save Indicator */
+.auto-save-indicator {
+    @apply fixed top-4 right-4 bg-green-100 text-green-800 px-3 py-2 rounded-lg text-sm z-50;
+    animation: slideInRight 0.3s ease, slideOutRight 0.3s ease 1.7s;
+    animation-fill-mode: both;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Loading States */
+.loading-spinner {
+    @apply inline-block w-4 h-4 border-2 border-gray-300 border-t-teal-600 rounded-full;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-overlay {
+    @apply absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center;
+    backdrop-filter: blur(2px);
+}
+
+/* Tooltip */
+.tooltip {
+    @apply absolute z-10 px-2 py-1 text-xs text-white bg-gray-900 rounded;
+    @apply opacity-0 pointer-events-none;
+    transition: opacity 0.2s ease;
+}
+
+.tooltip-trigger:hover .tooltip {
+    @apply opacity-100;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .workflow-step {
+        @apply p-4;
+    }
+    
+    .step-indicator {
+        @apply w-6 h-6 text-xs;
+    }
+    
+    .btn-primary,
+    .btn-secondary {
+        @apply px-3 py-2 text-sm;
+    }
+    
+    .form-input {
+        @apply text-base; /* Prevent zoom on iOS */
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .form-input {
+        @apply bg-gray-800 border-gray-600 text-white;
+    }
+    
+    .form-input:focus {
+        @apply border-teal-400;
+        box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+    }
+    
+    .btn-secondary {
+        @apply bg-gray-800 text-gray-200 border-gray-600;
+    }
+    
+    .btn-secondary:hover {
+        @apply bg-gray-700;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .workflow-step:not(.active) {
+        display: block !important;
+    }
+    
+    .btn-primary,
+    .btn-secondary {
+        display: none;
+    }
+    
+    .step-indicator {
+        @apply bg-gray-300 text-gray-700;
+    }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .form-input {
+        @apply border-2 border-black;
+    }
+    
+    .btn-primary {
+        @apply bg-black text-white border-2 border-black;
+    }
+    
+    .btn-secondary {
+        @apply bg-white text-black border-2 border-black;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    .workflow-step,
+    .step-indicator,
+    .step-connector,
+    .form-input,
+    .collection-suggestion,
+    .subject-tag,
+    .progress-bar,
+    .batch-import-method {
+        transition: none;
+    }
+    
+    .auto-save-indicator {
+        animation: none;
+    }
+    
+    .loading-spinner {
+        animation: none;
+    }
+}
+
+/* Focus Visible */
+.focus-visible:focus {
+    @apply outline-none ring-2 ring-teal-500 ring-offset-2;
+}
+
+/* Custom Scrollbar */
+.scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(156 163 175) transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgb(156 163 175);
+    border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(107 114 128);
+}
+
+/* Animation Utilities */
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Layout Utilities */
+.container-admin {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.grid-auto-fit {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.grid-auto-fill {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
