@@ -36,6 +36,62 @@
         .hero-overlay {
             background: linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.5));
         }
+
+        /* Featured Collections Styles */
+        .collection-card {
+            transition: transform 120ms var(--ease), box-shadow 200ms var(--ease);
+        }
+
+        .collection-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .aspect-\[4\/3\] {
+            aspect-ratio: 4 / 3;
+        }
+
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Category-specific gradient backgrounds */
+        .fashion-bg {
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            color: #1f2937;
+        }
+
+        .photography-bg {
+            background: linear-gradient(135deg, #e0f2fe, #dbeafe);
+            color: #1e3a8a;
+        }
+
+        .art-bg {
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+            color: #991b1b;
+        }
+
+        .music-bg {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            color: #15803d;
+        }
+
+        .design-bg {
+            background: linear-gradient(135deg, #fffbeb, #fef3c7);
+            color: #92400e;
+        }
+
+        .ephemera-bg {
+            background: linear-gradient(135deg, #eff6ff, #e0f2fe);
+            color: #075985;
+        }
+
+        .books-bg {
+            background: linear-gradient(135deg, #faf5ff, #f3e8ff);
+            color: #6b21a8;
+        }
     </style>
 </head>
 <body class="min-h-screen bg-neutral-50 text-neutral-900">
@@ -81,6 +137,75 @@
                     
                     We emphasize diverse global perspectives, featuring works from Middle Eastern and other underrepresented creators. The library also boasts rare zines, artist books, and special collections on LGBT+ publications, serial landscape photography, and photography of protest.
                 </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="featured-collections" class="py-24 bg-gradient-to-b from-white to-neutral-50">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto text-center mb-16">
+                <h2 class="text-4xl font-bold mb-6 text-teal-900">Featured Collections</h2>
+                <div class="line-divider inline-block"></div>
+                <p class="text-lg leading-relaxed text-neutral-600 mt-6">
+                    Explore curated selections from our specialized archives
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                {% for collection in dynamicCollections %}
+                    {% if collection.featured and loop.index <= 6 %}
+                    <a href="{{ collection.path }}"
+                       class="collection-card group block bg-white rounded-lg overflow-hidden border border-neutral-200 hover:border-teal-600 transition-all duration-200 hover:shadow-lg">
+
+                        <!-- Image Container with Aspect Ratio -->
+                        <div class="relative overflow-hidden aspect-[4/3]">
+                            {% if collection.representativeImage %}
+                                <img
+                                    src="{{ collection.representativeImage }}"
+                                    alt="{{ collection.name }}"
+                                    loading="lazy"
+                                    class="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
+                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            {% endif %}
+
+                            <!-- Fallback with Category-Specific Gradient -->
+                            <div class="collection-placeholder {{ collection.category }}-bg absolute inset-0 items-center justify-center p-6 text-center {% if collection.representativeImage %}hidden{% else %}flex{% endif %}"
+                                 style="display: {% if collection.representativeImage %}none{% else %}flex{% endif %};">
+                                <span class="text-base font-medium">{{ collection.name }}</span>
+                            </div>
+
+                            <!-- Subtle Overlay on Hover -->
+                            <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-5 transition-opacity duration-200"></div>
+                        </div>
+
+                        <!-- Card Content -->
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-neutral-900 mb-2 group-hover:text-teal-700 transition-colors">
+                                {{ collection.name }}
+                            </h3>
+                            <p class="text-sm text-neutral-600 mb-3 line-clamp-2">
+                                {{ collection.description }}
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-neutral-500">
+                                    <i class="fas fa-book-open mr-1"></i>{{ collection.bookCount }} items
+                                </span>
+                                <span class="text-teal-700 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                                    Explore <i class="fas fa-arrow-right ml-1"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <!-- View All Link -->
+            <div class="text-center mt-12">
+                <a href="/collection-explore.html"
+                   class="inline-block border-2 border-teal-700 text-teal-700 px-8 py-3 hover:bg-teal-700 hover:text-white transition-all rounded-sm font-medium">
+                    View All Collections
+                </a>
             </div>
         </div>
     </section>
