@@ -117,6 +117,9 @@ function generateBookPage(book, template, allBooks = []) {
     html = html.replace(/\[IMAGE_PATH\]/g, imagePath);
     html = html.replace(/\[OPACITY_CLASS\]/g, 'opacity-100');
     html = html.replace(/\[BORDER_CLASS\]/g, 'border-neutral-200');
+
+    // Use object-contain for better horizontal image support
+    html = html.replace(/object-cover/g, 'object-contain bg-gray-50');
     html = html.replace(/\[OVERLAY_HTML\]/g, '');
   } else {
     // Use placeholder directly - SVG already contains book icon and "No Cover Available" text
@@ -234,8 +237,9 @@ function generateBookPage(book, template, allBooks = []) {
   );
 
   // Find other books by the same author (but not this book)
+  // Match on full author name to avoid false matches (e.g., Kara Walker vs Adrian Octavius Walker)
   const otherBooksByAuthor = allBooks.filter(b =>
-    b.author_last === book.author_last &&
+    b.author_full_name === book.author_full_name &&
     b.title !== book.title &&
     b.title &&
     b.title !== 'NULL'
