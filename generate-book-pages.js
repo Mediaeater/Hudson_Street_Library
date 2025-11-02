@@ -320,7 +320,15 @@ function generateBookPage(book, template, allBooks = []) {
 
 // Main execution
 async function main() {
+  // Parse command-line arguments
+  const args = process.argv.slice(2);
+  const filterTitles = args.filter(arg => !arg.startsWith('--'));
+  const onlyChanged = args.includes('--only-changed');
+
   console.log('Starting book page generation...');
+  if (filterTitles.length > 0) {
+    console.log(`Filtering for books: ${filterTitles.join(', ')}`);
+  }
   console.log(`Reading CSV from: ${CSV_PATH}`);
   console.log(`Reading template from: ${TEMPLATE_PATH}`);
   console.log(`Output directory: ${OUTPUT_DIR}`);
@@ -341,10 +349,31 @@ async function main() {
       .on('end', () => {
         console.log(`\nProcessed ${books.length} books from CSV.`);
 
+        // Filter books if titles provided
+        let booksToGenerate = books;
+        if (filterTitles.length > 0) {
+          booksToGenerate = books.filter(book => {
+            const titleMatch = filterTitles.some(filter =>
+              book.title.toLowerCase().includes(filter.toLowerCase()) ||
+              book.author_last.toLowerCase().includes(filter.toLowerCase()) ||
+              createSlug(book.author_last, book.title).includes(filter.toLowerCase())
+            );
+            return titleMatch;
+          });
+          console.log(`Found ${booksToGenerate.length} matching books to generate.`);
+
+          // List the books that will be generated
+          if (booksToGenerate.length > 0 && booksToGenerate.length <= 10) {
+            console.log('\nBooks to generate:');
+            booksToGenerate.forEach(b => console.log(`  - ${b.title} by ${b.author_full_name}`));
+            console.log('');
+          }
+        }
+
         let successCount = 0;
         let errorCount = 0;
 
-        books.forEach((book, index) => {
+        booksToGenerate.forEach((book, index) => {
           try {
             // Create slug for directory name
             const slug = createSlug(book.author_last, book.title);
@@ -364,9 +393,10 @@ async function main() {
 
             successCount++;
 
-            // Log progress every 50 books
-            if ((index + 1) % 50 === 0) {
-              console.log(`Progress: ${index + 1}/${books.length} books processed...`);
+            // Log progress every 50 books (or every book if filtering)
+            const logInterval = filterTitles.length > 0 ? 1 : 50;
+            if ((index + 1) % logInterval === 0 || filterTitles.length > 0) {
+              console.log(`Progress: ${index + 1}/${booksToGenerate.length} books processed...`);
             }
           } catch (error) {
             console.error(`Error processing book: ${book.title} by ${book.author_full_name}`);
