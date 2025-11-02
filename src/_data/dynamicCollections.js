@@ -93,11 +93,51 @@ module.exports = function() {
     // Get the most recent book's date
     const mostRecentDate = sortedBooks.length > 0 ? getBookDate(sortedBooks[0]) : 0;
 
+    // Fallback: Check for collection-specific image directory
+    let representativeImage = bookWithImage?.image_url || collection.image;
+
+    // If no image found from books, check collection-specific directories
+    if (!bookWithImage) {
+      // Try multiple directory name variations
+      const possibleDirs = [
+        collection.slug,                                    // e.g., "queering-the-collection"
+        collection.id,                                      // e.g., "queering-the-collection"
+        collection.slug.split('-')[0],                     // e.g., "queering"
+        collection.category,                                // e.g., "photography"
+        collection.name.toLowerCase().replace(/\s+/g, '-')  // alternative slug format
+      ];
+
+      // Also check common variations
+      if (collection.slug.includes('queer')) possibleDirs.push('queer');
+      if (collection.slug.includes('black')) possibleDirs.push('black-photographers');
+      if (collection.slug.includes('collage')) possibleDirs.push('collage');
+      if (collection.slug.includes('nyc')) possibleDirs.push('nyc');
+
+      for (const dirName of possibleDirs) {
+        const collectionImageDir = path.join(__dirname, '..', 'assets', 'images', dirName);
+        try {
+          if (fs.existsSync(collectionImageDir)) {
+            const imageFiles = fs.readdirSync(collectionImageDir)
+              .filter(file => /\.(jpg|jpeg|png|webp)$/i.test(file))
+              .sort(); // Use first image alphabetically
+
+            if (imageFiles.length > 0) {
+              representativeImage = `/assets/images/${dirName}/${imageFiles[0]}`;
+              break; // Found an image, stop searching
+            }
+          }
+        } catch (err) {
+          // Directory doesn't exist or can't be read, try next
+          continue;
+        }
+      }
+    }
+
     // Build enriched collection object
     return {
       ...collection,
       bookCount: matchedBooks.length,
-      representativeImage: bookWithImage?.image_url || collection.image,
+      representativeImage: representativeImage,
       representativeBook: bookWithImage ? {
         id: bookWithImage.id,
         title: bookWithImage.title,
@@ -106,7 +146,7 @@ module.exports = function() {
       } : null,
       lastUpdated: mostRecentDate,
       hasBooks: matchedBooks.length > 0,
-      hasImage: !!bookWithImage
+      hasImage: !!bookWithImage || representativeImage !== collection.image
     };
   });
 
