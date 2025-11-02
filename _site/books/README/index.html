@@ -1,0 +1,101 @@
+<h1>Books Directory Structure</h1>
+<p>This directory organizes books by curated collections and provides scalable structure for growth.</p>
+<h2>Directory Structure</h2>
+<pre><code>src/books/
+├── collections/           # Books organized by curated collections
+│   ├── art/              # Art Books Collection
+│   ├── black-photographers/  # Black Photographers
+│   ├── books-on-books/   # Books on Books
+│   ├── collage/          # Collage Collections
+│   ├── ephemera/         # Ephemera
+│   ├── fashion/          # Fashion (general and subdirectories)
+│   │   ├── comme-des-garcons/ # Comme des Garçons Related
+│   │   └── matsuda-fashion/  # Matsuda Fashion Catalogs
+│   ├── music-photobooks/ # Music Photobooks
+│   ├── music/            # Music (general)
+│   ├── nyc/              # NYC Photobooks
+│   ├── posters-and-paper/ # Posters and Paper
+│   ├── queer/            # Queering the Collection
+│   ├── recently-added/   # Recently Added
+│   ├── small-books-big-images/ # Small Books Big Images
+│   └── woman-viewing-woman/    # Woman Viewing Woman
+├── alpha/                # Alphabetical organization for general books
+│   ├── a-d/
+│   ├── e-h/
+│   ├── i-l/
+│   ├── m-p/
+│   ├── q-t/
+│   └── u-z/
+├── general/              # Uncategorized books
+└── templates/            # Templates and disabled files
+    ├── BOOK-TEMPLATE.html
+    └── books.njk.disabled
+</code></pre>
+<h2>Adding New Books</h2>
+<h3>For Curated Collections</h3>
+<p>Place new books in the appropriate collection directory:</p>
+<ul>
+<li>Art book by new artist → <code>collections/art/Artist_Name-Book_Title.html</code></li>
+<li>NYC photobook → <code>collections/nyc/Artist_Name-Book_Title.html</code></li>
+<li>Queer-themed book → <code>collections/queer/Artist_Name-Book_Title.html</code></li>
+</ul>
+<h3>For General Collection</h3>
+<p>Use alphabetical organization:</p>
+<ul>
+<li>Author starts with A-D → <code>alpha/a-d/Author_Name-Book_Title.html</code></li>
+<li>Author starts with E-H → <code>alpha/e-h/Author_Name-Book_Title.html</code></li>
+<li>etc.</li>
+</ul>
+<h3>For Uncategorized</h3>
+<p>Place in <code>general/</code> until proper categorization is determined.</p>
+<h2>File Naming Convention</h2>
+<ul>
+<li>Format: <code>Artist_FirstName_LastName-Book_Title.html</code></li>
+<li>Spaces become underscores</li>
+<li>Hyphens separate artist from title</li>
+<li>Examples:
+<ul>
+<li><code>Vince_Aletti-Physique.html</code></li>
+<li><code>Ken_Schles-Invisible_City.html</code></li>
+</ul>
+</li>
+</ul>
+<h2>Collection Links</h2>
+<p>When books are in the collections subdirectories, they need to reference collections with:
+<code>../../../collections/collection-name.html</code></p>
+<h2>Template Usage</h2>
+<p>Use <code>templates/BOOK-TEMPLATE.html</code> as the starting point for new book pages.</p>
+<h2>Search and Discovery Features</h2>
+<h3>Clickable Metadata</h3>
+<p>All book metadata is now interactive. Users can click on:</p>
+<ul>
+<li><strong>Publisher</strong> - See all books by that publisher</li>
+<li><strong>Year</strong> - See all books from that year</li>
+<li><strong>Author</strong> - See all books by that author</li>
+<li><strong>Tags</strong> - See all books with that tag</li>
+<li><strong>Collection</strong> - See all books in that collection</li>
+</ul>
+<h3>Aggregate Views</h3>
+<p>The new aggregate view system (<code>/aggregate-view.html</code>) provides:</p>
+<ul>
+<li>URL parameter-based filtering (e.g., <code>?filter=publisher&amp;value=Steidl</code>)</li>
+<li>Active filter display with clear button</li>
+<li>Full search within filtered results</li>
+<li>Additional filtering on top of aggregate views</li>
+<li>Visual browse mode for image-focused exploration</li>
+</ul>
+<h3>Tag Analysis</h3>
+<p>Current tag coverage statistics:</p>
+<ul>
+<li>Only 241 books (18.5%) have tags</li>
+<li>154 unique tags identified</li>
+<li>Top tags: Photography (11), NYC (11), Fashion (6)</li>
+<li>Tag analysis reports available in <code>/tag-analysis/</code></li>
+</ul>
+<h3>Book Cover Status</h3>
+<ul>
+<li>757 books have covers (56.8% coverage)</li>
+<li>Covers acquired from free APIs (Open Library, Google Books, DPLA, Archive.org)</li>
+<li>Cover acquisition scripts available in project root</li>
+<li>Missing covers use placeholder SVG</li>
+</ul>
