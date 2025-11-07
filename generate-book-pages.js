@@ -66,7 +66,7 @@ function getTags(tagsString) {
 // Helper function to generate subject tags HTML
 function generateSubjectTags(tags) {
   if (!tags || tags.length === 0) {
-    return '<span class="subject-tag">Photography</span>';
+    return ''; // Return empty string instead of default Photography tag
   }
 
   // Limit to 7 tags maximum as per template comments
@@ -207,13 +207,20 @@ function generateBookPage(book, template, allBooks = []) {
   }
 
   // Classification links (replacing collection grouping)
-  const classificationCategories = book.classification_categories || book.classification || 'Photography';
+  const classificationCategories = book.classification_categories || book.classification || '';
   const classifications = classificationCategories.split(';').map(c => c.trim()).filter(c => c);
-  const classificationLinksHTML = classifications.map(classification => {
-    const slug = classification.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-    return `<a href="/static-demo/?classification=${encodeURIComponent(classification)}" class="collection-link"><i class="fas fa-folder-open mr-1"></i>${classification}</a>`;
-  }).join('\n                    ');
-  html = html.replace(/\[CLASSIFICATION_LINKS\]/g, classificationLinksHTML);
+
+  // Only show classification section if there are actual classifications
+  if (classifications.length > 0) {
+    const classificationLinksHTML = classifications.map(classification => {
+      const slug = classification.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+      return `<a href="/static-demo/?classification=${encodeURIComponent(classification)}" class="collection-link"><i class="fas fa-folder-open mr-1"></i>${classification}</a>`;
+    }).join('\n                    ');
+    html = html.replace(/\[CLASSIFICATION_LINKS\]/g, classificationLinksHTML);
+  } else {
+    // Remove the entire classification section if no classifications
+    html = html.replace(/<div class="section-divider"><\/div>\s*<!-- Classification -->\s*<section class="mb-12">\s*<h2 class="section-heading">Classification<\/h2>[\s\S]*?\[CLASSIFICATION_LINKS\][\s\S]*?<\/section>/g, '');
+  }
 
   // Library information
   const accessionDate = !isNullOrEmpty(book.accession_no) ? book.accession_no : 'Original Collection';
