@@ -243,7 +243,7 @@ function generateBookPage(book, template, allBooks = []) {
     b.title !== book.title &&
     b.title &&
     b.title !== 'NULL'
-  ).slice(0, 5); // Limit to 5 books
+  ); // Show all books by author
 
   // Generate "Other Books by This Author" section if there are other books
   if (otherBooksByAuthor.length > 0) {
