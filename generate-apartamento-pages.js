@@ -435,10 +435,6 @@ ${mag.specialContent && mag.specialContent.length > 0 ? `
                             <i class="fas fa-external-link-alt text-sm"></i>
                             <span>Apartamento Magazine Official Site</span>
                         </a>
-                        <a href="https://www.apartamentomagazine.com/product/issue-${mag.number}/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-teal-700 hover:text-teal-900 transition-colors">
-                            <i class="fas fa-external-link-alt text-sm"></i>
-                            <span>Purchase Issue #${mag.number}</span>
-                        </a>
                     </div>
                 </div>
 
