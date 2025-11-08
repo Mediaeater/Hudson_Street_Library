@@ -91,25 +91,14 @@
       {% endif %}
       
       {% if showTags != false and bookTags.length > 0 %}
-        <div class="mt-1 flex flex-wrap gap-1">
-          {% for tag in bookTags | slice(0, 3) %}
-            <a href="/aggregate-view.html?filter=tag&value={{ tag | urlencode }}" 
-               class="inline-block bg-neutral-100 hover:bg-teal-100 text-neutral-700 hover:text-teal-800 text-xs px-1.5 py-0.5 rounded transition-colors">
-              {{ tag | escape }}
-            </a>
-          {% endfor %}
-          {% if bookTags.length > 3 %}
-            <span class="text-xs text-gray-500">+{{ bookTags.length - 3 }}</span>
-          {% endif %}
+        <div class="mt-1 text-xs text-neutral-600">
+          {{ bookTags | join(', ') }}
         </div>
       {% endif %}
-      
+
       {% if bookCollection and bookCollection != 'NULL' %}
-        <div class="mt-1">
-          <a href="/aggregate-view.html?filter=collection&value={{ bookCollection | urlencode }}" 
-             class="inline-block bg-teal-100 hover:bg-teal-200 text-teal-800 text-xs px-1.5 py-0.5 rounded transition-colors">
-            {{ bookCollection | escape }}
-          </a>
+        <div class="mt-1 text-xs text-neutral-600">
+          {{ bookCollection | escape }}
         </div>
       {% endif %}
     </div>
