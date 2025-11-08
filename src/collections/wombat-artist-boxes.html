@@ -80,6 +80,32 @@ permalink: /collections/wombat-artist-boxes.html
     {% include "components/site-footer.njk" %}
 
     <script>
+        // Simple CSV parser that handles quoted fields
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                const nextChar = line[i + 1];
+
+                if (char === '"' && inQuotes && nextChar === '"') {
+                    current += '"';
+                    i++; // Skip next quote
+                } else if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current);
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            result.push(current);
+            return result;
+        }
+
         // Load and display Wombat boxes
         async function loadWombatBoxes() {
             try {
@@ -93,18 +119,17 @@ permalink: /collections/wombat-artist-boxes.html
                     const line = lines[i].trim();
                     if (!line) continue;
 
-                    // Parse CSV line
-                    const match = line.match(/^(\d+),([^,]*),([^,]*),([^,]*),([^,]*),Wombat Paris/);
-                    if (match) {
-                        const id = match[1];
-                        const authorLast = match[2];
-                        const authorFirst = match[3];
-                        const displayName = match[4];
-                        const title = match[5];
+                    // Parse CSV line properly
+                    const fields = parseCSVLine(line);
 
-                        // Extract image URL from the end of the line
-                        const parts = line.split(',');
-                        const imageUrl = parts[parts.length - 1];
+                    // Check if publisher is Wombat Paris (field index 5)
+                    if (fields[5] === 'Wombat Paris') {
+                        const id = fields[0];
+                        const authorLast = fields[1];
+                        const authorFirst = fields[2];
+                        const displayName = fields[3];
+                        const title = fields[4];
+                        const imageUrl = fields[28]; // Field 28 is image_url
 
                         // Create author slug for URL
                         const authorSlug = authorLast.toLowerCase().replace(/[^a-z0-9]+/g, '_');
