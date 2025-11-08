@@ -111,9 +111,6 @@ module.exports = function(eleventyConfig) {
   // Copy entire assets directory (images, js, css)
   eleventyConfig.addPassthroughCopy("src/assets");
 
-  // Copy root-level assets (magazines and music-books images)
-  eleventyConfig.addPassthroughCopy("assets");
-
   // Copy data files for search functionality
   eleventyConfig.addPassthroughCopy({"src/_data/books.csv": "cms/data/books.csv"});
   eleventyConfig.addPassthroughCopy({"src/_data/libraryCollections.json": "cms/data/libraryCollections.json"});
