@@ -110,15 +110,18 @@ module.exports = function(eleventyConfig) {
   // --- Passthrough Copy for assets ---
   // Copy entire assets directory (images, js, css)
   eleventyConfig.addPassthroughCopy("src/assets");
-  
+
+  // Copy root-level assets (magazines and music-books images)
+  eleventyConfig.addPassthroughCopy("assets");
+
   // Copy data files for search functionality
   eleventyConfig.addPassthroughCopy({"src/_data/books.csv": "cms/data/books.csv"});
   eleventyConfig.addPassthroughCopy({"src/_data/libraryCollections.json": "cms/data/libraryCollections.json"});
   eleventyConfig.addPassthroughCopy({"data": "data"});
-  
+
   // Copy CNAME for GitHub Pages
   eleventyConfig.addPassthroughCopy("CNAME");
-  
+
   // Copy .nojekyll to prevent Jekyll processing
   eleventyConfig.addPassthroughCopy(".nojekyll");
 
