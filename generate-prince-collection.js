@@ -31,11 +31,19 @@ allDirs.forEach(dirName => {
     const yearMatch = html.match(/<span[^>]*class="field-label"[^>]*>Published<\/span>\s*<span[^>]*class="field-value"[^>]*>(\d{4})/);
     const year = yearMatch ? yearMatch[1] : '';
 
-    // Extract cover image
-    const imgMatch = html.match(/src="(\.\.\/\.\.\/assets\/images\/books\/[^"]+Prince[^"]+)"/i) ||
-                    html.match(/src="(\.\.\/\.\.\/assets\/images\/books\/[^"]+prince[^"]+)"/i) ||
-                    html.match(/src="(\.\.\/\.\.\/assets\/images\/placeholder-book\.svg)"/);
-    let coverImage = imgMatch ? imgMatch[1].replace('../..', '') : '/assets/images/placeholder-book.svg';
+    // Extract cover image - look for the actual image in the book page
+    const imgMatch = html.match(/<img[^>]+src="(\.\.\/\.\.\/assets\/images\/[^"]+)"[^>]*alt=""[^>]*class="[^"]*w-full h-full object-contain/);
+    let coverImage = '/assets/images/placeholder-book.svg';
+
+    if (imgMatch) {
+      coverImage = imgMatch[1].replace('../..', '');
+    } else {
+      // Fallback: try to find any Prince image
+      const fallbackMatch = html.match(/src="(\.\.\/\.\.\/assets\/images\/books\/Prince[^"]+)"/i);
+      if (fallbackMatch) {
+        coverImage = fallbackMatch[1].replace('../..', '');
+      }
+    }
 
     // Extract description
     const descMatch = html.match(/<div[^>]*class="description-text[^"]*"[^>]*>[\s\S]*?<p>(.*?)<\/p>/);
@@ -128,7 +136,7 @@ permalink: /collections/richard-prince.html
                 <h1 class="text-4xl sm:text-5xl font-bold title-font mb-4 text-gray-900">Richard Prince</h1>
                 <div class="line-divider inline-block"></div>
                 <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">
-                    A comprehensive collection of publications by and about Richard Prince, the influential American artist known for his appropriation photography, cowboys, jokes, and social media work. Spanning exhibition catalogs, artist books, and rare publications from the 1980s through today.
+                    A barely comprehensive, not even close to complete collection of publications by and about Richard Prince, the influential American artist known for his appropriation photography, cowboys, jokes, and social media work. Spanning exhibition catalogs, artist books, and rare publications from the 1980s through today.
                 </p>
                 <div class="mt-8">
                     <a href="/collection-explore.html" class="text-sm text-teal-700 hover:text-teal-900 transition-colors">
