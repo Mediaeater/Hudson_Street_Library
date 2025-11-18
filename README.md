@@ -14,6 +14,9 @@ npm start
 # Build the site
 npm run build
 
+# Run tests
+npm test
+
 # Clean build directory
 npm run clean
 
@@ -98,6 +101,9 @@ docs/                # Documentation
 ├── guides/         # How-to guides
 └── DEPLOYMENT.md   # Deployment instructions
 
+lib/                # Project-specific libraries
+└── csv-handler.js   # CSV parsing utility
+
 scripts/            # Utility scripts and automation
 ├── image-pipeline/ # Automated image processing system
 └── news-pipeline/  # Automated news generation system
@@ -120,7 +126,8 @@ See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for detailed deployment information
 
 - **Static Site Generator**: [Eleventy](https://www.11ty.dev/) (11ty)
 - **Templates**: Nunjucks (`.njk` files)
-- **Styling**: Tailwind CSS (via CDN)
+- **Styling**: Tailwind CSS
+- **Testing**: Mocha
 - **Deployment**: GitHub Actions + GitHub Pages
 - **Custom Domain**: Configured via CNAME file
 
