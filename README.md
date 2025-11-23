@@ -17,6 +17,9 @@ npm run build
 # Run tests
 npm test
 
+# Add a new book (interactive)
+npm run add
+
 # Clean build directory
 npm run clean
 
@@ -25,6 +28,29 @@ npm run deploy:check
 ```
 
 Visit http://localhost:8080 when running the development server.
+
+## 📚 Adding New Books
+
+**Fastest method** - paste book text and auto-fill details:
+
+```bash
+npm run add
+```
+
+Then paste:
+```
+Ayoung Kim: Synthetic Storyteller
+The Floorplan, 2025 | Softcover | 400 pages
+```
+
+The script will:
+- Parse author, title, publisher, year, pages, binding
+- Look up ISBN via Google Books API
+- Assign sequential ID and accession date
+- Generate proper cover filename
+- Add to `books.csv` with backup
+
+See [ADD-BOOK-GUIDE.md](./ADD-BOOK-GUIDE.md) for complete instructions.
 
 ## 📊 Current Status
 
