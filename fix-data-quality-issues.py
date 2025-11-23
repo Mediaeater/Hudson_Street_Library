@@ -16,7 +16,9 @@ def fix_data_quality(csv_file):
     # Create backup
     csv_path = Path(csv_file)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    backup_path = csv_path.parent / f"{csv_path.stem}_backup_{timestamp}{csv_path.suffix}"
+    backup_dir = csv_path.parent / 'backups'
+    backup_dir.mkdir(exist_ok=True)
+    backup_path = backup_dir / f"{csv_path.stem}_backup_{timestamp}{csv_path.suffix}"
     print(f"Creating backup: {backup_path}")
     with open(csv_file, 'rb') as src:
         with open(backup_path, 'wb') as dst:
