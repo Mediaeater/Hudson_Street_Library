@@ -416,9 +416,7 @@ async function processBook(text) {
         console.log('\n✅ Book added successfully!\n');
         console.log('📸 Cover Image Instructions:');
         console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        console.log(`Place cover image at: src/assets/images/books/${coverFilename}`);
-        console.log('\nOr run cover acquisition:');
-        console.log(`  node acquire-covers.js --limit 1\n`);
+        console.log(`Place cover image at: src/assets/images/books/${coverFilename}\n`);
 
         console.log('🔨 Next Steps:');
         console.log('  1. Add cover image to books/ folder');
