@@ -4,7 +4,9 @@ const path = require("path");
 const slugify = require("slugify");
 const Image = require("@11ty/eleventy-img");
 const CSVHandler = require("./lib/csv-handler");
-const eleventyTailwind = require("eleventy-plugin-tailwindcss");
+// Note: eleventy-plugin-tailwindcss disabled due to Eleventy v3 incompatibility
+// CSS is built separately via passthrough copy
+// const eleventyTailwind = require("eleventy-plugin-tailwindcss");
 
 const { exec } = require("child_process");
 
@@ -23,14 +25,15 @@ module.exports = function(eleventyConfig) {
       console.error(`stderr: ${stderr}`);
     });
   });
-  
-  // Add Tailwind CSS plugin
-  eleventyConfig.addPlugin(eleventyTailwind, {
-    src: "src/assets/css/input.css",
-    dest: "_site/assets/css",
-    keepFolderStructure: false,
-    minify: true,
-  });
+
+  // Tailwind CSS plugin disabled - incompatible with Eleventy v3
+  // CSS files are copied via passthrough copy below
+  // eleventyConfig.addPlugin(eleventyTailwind, {
+  //   src: "src/assets/css/input.css",
+  //   dest: "_site/assets/css",
+  //   keepFolderStructure: false,
+  //   minify: true,
+  // });
 
   // Disable reserved data property checking to allow custom collections
   eleventyConfig.setFreezeReservedData(false);
