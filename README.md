@@ -25,9 +25,22 @@ npm run clean
 
 # Check deployment status
 npm run deploy:check
+
+# Deploy to live site (build + purge Cloudflare cache)
+npm run deploy
 ```
 
 Visit http://localhost:8080 when running the development server.
+
+## 🚀 Deployment
+
+After pushing changes to GitHub, purge Cloudflare cache to update the live site:
+
+```bash
+npm run cache:purge
+```
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for complete deployment workflows and troubleshooting.
 
 ## 📚 Adding New Books
 
