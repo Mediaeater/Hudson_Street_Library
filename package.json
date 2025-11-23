@@ -17,7 +17,10 @@
     "cleanup:build": "rm -rf _site",
     "prebuild": "npm run cleanup",
     "lint:docs": "node scripts/lint-documentation.js",
-    "lint": "npm run lint:docs"
+    "lint": "npm run lint:docs",
+    "cache:purge": "node scripts/purge-cloudflare-cache.js",
+    "cache:purge:all": "node scripts/purge-cloudflare-cache.js --all",
+    "deploy": "npm run build && npm run cache:purge"
   },
   "repository": {
     "type": "git",
