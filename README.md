@@ -34,13 +34,20 @@ Visit http://localhost:8080 when running the development server.
 
 ## 🚀 Deployment
 
-After pushing changes to GitHub, purge Cloudflare cache to update the live site:
+The site deploys automatically via GitHub Actions when you push to `main`. After deployment completes, purge Cloudflare cache to update the live site:
 
 ```bash
 npm run cache:purge
 ```
 
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for complete deployment workflows and troubleshooting.
+**Documentation**:
+- [DEPLOYMENT.md](./DEPLOYMENT.md) - Complete deployment workflows and troubleshooting
+- [docs/ELEVENTY-V3-MIGRATION.md](./docs/ELEVENTY-V3-MIGRATION.md) - Eleventy v3 compatibility notes
+
+**Key Requirements**:
+- Node.js 22+ (for Eleventy v3)
+- GitHub Actions enabled
+- Cloudflare API token configured in `.env`
 
 ## 📚 Adding New Books
 
