@@ -2,7 +2,27 @@
 
 ## Overview
 
-The Hudson Street Library site is deployed through git with Cloudflare caching. After pushing changes to GitHub, you need to purge the Cloudflare cache to make updates visible on the live site.
+The Hudson Street Library site is deployed via **GitHub Pages** with **Cloudflare** providing CDN and caching.
+
+### Deployment Architecture
+
+```
+Local Changes → Git Push → GitHub Actions → GitHub Pages → Cloudflare CDN → Live Site
+```
+
+**How it works**:
+1. Push changes to `main` branch
+2. GitHub Actions workflow automatically triggers (`.github/workflows/build-and-deploy.yml`)
+3. Workflow builds site with Eleventy (Node 22, Eleventy v3)
+4. Built `_site/` folder deployed to GitHub Pages
+5. Cloudflare serves the site at hudsonstreetlibrary.com
+6. **You must manually purge Cloudflare cache** to see updates
+
+### Key Requirements
+
+- **Node.js 22+**: Required for Eleventy v3 compatibility
+- **GitHub Actions**: Builds and deploys automatically on push
+- **Cloudflare Cache Purge**: Manual step to update live site after deployment
 
 ## Quick Deploy
 
@@ -247,6 +267,34 @@ git commit -m "Deploy: Missing built files"
 git push
 npm run cache:purge
 ```
+
+### GitHub Actions Build Failing
+
+**Problem**: GitHub Actions workflow fails with "require('@11ty/eleventy') is incompatible with Eleventy v3"
+
+**Root Cause**: Eleventy v3 requires Node.js 22.12+ to use `require()` with ESM modules. The workflow was using Node 18.
+
+**Solution**:
+```yaml
+# In .github/workflows/build-and-deploy.yml
+- name: Setup Node.js
+  uses: actions/setup-node@v4
+  with:
+    node-version: '22'  # Changed from '18'
+    cache: 'npm'
+```
+
+**Problem**: GitHub Actions fails with "Cannot read properties of undefined (reading 'watch')"
+
+**Root Cause**: The `eleventy-plugin-tailwindcss` plugin is incompatible with Eleventy v3.
+
+**Solution**: Disabled the plugin in `.eleventy.js`:
+```javascript
+// CSS files are copied via passthrough copy instead
+// eleventyConfig.addPlugin(eleventyTailwind, { ... });
+```
+
+The CSS files are still properly deployed through Eleventy's passthrough copy feature.
 
 ## Cache Purge Script Details
 
