@@ -59,23 +59,12 @@ The script tells you:
 ```
 📸 Cover Image Instructions:
 Place cover image at: src/assets/images/books/Ayoung_Kim_Synthetic_Storyteller_9783000841156.jpg
-
-Or run cover acquisition:
-  node acquire-covers.js --limit 1
 ```
 
-**Two options for covers:**
-
-**Option A: Manual** (if you have the image)
+**Add cover manually:**
 ```bash
 # Place your image file with exact name shown
 cp ~/Downloads/cover.jpg src/assets/images/books/Ayoung_Kim_Synthetic_Storyteller_9783000841156.jpg
-```
-
-**Option B: Auto-fetch** (if ISBN found)
-```bash
-# Script will download from Google Books/Open Library
-node acquire-covers.js --limit 1
 ```
 
 ### Batch Mode
@@ -105,9 +94,8 @@ node scripts/add-book-from-text.js --file books-to-add.txt
 # 1. Add book(s)
 node scripts/add-book-from-text.js --interactive
 
-# 2. Add cover images (manual or auto)
-# Manual: cp cover.jpg src/assets/images/books/[filename shown]
-# Auto:   node acquire-covers.js --limit 5
+# 2. Add cover images manually
+cp cover.jpg src/assets/images/books/[filename shown]
 
 # 3. Validate
 npm test
@@ -160,7 +148,7 @@ git push
 
 **ISBN not found?**
 - Add manually later by editing CSV
-- Or run `node acquire-covers.js` after adding ISBN
+- Cover acquisition is manual only
 
 **Wrong author parsing?**
 - Complex names may split incorrectly
