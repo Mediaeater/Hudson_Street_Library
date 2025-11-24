@@ -580,19 +580,21 @@ class BookSearch {
     }
 
     generateBookPageUrl(book) {
-        // Generate URL slug matching the generate-book-pages.js script
-        // Format: /books/{author_last}_{title}/
+        // Generate URL slug matching the books.njk permalink format
+        // Format: /books/{author_last}_{title}_{id}/
         const author = (book.author_last || 'unknown')
             .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '_')
-            .replace(/^_+|_+$/g, '');
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
 
         const title = (book.title || 'untitled')
             .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '_')
-            .replace(/^_+|_+$/g, '');
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
 
-        return `/books/${author}_${title}/`;
+        const id = book.id || '';
+
+        return `/books/${author}_${title}_${id}/`;
     }
 
     renderBookCard(book) {
