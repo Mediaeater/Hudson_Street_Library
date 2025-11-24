@@ -119,12 +119,12 @@
       </section>
 
       <!-- Notes (for non-uniform information) -->
-      <section class="mb-12">
-        <h2 class="section-heading">Notes</h2>
-        <div class="prose max-w-none text-sm text-gray-700">
-          <p>Additional information and context will appear here.</p>
-        </div>
-      </section>
+      {% if book.notes %}
+        <section class="mb-12">
+          <h2 class="section-heading">Notes</h2>
+          <div class="prose max-w-none text-sm text-gray-700" style="white-space: pre-line;">{{ book.notes }}</div>
+        </section>
+      {% endif %}
 
       <!-- Contributors -->
       {% if book.editor or book.contributors or book.designer %}
