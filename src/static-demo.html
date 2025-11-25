@@ -74,7 +74,7 @@
                     <label for="search-input" class="block text-sm font-medium text-neutral-700 mb-2">Search books</label>
                     <input type="text"
                            id="search-input"
-                           placeholder="Search by title or author..."
+                           placeholder="Search by title, author, or tags..."
                            class="w-full px-4 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500">
                 </div>
                 <div class="md:w-48">
@@ -103,29 +103,19 @@
                     </select>
                 </div>
                 <div>
-                    <label for="collection-filter" class="block text-sm font-medium text-neutral-700 mb-2">Collection</label>
+                    <label for="collection-filter" class="block text-sm font-medium text-neutral-700 mb-2">Curated Collections</label>
                     <select id="collection-filter" class="w-full px-3 py-2 border border-neutral-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
                         <option value="">All Collections</option>
                     </select>
                 </div>
             </div>
-            
-            <!-- Additional Filters Row -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                    <label for="cover-filter" class="block text-sm font-medium text-neutral-700 mb-2">Cover Availability</label>
-                    <select id="cover-filter" class="w-full px-3 py-2 border border-neutral-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
-                        <option value="">All Books</option>
-                        <option value="with-covers">Books with Covers</option>
-                        <option value="without-covers">Books without Covers</option>
-                    </select>
-                </div>
-                <div class="flex items-end">
-                    <label class="flex items-center space-x-2 text-sm">
-                        <input type="checkbox" id="visual-browse" class="rounded border-neutral-300 text-teal-600 focus:ring-teal-500">
-                        <span class="text-neutral-700">Visual Browse Mode</span>
-                    </label>
-                </div>
+
+            <!-- Visual Browse Mode -->
+            <div class="mt-4 flex items-start">
+                <label class="flex items-center space-x-2 text-sm">
+                    <input type="checkbox" id="visual-browse" class="rounded border-neutral-300 text-teal-600 focus:ring-teal-500">
+                    <span class="text-neutral-700">Visual Browse Mode</span>
+                </label>
             </div>
             
             <div class="mt-4 flex justify-between items-center">
@@ -297,7 +287,6 @@ class BookSearch {
         const publisherFilter = document.getElementById('publisher-filter');
         const yearFilter = document.getElementById('year-filter');
         const collectionFilter = document.getElementById('collection-filter');
-        const coverFilter = document.getElementById('cover-filter');
         const visualBrowseCheckbox = document.getElementById('visual-browse');
         const clearFilters = document.getElementById('clear-filters');
         const prevPage = document.getElementById('prev-page');
@@ -331,13 +320,7 @@ class BookSearch {
             this.currentPage = 1;
             this.performSearch();
         });
-        
-        coverFilter.addEventListener('change', (e) => {
-            this.filters.cover = e.target.value;
-            this.currentPage = 1;
-            this.performSearch();
-        });
-        
+
         visualBrowseCheckbox.addEventListener('change', (e) => {
             this.visualBrowse = e.target.checked;
             this.performSearch();
@@ -398,11 +381,10 @@ class BookSearch {
         document.getElementById('publisher-filter').value = '';
         document.getElementById('year-filter').value = '';
         document.getElementById('collection-filter').value = '';
-        document.getElementById('cover-filter').value = '';
         document.getElementById('visual-browse').checked = false;
-        
+
         this.searchTerm = '';
-        this.filters = { publisher: '', year: '', collection: '', cover: '' };
+        this.filters = { publisher: '', year: '', collection: '' };
         this.visualBrowse = false;
         this.sortBy = 'title';
         this.currentPage = 1;
@@ -411,44 +393,34 @@ class BookSearch {
     
     performSearch() {
         this.filteredBooks = this.books.filter(book => {
-            // Search term filter - only search title and author for precision
+            // Search term filter - search title, author, and tags
             if (this.searchTerm) {
                 const searchableText = [
                     book.title,
-                    book.author_full_name
+                    book.author_full_name,
+                    book.tags
                 ].join(' ').toLowerCase();
 
                 if (!searchableText.includes(this.searchTerm)) {
                     return false;
                 }
             }
-            
+
             // Publisher filter
             if (this.filters.publisher && book.publisher !== this.filters.publisher) {
                 return false;
             }
-            
+
             // Year filter
             if (this.filters.year && book.publication_year !== this.filters.year) {
                 return false;
             }
-            
+
             // Collection filter
             if (this.filters.collection && book.collection_grouping !== this.filters.collection) {
                 return false;
             }
-            
-            // Cover availability filter
-            if (this.filters.cover) {
-                const hasCover = this.generateCoverImagePath(book) !== '/assets/images/placeholder-book.svg';
-                if (this.filters.cover === 'with-covers' && !hasCover) {
-                    return false;
-                }
-                if (this.filters.cover === 'without-covers' && hasCover) {
-                    return false;
-                }
-            }
-            
+
             return true;
         });
         
