@@ -36,7 +36,26 @@
         .prose p {
             margin-bottom: 1rem;
         }
+        .prose a {
+            color: #0d9488;
+            text-decoration: underline;
+        }
+        .prose a:hover {
+            color: #115e59;
+        }
     </style>
+    <script>
+        // Auto-linkify URLs in notes section
+        document.addEventListener('DOMContentLoaded', function() {
+            const notesSection = document.querySelector('.notes-content');
+            if (notesSection) {
+                const urlRegex = /(https?:\/\/[^\s]+)/g;
+                notesSection.innerHTML = notesSection.innerHTML.replace(urlRegex, function(url) {
+                    return '<a href="' + url + '" target="_blank" rel="noopener noreferrer">' + url + '</a>';
+                });
+            }
+        });
+    </script>
 </head>
 <body class="min-h-screen bg-neutral-50">
 
