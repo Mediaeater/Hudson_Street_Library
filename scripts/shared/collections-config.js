@@ -18,9 +18,8 @@ module.exports = {
     'nyc': ['new york', 'manhattan', 'brooklyn', 'nyc', 'urban'],
     'posters-and-paper': ['poster', 'print', 'graphic design', 'announcement'],
     'queer': ['lgbt', 'queer', 'gay', 'lesbian', 'trans', 'pride'],
-    'recently-added': [],
-    'small-books-big-images': ['large format', 'oversized'],
-    'woman-viewing-woman': ['female', 'women', 'feminist', 'gender']
+    'disaster': ['disaster', 'tragedy', 'forensic', 'accident', 'war', 'violence'],
+    'recently-added': []
   },
 
   // Helper method to infer collection from text content
