@@ -36,7 +36,26 @@
         .prose p {
             margin-bottom: 1rem;
         }
+        .prose a {
+            color: #0d9488;
+            text-decoration: underline;
+        }
+        .prose a:hover {
+            color: #115e59;
+        }
     </style>
+    <script>
+        // Auto-linkify URLs in notes section
+        document.addEventListener('DOMContentLoaded', function() {
+            const notesSection = document.querySelector('.notes-content');
+            if (notesSection) {
+                const urlRegex = /(https?:\/\/[^\s]+)/g;
+                notesSection.innerHTML = notesSection.innerHTML.replace(urlRegex, function(url) {
+                    return '<a href="' + url + '" target="_blank" rel="noopener noreferrer">' + url + '</a>';
+                });
+            }
+        });
+    </script>
 </head>
 <body class="min-h-screen bg-neutral-50">
 
@@ -122,7 +141,7 @@
       {% if book.notes %}
         <section class="mb-12">
           <h2 class="section-heading">Notes</h2>
-          <div class="prose max-w-none text-sm text-gray-700" style="white-space: pre-line;">{{ book.notes }}</div>
+          <div class="notes-content prose max-w-none text-sm text-gray-700" style="white-space: pre-line;">{{ book.notes }}</div>
         </section>
       {% endif %}
 
