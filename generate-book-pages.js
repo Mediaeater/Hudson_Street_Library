@@ -222,6 +222,23 @@ function generateBookPage(book, template, allBooks = []) {
     html = html.replace(/<div class="section-divider"><\/div>\s*<!-- Classification -->\s*<section class="mb-12">\s*<h2 class="section-heading">Classification<\/h2>[\s\S]*?\[CLASSIFICATION_LINKS\][\s\S]*?<\/section>/g, '');
   }
 
+  // Subjects/Tags section
+  const tags = getTags(book.tags);
+  if (tags.length > 0) {
+    const subjectTagsHTML = generateSubjectTags(tags);
+    const subjectsSection = `<div class="section-divider"></div>
+                <section class="mb-12">
+                    <h2 class="section-heading">Subjects</h2>
+                    <div class="flex flex-wrap gap-2">
+                        ${subjectTagsHTML}
+                    </div>
+                </section>`;
+    html = html.replace(/\[SUBJECTS_SECTION\]/g, subjectsSection);
+  } else {
+    // Remove placeholder if no tags
+    html = html.replace(/<!-- Subjects\/Tags -->\s*\[SUBJECTS_SECTION\]/g, '');
+  }
+
   // Library information
   const accessionDate = !isNullOrEmpty(book.accession_no) ? book.accession_no : 'Original Collection';
   html = html.replace(/\[Date\/Status\]/g, accessionDate);

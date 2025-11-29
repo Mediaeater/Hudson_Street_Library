@@ -205,8 +205,52 @@ class HudsonStreetLibrary {
 // Initialize when script loads
 new HudsonStreetLibrary();
 
+// Toast notification system
+function showToast(message, type = 'success') {
+    // Ensure toast container exists
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        container.className = 'fixed top-4 right-4 z-50 space-y-2';
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    const bgColor = type === 'success' ? 'bg-green-500' :
+                    type === 'error' ? 'bg-red-500' :
+                    type === 'warning' ? 'bg-yellow-500' : 'bg-blue-500';
+    const icon = type === 'success' ? 'check' :
+                 type === 'error' ? 'times' :
+                 type === 'warning' ? 'exclamation' : 'info';
+
+    toast.className = `toast px-6 py-4 rounded-lg shadow-lg text-white max-w-sm ${bgColor} transform transition-all duration-300 ease-out`;
+    toast.innerHTML = `
+        <div class="flex items-center">
+            <i class="fas fa-${icon} mr-3"></i>
+            <span>${message}</span>
+            <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white hover:text-gray-200">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    container.appendChild(toast);
+
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        if (toast.parentElement) {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+        }
+    }, 5000);
+}
+
+// Make showToast globally available
+window.showToast = showToast;
+
 // Global utilities
 window.HSL = {
     resolvePath: HudsonStreetLibrary.resolvePath,
-    loadCollectionData: HudsonStreetLibrary.loadCollectionData
+    loadCollectionData: HudsonStreetLibrary.loadCollectionData,
+    showToast: showToast
 };
