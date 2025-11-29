@@ -1064,9 +1064,11 @@ class BookWorkflow {
         
         // Update SEO preview
         const title = formData.get('title') || 'Book Title';
+        const authorLast = formData.get('author_last') || 'author';
+        const bookId = formData.get('id') || 'ID';
         document.getElementById('seo-title').textContent = `${title} - Hudson Street Library`;
-        document.getElementById('seo-url').textContent = `https://hudsonstreetlibrary.com/books/${this.generateSlug(title)}`;
-        
+        document.getElementById('seo-url').textContent = `https://hudsonstreetlibrary.com/books/${this.generateSlug(authorLast)}_${this.generateSlug(title)}_${bookId}`;
+
         const description = formData.get('summary') || formData.get('description') || 'Book description will appear here in search results...';
         document.getElementById('seo-description').textContent = description.substring(0, 160) + (description.length > 160 ? '...' : '');
     }
