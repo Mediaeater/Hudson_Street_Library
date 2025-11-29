@@ -14,14 +14,63 @@ npm start
 # Build the site
 npm run build
 
+# Run tests
+npm test
+
+# Add a new book (interactive)
+npm run add
+
 # Clean build directory
 npm run clean
 
 # Check deployment status
 npm run deploy:check
+
+# Deploy to live site (build + purge Cloudflare cache)
+npm run deploy
 ```
 
 Visit http://localhost:8080 when running the development server.
+
+## 🚀 Deployment
+
+The site deploys automatically via GitHub Actions when you push to `main`. After deployment completes, purge Cloudflare cache to update the live site:
+
+```bash
+npm run cache:purge
+```
+
+**Documentation**:
+- [DEPLOYMENT.md](./DEPLOYMENT.md) - Complete deployment workflows and troubleshooting
+- [docs/ELEVENTY-V3-MIGRATION.md](./docs/ELEVENTY-V3-MIGRATION.md) - Eleventy v3 compatibility notes
+
+**Key Requirements**:
+- Node.js 22+ (for Eleventy v3)
+- GitHub Actions enabled
+- Cloudflare API token configured in `.env`
+
+## 📚 Adding New Books
+
+**Fastest method** - paste book text and auto-fill details:
+
+```bash
+npm run add
+```
+
+Then paste:
+```
+Ayoung Kim: Synthetic Storyteller
+The Floorplan, 2025 | Softcover | 400 pages
+```
+
+The script will:
+- Parse author, title, publisher, year, pages, binding
+- Look up ISBN via Google Books API
+- Assign sequential ID and accession date
+- Generate proper cover filename
+- Add to `books.csv` with backup
+
+See [ADD-BOOK-GUIDE.md](./ADD-BOOK-GUIDE.md) for complete instructions.
 
 ## 📊 Current Status
 
@@ -98,6 +147,9 @@ docs/                # Documentation
 ├── guides/         # How-to guides
 └── DEPLOYMENT.md   # Deployment instructions
 
+lib/                # Project-specific libraries
+└── csv-handler.js   # CSV parsing utility
+
 scripts/            # Utility scripts and automation
 ├── image-pipeline/ # Automated image processing system
 └── news-pipeline/  # Automated news generation system
@@ -120,7 +172,8 @@ See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for detailed deployment information
 
 - **Static Site Generator**: [Eleventy](https://www.11ty.dev/) (11ty)
 - **Templates**: Nunjucks (`.njk` files)
-- **Styling**: Tailwind CSS (via CDN)
+- **Styling**: Tailwind CSS
+- **Testing**: Mocha
 - **Deployment**: GitHub Actions + GitHub Pages
 - **Custom Domain**: Configured via CNAME file
 

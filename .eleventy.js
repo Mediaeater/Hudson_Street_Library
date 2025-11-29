@@ -3,43 +3,54 @@ const fs = require("fs");
 const path = require("path");
 const slugify = require("slugify");
 const Image = require("@11ty/eleventy-img");
-const CSVHandler = require("./scripts/utils/csv-handler");
+const CSVHandler = require("./lib/csv-handler");
+// Note: eleventy-plugin-tailwindcss disabled due to Eleventy v3 incompatibility
+// CSS is built separately via passthrough copy
+// const eleventyTailwind = require("eleventy-plugin-tailwindcss");
+
+const { exec } = require("child_process");
 
 module.exports = function(eleventyConfig) {
   console.log("--- Running Eleventy configuration ---");
-  
+
+  // Add a build event to trigger the cover acquisition script
+  eleventyConfig.on("beforeBuild", () => {
+    console.log("--- Acquiring book covers ---");
+    exec("node acquire-covers.js --limit 10 --strict", (error, stdout, stderr) => {
+      if (error) {
+        console.error(`exec error: ${error}`);
+        return;
+      }
+      console.log(`stdout: ${stdout}`);
+      console.error(`stderr: ${stderr}`);
+    });
+  });
+
+  // Tailwind CSS plugin disabled - incompatible with Eleventy v3
+  // CSS files are copied via passthrough copy below
+  // eleventyConfig.addPlugin(eleventyTailwind, {
+  //   src: "src/assets/css/input.css",
+  //   dest: "_site/assets/css",
+  //   keepFolderStructure: false,
+  //   minify: true,
+  // });
+
   // Disable reserved data property checking to allow custom collections
   eleventyConfig.setFreezeReservedData(false);
 
   // --- Load CSV Data ---
-  const csvPath = path.join(__dirname, "src/_data/books.csv");
-  let bookData = [];
-
-  try {
-    console.log(`--- Attempting to read CSV: ${csvPath}`);
-    if (fs.existsSync(csvPath)) {
-      const csvResult = CSVHandler.readBooksSync(csvPath);
-      bookData = csvResult.data;
-
+  eleventyConfig.addGlobalData("books", async () => {
+    const csvPath = path.join(__dirname, "src/_data/books.csv");
+    try {
+      console.log(`--- Attempting to read CSV: ${csvPath}`);
+      const bookData = await CSVHandler.readBooks(csvPath);
       console.log(`--- Parsed ${bookData.length} records from ${csvPath}`);
-      console.log(`--- CSV stats: ${csvResult.stats.validRows} valid, ${csvResult.stats.correctedRows} corrected, ${csvResult.stats.invalidRows} invalid`);
-
-      if (csvResult.errors.length > 0) {
-        console.log(`--- CSV had ${csvResult.errors.length} warnings/errors`);
-        csvResult.errors.slice(0, 3).forEach(error => {
-          console.log(`    Row ${error.row}: ${error.message || error.warnings?.join(', ')}`);
-        });
-      }
-    } else {
-      console.error(`--- CSV file does not exist: ${csvPath}`);
+      return bookData;
+    } catch (err) {
+      console.error(`--- Error parsing CSV: ${csvPath}`, err);
+      return [];
     }
-  } catch (err) {
-    console.error(`--- Error parsing CSV: ${csvPath}`, err);
-  }
-
-  // --- Add Data Globally ---
-  eleventyConfig.addGlobalData("books", bookData);
-  console.log(`--- Added 'books' global data with ${bookData.length} items.`);
+  });
 
   // --- Add Slugify Filter ---
   eleventyConfig.addFilter("slugify", function(str) {
