@@ -13,7 +13,8 @@ class BookWorkflow {
         this.selectedSubjects = [];
         this.uploadedImages = {};
         this.isDirty = false;
-        
+        this.autoSaveInterval = null;
+
         this.init();
     }
 
@@ -26,35 +27,43 @@ class BookWorkflow {
         this.setupAutoSave();
     }
 
+    // Helper to safely add event listener with null check
+    safeAddEventListener(elementId, event, handler) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.addEventListener(event, handler);
+        }
+    }
+
     setupEventListeners() {
         // Navigation buttons
-        document.getElementById('next-step-btn').addEventListener('click', () => this.nextStep());
-        document.getElementById('prev-step-btn').addEventListener('click', () => this.prevStep());
-        document.getElementById('publish-btn').addEventListener('click', () => this.publishBook());
-        
+        this.safeAddEventListener('next-step-btn', 'click', () => this.nextStep());
+        this.safeAddEventListener('prev-step-btn', 'click', () => this.prevStep());
+        this.safeAddEventListener('publish-btn', 'click', () => this.publishBook());
+
         // Form actions
-        document.getElementById('save-draft-btn').addEventListener('click', () => this.saveDraft());
-        document.getElementById('batch-mode-btn').addEventListener('click', () => this.openBatchMode());
-        
+        this.safeAddEventListener('save-draft-btn', 'click', () => this.saveDraft());
+        this.safeAddEventListener('batch-mode-btn', 'click', () => this.openBatchMode());
+
         // Form change tracking
-        document.getElementById('book-workflow-form').addEventListener('input', () => {
+        this.safeAddEventListener('book-workflow-form', 'input', () => {
             this.isDirty = true;
             this.validateCurrentStep();
             this.updatePreview();
         });
 
         // ISBN lookup
-        document.getElementById('isbn').addEventListener('blur', () => this.lookupBookByISBN());
-        
+        this.safeAddEventListener('isbn', 'blur', () => this.lookupBookByISBN());
+
         // Title-based category detection
-        document.getElementById('title').addEventListener('input', debounce(() => this.detectCategory(), 500));
-        document.getElementById('description').addEventListener('input', debounce(() => this.detectCategory(), 500));
-        
+        this.safeAddEventListener('title', 'input', debounce(() => this.detectCategory(), 500));
+        this.safeAddEventListener('description', 'input', debounce(() => this.detectCategory(), 500));
+
         // Subject management
         this.setupSubjectManagement();
-        
+
         // Collection search
-        document.getElementById('collection-search').addEventListener('input', debounce((e) => this.searchCollections(e.target.value), 300));
+        this.safeAddEventListener('collection-search', 'input', debounce((e) => this.searchCollections(e.target.value), 300));
         
         // Image processing
         this.setupImageProcessing();
@@ -1093,11 +1102,20 @@ class BookWorkflow {
 
     // Auto-save functionality
     setupAutoSave() {
-        setInterval(() => {
+        // Store interval ID so it can be cleared later
+        this.autoSaveInterval = setInterval(() => {
             if (this.isDirty) {
                 this.autoSave();
             }
         }, 30000); // Auto-save every 30 seconds
+    }
+
+    // Cleanup method to prevent memory leaks
+    destroy() {
+        if (this.autoSaveInterval) {
+            clearInterval(this.autoSaveInterval);
+            this.autoSaveInterval = null;
+        }
     }
 
     async autoSave() {
