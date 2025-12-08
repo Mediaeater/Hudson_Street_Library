@@ -41,8 +41,8 @@ npm run cache:purge
 ```
 
 **Documentation**:
-- [DEPLOYMENT.md](./DEPLOYMENT.md) - Complete deployment workflows and troubleshooting
-- [docs/ELEVENTY-V3-MIGRATION.md](./docs/ELEVENTY-V3-MIGRATION.md) - Eleventy v3 compatibility notes
+- [DEPLOYMENT.md](docs/DEPLOYMENT.md) - Complete deployment workflows and troubleshooting
+- [ELEVENTY-V3-MIGRATION.md](docs/ELEVENTY-V3-MIGRATION.md) - Eleventy v3 compatibility notes
 
 **Key Requirements**:
 - Node.js 22+ (for Eleventy v3)
@@ -70,7 +70,7 @@ The script will:
 - Generate proper cover filename
 - Add to `books.csv` with backup
 
-See [ADD-BOOK-GUIDE.md](./ADD-BOOK-GUIDE.md) for complete instructions.
+See [ADD-BOOK-GUIDE.md](docs/ADD-BOOK-GUIDE.md) for complete instructions.
 
 ## 📊 Current Status
 
@@ -166,7 +166,7 @@ The site is automatically built and deployed via GitHub Actions when changes are
 2. Deploy to GitHub Pages
 3. Update the live site at https://hudsonstreetlibrary.com
 
-See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for detailed deployment information.
+See [DEPLOYMENT.md](docs/DEPLOYMENT.md) for detailed deployment information.
 
 ## 🛠 Technology Stack
 
@@ -282,7 +282,6 @@ npm clean
 ### Deployment & Operations
 - [Deployment Guide](docs/DEPLOYMENT.md) - How deployment works
 - [GitHub Actions Pipeline](docs/GITHUB-ACTIONS-PIPELINE.md) - Detailed CI/CD documentation
-- [Deployment Monitoring](docs/DEPLOYMENT-MONITORING.md) - Status monitoring and troubleshooting
 - [Quick Reference](docs/DEPLOYMENT-QUICK-REFERENCE.md) - Essential commands and links
 
 ### Development
