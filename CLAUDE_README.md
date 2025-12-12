@@ -37,6 +37,26 @@ node acquire-covers.js --limit 50
 - Site templates: `src/_includes/`
 - Static pages: `src/pages/`
 
+#### 4. MAGAZINE DIRECTORY SYSTEM
+Magazines use two paired directories that must stay in sync:
+
+| Purpose | Directory |
+|---------|-----------|
+| Cover images (.jpg, .gif) | `src/assets/images/magazines/[magazine-name]/` |
+| Issue detail pages (.html) | `src/books/magazines/[magazine-name]/` |
+
+**When adding a new magazine:**
+1. Create matching subdirectories in BOTH locations
+2. Add cover images to `src/assets/images/magazines/[magazine-name]/`
+3. Add issue HTML pages to `src/books/magazines/[magazine-name]/`
+4. Update collection page in `src/collections/`
+
+**Current magazines:** afm, apartamento, le-petit-voyeur, purple-magazine, purple-mag-book-inserts, record-culture, slanted, toilet-paper, useful-photography
+
+**Image path in HTML:** `/assets/images/magazines/[magazine-name]/[filename]`
+
+See README.md files in each directory for details.
+
 ### 📁 KEY FILES TO KNOW
 
 1. **README.md** - Project overview and current status
