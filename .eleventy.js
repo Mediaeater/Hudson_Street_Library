@@ -127,9 +127,6 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy({"src/_data/libraryCollections.json": "cms/data/libraryCollections.json"});
   eleventyConfig.addPassthroughCopy({"data": "data"});
 
-  // Copy book page template for generate-book-pages.js
-  eleventyConfig.addPassthroughCopy({"src/books/templates": "books/templates"});
-
   // Copy CNAME for GitHub Pages
   eleventyConfig.addPassthroughCopy("CNAME");
 
