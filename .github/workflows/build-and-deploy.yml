@@ -43,6 +43,13 @@ jobs:
       - name: Generate book pages
         run: node generate-book-pages.js
 
+      - name: Copy manual book pages (custom content overrides)
+        run: |
+          if [ -d "src/books/manual" ]; then
+            cp -r src/books/manual/* _site/books/
+            echo "Copied manual book pages to _site/books/"
+          fi
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
