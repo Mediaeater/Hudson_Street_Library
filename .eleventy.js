@@ -24,6 +24,16 @@ module.exports = function(eleventyConfig) {
       console.log(`stdout: ${stdout}`);
       console.error(`stderr: ${stderr}`);
     });
+
+    console.log("--- Generating book pages ---");
+    exec("node generate-book-pages.js", (error, stdout, stderr) => {
+      if (error) {
+        console.error(`exec error: ${error}`);
+        return;
+      }
+      console.log(`stdout: ${stdout}`);
+      console.error(`stderr: ${stderr}`);
+    });
   });
 
   // Tailwind CSS plugin disabled - incompatible with Eleventy v3
