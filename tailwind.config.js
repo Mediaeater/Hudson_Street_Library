@@ -8,10 +8,19 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        'forest': {
+          400: '#a4ac86',  // Olive - lightest
+          500: '#7d8471',  // Sage - medium
+          600: '#4a6348',  // Forest medium
+          700: '#2d4a2b',  // Forest Green - primary
+          800: '#243d23',  // Forest dark
+          900: '#1b2e1a',  // Forest darkest
+        },
+        // Backwards compatibility aliases
         'teal': {
-          700: '#0f766e',
-          800: '#115e59',
-          900: '#134e4a',
+          700: '#2d4a2b',
+          800: '#243d23',
+          900: '#1b2e1a',
         }
       },
       fontFamily: {
