@@ -1,0 +1,55 @@
+{%- if breadcrumbs -%}
+  {%- set schemaBreadcrumbs = breadcrumbs -%}
+{%- else -%}
+  {%- set schemaBreadcrumbs = [] -%}
+  {%- set schemaBreadcrumbs = (schemaBreadcrumbs.push({
+    "name": "Home",
+    "url": "https://hudsonstreetlibrary.com/"
+  }), schemaBreadcrumbs) -%}
+
+  {%- if book -%}
+    {# Book page breadcrumbs #}
+    {%- set schemaBreadcrumbs = (schemaBreadcrumbs.push({
+      "name": "Books",
+      "url": "https://hudsonstreetlibrary.com/books/"
+    }), schemaBreadcrumbs) -%}
+    {%- set schemaBreadcrumbs = (schemaBreadcrumbs.push({
+      "name": book.title,
+      "url": "https://hudsonstreetlibrary.com" + page.url
+    }), schemaBreadcrumbs) -%}
+  {%- elif title and permalink and "collections" in permalink -%}
+    {# Collection page breadcrumbs #}
+    {%- set schemaBreadcrumbs = (schemaBreadcrumbs.push({
+      "name": "Collections",
+      "url": "https://hudsonstreetlibrary.com/collections/"
+    }), schemaBreadcrumbs) -%}
+    {%- set schemaBreadcrumbs = (schemaBreadcrumbs.push({
+      "name": title,
+      "url": "https://hudsonstreetlibrary.com" + permalink
+    }), schemaBreadcrumbs) -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- set breadcrumbList = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": []
+} -%}
+
+{%- for crumb in schemaBreadcrumbs -%}
+  {%- set position = loop.index -%}
+  {%- set breadcrumbList = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": breadcrumbList.itemListElement.concat([{
+      "@type": "ListItem",
+      "position": position,
+      "name": crumb.name,
+      "item": crumb.url
+    }])
+  } -%}
+{%- endfor -%}
+
+<script type="application/ld+json">
+{{ breadcrumbList | dump | safe }}
+</script>

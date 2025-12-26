@@ -12,10 +12,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }} | Hudson Street Library</title>
     {% if description %}
-    <meta name="description" content="{{ description }}">
+    <meta name="description" content="{{ description | truncate(155) | escape }}">
     {% endif %}
     <link rel="stylesheet" href="/assets/css/design-system.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    {% include "components/schema-organization.njk" %}
+    {% include "components/schema-collection.njk" %}
+    {% include "components/schema-breadcrumb.njk" %}
 </head>
 <body class="min-h-screen bg-neutral-50 text-neutral-900">
 
