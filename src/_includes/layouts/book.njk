@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ book.title }} by {{ book.author_full }} | Hudson Street Library</title>
+    {% if book.description %}
+<meta name="description" content="{{ book.description | truncate(155) | escape }}">
+    {% else %}
+<meta name="description" content="{{ book.title }} by {{ book.author_full_name }}. Published by {{ book.publisher }}{% if book.publication_year %} in {{ book.publication_year }}{% endif %}. From the Hudson Street Library collection.">
+    {% endif %}
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -70,6 +75,9 @@
             }
         });
     </script>
+    {% include "components/schema-organization.njk" %}
+    {% include "components/schema-book.njk" %}
+    {% include "components/schema-breadcrumb.njk" %}
 </head>
 <body class="min-h-screen bg-neutral-50">
 

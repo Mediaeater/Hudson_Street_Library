@@ -1,0 +1,21 @@
+{%- set schemaCollection = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": title,
+  "url": "https://hudsonstreetlibrary.com" + permalink,
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Hudson Street Library",
+    "url": "https://hudsonstreetlibrary.com"
+  }
+} -%}
+
+{%- if description -%}
+  {%- set schemaCollection = schemaCollection | merge({
+    "description": description
+  }) -%}
+{%- endif -%}
+
+<script type="application/ld+json">
+{{ schemaCollection | dump | safe }}
+</script>

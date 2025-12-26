@@ -1,0 +1,66 @@
+{%- set schemaBook = {
+  "@context": "https://schema.org",
+  "@type": "Book",
+  "name": book.title
+} -%}
+
+{%- if book.author_full_name -%}
+  {%- set schemaBook = schemaBook | merge({
+    "author": {
+      "@type": "Person",
+      "name": book.author_full_name
+    }
+  }) -%}
+{%- endif -%}
+
+{%- if book.publisher -%}
+  {%- set schemaBook = schemaBook | merge({
+    "publisher": {
+      "@type": "Organization",
+      "name": book.publisher
+    }
+  }) -%}
+{%- endif -%}
+
+{%- if book.isbn_asin -%}
+  {%- set schemaBook = schemaBook | merge({
+    "isbn": book.isbn_asin
+  }) -%}
+{%- endif -%}
+
+{%- if book.publication_year -%}
+  {%- set schemaBook = schemaBook | merge({
+    "datePublished": book.publication_year | string
+  }) -%}
+{%- endif -%}
+
+{%- if book.image_url -%}
+  {%- set imageUrl = "https://hudsonstreetlibrary.com" + book.image_url -%}
+  {%- set schemaBook = schemaBook | merge({
+    "image": imageUrl
+  }) -%}
+{%- endif -%}
+
+{%- if book.description -%}
+  {%- set truncatedDesc = book.description | truncate(500) | replace('"', '\\"') | replace('\n', ' ') -%}
+  {%- set schemaBook = schemaBook | merge({
+    "description": truncatedDesc
+  }) -%}
+{%- endif -%}
+
+{%- if book.page_count and book.page_count > 0 -%}
+  {%- set schemaBook = schemaBook | merge({
+    "numberOfPages": book.page_count
+  }) -%}
+{%- endif -%}
+
+{%- if book.binding -%}
+  {%- set bookFormat = "https://schema.org/Hardcover" if "Hardcover" in book.binding or "Hardback" in book.binding else "https://schema.org/Paperback" if "Softcover" in book.binding or "Paperback" in book.binding else "https://schema.org/EBook" -%}
+  {%- set schemaBook = schemaBook | merge({
+    "bookFormat": bookFormat
+  }) -%}
+{%- endif -%}
+
+<script type="application/ld+json">
+{{ schemaBook | dump | safe }}
+</script>
