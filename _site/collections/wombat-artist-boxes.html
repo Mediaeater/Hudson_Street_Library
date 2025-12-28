@@ -1,53 +1,155 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wombat Artist Boxes | Hudson Street Library</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="/assets/css/design-system.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .item-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .item-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.07); }
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Hudson Street Library",
+  "url": "https://hudsonstreetlibrary.com",
+  "logo": "https://hudsonstreetlibrary.com/assets/images/logo.png",
+  "description": "A curated collection of photography, art, and design books"
+}
+</script>
 
-        .line-divider { position: relative; padding-bottom: 8px; margin-bottom: 16px; }
-        .line-divider::after { content: ''; position: absolute; left: 50%; transform: translateX(-50%); bottom: 0; width: 60px; height: 1px; background: #0f766e; }
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Wombat Artist Boxes",
+  "url": "https://hudsonstreetlibrary.com/collections/wombat-artist-boxes.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Hudson Street Library",
+    "url": "https://hudsonstreetlibrary.com"
+  }
+}
+</script>
 
-        .hero-image-container { box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); }
-    </style>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://hudsonstreetlibrary.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Collections",
+      "item": "https://hudsonstreetlibrary.com/collection-explore.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Wombat Artist Boxes",
+      "item": "https://hudsonstreetlibrary.com/collections/wombat-artist-boxes.html"
+    }
+  ]
+}
+</script>
+
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="min-h-screen bg-neutral-50 text-neutral-900">
 
-    <!-- Standard Site Header -->
-    <header class="sticky top-0 w-full bg-white z-50 py-4 shadow-md">
-        <div class="container mx-auto px-6">
-            <div class="flex justify-between items-center">
-                <a href="/" class="text-xl sm:text-2xl font-bold tracking-tight text-teal-900">HUDSON STREET LIBRARY</a>
-                <nav id="main-nav" class="hidden md:flex space-x-6 lg:space-x-8 items-center text-neutral-700 text-sm lg:text-base">
-                    <a href="/#about" class="nav-item hover:text-teal-700">About</a>
-                    <a href="/collection-explore.html" class="nav-item hover:text-teal-700 font-semibold text-teal-700">Collections</a>
-                    <a href="/static-demo/" class="nav-item hover:text-teal-700">Search</a>
-                    <a href="/#publications" class="nav-item hover:text-teal-700">Publications</a>
-                    <a href="/news.html" class="nav-item hover:text-teal-700">News</a>
-                    <a href="/collections/recently_added.html" class="nav-item hover:text-teal-700">Recently Added</a>
-                    <a href="/#contact" class="nav-item hover:text-teal-700">Contact</a>
-                </nav>
-                <button class="md:hidden focus:outline-none text-teal-800" aria-label="Toggle menu" aria-controls="mobile-nav-menu" aria-expanded="false">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
-            </div>
+
+
+<header class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link nav-link-active">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Recently Added
+                </a>
+                <a href="/#contact"
+                   class="nav-link ">
+                   Contact
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden focus:outline-none text-teal-800"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <i class="fas fa-bars text-xl" id="mobile-menu-icon"></i>
+            </button>
         </div>
-        <!-- Mobile Nav Structure (hidden initially) -->
-        <nav id="mobile-nav-menu" class="hidden md:hidden absolute top-full left-0 right-0 bg-white shadow-lg px-6 py-4 space-y-3 flex-col z-40">
-             <a href="/#about" class="block py-2 text-neutral-700 hover:text-teal-700">About</a>
-             <a href="/collection-explore.html" class="block py-2 text-neutral-700 hover:text-teal-700 font-semibold text-teal-700">Collections</a>
-             <a href="/static-demo/" class="block py-2 text-neutral-700 hover:text-teal-700">Search</a>
-             <a href="/#publications" class="block py-2 text-neutral-700 hover:text-teal-700">Publications</a>
-             <a href="/news.html" class="block py-2 text-neutral-700 hover:text-teal-700">News</a>
-             <a href="/collections/recently_added.html" class="block py-2 text-neutral-700 hover:text-teal-700">Recently Added</a>
-             <a href="/#contact" class="block py-2 text-neutral-700 hover:text-teal-700">Contact</a>
-        </nav>
-    </header>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu"
+         class="hidden md:hidden absolute top-full left-0 right-0 bg-white shadow-lg px-6 py-4 space-y-1 z-40">
+        <a href="/#about" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">About</a>
+        <a href="/collection-explore.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Collections</a>
+        <a href="/static-demo/" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Search</a>
+        <a href="/#publications" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Publications</a>
+        <a href="/news.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">News</a>
+        <a href="/collections/recently_added.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Recently Added</a>
+        <a href="/#contact" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Contact</a>
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const icon = document.getElementById('mobile-menu-icon');
+    const isHidden = menu.classList.contains('hidden');
+
+    if (isHidden) {
+        menu.classList.remove('hidden');
+        menu.classList.add('flex', 'flex-col');
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+    } else {
+        menu.classList.add('hidden');
+        menu.classList.remove('flex', 'flex-col');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+    }
+}
+</script>
+
+
 
     <main>
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
@@ -60,7 +162,7 @@
                     Limited edition photography portfolios produced by Wombat Paris. Each box contains museum-quality numbered prints on Hahnemühle paper, printed by Processus lab, and unpublished portfolios from contemporary photographers. Hand-assembled, numbered, and stamp-dated in limited editions.
                 </p>
                 <div class="mt-8">
-                    <a href="/collection-explore.html" class="text-sm text-teal-700 hover:text-teal-900 transition-colors">
+                    <a href="/collection-explore.html" class="text-sm text-primary-700 hover:text-primary-700 transition-colors">
                         <i class="fas fa-arrow-left mr-1"></i> Back to All Collections
                     </a>
                 </div>
@@ -75,16 +177,6 @@
 
         </div>
     </main>
-
-    
-
-
-
-<footer class="bg-gray-50 border-t border-gray-100 mt-24 py-12">
-    <div class="container mx-auto px-6 text-center text-gray-600">
-        <p>© 2025 Hudson Street Library</p>
-    </div>
-</footer>
 
     <script>
         // Simple CSV parser that handles quoted fields
@@ -187,7 +279,7 @@
                                 `}
                             </div>
                             <div class="p-3 sm:p-4">
-                                <h3 class="text-base font-semibold text-gray-800 truncate group-hover:text-teal-600 transition-colors">
+                                <h3 class="text-base font-semibold text-gray-800 truncate group-hover:text-primary-700 transition-colors">
                                     ${book.displayName}
                                 </h3>
                                 <p class="text-sm text-gray-500 mt-1 truncate">${book.title}</p>
@@ -207,45 +299,57 @@
 
         // Load boxes when page loads
         loadWombatBoxes();
-
-        // Mobile Menu Toggle Logic
-        const mobileMenuButton = document.querySelector('button.md\\:hidden');
-        const mobileNavMenu = document.getElementById('mobile-nav-menu');
-
-        if (mobileMenuButton && mobileNavMenu) {
-            mobileMenuButton.addEventListener('click', function() {
-                const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
-                mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
-                mobileNavMenu.classList.toggle('hidden');
-                mobileNavMenu.classList.toggle('flex');
-                const icon = mobileMenuButton.querySelector('i');
-                if (icon) {
-                    icon.classList.toggle('fa-bars');
-                    icon.classList.toggle('fa-times');
-                }
-            });
-        }
-
-        // Smooth Scrolling for on-page anchors (if any added later)
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                if (this.hash) {
-                   const targetElement = document.querySelector(this.hash);
-                   if (targetElement) {
-                        e.preventDefault();
-                        const headerOffset = document.querySelector('header')?.offsetHeight || 70;
-                        const elementPosition = targetElement.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-                        // Close mobile menu if open
-                        if (mobileMenuButton.getAttribute('aria-expanded') === 'true') {
-                             mobileMenuButton.click();
-                        }
-                   }
-                }
-            });
-        });
     </script>
+
+
+
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
+        <p>© 2025 Hudson Street Library</p>
+    </div>
+</footer>
+
+<script>
+    // Mobile Menu Toggle Logic
+    const mobileMenuButton = document.querySelector('button.md\\:hidden');
+    const mobileNavMenu = document.getElementById('mobile-nav-menu');
+
+    if (mobileMenuButton && mobileNavMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+            mobileNavMenu.classList.toggle('hidden');
+            mobileNavMenu.classList.toggle('flex');
+            const icon = mobileMenuButton.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            }
+        });
+    }
+
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            if (this.hash) {
+               const targetElement = document.querySelector(this.hash);
+               if (targetElement) {
+                    e.preventDefault();
+                    const headerOffset = document.querySelector('header')?.offsetHeight || 70;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                    if (mobileMenuButton && mobileMenuButton.getAttribute('aria-expanded') === 'true') {
+                         mobileMenuButton.click();
+                    }
+               }
+            }
+        });
+    });
+</script>
 
 </body>
 </html>

@@ -1,106 +1,581 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Purple Magazine | Hudson Street Library</title>
+    
     <link rel="stylesheet" href="/assets/css/design-system.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .item-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .item-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.07); }
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Hudson Street Library",
+  "url": "https://hudsonstreetlibrary.com",
+  "logo": "https://hudsonstreetlibrary.com/assets/images/logo.png",
+  "description": "A curated collection of photography, art, and design books"
+}
+</script>
 
-        .line-divider { position: relative; padding-bottom: 8px; margin-bottom: 16px; }
-        .line-divider::after { content: ''; position: absolute; left: 50%; transform: translateX(-50%); bottom: 0; width: 60px; height: 1px; background: #0f766e; }
-    </style>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Purple Magazine",
+  "url": "https://hudsonstreetlibrary.com/collections/purple-magazine.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Hudson Street Library",
+    "url": "https://hudsonstreetlibrary.com"
+  }
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://hudsonstreetlibrary.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Collections",
+      "item": "https://hudsonstreetlibrary.com/collection-explore.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Purple Magazine",
+      "item": "https://hudsonstreetlibrary.com/collections/purple-magazine.html"
+    }
+  ]
+}
+</script>
+
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="min-h-screen bg-neutral-50 text-neutral-900">
 
-    <!-- Standard Site Header -->
-    <header class="sticky top-0 w-full bg-white z-50 py-4 shadow-md">
-        <div class="container mx-auto px-6">
-            <div class="flex justify-between items-center">
-                <a href="/" class="text-xl sm:text-2xl font-bold tracking-tight text-teal-900">HUDSON STREET LIBRARY</a>
-                <nav id="main-nav" class="hidden md:flex space-x-6 lg:space-x-8 items-center text-neutral-700 text-sm lg:text-base">
-                    <a href="/#about" class="nav-item hover:text-teal-700">About</a>
-                    <a href="/collection-explore.html" class="nav-item hover:text-teal-700 font-semibold text-teal-700">Collections</a>
-                    <a href="/static-demo/" class="nav-item hover:text-teal-700">Search</a>
-                    <a href="/#publications" class="nav-item hover:text-teal-700">Publications</a>
-                    <a href="/news.html" class="nav-item hover:text-teal-700">News</a>
-                    <a href="/collections/recently_added.html" class="nav-item hover:text-teal-700">Recently Added</a>
-                    <a href="/#contact" class="nav-item hover:text-teal-700">Contact</a>
-                </nav>
-                <button class="md:hidden focus:outline-none text-teal-800" aria-label="Toggle menu" aria-controls="mobile-nav-menu" aria-expanded="false">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
-            </div>
+
+
+<header class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link nav-link-active">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Recently Added
+                </a>
+                <a href="/#contact"
+                   class="nav-link ">
+                   Contact
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden focus:outline-none text-teal-800"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <i class="fas fa-bars text-xl" id="mobile-menu-icon"></i>
+            </button>
         </div>
-        <!-- Mobile Nav Structure -->
-        <nav id="mobile-nav-menu" class="hidden md:hidden absolute top-full left-0 right-0 bg-white shadow-lg px-6 py-4 space-y-3 flex-col z-40">
-             <a href="/#about" class="block py-2 text-neutral-700 hover:text-teal-700">About</a>
-             <a href="/collection-explore.html" class="block py-2 text-neutral-700 hover:text-teal-700 font-semibold text-teal-700">Collections</a>
-             <a href="/static-demo/" class="block py-2 text-neutral-700 hover:text-teal-700">Search</a>
-             <a href="/#publications" class="block py-2 text-neutral-700 hover:text-teal-700">Publications</a>
-             <a href="/news.html" class="block py-2 text-neutral-700 hover:text-teal-700">News</a>
-             <a href="/collections/recently_added.html" class="block py-2 text-neutral-700 hover:text-teal-700">Recently Added</a>
-             <a href="/#contact" class="block py-2 text-neutral-700 hover:text-teal-700">Contact</a>
-        </nav>
-    </header>
+    </div>
 
-    <main>
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu"
+         class="hidden md:hidden absolute top-full left-0 right-0 bg-white shadow-lg px-6 py-4 space-y-1 z-40">
+        <a href="/#about" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">About</a>
+        <a href="/collection-explore.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Collections</a>
+        <a href="/static-demo/" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Search</a>
+        <a href="/#publications" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Publications</a>
+        <a href="/news.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">News</a>
+        <a href="/collections/recently_added.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Recently Added</a>
+        <a href="/#contact" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Contact</a>
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const icon = document.getElementById('mobile-menu-icon');
+    const isHidden = menu.classList.contains('hidden');
+
+    if (isHidden) {
+        menu.classList.remove('hidden');
+        menu.classList.add('flex', 'flex-col');
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+    } else {
+        menu.classList.add('hidden');
+        menu.classList.remove('flex', 'flex-col');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+    }
+}
+</script>
+
+
+
+<main>
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
 
             <!-- Collection Header -->
             <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-                <h1 class="text-4xl sm:text-5xl font-bold title-font mb-4 text-gray-900">Purple Magazine</h1>
+                <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Purple Magazine</h1>
                 <div class="line-divider inline-block"></div>
                 <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">
-                    An influential fashion and contemporary culture magazine founded in 1992 in Paris.
+                    An influential French fashion and contemporary culture magazine founded in Paris in 1992 by Elein Fleiss and Olivier Zahm.
+                    Purple emerged as a reaction against the superficial glamour of the 1980s, pioneering the "anti-fashion" aesthetic
+                    and becoming synonymous with the new realism in fashion photography through collaborators like Juergen Teller,
+                    Terry Richardson, Wolfgang Tillmans, and Mario Sorrenti.
                 </p>
-                <div class="mt-8">
-                    <a href="/collections/magazines.html" class="text-sm text-teal-700 hover:text-teal-900 transition-colors">
+                <div class="mt-6 flex justify-center gap-4">
+                    <a href="https://purple.fr" target="_blank" class="text-sm text-primary-700 hover:underline">
+                        <i class="fas fa-external-link-alt mr-1"></i> purple.fr
+                    </a>
+                    <a href="/collections/magazines.html" class="text-sm text-primary-700 hover:underline">
                         <i class="fas fa-arrow-left mr-1"></i> Back to Magazines
                     </a>
                 </div>
             </div>
 
-            <!-- Cataloging Notice -->
-            <div class="max-w-3xl mx-auto bg-gray-100 rounded-lg p-8 text-center">
-                <p class="text-gray-600">Purple Magazine issues are currently being cataloged and will be added to this collection soon.</p>
-            </div>
+            <!-- Volume IV Section -->
+            <section class="mb-16">
+                <div class="volume-header pl-4 mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900">Volume IV</h2>
+                    <p class="text-sm text-gray-500 mt-1">F/W 2017 – S/S 2020 · Issues #28–33</p>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_33_the_brain_issue_volume_iv/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-33-brain.jpg" alt="Purple #33" class="w-full h-full object-cover"></div>
+                        <div class="p-3">
+                            <p class="text-xs font-medium text-gray-900">The Brain Issue</p>
+                            <p class="text-xs text-gray-500">S/S 2020</p>
+                        </div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_32_the_cosmos_issue_volume_iv/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-32-cosmos.jpg" alt="Purple #32" class="w-full h-full object-cover"></div>
+                        <div class="p-3">
+                            <p class="text-xs font-medium text-gray-900">The Cosmos Issue</p>
+                            <p class="text-xs text-gray-500">F/W 2019</p>
+                        </div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_31_the_paris_issue_volume_iv/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-31-paris.jpg" alt="Purple #31" class="w-full h-full object-cover"></div>
+                        <div class="p-3">
+                            <p class="text-xs font-medium text-gray-900">The Paris Issue</p>
+                            <p class="text-xs text-gray-500">S/S 2019</p>
+                        </div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_30_the_los_angeles_issue_volume_iv/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-30-la.jpg" alt="Purple #30" class="w-full h-full object-cover"></div>
+                        <div class="p-3">
+                            <p class="text-xs font-medium text-gray-900">The Los Angeles Issue</p>
+                            <p class="text-xs text-gray-500">F/W 2018</p>
+                        </div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_29_purple_76_index_volume_iv/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-29-index.jpg" alt="Purple #29" class="w-full h-full object-cover"></div>
+                        <div class="p-3">
+                            <p class="text-xs font-medium text-gray-900">Purple 76 Index</p>
+                            <p class="text-xs text-gray-500">S/S 2018</p>
+                        </div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_28_25yrs_anniversary_volume_iv/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-28-25yrs.jpg" alt="Purple #28" class="w-full h-full object-cover"></div>
+                        <div class="p-3">
+                            <p class="text-xs font-medium text-gray-900">25YRS Anniversary</p>
+                            <p class="text-xs text-gray-500">F/W 2017</p>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Volume III Section -->
+            <section class="mb-16">
+                <div class="volume-header pl-4 mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900">Volume III</h2>
+                    <p class="text-sm text-gray-500 mt-1">S/S 2004 – S/S 2017 · Issues #1–27 · Complete Run</p>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-9 gap-4">
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_27_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-27.png" alt="Purple #27" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">S/S 2017</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_26_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-26.jpg" alt="Purple #26" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">F/W 2016</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_25_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-25.jpg" alt="Purple #25" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">S/S 2016</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_24_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-24.jpg" alt="Purple #24" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">F/W 2015</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_23_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-23.jpg" alt="Purple #23" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">S/S 2015</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_22_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-22.jpg" alt="Purple #22" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">F/W 2014</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_21_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-21.jpg" alt="Purple #21" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">S/S 2014</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_20_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-20.jpg" alt="Purple #20" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">F/W 2013</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_19_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-19.jpg" alt="Purple #19" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">S/S 2013</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_18_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-18.jpg" alt="Purple #18" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">F/W 2012</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_17_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-17.jpg" alt="Purple #17" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">S/S 2012</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_16_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-16.jpg" alt="Purple #16" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">F/W 2011</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_15_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-15.jpg" alt="Purple #15" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">S/S 2011</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_14_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-14.jpg" alt="Purple #14" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">F/W 2010</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_13_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-13.jpg" alt="Purple #13" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">S/S 2010</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_12_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-12.jpg" alt="Purple #12" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">F/W 2009</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_11_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-11.jpg" alt="Purple #11" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">S/S 2009</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_10_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-10.jpg" alt="Purple #10" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">F/W 2008</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_9_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-09.jpg" alt="Purple #9" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">S/S 2008</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_8_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-08.jpg" alt="Purple #8" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">F/W 2007</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_7_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-07.jpg" alt="Purple #7" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">S/S 2007</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_6_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-06.jpg" alt="Purple #6" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">F/W 2006</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_5_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-05.jpg" alt="Purple #5" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">S/S 2006</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_4_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-04.jpg" alt="Purple #4" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">F/W 2005</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_3_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-03.jpg" alt="Purple #3" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">S/S 2005</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_2_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-02.jpg" alt="Purple #2" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">F/W 2004</p></div>
+                    </a>
+                    <a href="/books/purple_magazine_purple_fashion_magazine_issue_1_volume_iii/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100"><img src="/assets/images/magazines/purple-magazine/covers/purple-01.jpg" alt="Purple #1" class="w-full h-full object-cover"></div>
+                        <div class="p-2"><p class="text-xs text-gray-500">S/S 2004</p></div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Volume II Section -->
+            <section class="mb-16">
+                <div class="volume-header pl-4 mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900">Volume II</h2>
+                    <p class="text-sm text-gray-500 mt-1">1998–2003 · The Fusion Era</p>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    <a href="#" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100 flex items-center justify-center">
+                            <span class="text-4xl font-bold text-gray-300">#5</span>
+                        </div>
+                        <div class="p-3">
+                            <p class="text-xs font-medium text-gray-900">Issue 5</p>
+                            <p class="text-xs text-gray-500">c. 2000</p>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Purple Books Section -->
+            <section class="mb-16">
+                <div class="volume-header pl-4 mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900">Purple Books</h2>
+                    <p class="text-sm text-gray-500 mt-1">Artist monograph series</p>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    <a href="/books/richardson_terry/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100 flex items-center justify-center">
+                            <span class="text-2xl font-bold text-gray-300">#1</span>
+                        </div>
+                        <div class="p-3">
+                            <p class="text-xs font-medium text-gray-900">Terry</p>
+                            <p class="text-xs text-gray-500">Terry Richardson</p>
+                        </div>
+                    </a>
+                    <a href="/books/prince_the_hippie_drawings/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100 flex items-center justify-center">
+                            <span class="text-2xl font-bold text-gray-300">#2</span>
+                        </div>
+                        <div class="p-3">
+                            <p class="text-xs font-medium text-gray-900">The Hippie Drawings</p>
+                            <p class="text-xs text-gray-500">Richard Prince</p>
+                        </div>
+                    </a>
+                    <a href="/books/slimane_interzone/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100 flex items-center justify-center">
+                            <span class="text-2xl font-bold text-gray-300">#3</span>
+                        </div>
+                        <div class="p-3">
+                            <p class="text-xs font-medium text-gray-900">Interzone</p>
+                            <p class="text-xs text-gray-500">Hedi Slimane</p>
+                        </div>
+                    </a>
+                    <a href="/books/teller_ed_in_japan/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100 flex items-center justify-center">
+                            <span class="text-2xl font-bold text-gray-300">#4</span>
+                        </div>
+                        <div class="p-3">
+                            <p class="text-xs font-medium text-gray-900">Ed in Japan</p>
+                            <p class="text-xs text-gray-500">Juergen Teller</p>
+                        </div>
+                    </a>
+                    <a href="/books/ackermann_good_morning_new_york/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100 flex items-center justify-center">
+                            <span class="text-2xl font-bold text-gray-300">#5</span>
+                        </div>
+                        <div class="p-3">
+                            <p class="text-xs font-medium text-gray-900">Good Morning New York</p>
+                            <p class="text-xs text-gray-500">Rita Ackermann</p>
+                        </div>
+                    </a>
+                    <a href="/books/lang_selective_memory_series/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100 flex items-center justify-center">
+                            <span class="text-2xl font-bold text-gray-300">#6</span>
+                        </div>
+                        <div class="p-3">
+                            <p class="text-xs font-medium text-gray-900">Selective Memory Series</p>
+                            <p class="text-xs text-gray-500">Helmut Lang</p>
+                        </div>
+                    </a>
+                    <a href="/books/snow_you_can_t_drink_it_if_it_s_frozen/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100 flex items-center justify-center">
+                            <span class="text-2xl font-bold text-gray-300">#7</span>
+                        </div>
+                        <div class="p-3">
+                            <p class="text-xs font-medium text-gray-900">You Can't Drink It...</p>
+                            <p class="text-xs text-gray-500">Dash Snow</p>
+                        </div>
+                    </a>
+                    <a href="/books/brunnquell_annees_erotiques/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100 flex items-center justify-center">
+                            <img src="/assets/images/books/Années_érotique-The Christophe Brunnquell Purple Book.jpeg" alt="Annees Erotiques" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-3">
+                            <p class="text-xs font-medium text-gray-900">Années Érotiques</p>
+                            <p class="text-xs text-gray-500">Christophe Brunnquell</p>
+                        </div>
+                    </a>
+                    <a href="/books/korine_pigxtras/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100 flex items-center justify-center">
+                            <span class="text-2xl font-bold text-gray-300">#9</span>
+                        </div>
+                        <div class="p-3">
+                            <p class="text-xs font-medium text-gray-900">Pigxtras</p>
+                            <p class="text-xs text-gray-500">Harmony Korine</p>
+                        </div>
+                    </a>
+                    <a href="/books/marino_cuba_2009/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100 flex items-center justify-center">
+                            <span class="text-2xl font-bold text-gray-300">#10</span>
+                        </div>
+                        <div class="p-3">
+                            <p class="text-xs font-medium text-gray-900">Cuba 2009</p>
+                            <p class="text-xs text-gray-500">Marlene Marino</p>
+                        </div>
+                    </a>
+                    <a href="/books/marcopoulos_debris/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100 flex items-center justify-center">
+                            <span class="text-2xl font-bold text-gray-300">#11</span>
+                        </div>
+                        <div class="p-3">
+                            <p class="text-xs font-medium text-gray-900">Debris</p>
+                            <p class="text-xs text-gray-500">Ari Marcopoulos</p>
+                        </div>
+                    </a>
+                    <a href="/books/schmidt_pussy/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100 flex items-center justify-center">
+                            <span class="text-2xl font-bold text-gray-300">#12</span>
+                        </div>
+                        <div class="p-3">
+                            <p class="text-xs font-medium text-gray-900">Pussy</p>
+                            <p class="text-xs text-gray-500">Aurel Schmidt</p>
+                        </div>
+                    </a>
+                    <a href="/books/darre_vincent/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100 flex items-center justify-center">
+                            <span class="text-2xl font-bold text-gray-300">#13</span>
+                        </div>
+                        <div class="p-3">
+                            <p class="text-xs font-medium text-gray-900">Vincent</p>
+                            <p class="text-xs text-gray-500">Vincent Darré</p>
+                        </div>
+                    </a>
+                    <a href="/books/moore_street_mouth/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+                        <div class="aspect-[3/4] bg-gray-100 flex items-center justify-center">
+                            <span class="text-2xl font-bold text-gray-300">#14</span>
+                        </div>
+                        <div class="p-3">
+                            <p class="text-xs font-medium text-gray-900">Street Mouth</p>
+                            <p class="text-xs text-gray-500">Thurston Moore</p>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- History Section -->
+            <section class="max-w-3xl mx-auto mt-16 pt-12 border-t border-gray-200">
+                <h2 class="text-xl font-bold text-gray-900 mb-4">About Purple</h2>
+                <div class="prose prose-sm text-gray-600 space-y-4">
+                    <p>
+                        <strong>Purple Prose</strong> (1992–1998) began as a reaction against 1980s superficiality,
+                        pioneering anti-fashion aesthetics. The first four issues were laid out by Claude Closky
+                        at the Jennifer Flay gallery.
+                    </p>
+                    <p>
+                        In 1994, founders Zahm and Fleiss curated "The Winter of Love" at the Museum of Modern Art
+                        in Paris, later shown at P.S.1 in New York.
+                    </p>
+                    <p>
+                        <strong>Purple</strong> (1998–2003) fused Purple Prose, Purple Fiction, Purple Fashion,
+                        and Purple Sexe into 16 issues. Art direction by Christophe Brunnquell until 2006,
+                        then M/M Paris.
+                    </p>
+                    <p>
+                        <strong>Purple Fashion Magazine</strong> launched in 2004 as Volume III, continuing
+                        the publication's legacy of showcasing emerging and established talent in fashion,
+                        art, and culture.
+                    </p>
+                </div>
+            </section>
 
         </div>
     </main>
 
-    
 
 
 
-<footer class="bg-gray-50 border-t border-gray-100 mt-24 py-12">
-    <div class="container mx-auto px-6 text-center text-gray-600">
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
         <p>© 2025 Hudson Street Library</p>
     </div>
 </footer>
 
-    <script>
-        // Mobile menu toggle
-        const mobileMenuButton = document.querySelector('button[aria-controls="mobile-nav-menu"]');
-        const mobileNav = document.getElementById('mobile-nav-menu');
+<script>
+    // Mobile Menu Toggle Logic
+    const mobileMenuButton = document.querySelector('button.md\\:hidden');
+    const mobileNavMenu = document.getElementById('mobile-nav-menu');
 
-        if (mobileMenuButton && mobileNav) {
-            mobileMenuButton.addEventListener('click', function() {
-                const isExpanded = this.getAttribute('aria-expanded') === 'true';
-                this.setAttribute('aria-expanded', !isExpanded);
-                mobileNav.classList.toggle('hidden');
-                mobileNav.classList.toggle('flex');
+    if (mobileMenuButton && mobileNavMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+            mobileNavMenu.classList.toggle('hidden');
+            mobileNavMenu.classList.toggle('flex');
+            const icon = mobileMenuButton.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            }
+        });
+    }
 
-                const icon = this.querySelector('i');
-                if (icon) {
-                    icon.classList.toggle('fa-bars');
-                    icon.classList.toggle('fa-times');
-                }
-            });
-        }
-    </script>
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            if (this.hash) {
+               const targetElement = document.querySelector(this.hash);
+               if (targetElement) {
+                    e.preventDefault();
+                    const headerOffset = document.querySelector('header')?.offsetHeight || 70;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                    if (mobileMenuButton && mobileMenuButton.getAttribute('aria-expanded') === 'true') {
+                         mobileMenuButton.click();
+                    }
+               }
+            }
+        });
+    });
+</script>
+
 </body>
 </html>

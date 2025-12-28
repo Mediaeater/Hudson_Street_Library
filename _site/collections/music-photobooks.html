@@ -1,57 +1,155 @@
+
 <!DOCTYPE html>
-<!-- Updated lang attribute -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Title updated -->
-    <title>Music Photobooks | Hudson Street Library Curated Collection</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Music Photobooks | Hudson Street Library</title>
+    
+    <link rel="stylesheet" href="/assets/css/design-system.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .item-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .item-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.07); }
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Hudson Street Library",
+  "url": "https://hudsonstreetlibrary.com",
+  "logo": "https://hudsonstreetlibrary.com/assets/images/logo.png",
+  "description": "A curated collection of photography, art, and design books"
+}
+</script>
 
-        .line-divider { position: relative; padding-bottom: 8px; margin-bottom: 16px; }
-        .line-divider::after { content: ''; position: absolute; left: 50%; transform: translateX(-50%); bottom: 0; width: 60px; height: 1px; background: #0f766e; }
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Music Photobooks",
+  "url": "https://hudsonstreetlibrary.com/collections/music-photobooks.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Hudson Street Library",
+    "url": "https://hudsonstreetlibrary.com"
+  }
+}
+</script>
 
-        .hero-image-container { box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); }
-    </style>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://hudsonstreetlibrary.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Collections",
+      "item": "https://hudsonstreetlibrary.com/collection-explore.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Music Photobooks",
+      "item": "https://hudsonstreetlibrary.com/collections/music-photobooks.html"
+    }
+  ]
+}
+</script>
+
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="min-h-screen bg-neutral-50 text-neutral-900">
 
-    <!-- Standard Site Header -->
-    <header class="sticky top-0 w-full bg-white z-50 py-4 shadow-md">
-        <div class="container mx-auto px-6">
-            <div class="flex justify-between items-center">
-                <a href="/" class="text-xl sm:text-2xl font-bold tracking-tight text-teal-900">HUDSON STREET LIBRARY</a>
-                <nav class="desktop-nav hidden md:flex space-x-6 lg:space-x-8 items-center text-neutral-700 text-sm lg:text-base">
-                    <a href="/#about" class="nav-item hover:text-teal-700">About</a>
-                    <a href="/collection-explore.html" class="nav-item hover:text-teal-700 font-semibold text-teal-700">Collections</a>
-                    <a href="/static-demo/" class="nav-item hover:text-teal-700">Search</a>
-                    <a href="/#publications" class="nav-item hover:text-teal-700">Publications</a>
-                    <a href="/news.html" class="nav-item hover:text-teal-700">News</a>
-                    <a href="/collections/recently_added.html" class="nav-item hover:text-teal-700">Recently Added</a>
-                    <a href="/#contact" class="nav-item hover:text-teal-700">Contact</a>
-                </nav>
-                <button class="mobile-nav-button md:hidden focus:outline-none text-teal-800" aria-label="Toggle menu">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
-            </div>
-            <!-- Mobile Menu -->
-            <nav class="mobile-menu hidden">
-                <div class="px-6 py-4 space-y-3">
-                    <a href="/#about" class="block py-2 text-neutral-700 hover:text-teal-700">About</a>
-                    <a href="/collection-explore.html" class="block py-2 text-neutral-700 hover:text-teal-700 font-semibold text-teal-700">Collections</a>
-                    <a href="/static-demo/" class="block py-2 text-neutral-700 hover:text-teal-700">Search</a>
-                    <a href="/#publications" class="block py-2 text-neutral-700 hover:text-teal-700">Publications</a>
-                    <a href="/news.html" class="block py-2 text-neutral-700 hover:text-teal-700">News</a>
-             <a href="/collections/recently_added.html" class="block py-2 text-neutral-700 hover:text-teal-700">Recently Added</a>
-                    <a href="/#contact" class="block py-2 text-neutral-700 hover:text-teal-700">Contact</a>
-                </div>
+
+
+<header class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link nav-link-active">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Recently Added
+                </a>
+                <a href="/#contact"
+                   class="nav-link ">
+                   Contact
+                </a>
             </nav>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden focus:outline-none text-teal-800"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <i class="fas fa-bars text-xl" id="mobile-menu-icon"></i>
+            </button>
         </div>
-    </header>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu"
+         class="hidden md:hidden absolute top-full left-0 right-0 bg-white shadow-lg px-6 py-4 space-y-1 z-40">
+        <a href="/#about" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">About</a>
+        <a href="/collection-explore.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Collections</a>
+        <a href="/static-demo/" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Search</a>
+        <a href="/#publications" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Publications</a>
+        <a href="/news.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">News</a>
+        <a href="/collections/recently_added.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Recently Added</a>
+        <a href="/#contact" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Contact</a>
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const icon = document.getElementById('mobile-menu-icon');
+    const isHidden = menu.classList.contains('hidden');
+
+    if (isHidden) {
+        menu.classList.remove('hidden');
+        menu.classList.add('flex', 'flex-col');
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+    } else {
+        menu.classList.add('hidden');
+        menu.classList.remove('flex', 'flex-col');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+    }
+}
+</script>
+
+
 
     <main>
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
@@ -67,7 +165,7 @@
                 </p>
                 <div class="mt-8">
                     <!-- Link back to the main collections page (Verified) -->
-                    <a href="/collection-explore.html" class="text-sm text-teal-700 hover:text-teal-900 transition-colors">
+                    <a href="/collection-explore.html" class="text-sm text-primary-700 hover:text-primary-800 transition-colors">
                         <i class="fas fa-arrow-left mr-1"></i> Back to All Collections
                     </a>
                 </div>
@@ -162,7 +260,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 All The Young Punks
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Graham Macindoe</p>
@@ -185,7 +283,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 AnOther Magazine - Bjork
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Magazine</p>
@@ -208,7 +306,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Backstage Pass: Rock & Roll Photography (Portland Museum of Art)
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Thomas Andrew Denenberg and Glenn O'Brien</p>
@@ -231,7 +329,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Backstage Pass: Rock & Roll Photography (Portland Museum of Art)
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Thomas Andrew Denenberg and Glenn O'Brien</p>
@@ -254,7 +352,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Bob Dylan - a man called alias
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Music Photography</p>
@@ -277,7 +375,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Bob Dylan - The Darwin Blank Series
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Prestel</p>
@@ -300,7 +398,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Bob Dylan - The Darwin Blank Series
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Halycyon Gallery</p>
@@ -323,7 +421,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Bruce Springsteen: Songs Hardcover  (two copies one sealed)
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Music Photography</p>
@@ -346,7 +444,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Cash - An American Man
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Music Photography</p>
@@ -369,7 +467,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 CREEM: America's Only Rock 'N' Roll Magazine (3 copies)
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Robert Matheu</p>
@@ -392,7 +490,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 David Bowie Is (Museum of Contemporary Art, Chicago: Exhibition Catalogues)   (2 copies)
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Victoria Broackes</p>
@@ -415,7 +513,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 David Byrne : Tribal Textiles from Persia: Neiriz Collection in the Ethnographical Museum Berlin by David Byrne (2003, Hardcover)
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">David Byrne</p>
@@ -438,7 +536,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Dust & Grooves: Adventures in Record Collecting
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Eilon Paz</p>
@@ -461,7 +559,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Factory Records: The Complete Graphic Album by Matthew Robertson
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Matthew Robertson</p>
@@ -484,7 +582,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Fucked Up + Photocopied: instant art of the punk rock movement
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Bryan Ray Turcotte</p>
@@ -507,7 +605,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Fucked Up + Photocopied: instant art of the punk rock movement
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Bryan Ray Turcotte</p>
@@ -530,7 +628,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 God Listens To Slayer
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Sanna Charles</p>
@@ -553,7 +651,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Journals by Kurt Cobain
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Music Photography</p>
@@ -576,7 +674,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Joy Division by Kevin Cummins, Bernard Sumner   (Three Copies, one inscribed, one signed, one new)
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Kevin Cummins</p>
@@ -599,7 +697,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Karlheinz Weinberger - Vol 1 Halbstarke P
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Karlheinz Weinberger</p>
@@ -622,7 +720,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 New Order by Kevin Cummins    (signed)
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Kevin Cummins</p>
@@ -645,7 +743,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 No Wave: Post-Punk. Underground. New York. 1976-1980
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Thurston Moore and Byron Coley</p>
@@ -668,7 +766,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Oh So Pretty: Punk in Print 1976-19801980
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Toby Mott</p>
@@ -691,7 +789,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Panic Attack!: Art in the Punk Years
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Mark Sladen</p>
@@ -714,7 +812,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Patti Smith 1969-1976
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Judy Linn</p>
@@ -737,7 +835,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Punk 365 (365 Series)
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Holly George-Warren (Author),‎ Richard Hell (Foreword)</p>
@@ -760,7 +858,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Punk: Chaos to Couture
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Andrew Bolton  (Author),‎ Richard Hell</p>
@@ -783,7 +881,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Punks & Portraits San Francisco 1979
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">John Roberts</p>
@@ -806,7 +904,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Rock Book : A Portrait of Music
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">David Raccuglia [creative director]</p>
@@ -829,7 +927,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Rock Seen - Bob Gruen
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Bob Gruen</p>
@@ -852,7 +950,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Rolling Stone Images of Rock & Roll
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">NA</p>
@@ -875,7 +973,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Showboat: Punk/Sex/Bodies
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Toby Mott</p>
@@ -898,7 +996,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Skinhead: An Archive. (Signed)
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Toby Mott</p>
@@ -921,7 +1019,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Slash: A Punk Magazine from Los Angeles: 1977-1980
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">J.C. Gabel and Brian Roettinger</p>
@@ -944,7 +1042,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 The Beautiful & The Damned: Punk Photographs by Ann Summa
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Kristine McKenna</p>
@@ -967,7 +1065,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 The Bob Dylan Scrapbook 1956-1966
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Music Photography</p>
@@ -990,7 +1088,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 The Definitive Dlayn Songbook
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Music Photography</p>
@@ -1013,7 +1111,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 The Hollow of the Hand by PJ Harvey
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">PJ Harvey; Seamus Murphy</p>
@@ -1036,7 +1134,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 The Who Live Leather Bound –
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Ross Halfin</p>
@@ -1059,7 +1157,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Touch Me I'm Sick
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Charles Peterson</p>
@@ -1082,7 +1180,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 TRILLO, Miguel. Rockoco: Imagenes del Pop-Rock 1980-1984 / 2000 – 2016.
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Miguel Trillo</p>
@@ -1105,7 +1203,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 U2 by U2  (signed by band, 2 copies)
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Neil McCormick</p>
@@ -1128,7 +1226,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Yes Yes Yes Alternative Press 1966-1977, From Provo To Punk
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">A. Martegani Eds. E. De Donno</p>
@@ -1151,7 +1249,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 You can click away of whatever you want: That's PUNK
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Herbie Yamaguchi</p>
@@ -1174,7 +1272,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 You Should Have Heard Just What I Seen
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">James Hamilton</p>
@@ -1197,7 +1295,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Record Culture Issue #1
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">2016</p>
@@ -1220,7 +1318,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Record Culture Issue #2
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">2017</p>
@@ -1243,7 +1341,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Record Culture Issue #3
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">2017</p>
@@ -1266,7 +1364,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Record Culture Issue #4
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">2018</p>
@@ -1289,7 +1387,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Record Culture Issue #5
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">2018</p>
@@ -1312,7 +1410,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Record Culture Issue #6
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">2019</p>
@@ -1335,7 +1433,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Record Culture Issue #7
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">2020</p>
@@ -1358,7 +1456,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Record Culture Issue #8
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">2020</p>
@@ -1381,7 +1479,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Record Culture Issue #9
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">2021</p>
@@ -1404,7 +1502,7 @@
                             </div>
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
                                 Record Culture Issue #10
                             </h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">2022</p>
@@ -1420,7 +1518,7 @@
                             <img src="/assets/images/music-books/all-the-young-punks.jpg" alt="All The Young Punks" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">All The Young Punks</h3>
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">All The Young Punks</h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Graham MacIndoe</p>
                         </div>
                     </a>
@@ -1433,7 +1531,7 @@
                             <img src="/assets/images/music-books/another-magazine-bjork.jpg" alt="AnOther Magazine - Bjork" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">AnOther Magazine - Bjork</h3>
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">AnOther Magazine - Bjork</h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Issue #19, 2010</p>
                         </div>
                     </a>
@@ -1446,7 +1544,7 @@
                             <img src="/assets/images/music-books/backstage-pass.jpg" alt="Backstage Pass: Rock & Roll Photography" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">Backstage Pass: Rock & Roll Photography</h3>
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Backstage Pass: Rock & Roll Photography</h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Thomas Denenberg</p>
                         </div>
                     </a>
@@ -1459,7 +1557,7 @@
                             <img src="/assets/images/music-books/bob-dylan-drawn-blank.jpg" alt="Bob Dylan: The Drawn Blank Series" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">Bob Dylan: The Drawn Blank Series</h3>
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Bob Dylan: The Drawn Blank Series</h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Bob Dylan</p>
                         </div>
                     </a>
@@ -1472,7 +1570,7 @@
                             <img src="/assets/images/music-books/dylan-man-called-alias.jpg" alt="Dylan: A Man Called Alias" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">Dylan: A Man Called Alias</h3>
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Dylan: A Man Called Alias</h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Richard Williams</p>
                         </div>
                     </a>
@@ -1485,7 +1583,7 @@
                             <img src="/assets/images/music-books/bruce-springsteen-songs.jpg" alt="Bruce Springsteen: Songs" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">Bruce Springsteen: Songs</h3>
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Bruce Springsteen: Songs</h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Bruce Springsteen</p>
                         </div>
                     </a>
@@ -1498,7 +1596,7 @@
                             <img src="/assets/images/music-books/cash-american-man.jpg" alt="Cash: An American Man" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">Cash: An American Man</h3>
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Cash: An American Man</h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Bill Miller</p>
                         </div>
                     </a>
@@ -1511,7 +1609,7 @@
                             <img src="/assets/images/music-books/creem-magazine.jpg" alt="CREEM: America's Only Rock 'N' Roll Magazine" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
                         </div>
                         <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">CREEM: America's Only Rock 'N' Roll Magazine</h3>
+                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">CREEM: America's Only Rock 'N' Roll Magazine</h3>
                             <p class="text-sm text-gray-500 mt-1 truncate">Robert Matheu</p>
                         </div>
                     </a>
@@ -1525,51 +1623,56 @@
         </div> <!-- End Container -->
     </main>
 
-    <!-- Standard Site Footer -->
-    
 
 
 
-<footer class="bg-gray-50 border-t border-gray-100 mt-24 py-12">
-    <div class="container mx-auto px-6 text-center text-gray-600">
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
         <p>© 2025 Hudson Street Library</p>
     </div>
 </footer>
 
-    <script>
-        // Mobile menu toggle
-        const mobileNavButton = document.querySelector('.mobile-nav-button');
-        const mobileMenu = document.querySelector('.mobile-menu');
+<script>
+    // Mobile Menu Toggle Logic
+    const mobileMenuButton = document.querySelector('button.md\\:hidden');
+    const mobileNavMenu = document.getElementById('mobile-nav-menu');
 
-        if (mobileNavButton) {
-            mobileNavButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('active');
-                const icon = mobileNavButton.querySelector('i');
+    if (mobileMenuButton && mobileNavMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+            mobileNavMenu.classList.toggle('hidden');
+            mobileNavMenu.classList.toggle('flex');
+            const icon = mobileMenuButton.querySelector('i');
+            if (icon) {
                 icon.classList.toggle('fa-bars');
                 icon.classList.toggle('fa-times');
-            });
-        }
-
-        // Smooth Scrolling for on-page anchors (if any added later)
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                if (this.hash) {
-                   const targetElement = document.querySelector(this.hash);
-                   if (targetElement) {
-                        e.preventDefault();
-                        const headerOffset = document.querySelector('header')?.offsetHeight || 70;
-                        const elementPosition = targetElement.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-                        // Close mobile menu if open
-                        if (mobileMenuButton.getAttribute('aria-expanded') === 'true') {
-                             mobileMenuButton.click();
-                        }
-                   }
-                }
-            });
+            }
         });
-    </script>
+    }
+
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            if (this.hash) {
+               const targetElement = document.querySelector(this.hash);
+               if (targetElement) {
+                    e.preventDefault();
+                    const headerOffset = document.querySelector('header')?.offsetHeight || 70;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                    if (mobileMenuButton && mobileMenuButton.getAttribute('aria-expanded') === 'true') {
+                         mobileMenuButton.click();
+                    }
+               }
+            }
+        });
+    });
+</script>
 
 </body>
 </html>

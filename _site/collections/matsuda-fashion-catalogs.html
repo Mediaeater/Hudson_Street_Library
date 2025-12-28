@@ -1,987 +1,782 @@
+
 <!DOCTYPE html>
-<!-- Updated lang attribute -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Title updated -->
-    <title>Matsuda Fashion Catalogues | Hudson Street Library Curated Collection</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Matsuda Fashion Catalogues | Hudson Street Library</title>
+    
+    <link rel="stylesheet" href="/assets/css/design-system.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .item-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .item-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.07); }
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Hudson Street Library",
+  "url": "https://hudsonstreetlibrary.com",
+  "logo": "https://hudsonstreetlibrary.com/assets/images/logo.png",
+  "description": "A curated collection of photography, art, and design books"
+}
+</script>
 
-        .line-divider { position: relative; padding-bottom: 8px; margin-bottom: 16px; }
-        .line-divider::after { content: ''; position: absolute; left: 50%; transform: translateX(-50%); bottom: 0; width: 60px; height: 1px; background: #0f766e; }
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Matsuda Fashion Catalogues",
+  "url": "https://hudsonstreetlibrary.com/collections/matsuda-fashion-catalogs.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Hudson Street Library",
+    "url": "https://hudsonstreetlibrary.com"
+  }
+}
+</script>
 
-        .hero-image-container { box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); }
-    </style>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://hudsonstreetlibrary.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Collections",
+      "item": "https://hudsonstreetlibrary.com/collection-explore.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Matsuda Fashion Catalogues",
+      "item": "https://hudsonstreetlibrary.com/collections/matsuda-fashion-catalogs.html"
+    }
+  ]
+}
+</script>
+
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="min-h-screen bg-neutral-50 text-neutral-900">
 
-    <!-- Standard Site Header -->
-    <header class="sticky top-0 w-full bg-white z-50 py-4 shadow-md">
-        <div class="container mx-auto px-6">
-            <div class="flex justify-between items-center">
-                <a href="/" class="text-xl sm:text-2xl font-bold tracking-tight text-teal-900">HUDSON STREET LIBRARY</a>
-                <nav id="main-nav" class="hidden md:flex space-x-6 lg:space-x-8 items-center text-neutral-700 text-sm lg:text-base">
-                    <a href="/#about" class="nav-item hover:text-teal-700">About</a>
-                    <a href="/collection-explore.html" class="nav-item hover:text-teal-700 font-semibold text-teal-700">Collections</a>
-                    <a href="/static-demo/" class="nav-item hover:text-teal-700">Search</a>
-                    <a href="/#publications" class="nav-item hover:text-teal-700">Publications</a>
-                    <a href="/news.html" class="nav-item hover:text-teal-700">News</a>
-                    <a href="/collections/recently_added.html" class="nav-item hover:text-teal-700">Recently Added</a>
-                    <a href="/#contact" class="nav-item hover:text-teal-700">Contact</a>
-                </nav>
-                <button class="md:hidden focus:outline-none text-teal-800" aria-label="Toggle menu" aria-controls="mobile-nav-menu" aria-expanded="false">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
+
+
+<header class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link nav-link-active">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Recently Added
+                </a>
+                <a href="/#contact"
+                   class="nav-link ">
+                   Contact
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden focus:outline-none text-teal-800"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <i class="fas fa-bars text-xl" id="mobile-menu-icon"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu"
+         class="hidden md:hidden absolute top-full left-0 right-0 bg-white shadow-lg px-6 py-4 space-y-1 z-40">
+        <a href="/#about" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">About</a>
+        <a href="/collection-explore.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Collections</a>
+        <a href="/static-demo/" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Search</a>
+        <a href="/#publications" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Publications</a>
+        <a href="/news.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">News</a>
+        <a href="/collections/recently_added.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Recently Added</a>
+        <a href="/#contact" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Contact</a>
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const icon = document.getElementById('mobile-menu-icon');
+    const isHidden = menu.classList.contains('hidden');
+
+    if (isHidden) {
+        menu.classList.remove('hidden');
+        menu.classList.add('flex', 'flex-col');
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+    } else {
+        menu.classList.add('hidden');
+        menu.classList.remove('flex', 'flex-col');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+    }
+}
+</script>
+
+
+
+<main>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+
+        <!-- Collection Header -->
+        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
+            <h1 class="text-4xl sm:text-5xl font-bold title-font mb-4 text-gray-900">Matsuda Fashion Catalogues</h1>
+            <div class="line-divider inline-block"></div>
+            <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">
+                A collection of rare and influential fashion catalogues from Japanese designer Mitsuhiro Matsuda (published between 1984–1993)</p>
+            <div class="mt-8">
+                <a href="/collection-explore.html" class="text-sm text-primary-700 hover:text-primary-800 transition-colors">
+                    <i class="fas fa-arrow-left mr-1"></i> Back to All Collections
+                </a>
             </div>
         </div>
-        <!-- Mobile Nav Structure (hidden initially) -->
-        <nav id="mobile-nav-menu" class="hidden md:hidden absolute top-full left-0 right-0 bg-white shadow-lg px-6 py-4 space-y-3 flex-col z-40">
-             <a href="/#about" class="block py-2 text-neutral-700 hover:text-teal-700">About</a>
-             <a href="/collection-explore.html" class="block py-2 text-neutral-700 hover:text-teal-700 font-semibold text-teal-700">Collections</a>
-             <a href="/static-demo/" class="block py-2 text-neutral-700 hover:text-teal-700">Search</a>
-             <a href="/#publications" class="block py-2 text-neutral-700 hover:text-teal-700">Publications</a>
-             <a href="/news.html" class="block py-2 text-neutral-700 hover:text-teal-700">News</a>
-             <a href="/collections/recently_added.html" class="block py-2 text-neutral-700 hover:text-teal-700">Recently Added</a>
-             <a href="/#contact" class="block py-2 text-neutral-700 hover:text-teal-700">Contact</a>
-        </nav>
-    </header>
 
-    <main>
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-
-            <!-- Collection Header -->
-            <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-                <!-- Heading updated -->
-                <h1 class="text-4xl sm:text-5xl font-bold title-font mb-4 text-gray-900">Matsuda Fashion Catalogues</h1>
-                <div class="line-divider inline-block"></div>
-                <!-- Description updated -->
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">
-                    A collection of rare and influential fashion catalogues from Japanese designer Mitsuhiro Matsuda (published between 1984–1993)</p>
-                <div class="mt-8">
-                    <!-- Link back to the main collections page -->
-                    <a href="/collection-explore.html" class="text-sm text-teal-700 hover:text-teal-900 transition-colors">
-                        <i class="fas fa-arrow-left mr-1"></i> Back to All Collections
-                    </a>
+        <!-- Hero Section -->
+        <section class="mb-12 md:mb-16 lg:mb-20">
+            <a href="#" class="block group">
+                <div class="relative hero-image-container aspect-[16/9] sm:aspect-[2/1] lg:aspect-[2.5/1] bg-gray-300 rounded-lg overflow-hidden">
+                    <img src="/assets/images/fashion/matsuda/matsuda_hero.jpg"
+                         alt="Featured image from a 1990s Matsuda fashion catalogue"
+                         class="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105">
                 </div>
-            </div>
+                 <div class="mt-4 px-2">
+                    <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 group-hover:text-primary-700 transition-colors"> Matsuda Catalogues</h2>
+                </div>
+            </a>
+        </section>
 
-            <!-- ====================== -->
-            <!-- === HERO SECTION START === -->
-            <!-- ====================== -->
-            <section class="mb-12 md:mb-16 lg:mb-20">
-                <!-- Link the hero section if desired -->
-                <a href="#" class="block group">
-                    <div class="relative hero-image-container aspect-[16/9] sm:aspect-[2/1] lg:aspect-[2.5/1] bg-gray-300 rounded-lg overflow-hidden">
-                        <!-- Hero Image updated for Matsuda -->
-                        <img src="/assets/images/fashion/matsuda/matsuda_hero.jpg"
-                             alt="Featured image from a 1990s Matsuda fashion catalogue"
-                             class="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105">
+        <!-- Grid for Items within this Collection -->
+        <div id="item-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 md:gap-8">
+
+            <!-- Matsuda Catalogue 1 -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1439" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_01.jpg"
+                             alt="1999 - Nicole Times Vol.1 Matsuda fall winter 99"
+                             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                             onload="this.style.display='block'"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                        <div class="absolute inset-0 flex items-center justify-center" style="display:none">
+                            <span class="text-gray-400 text-lg font-medium">Vol.1</span>
+                        </div>
                     </div>
-                     <div class="mt-4 px-2">
-                        <!-- Hero Title placeholder -->
-                        <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 group-hover:text-teal-600 transition-colors"> Matsuda Catalogues</h2>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
+                            1999 - Nicole Times Vol.1 Matsuda fall winter 99
+                        </h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
                     </div>
                 </a>
-            </section>
-            <!-- ==================== -->
-            <!-- === HERO SECTION END === -->
-            <!-- ==================== -->
+            </article>
 
+            <!-- Matsuda Catalogue 36 -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1436" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_36.jpg"
+                             alt="1997 - Nicole Times Vol.36 Matsuda Fall / Winter 1997"
+                             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                             onload="this.style.display='block'"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                        <div class="absolute inset-0 flex items-center justify-center" style="display:none">
+                            <span class="text-gray-400 text-lg font-medium">Vol.36</span>
+                        </div>
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
+                            1997 - Nicole Times Vol.36 Matsuda Fall / Winter 1997
+                        </h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-            <!-- Grid for Items within this Collection -->
-            <div id="item-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 md:gap-8">
+            <!-- Matsuda Catalogue 35 -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1438" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_35.jpg"
+                             alt="1997 - Nicole Times Vol.35 Beyond gender"
+                             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                             onload="this.style.display='block'"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                        <div class="absolute inset-0 flex items-center justify-center" style="display:none">
+                            <span class="text-gray-400 text-lg font-medium">Vol.35</span>
+                        </div>
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
+                            1997 - Nicole Times Vol.35 Beyond gender
+                        </h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 1 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1439" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_01.jpg"
-                                 alt="1999 - Nicole Times Vol.1 Matsuda fall winter 99"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.1</span>
-                            </div>
+            <!-- Matsuda Catalogue 33 -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1437" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_33.jpg"
+                             alt="1996 - Nicole Times Vol.33 Matsuda spring/summer 1996"
+                             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                             onload="this.style.display='block'"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                        <div class="absolute inset-0 flex items-center justify-center" style="display:none">
+                            <span class="text-gray-400 text-lg font-medium">Vol.33</span>
                         </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                1999 - Nicole Times Vol.1 Matsuda fall winter 99
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 1 === -->
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
+                            1996 - Nicole Times Vol.33 Matsuda spring/summer 1996
+                        </h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 36 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1436" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_36.jpg"
-                                 alt="1997 - Nicole Times Vol.36 Matsuda Fall / Winter 1997. Vol 36 July 1997."
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.36</span>
-                            </div>
+            <!-- Matsuda Catalogue 5 -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1435" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_05.jpg"
+                             alt="1996 - Nicole Times Vol.5 Naked New York"
+                             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                             onload="this.style.display='block'"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                        <div class="absolute inset-0 flex items-center justify-center" style="display:none">
+                            <span class="text-gray-400 text-lg font-medium">Vol.5</span>
                         </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                1997 - Nicole Times Vol.36 Matsuda Fall / Winter 1997. Vol 36 July 1997.
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 36 === -->
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
+                            1996 - Nicole Times Vol.5 Naked New York
+                        </h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 35 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1438" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_35.jpg"
-                                 alt="1997 - Nicole Times Vol.35 Beyond gender"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.35</span>
-                            </div>
+            <!-- Matsuda Catalogue 32 -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1434" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_32.jpg"
+                             alt="1995 - Nicole Times Vol.32 Matsuda Fall Winter 1995"
+                             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                             onload="this.style.display='block'"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                        <div class="absolute inset-0 flex items-center justify-center" style="display:none">
+                            <span class="text-gray-400 text-lg font-medium">Vol.32</span>
                         </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                1997 - Nicole Times Vol.35 Beyond gender
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 35 === -->
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
+                            1995 - Nicole Times Vol.32 Matsuda Fall Winter 1995
+                        </h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 33 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1437" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_33.jpg"
-                                 alt="1996 - Nicole Times Vol.33 Matsuda spring/summer 1996 collection for women and men by Yukio Kobayashi"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.33</span>
-                            </div>
+            <!-- Matsuda Catalogue 31 -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1432" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_31.jpg"
+                             alt="1995 - Nicole Times Vol.31"
+                             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                             onload="this.style.display='block'"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                        <div class="absolute inset-0 flex items-center justify-center" style="display:none">
+                            <span class="text-gray-400 text-lg font-medium">Vol.31</span>
                         </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                1996 - Nicole Times Vol.33 Matsuda spring/summer 1996 collection for women and men by Yukio Kobayashi
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 33 === -->
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
+                            1995 - Nicole Times Vol.31
+                        </h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 5 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1435" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_05.jpg"
-                                 alt="1996 - Nicole Times Vol.5 Naked New York : Nan Goldin meets Yukio Kobayashi"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.5</span>
-                            </div>
+            <!-- Matsuda Catalogue 8 -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1430" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_08.jpg"
+                             alt="1993 - Nicole Times Vol.8"
+                             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                             onload="this.style.display='block'"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                        <div class="absolute inset-0 flex items-center justify-center" style="display:none">
+                            <span class="text-gray-400 text-lg font-medium">Vol.8</span>
                         </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                1996 - Nicole Times Vol.5 Naked New York : Nan Goldin meets Yukio Kobayashi
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 5 === -->
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
+                            1993 - Nicole Times Vol.8
+                        </h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 32 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1434" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_32.jpg"
-                                 alt="1995 - Nicole Times Vol.32 Matsuda Fall Winter 1995 Men's Catalog By Steven Klein"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.32</span>
-                            </div>
+            <!-- Matsuda Catalogue 26 -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1428" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_26.jpg"
+                             alt="1992 - Nicole Times Vol.26"
+                             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                             onload="this.style.display='block'"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                        <div class="absolute inset-0 flex items-center justify-center" style="display:none">
+                            <span class="text-gray-400 text-lg font-medium">Vol.26</span>
                         </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                1995 - Nicole Times Vol.32 Matsuda Fall Winter 1995 Men's Catalog By Steven Klein
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 32 === -->
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
+                            1992 - Nicole Times Vol.26
+                        </h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 31 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1432" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_31.jpg"
-                                 alt="1995 - Nicole Times Vol.31 Yukio Kobayashi for Matsuda Spring-Summer 1995 Collection"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.31</span>
-                            </div>
+            <!-- Matsuda Catalogue 10 -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1429" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_10.jpg"
+                             alt="1992 - Nicole Times Vol.10"
+                             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                             onload="this.style.display='block'"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                        <div class="absolute inset-0 flex items-center justify-center" style="display:none">
+                            <span class="text-gray-400 text-lg font-medium">Vol.10</span>
                         </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                1995 - Nicole Times Vol.31 Yukio Kobayashi for Matsuda Spring-Summer 1995 Collection
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 31 === -->
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">
+                            1992 - Nicole Times Vol.10
+                        </h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 8 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1430" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_08.jpg"
-                                 alt="1993 - Nicole Times Vol.8 Matsuda Spring and Summer 1993."
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.8</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                1993 - Nicole Times Vol.8 Matsuda Spring and Summer 1993.
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 8 === -->
+            <!-- Additional catalogues abbreviated for brevity -->
+            <!-- Matsuda Catalogue 24 -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1427" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_24.jpg"
+                             alt="1991 - Nicole Times Vol.24"
+                             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">1991 - Nicole Times Vol.24</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 26 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1428" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_26.jpg"
-                                 alt="1992 - Nicole Times Vol.26 Fall winter 1992"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.26</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                1992 - Nicole Times Vol.26 Fall winter 1992
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 26 === -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1426" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_12.jpg" alt="1990 - Nicole Times Vol.12" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">1990 - Nicole Times Vol.12</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 10 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1429" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_10.jpg"
-                                 alt="1992 - Nicole Times Vol.10 Printemps ete 92"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.10</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                1992 - Nicole Times Vol.10 Printemps ete 92
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 10 === -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1424" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_21.jpg" alt="1989 - Nicole Times Vol.21" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">1989 - Nicole Times Vol.21</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 24 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1427" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_24.jpg"
-                                 alt="1991 - Nicole Times Vol.24"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.24</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                1991 - Nicole Times Vol.24
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 24 === -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1425" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_20.jpg" alt="1989 - Nicole Times Vol.20" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">1989 - Nicole Times Vol.20</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 12 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1426" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_12.jpg"
-                                 alt="1990 - Nicole Times Vol.12 Matsuda Fall Winter 1990 Men's Look Book By Naka"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.12</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                1990 - Nicole Times Vol.12 Matsuda Fall Winter 1990 Men's Look Book By Naka
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 12 === -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1423" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_19.jpg" alt="1988 - Nicole Times Vol.19" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">1988 - Nicole Times Vol.19</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 21 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1424" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_21.jpg"
-                                 alt="1989 - Nicole Times Vol.21 Matsuda : fall & winter collection, 1989."
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.21</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                1989 - Nicole Times Vol.21 Matsuda : fall & winter collection, 1989.
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 21 === -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1422" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_18.jpg" alt="1988 - Nicole Times Vol.18" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">1988 - Nicole Times Vol.18</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 20 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1425" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_20.jpg"
-                                 alt="1989 - Nicole Times Vol.20 Matsuda spring summer collection 1989"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.20</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                1989 - Nicole Times Vol.20 Matsuda spring summer collection 1989
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 20 === -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1419" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_16.jpg" alt="1987 - Nicole Times Vol.16" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">1987 - Nicole Times Vol.16</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 19 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1423" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_19.jpg"
-                                 alt="1988 - Nicole Times Vol.19 Matsuda : Fall and winter collection 1988."
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.19</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                1988 - Nicole Times Vol.19 Matsuda : Fall and winter collection 1988.
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 19 === -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1417" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_14.jpg" alt="1986 - Nicole Times Vol.14" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">1986 - Nicole Times Vol.14</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 18 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1422" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_18.jpg"
-                                 alt="1988 - Nicole Times Vol.18 Pictures Matsuda Spring and Summer 1988"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.18</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                1988 - Nicole Times Vol.18 Pictures Matsuda Spring and Summer 1988
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 18 === -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1416" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_13.jpg" alt="1985 - Nicole Times Vol.13" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">1985 - Nicole Times Vol.13</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 16 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1419" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_16.jpg"
-                                 alt="1987 - Nicole Times Vol.16 Matsuda Spring & Summer Collection 1987"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.16</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                1987 - Nicole Times Vol.16 Matsuda Spring & Summer Collection 1987
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 16 === -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1413" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_10.jpg" alt="1984 - Nicole Times Vol.10" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">1984 - Nicole Times Vol.10</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 14 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1417" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_14.jpg"
-                                 alt="1986 - Nicole Times Vol.14 Matsuda"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.14</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                1986 - Nicole Times Vol.14 Matsuda
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 14 === -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1412" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_09.jpg" alt="1983 - Nicole Times Vol.09" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">1983 - Nicole Times Vol.09</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 13 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1416" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_13.jpg"
-                                 alt="1985 - Nicole Times Vol.13 Monsieur Nicole fall and winter collection 1985."
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.13</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                1985 - Nicole Times Vol.13 Monsieur Nicole fall and winter collection 1985.
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 13 === -->
+            <!-- Undated catalogues -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1421" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_18.jpg" alt="Nicole Times Vol.18" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">199X - Nicole Times Vol.18</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 10 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1413" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_10.jpg"
-                                 alt="1984 - Nicole Times Vol.10 Monsieur Nicole : spring and summer collection 1984."
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.10</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                1984 - Nicole Times Vol.10 Monsieur Nicole : spring and summer collection 1984.
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 10 === -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1420" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_17.jpg" alt="Nicole Times Vol.17" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">199X - Nicole Times Vol.17</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 9 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1412" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_09.jpg"
-                                 alt="1983 - Nicole Times Vol.09 Nicole monsieur Nicole : autumn and winter collection 1983."
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.9</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                1983 - Nicole Times Vol.09 Nicole monsieur Nicole : autumn and winter collection 1983.
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 9 === -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1418" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_15.jpg" alt="Nicole Times Vol.15" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">199X - Nicole Times Vol.15</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 18 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1421" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_18.jpg"
-                                 alt="199X - Nicole Times Vol.18"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.18</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                199X - Nicole Times Vol.18
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 18 === -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1415" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_12.jpg" alt="Nicole Times Vol.12" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">199X - Nicole Times Vol.12</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 17 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1420" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_17.jpg"
-                                 alt="199X - Nicole Times Vol.17"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.17</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                199X - Nicole Times Vol.17
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 17 === -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1414" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_11.jpg" alt="Nicole Times Vol.11" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">199X - Nicole Times Vol.11</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 15 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1418" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_15.jpg"
-                                 alt="199X - Nicole Times Vol.15"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.15</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                199X - Nicole Times Vol.15
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 15 === -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1411" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_08.jpg" alt="Nicole Times Vol.08" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">199X - Nicole Times Vol.08</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 12 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1415" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_12.jpg"
-                                 alt="199X - Nicole Times Vol.12"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.12</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                199X - Nicole Times Vol.12
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 12 === -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1410" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_07.jpg" alt="Nicole Times Vol.07" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">199X - Nicole Times Vol.07</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 11 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1414" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_11.jpg"
-                                 alt="199X - Nicole Times Vol.11"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.11</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                199X - Nicole Times Vol.11
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 11 === -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1409" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_06.jpg" alt="Nicole Times Vol.06" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">199X - Nicole Times Vol.06</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 8 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1411" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_08.jpg"
-                                 alt="199X - Nicole Times Vol.08"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.8</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                199X - Nicole Times Vol.08
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 8 === -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1408" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_05.jpg" alt="Nicole Times Vol.05" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">199X - Nicole Times Vol.05</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 7 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1410" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_07.jpg"
-                                 alt="199X - Nicole Times Vol.07"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.7</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                199X - Nicole Times Vol.07
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 7 === -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1407" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_04.jpg" alt="Nicole Times Vol.04" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">199X - Nicole Times Vol.04</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 6 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1409" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_06.jpg"
-                                 alt="199X - Nicole Times Vol.06"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.6</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                199X - Nicole Times Vol.06
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 6 === -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1406" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_03.jpg" alt="Nicole Times Vol.03" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">199X - Nicole Times Vol.03</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 5 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1408" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_05.jpg"
-                                 alt="199X - Nicole Times Vol.05"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.5</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                199X - Nicole Times Vol.05
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 5 === -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1405" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_02.jpg" alt="Nicole Times Vol.02" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">199X - Nicole Times Vol.02</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 4 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1407" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_04.jpg"
-                                 alt="199X - Nicole Times Vol.04"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.4</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                199X - Nicole Times Vol.04
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 4 === -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1404" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_01.jpg" alt="Nicole Times Vol.01" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">199X - Nicole Times Vol.01</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 3 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1406" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_03.jpg"
-                                 alt="199X - Nicole Times Vol.03"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.3</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                199X - Nicole Times Vol.03
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 3 === -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1431" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_35.jpg" alt="Nicole Times Vol.35" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">199X - Nicole Times Vol.35</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 2 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1405" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_02.jpg"
-                                 alt="199X - Nicole Times Vol.02"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.2</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                199X - Nicole Times Vol.02
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 2 === -->
+            <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                <a href="/books/Matsuda_1433" class="block">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                        <img src="/assets/images/fashion/matsuda/matsuda_vol_36.jpg" alt="Nicole Times Vol.36" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    </div>
+                    <div class="p-3 sm:p-4">
+                        <h3 class="text-base font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">199X - Nicole Times Vol.36</h3>
+                        <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
+                    </div>
+                </a>
+            </article>
 
-                <!-- === START: Matsuda Catalogue 1 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1404" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_01.jpg"
-                                 alt="199X - Nicole Times Vol.01"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.1</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                199X - Nicole Times Vol.01
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 1 === -->
+        </div>
 
-                <!-- === START: Matsuda Catalogue 35 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1431" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_35.jpg"
-                                 alt="199X - Nicole Times Vol.35"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.35</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                199X - Nicole Times Vol.35
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 35 === -->
+        <p id="no-items-message" class="text-center text-gray-500 py-12 hidden">No items currently displayed in this collection.</p>
 
-                <!-- === START: Matsuda Catalogue 36 === -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/Matsuda_1433" class="block">
-                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                            <img src="/assets/images/fashion/matsuda/matsuda_vol_36.jpg"
-                                 alt="199X - Nicole Times Vol.36 Matsuda Fall Winter 1995 Women's Catalog By Mitsuhiro Matsuda"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                 onload="this.style.display='block'"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                            <div class="absolute inset-0 flex items-center justify-center" style="display:none">
-                                <span class="text-gray-400 text-lg font-medium">Vol.36</span>
-                            </div>
-                        </div>
-                        <div class="p-3 sm:p-4">
-                            <h3 class="text-base font-semibold text-gray-800 group-hover:text-teal-600 transition-colors">
-                                199X - Nicole Times Vol.36 Matsuda Fall Winter 1995 Women's Catalog By Mitsuhiro Matsuda
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1 truncate">Matsuda Catalogue</p>
-                        </div>
-                    </a>
-                </article>
-                <!-- === END: Matsuda Catalogue 36 === -->
-
-            </div> <!-- End Item Grid -->
-
-             <!-- Message shown if the grid is empty -->
-             <p id="no-items-message" class="text-center text-gray-500 py-12 hidden">No items currently displayed in this collection.</p>
-
-        </div> <!-- End Container -->
-    </main>
-
-    <!-- Standard Site Footer -->
-    
+    </div>
+</main>
 
 
 
-<footer class="bg-gray-50 border-t border-gray-100 mt-24 py-12">
-    <div class="container mx-auto px-6 text-center text-gray-600">
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
         <p>© 2025 Hudson Street Library</p>
     </div>
 </footer>
 
-    <script>
-        // Mobile Menu Toggle Logic
-        const mobileMenuButton = document.querySelector('button.md\\:hidden');
-        const mobileNavMenu = document.getElementById('mobile-nav-menu');
+<script>
+    // Mobile Menu Toggle Logic
+    const mobileMenuButton = document.querySelector('button.md\\:hidden');
+    const mobileNavMenu = document.getElementById('mobile-nav-menu');
 
-        if (mobileMenuButton && mobileNavMenu) {
-            mobileMenuButton.addEventListener('click', function() {
-                const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
-                mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
-                mobileNavMenu.classList.toggle('hidden');
-                mobileNavMenu.classList.toggle('flex');
-                const icon = mobileMenuButton.querySelector('i');
-                if (icon) {
-                    icon.classList.toggle('fa-bars');
-                    icon.classList.toggle('fa-times');
-                }
-            });
-        }
-
-        // Smooth Scrolling for on-page anchors (if any added later)
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                if (this.hash) {
-                   const targetElement = document.querySelector(this.hash);
-                   if (targetElement) {
-                        e.preventDefault();
-                        const headerOffset = document.querySelector('header')?.offsetHeight || 70;
-                        const elementPosition = targetElement.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-                        // Close mobile menu if open
-                        if (mobileMenuButton.getAttribute('aria-expanded') === 'true') {
-                             mobileMenuButton.click();
-                        }
-                   }
-                }
-            });
+    if (mobileMenuButton && mobileNavMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+            mobileNavMenu.classList.toggle('hidden');
+            mobileNavMenu.classList.toggle('flex');
+            const icon = mobileMenuButton.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            }
         });
-    </script>
+    }
+
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            if (this.hash) {
+               const targetElement = document.querySelector(this.hash);
+               if (targetElement) {
+                    e.preventDefault();
+                    const headerOffset = document.querySelector('header')?.offsetHeight || 70;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                    if (mobileMenuButton && mobileMenuButton.getAttribute('aria-expanded') === 'true') {
+                         mobileMenuButton.click();
+                    }
+               }
+            }
+        });
+    });
+</script>
 
 </body>
 </html>
