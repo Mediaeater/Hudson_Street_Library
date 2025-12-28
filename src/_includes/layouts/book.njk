@@ -9,22 +9,9 @@
     {% else %}
 <meta name="description" content="{{ book.title }} by {{ book.author_full_name }}. Published by {{ book.publisher }}{% if book.publication_year %} in {{ book.publication_year }}{% endif %}. From the Hudson Street Library collection.">
     {% endif %}
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/assets/css/design-system.css">
     <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .nav-link {
-            padding: 0.5rem 1rem;
-            border-radius: 0.25rem;
-            text-decoration: none;
-            color: #115e59;
-            font-weight: 500;
-            transition: background-color 0.2s;
-        }
-        .nav-link:hover {
-            background-color: #f0fdfa;
-        }
-    </style>
     <style>
         .details-label {
             font-weight: 600;
@@ -81,25 +68,7 @@
 </head>
 <body class="min-h-screen bg-neutral-50">
 
-<header class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
-    <div class="mx-auto max-w-6xl px-6 py-4">
-        <div class="flex items-center justify-between">
-            <a href="/" class="text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">HUDSON STREET LIBRARY</a>
-            <nav id="main-nav" class="hidden md:flex items-center gap-1">
-                <a href="/#about" class="nav-link">About</a>
-                <a href="/collection-explore.html" class="nav-link">Collections</a>
-                <a href="/static-demo/" class="nav-link">Search</a>
-                <a href="/#publications" class="nav-link">Publications</a>
-                <a href="/news.html" class="nav-link">News</a>
-                <a href="/collections/recently_added.html" class="nav-link">Recently Added</a>
-                <a href="/#contact" class="nav-link">Contact</a>
-            </nav>
-            <button class="md:hidden focus:outline-none text-teal-800" aria-label="Toggle menu" aria-controls="main-nav" aria-expanded="false">
-                <i class="fas fa-bars text-xl"></i>
-            </button>
-        </div>
-    </div>
-</header>
+{% include "components/site-header.njk" %}
 
 <div class="book-page-container px-4 md:px-8 lg:px-16 py-12">
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
