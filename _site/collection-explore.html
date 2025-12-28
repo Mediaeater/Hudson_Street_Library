@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Standardized title -->
 <title>Curated Collections | Hudson Street Library</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="/assets/css/design-system.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
     .title-font {
@@ -72,45 +71,92 @@
 <body class="bg-gray-50 text-gray-800">
 
 
-  <!-- Standard Header -->
-<header class="sticky top-0 w-full bg-white z-50 py-4 shadow-md">
-    <div class="container mx-auto px-6">
-        <div class="flex justify-between items-center">
-            <!-- Assumed link to homepage relative to current file -->
-            <a href="/" class="text-xl sm:text-2xl font-bold tracking-tight text-teal-900">HUDSON STREET LIBRARY</a>
-            <nav id="main-nav" class="hidden md:flex space-x-6 lg:space-x-8 items-center text-neutral-700 text-sm lg:text-base">
-                <!-- Added nav-item class for consistency -->
-                <a href="/#about" class="nav-item hover:text-teal-700">About</a>
-                <!-- Standardized href, removed highlighting, added nav-item -->
-                <a href="/collection-explore.html" class="nav-item hover:text-teal-700 font-semibold text-teal-700">Collections</a>
-                <!-- Search link -->
-                <a href="/static-demo/" class="nav-item hover:text-teal-700">Search</a>
-                <!-- Added nav-item class for consistency -->
-                <a href="/#publications" class="nav-item hover:text-teal-700">Publications</a>
-                <!-- Added missing News link -->
-                <a href="/collections/recently_added.html" class="nav-item hover:text-teal-700">News</a>
-                <!-- Added nav-item class for consistency -->
-                <a href="/#contact" class="nav-item hover:text-teal-700">Contact</a>
+
+
+<header class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link nav-link-active">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Recently Added
+                </a>
+                <a href="/#contact"
+                   class="nav-link ">
+                   Contact
+                </a>
             </nav>
-            <!-- Changed aria-controls to a more generic ID -->
-            <button class="md:hidden focus:outline-none text-teal-800" aria-label="Toggle menu" aria-controls="mobile-nav-menu" aria-expanded="false">
-                <i class="fas fa-bars text-xl"></i>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden focus:outline-none text-teal-800"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <i class="fas fa-bars text-xl" id="mobile-menu-icon"></i>
             </button>
         </div>
     </div>
-     <!-- Changed ID to a more generic one -->
-     <nav id="mobile-nav-menu" class="hidden md:hidden absolute top-full left-0 right-0 bg-white shadow-lg px-6 py-4 space-y-3 flex-col z-40">
-         <a href="/#about" class="block py-2 text-neutral-700 hover:text-teal-700">About</a>
-         <!-- Standardized href, removed highlighting -->
-         <a href="/collection-explore.html" class="block py-2 text-neutral-700 hover:text-teal-700 font-semibold text-teal-700">Collections</a>
-         <!-- Search link -->
-         <a href="/static-demo/" class="block py-2 text-neutral-700 hover:text-teal-700">Search</a>
-         <a href="/#publications" class="block py-2 text-neutral-700 hover:text-teal-700">Publications</a>
-         <!-- Added missing News link -->
-         <a href="/collections/recently_added.html" class="block py-2 text-neutral-700 hover:text-teal-700">News</a>
-         <a href="/#contact" class="block py-2 text-neutral-700 hover:text-teal-700">Contact</a>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu"
+         class="hidden md:hidden absolute top-full left-0 right-0 bg-white shadow-lg px-6 py-4 space-y-1 z-40">
+        <a href="/#about" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">About</a>
+        <a href="/collection-explore.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Collections</a>
+        <a href="/static-demo/" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Search</a>
+        <a href="/#publications" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Publications</a>
+        <a href="/news.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">News</a>
+        <a href="/collections/recently_added.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Recently Added</a>
+        <a href="/#contact" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Contact</a>
     </nav>
 </header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const icon = document.getElementById('mobile-menu-icon');
+    const isHidden = menu.classList.contains('hidden');
+
+    if (isHidden) {
+        menu.classList.remove('hidden');
+        menu.classList.add('flex', 'flex-col');
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+    } else {
+        menu.classList.add('hidden');
+        menu.classList.remove('flex', 'flex-col');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+    }
+}
+</script>
+
 
 
 <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 max-w-7xl">
@@ -174,8 +220,8 @@
 
 
 
-<footer class="bg-gray-50 border-t border-gray-100 mt-24 py-12">
-    <div class="container mx-auto px-6 text-center text-gray-600">
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
         <p>© 2025 Hudson Street Library</p>
     </div>
 </footer>
@@ -241,23 +287,6 @@
         // Filter event listener
         document.getElementById('filter-category').addEventListener('change', renderCollections);
 
-        // Mobile menu toggle
-        const mobileMenuButton = document.querySelector('button.md\\:hidden');
-        const mobileNavMenu = document.getElementById('mobile-nav-menu');
-
-        if (mobileMenuButton && mobileNavMenu) {
-            mobileMenuButton.addEventListener('click', function() {
-                const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
-                mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
-                mobileNavMenu.classList.toggle('hidden');
-                mobileNavMenu.classList.toggle('flex');
-                const icon = mobileMenuButton.querySelector('i');
-                if (icon) {
-                    icon.classList.toggle('fa-bars');
-                    icon.classList.toggle('fa-times');
-                }
-            });
-        }
     });
 </script>
 </body>

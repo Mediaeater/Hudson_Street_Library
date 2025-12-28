@@ -1,54 +1,160 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recently Added | Hudson Street Library</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="/assets/css/design-system.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .line-divider { position: relative; padding-bottom: 8px; margin-bottom: 16px; }
-        .line-divider::after { content: ''; position: absolute; left: 50%; transform: translateX(-50%); bottom: 0; width: 60px; height: 1px; background: #0f766e; }
-    </style>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Hudson Street Library",
+  "url": "https://hudsonstreetlibrary.com",
+  "logo": "https://hudsonstreetlibrary.com/assets/images/logo.png",
+  "description": "A curated collection of photography, art, and design books"
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Recently Added",
+  "url": "https://hudsonstreetlibrary.com/collections/recently_added.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Hudson Street Library",
+    "url": "https://hudsonstreetlibrary.com"
+  }
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://hudsonstreetlibrary.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Collections",
+      "item": "https://hudsonstreetlibrary.com/collection-explore.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Recently Added",
+      "item": "https://hudsonstreetlibrary.com/collections/recently_added.html"
+    }
+  ]
+}
+</script>
+
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="min-h-screen bg-neutral-50 text-neutral-900">
 
-    <!-- Standard Site Header -->
-    <header class="sticky top-0 w-full bg-white z-50 py-4 shadow-md">
-        <div class="container mx-auto px-6">
-            <div class="flex justify-between items-center">
-                <a href="/" class="text-xl sm:text-2xl font-bold tracking-tight text-teal-900">HUDSON STREET LIBRARY</a>
-                <nav id="main-nav" class="hidden md:flex space-x-6 lg:space-x-8 items-center text-neutral-700 text-sm lg:text-base">
-                    <a href="/#about" class="nav-item hover:text-teal-700">About</a>
-                    <a href="/collection-explore.html" class="nav-item hover:text-teal-700">Collections</a>
-                    <a href="/static-demo/" class="nav-item hover:text-teal-700">Search</a>
-                    <a href="/#publications" class="nav-item hover:text-teal-700">Publications</a>
-                    <a href="/news.html" class="nav-item hover:text-teal-700">News</a>
-                    <a href="/collections/recently_added.html" class="nav-item hover:text-teal-700 font-semibold text-teal-700">Recently Added</a>
-                    <a href="/#contact" class="nav-item hover:text-teal-700">Contact</a>
-                </nav>
-                <button class="md:hidden focus:outline-none text-teal-800" aria-label="Toggle menu" aria-controls="mobile-nav-menu" aria-expanded="false">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
-            </div>
+
+
+<header class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link ">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                <a href="/collections/recently_added.html"
+                   class="nav-link nav-link-active">
+                   Recently Added
+                </a>
+                <a href="/#contact"
+                   class="nav-link ">
+                   Contact
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden focus:outline-none text-teal-800"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <i class="fas fa-bars text-xl" id="mobile-menu-icon"></i>
+            </button>
         </div>
-        <nav id="mobile-nav-menu" class="hidden md:hidden absolute top-full left-0 right-0 bg-white shadow-lg px-6 py-4 space-y-3 flex-col z-40">
-             <a href="/#about" class="block py-2 text-neutral-700 hover:text-teal-700">About</a>
-             <a href="/collection-explore.html" class="block py-2 text-neutral-700 hover:text-teal-700">Collections</a>
-             <a href="/static-demo/" class="block py-2 text-neutral-700 hover:text-teal-700">Search</a>
-             <a href="/#publications" class="block py-2 text-neutral-700 hover:text-teal-700">Publications</a>
-             <a href="/news.html" class="block py-2 text-neutral-700 hover:text-teal-700">News</a>
-             <a href="/collections/recently_added.html" class="block py-2 text-neutral-700 hover:text-teal-700 font-semibold text-teal-700">Recently Added</a>
-             <a href="/#contact" class="block py-2 text-neutral-700 hover:text-teal-700">Contact</a>
-        </nav>
-    </header>
+    </div>
 
-    <main>
-        <!-- === UPDATED SECTION === -->
-        <section id="new-acquisitions" class="py-16 bg-gray-50">
-            <div class="container mx-auto px-6">
-                <div class="max-w-4xl mx-auto text-center mb-12">
-                    <h2 class="text-4xl font-bold mb-6 text-teal-900">Recently Added</h2>
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu"
+         class="hidden md:hidden absolute top-full left-0 right-0 bg-white shadow-lg px-6 py-4 space-y-1 z-40">
+        <a href="/#about" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">About</a>
+        <a href="/collection-explore.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Collections</a>
+        <a href="/static-demo/" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Search</a>
+        <a href="/#publications" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Publications</a>
+        <a href="/news.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">News</a>
+        <a href="/collections/recently_added.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Recently Added</a>
+        <a href="/#contact" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Contact</a>
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const icon = document.getElementById('mobile-menu-icon');
+    const isHidden = menu.classList.contains('hidden');
+
+    if (isHidden) {
+        menu.classList.remove('hidden');
+        menu.classList.add('flex', 'flex-col');
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+    } else {
+        menu.classList.add('hidden');
+        menu.classList.remove('flex', 'flex-col');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+    }
+}
+</script>
+
+
+
+<section id="new-acquisitions" class="py-16 bg-neutral-50">
+    <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto text-center mb-12">
+            <h2 class="text-4xl font-bold mb-6 text-primary-700">Recently Added</h2>
                     <div class="line-divider inline-block"></div>
                     <p class="text-lg leading-relaxed text-neutral-600 mt-4">
                         Browse recent additions to the Hudson Street Library special collection. All materials are cataloged according to Library of Congress Classification standards.
@@ -57,7 +163,135 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
 
-                    <!-- Item 1: Richard Prince - Folksongs -->
+                    <!-- Item 1: Theaster Gates - Unto Thee -->
+                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
+                        <div class="h-64 overflow-hidden bg-neutral-100">
+                            <img src="/assets/images/books/Gates_Theaster_Gates_Unto_Thee.jpg" alt="Cover of Theaster Gates: Unto Thee" class="w-full h-full object-contain">
+                        </div>
+                        <div class="p-6">
+                            <div class="mb-4">
+                                <p class="text-xs text-neutral-500 mb-1">N6537.G38 A4 2025</p>
+                                <h3 class="text-xl font-bold text-primary-700 mb-1">Theaster Gates: Unto Thee</h3>
+                                <p class="italic text-neutral-700">Theaster Gates</p>
+                            </div>
+                            <div class="space-y-2 text-sm text-neutral-600">
+                                <p><span class="font-semibold">Imprint:</span> Smart Museum of Art, 2025.</p>
+                                <p><span class="font-semibold">Physical Description:</span> 176 pages: 113 color plates; 28.3 x 21.0 cm</p>
+                                <p><span class="font-semibold">ISBN:</span> 979-8-9922160-0-4</p>
+                                <p><span class="font-semibold">Editors:</span> Galina Mardilovich, Vanja Malloy</p>
+                                <p><span class="font-semibold">Accession Date:</span> December 26, 2025</p>
+                                <p class="mt-2 text-xs">Catalog accompanying the Smart Museum of Art exhibition—the first major museum presentation of Chicago artist Theaster Gates in his hometown. Features five scholarly essays examining Gates's practice of institutional critique and community-building on Chicago's South Side.</p>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-neutral-200">
+                                <p class="text-xs text-neutral-500">Keywords: Contemporary Art, Exhibition Catalog, Chicago, Community Art, Institutional Critique, African American Artists</p>
+                                <a href="/books/gates_theaster_gates_unto_thee/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 2: Lukas Birk - MUG SHOT -->
+                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
+                        <div class="h-64 overflow-hidden bg-neutral-100">
+                            <img src="/assets/images/books/Birk_MUG_SHOT_guilty_until_proven_innocent.jpg" alt="Cover of MUG SHOT – guilty until proven innocent" class="w-full h-full object-contain">
+                        </div>
+                        <div class="p-6">
+                            <div class="mb-4">
+                                <p class="text-xs text-neutral-500 mb-1">TR647.B57 M8 2025</p>
+                                <h3 class="text-xl font-bold text-primary-700 mb-1">MUG SHOT – guilty until proven innocent</h3>
+                                <p class="italic text-neutral-700">Lukas Birk</p>
+                            </div>
+                            <div class="space-y-2 text-sm text-neutral-600">
+                                <p><span class="font-semibold">Imprint:</span> Fraglich Publishing, 2025.</p>
+                                <p><span class="font-semibold">Physical Description:</span> 336 pages; 17.5 x 14.0 cm</p>
+                                <p><span class="font-semibold">Edition:</span> Edition of 500</p>
+                                <p><span class="font-semibold">Accession Date:</span> December 23, 2025</p>
+                                <p class="mt-2 text-xs">An examination of forced identity photography from historic archives, exploring representations of criminals, victims of persecution, political prisoners, and war camp inmates. Part of the Surveillance Index collection.</p>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-neutral-200">
+                                <p class="text-xs text-neutral-500">Keywords: Photography, Surveillance, Criminal Justice, Political Prisoners, Identity, Archives, Documentary Photography</p>
+                                <a href="/books/birk_mug_shot_guilty_until_proven_innocent/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 2: Jack Pierson - Array (Miami Beach) -->
+                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
+                        <div class="h-64 overflow-hidden bg-neutral-100">
+                            <img src="/assets/images/books/Pierson_Array_Miami_Beach_9781940881713.jpg" alt="Cover of Array (Miami Beach)" class="w-full h-full object-contain">
+                        </div>
+                        <div class="p-6">
+                            <div class="mb-4">
+                                <p class="text-xs text-neutral-500 mb-1">TR647.P54 A7 2025</p>
+                                <h3 class="text-xl font-bold text-primary-700 mb-1">Array (Miami Beach)</h3>
+                                <p class="italic text-neutral-700">Jack Pierson</p>
+                            </div>
+                            <div class="space-y-2 text-sm text-neutral-600">
+                                <p><span class="font-semibold">Imprint:</span> Hassla, 2025.</p>
+                                <p><span class="font-semibold">Physical Description:</span> 168 pages: color photographs; 30.5 x 22.9 cm</p>
+                                <p><span class="font-semibold">ISBN:</span> 978-1-940881-71-3</p>
+                                <p><span class="font-semibold">Edition:</span> Limited edition of 500 copies</p>
+                                <p><span class="font-semibold">Accession Date:</span> December 23, 2025</p>
+                                <p class="mt-2 text-xs">Jack Pierson's Array (Miami Beach) is a collection of photographic works capturing the essence of Miami Beach. Signed by the artist.</p>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-neutral-200">
+                                <p class="text-xs text-neutral-500">Keywords: Photography, Contemporary Art, Miami, Signed, Limited Edition</p>
+                                <a href="/books/pierson_array_miami_beach/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 2: Jack Pierson - Andre -->
+                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
+                        <div class="h-64 overflow-hidden bg-neutral-100">
+                            <img src="/assets/images/books/Pierson_Andre_9781940881706.jpg" alt="Cover of Andre" class="w-full h-full object-contain">
+                        </div>
+                        <div class="p-6">
+                            <div class="mb-4">
+                                <p class="text-xs text-neutral-500 mb-1">TR647.P54 A5 2025</p>
+                                <h3 class="text-xl font-bold text-primary-700 mb-1">Andre</h3>
+                                <p class="italic text-neutral-700">Jack Pierson</p>
+                            </div>
+                            <div class="space-y-2 text-sm text-neutral-600">
+                                <p><span class="font-semibold">Imprint:</span> Hassla, 2025.</p>
+                                <p><span class="font-semibold">Physical Description:</span> softcover; 19.1 x 14.0 cm</p>
+                                <p><span class="font-semibold">ISBN:</span> 978-1-940881-70-6</p>
+                                <p><span class="font-semibold">Edition:</span> Edition of 500</p>
+                                <p><span class="font-semibold">Accession Date:</span> December 23, 2025</p>
+                                <p class="mt-2 text-xs">Jack Pierson's Andre is a photographic exploration presented in an intimate format. Signed by the artist.</p>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-neutral-200">
+                                <p class="text-xs text-neutral-500">Keywords: Photography, Contemporary Art, Signed, Limited Edition</p>
+                                <a href="/books/pierson_andre/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 3: Felix Gonzalez-Torres - Always to Return -->
+                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
+                        <div class="h-64 overflow-hidden bg-neutral-100">
+                            <img src="/assets/images/books/gonzalez-torres_always-to-return/Felix Gonzalez-Torres-Always to Return.jpg" alt="Cover of Felix Gonzalez-Torres: Always to Return" class="w-full h-full object-contain">
+                        </div>
+                        <div class="p-6">
+                            <div class="mb-4">
+                                <p class="text-xs text-neutral-500 mb-1">TR647.G66 A4 2024</p>
+                                <h3 class="text-xl font-bold text-primary-700 mb-1">Felix Gonzalez-Torres: Always to Return</h3>
+                                <p class="italic text-neutral-700">Felix Gonzalez-Torres</p>
+                            </div>
+                            <div class="space-y-2 text-sm text-neutral-600">
+                                <p><span class="font-semibold">Imprint:</span> Radius Books, 2024.</p>
+                                <p><span class="font-semibold">Physical Description:</span> 340 pages: 160 images; 29.85 x 22.23 cm</p>
+                                <p><span class="font-semibold">ISBN:</span> 9798890181107</p>
+                                <p><span class="font-semibold">Accession Date:</span> December 12, 2024</p>
+                                <p class="mt-2 text-xs">This monograph examines the artist's relationship to portraiture, expanding the genre from static representations of individuals to one with the capacity to change, remain resonant, and encourage collaboration. Co-published with the National Portrait Gallery and the Archives of American Art, Smithsonian Institution.</p>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-neutral-200">
+                                <p class="text-xs text-neutral-500">Keywords: Art, Contemporary Art, LGBTQ, Photography, Portraiture</p>
+                                <a href="/books/gonzalez_torres_felix_gonzalez_torres_always_to_return/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 2: Richard Prince - Folksongs -->
                     <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
                         <div class="h-64 overflow-hidden bg-neutral-100">
                             <img src="/assets/images/books/Prince_Folksongs.jpg" alt="Cover of Richard Prince: Folksongs" class="w-full h-full object-contain">
@@ -65,7 +299,7 @@
                         <div class="p-6">
                             <div class="mb-4">
                                 <p class="text-xs text-neutral-500 mb-1">N6537.P745 A4 2025</p>
-                                <h3 class="text-xl font-bold text-teal-900 mb-1">Richard Prince: Folksongs</h3>
+                                <h3 class="text-xl font-bold text-primary-700 mb-1">Richard Prince: Folksongs</h3>
                                 <p class="italic text-neutral-700">Richard Prince</p>
                             </div>
                             <div class="space-y-2 text-sm text-neutral-600">
@@ -77,7 +311,7 @@
                             </div>
                             <div class="mt-4 pt-4 border-t border-neutral-200">
                                 <p class="text-xs text-neutral-500">Keywords: Contemporary Art, Photography, Artist Book, Conceptual Art</p>
-                                <a href="/books/prince_folksongs_1577/" class="inline-block mt-2 text-teal-700 hover:text-teal-900 text-sm font-medium">View Details →</a>
+                                <a href="/books/prince_folksongs_1577/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
                             </div>
                         </div>
                     </div>
@@ -90,7 +324,7 @@
                         <div class="p-6">
                             <div class="mb-4">
                                 <p class="text-xs text-neutral-500 mb-1">NE2012.G69 A4 2025</p>
-                                <h3 class="text-xl font-bold text-teal-900 mb-1">Goya: The Disasters of War</h3>
+                                <h3 class="text-xl font-bold text-primary-700 mb-1">Goya: The Disasters of War</h3>
                                 <p class="italic text-neutral-700">Francisco de Goya</p>
                             </div>
                             <div class="space-y-2 text-sm text-neutral-600">
@@ -102,7 +336,7 @@
                             </div>
                             <div class="mt-4 pt-4 border-t border-neutral-200">
                                 <p class="text-xs text-neutral-500">Keywords: War, Etchings, Spanish Art, Historical, Political Art, Printmaking</p>
-                                <a href="/books/goya_goya-the-disasters-of-war_1354/" class="inline-block mt-2 text-teal-700 hover:text-teal-900 text-sm font-medium">View Details →</a>
+                                <a href="/books/goya_goya-the-disasters-of-war_1354/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
                             </div>
                         </div>
                     </div>
@@ -115,7 +349,7 @@
                         <div class="p-6">
                             <div class="mb-4">
                                 <p class="text-xs text-neutral-500 mb-1">N6537.V54 A4 2025</p>
-                                <h3 class="text-xl font-bold text-teal-900 mb-1">Leo Villareal: Coding Light</h3>
+                                <h3 class="text-xl font-bold text-primary-700 mb-1">Leo Villareal: Coding Light</h3>
                                 <p class="italic text-neutral-700">Leo Villareal</p>
                             </div>
                             <div class="space-y-2 text-sm text-neutral-600">
@@ -127,7 +361,7 @@
                             </div>
                             <div class="mt-4 pt-4 border-t border-neutral-200">
                                 <p class="text-xs text-neutral-500">Keywords: Light Art, Digital Art, Installation Art, Public Art, Contemporary Art</p>
-                                <a href="/books/villareal_leo-villareal-coding-light_1355/" class="inline-block mt-2 text-teal-700 hover:text-teal-900 text-sm font-medium">View Details →</a>
+                                <a href="/books/villareal_leo-villareal-coding-light_1355/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
                             </div>
                         </div>
                     </div>
@@ -140,7 +374,7 @@
                         <div class="p-6">
                             <div class="mb-4">
                                 <p class="text-xs text-neutral-500 mb-1">TR647.W65 A4 2025</p>
-                                <h3 class="text-xl font-bold text-teal-900 mb-1">Arthur Rimbaud in New York</h3>
+                                <h3 class="text-xl font-bold text-primary-700 mb-1">Arthur Rimbaud in New York</h3>
                                 <p class="italic text-neutral-700">David Wojnarowicz</p>
                             </div>
                             <div class="space-y-2 text-sm text-neutral-600">
@@ -152,7 +386,7 @@
                             </div>
                             <div class="mt-4 pt-4 border-t border-neutral-200">
                                 <p class="text-xs text-neutral-500">Keywords: Photography, LGBTQ Art, Performance Art, Punk, Downtown New York</p>
-                                <a href="/books/wojnarowicz_david-wojnarowicz-arthur-rimbaud-in-new-york_1356/" class="inline-block mt-2 text-teal-700 hover:text-teal-900 text-sm font-medium">View Details →</a>
+                                <a href="/books/wojnarowicz_david-wojnarowicz-arthur-rimbaud-in-new-york_1356/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
                             </div>
                         </div>
                     </div>
@@ -165,7 +399,7 @@
                         <div class="p-6">
                             <div class="mb-4">
                                 <p class="text-xs text-neutral-500 mb-1">N6537.T453 A4 2025</p>
-                                <h3 class="text-xl font-bold text-teal-900 mb-1">Stay away from nothing</h3>
+                                <h3 class="text-xl font-bold text-primary-700 mb-1">Stay away from nothing</h3>
                                 <p class="italic text-neutral-700">Paul Thek and Peter Hujar</p>
                             </div>
                             <div class="space-y-2 text-sm text-neutral-600">
@@ -176,7 +410,7 @@
                             </div>
                             <div class="mt-4 pt-4 border-t border-neutral-200">
                                 <p class="text-xs text-neutral-500">Keywords: Photography, queer art, American artists, artist correspondence, 1960s-1970s, New York art</p>
-                                <a href="/books/thek_stay-away-from-nothing_1309/" class="inline-block mt-2 text-teal-700 hover:text-teal-900 text-sm font-medium">View Details →</a>
+                                <a href="/books/thek_stay-away-from-nothing_1309/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
                             </div>
                         </div>
                     </div>
@@ -189,7 +423,7 @@
                         <div class="p-6">
                             <div class="mb-4">
                                 <p class="text-xs text-neutral-500 mb-1">PN6728.R49 M37 2025</p>
-                                <h3 class="text-xl font-bold text-teal-900 mb-1">Rythm Mastr: This Is How It Begins</h3>
+                                <h3 class="text-xl font-bold text-primary-700 mb-1">Rythm Mastr: This Is How It Begins</h3>
                                 <p class="italic text-neutral-700">Kerry James Marshall</p>
                             </div>
                             <div class="space-y-2 text-sm text-neutral-600">
@@ -200,7 +434,7 @@
                             </div>
                             <div class="mt-4 pt-4 border-t border-neutral-200">
                                 <p class="text-xs text-neutral-500">Keywords: Afrofuturism, graphic novels, African American art, contemporary art, superhero comics</p>
-                                <a href="/books/marshall_rythm-mastr-this-is-how-it-begins_1304/" class="inline-block mt-2 text-teal-700 hover:text-teal-900 text-sm font-medium">View Details →</a>
+                                <a href="/books/marshall_rythm-mastr-this-is-how-it-begins_1304/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
                             </div>
                         </div>
                     </div>
@@ -213,7 +447,7 @@
                         <div class="p-6">
                             <div class="mb-4">
                                 <p class="text-xs text-neutral-500 mb-1">TR647 .D58 2025 v.48</p>
-                                <h3 class="text-xl font-bold text-teal-900 mb-1">Italian Cars</h3>
+                                <h3 class="text-xl font-bold text-primary-700 mb-1">Italian Cars</h3>
                                 <p class="italic text-neutral-700">John Divola</p>
                                 <p class="text-xs text-neutral-600 mt-1">One Picture Book Two Vol #48</p>
                             </div>
@@ -225,7 +459,7 @@
                             </div>
                             <div class="mt-4 pt-4 border-t border-neutral-200">
                                 <p class="text-xs text-neutral-500">Keywords: Photography, limited edition, automotive studies, contemporary photography</p>
-                                <a href="/books/divola_one-picture-book-two-vol-48-italian-cars_1308/" class="inline-block mt-2 text-teal-700 hover:text-teal-900 text-sm font-medium">View Details →</a>
+                                <a href="/books/divola_one-picture-book-two-vol-48-italian-cars_1308/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
                             </div>
                         </div>
                     </div>
@@ -238,7 +472,7 @@
                         <div class="p-6">
                             <div class="mb-4">
                                 <p class="text-xs text-neutral-500 mb-1">TR647 .C37 2025 v.47</p>
-                                <h3 class="text-xl font-bold text-teal-900 mb-1">Paperworks</h3>
+                                <h3 class="text-xl font-bold text-primary-700 mb-1">Paperworks</h3>
                                 <p class="italic text-neutral-700">Benedetta Casagrande</p>
                                 <p class="text-xs text-neutral-600 mt-1">One Picture Book Two Vol #47</p>
                             </div>
@@ -250,7 +484,7 @@
                             </div>
                             <div class="mt-4 pt-4 border-t border-neutral-200">
                                 <p class="text-xs text-neutral-500">Keywords: Photography, limited edition, paper art, materiality, contemporary photography</p>
-                                <a href="/books/casagrande_one-picture-book-two-vol-47-paperworks_1307/" class="inline-block mt-2 text-teal-700 hover:text-teal-900 text-sm font-medium">View Details →</a>
+                                <a href="/books/casagrande_one-picture-book-two-vol-47-paperworks_1307/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
                             </div>
                         </div>
                     </div>
@@ -263,7 +497,7 @@
                         <div class="p-6">
                             <div class="mb-4">
                                 <p class="text-xs text-neutral-500 mb-1">TR647 .H67 2025 v.48</p>
-                                <h3 class="text-xl font-bold text-teal-900 mb-1">Kimono</h3>
+                                <h3 class="text-xl font-bold text-primary-700 mb-1">Kimono</h3>
                                 <p class="italic text-neutral-700">Eikoh Hosoe</p>
                                 <p class="text-xs text-neutral-600 mt-1">One Picture Book Two Vol #48</p>
                             </div>
@@ -275,7 +509,7 @@
                             </div>
                             <div class="mt-4 pt-4 border-t border-neutral-200">
                                 <p class="text-xs text-neutral-500">Keywords: Photography, limited edition, Japanese photography, fashion, traditional garments</p>
-                                <a href="/books/hosoe_one-picture-book-two-vol-48-kimono_1306/" class="inline-block mt-2 text-teal-700 hover:text-teal-900 text-sm font-medium">View Details →</a>
+                                <a href="/books/hosoe_one-picture-book-two-vol-48-kimono_1306/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
                             </div>
                         </div>
                     </div>
@@ -288,7 +522,7 @@
                         <div class="p-6">
                             <div class="mb-4">
                                 <p class="text-xs text-neutral-500 mb-1">TR647 .Z34 2025 v.46</p>
-                                <h3 class="text-xl font-bold text-teal-900 mb-1">Toer</h3>
+                                <h3 class="text-xl font-bold text-primary-700 mb-1">Toer</h3>
                                 <p class="italic text-neutral-700">Susan Zadeh</p>
                                 <p class="text-xs text-neutral-600 mt-1">One Picture Book Two Vol #46</p>
                             </div>
@@ -300,71 +534,66 @@
                             </div>
                             <div class="mt-4 pt-4 border-t border-neutral-200">
                                 <p class="text-xs text-neutral-500">Keywords: Photography, limited edition, memory, cultural identity, contemporary photography</p>
-                                <a href="/books/zadeh_one-picture-book-two-vol-46-susan-zadeh-toer_1305/" class="inline-block mt-2 text-teal-700 hover:text-teal-900 text-sm font-medium">View Details →</a>
+                                <a href="/books/zadeh_one-picture-book-two-vol-46-susan-zadeh-toer_1305/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="text-center mt-12">
-                    <!-- Link updated for consistency -->
-                    <a href="/collection-explore.html" class="inline-block border border-teal-700 text-teal-700 px-6 py-3 hover:bg-teal-700 hover:text-white transition-all rounded-sm font-medium">Browse Curated Collections</a>
+                    <a href="/collection-explore.html" class="inline-block border border-primary-700 text-primary-700 px-6 py-3 hover:bg-primary-700 hover:text-white transition-all rounded-sm font-medium">Browse Curated Collections</a>
                 </div>
             </div>
         </section>
-        <!-- === END: UPDATED SECTION === -->
-
-    </main>
-
-    <!-- Standard Site Footer -->
-    
 
 
 
-<footer class="bg-gray-50 border-t border-gray-100 mt-24 py-12">
-    <div class="container mx-auto px-6 text-center text-gray-600">
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
         <p>© 2025 Hudson Street Library</p>
     </div>
 </footer>
 
-    <script>
-        // Mobile Menu Toggle Logic
-        const mobileMenuButton = document.querySelector('button.md\\:hidden');
-        const mobileNavMenu = document.getElementById('mobile-nav-menu');
+<script>
+    // Mobile Menu Toggle Logic
+    const mobileMenuButton = document.querySelector('button.md\\:hidden');
+    const mobileNavMenu = document.getElementById('mobile-nav-menu');
 
-        if (mobileMenuButton && mobileNavMenu) {
-            mobileMenuButton.addEventListener('click', function() {
-                const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
-                mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
-                mobileNavMenu.classList.toggle('hidden');
-                mobileNavMenu.classList.toggle('flex');
-                const icon = mobileMenuButton.querySelector('i');
-                if (icon) {
-                    icon.classList.toggle('fa-bars');
-                    icon.classList.toggle('fa-times');
-                }
-            });
-        }
-
-        // Smooth Scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                if (this.hash) {
-                   const targetElement = document.querySelector(this.hash);
-                   if (targetElement) {
-                        e.preventDefault();
-                        const headerOffset = document.querySelector('header')?.offsetHeight || 70;
-                        const elementPosition = targetElement.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-                        if (mobileMenuButton.getAttribute('aria-expanded') === 'true') {
-                             mobileMenuButton.click();
-                        }
-                   }
-                }
-            });
+    if (mobileMenuButton && mobileNavMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+            mobileNavMenu.classList.toggle('hidden');
+            mobileNavMenu.classList.toggle('flex');
+            const icon = mobileMenuButton.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            }
         });
-    </script>
+    }
+
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            if (this.hash) {
+               const targetElement = document.querySelector(this.hash);
+               if (targetElement) {
+                    e.preventDefault();
+                    const headerOffset = document.querySelector('header')?.offsetHeight || 70;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                    if (mobileMenuButton && mobileMenuButton.getAttribute('aria-expanded') === 'true') {
+                         mobileMenuButton.click();
+                    }
+               }
+            }
+        });
+    });
+</script>
 
 </body>
 </html>
