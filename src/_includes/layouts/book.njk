@@ -75,11 +75,13 @@
     <!-- Left Column: Image Only -->
     <div class="lg:col-span-1">
       <!-- Book Cover Image -->
+      {% set coverPath = book | generateCoverPath %}
       <div class="book-cover-container mb-8">
         <img
-          src="{{ book.image_url or '../../assets/images/placeholder-book.svg' }}"
+          src="{{ coverPath }}"
           alt="Cover of {{ book.title }}"
-          class="w-full h-auto object-contain bg-gray-50 rounded-md shadow-lg border {{ 'border-neutral-200' if book.image_url else 'border-neutral-100' }}"
+          class="w-full h-auto object-contain bg-gray-50 rounded-md shadow-lg border border-neutral-200"
+          onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
         />
       </div>
     </div>
