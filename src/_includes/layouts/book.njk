@@ -233,6 +233,41 @@
       </section>
     </div>
   </div>
+
+  <!-- Other Books by Same Author -->
+  {% set authorBooks = books | otherBooksByAuthor(book.author_last, book.id) %}
+  {% set totalByAuthor = books | countByAuthor(book.author_last, book.id) %}
+
+  {% if authorBooks.length > 0 %}
+  <section class="mt-16 border-t border-gray-200 pt-12 px-4 md:px-8 lg:px-16">
+    <h2 class="text-2xl font-bold text-gray-900 mb-8">More by {{ book.author_full_name }}</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+      {% for otherBook in authorBooks %}
+      <a href="/books/{{ otherBook.author_last | slugify }}_{{ otherBook.title | slugify }}_{{ otherBook.id }}/" class="group">
+        <div class="aspect-[3/4] bg-gray-100 rounded-md overflow-hidden mb-2">
+          <img
+            src="{{ otherBook.image_url or '/assets/images/placeholder-book-simple.svg' }}"
+            alt="{{ otherBook.title }}"
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            loading="lazy"
+          />
+        </div>
+        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">{{ otherBook.title }}</h3>
+        {% if otherBook.publication_year %}
+        <p class="text-xs text-gray-500">{{ otherBook.publication_year }}</p>
+        {% endif %}
+      </a>
+      {% endfor %}
+    </div>
+    {% if totalByAuthor > 12 %}
+    <p class="mt-6 text-sm text-gray-600">
+      <a href="/static-demo/?author={{ book.author_last | urlencode }}" class="text-teal-700 hover:text-teal-900 underline">
+        View all {{ totalByAuthor }} books by {{ book.author_full_name }} →
+      </a>
+    </p>
+    {% endif %}
+  </section>
+  {% endif %}
 </div>
 
 </body>

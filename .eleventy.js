@@ -62,6 +62,22 @@ module.exports = function(eleventyConfig) {
     });
   });
 
+  // --- Filter books by same author (excluding current book) ---
+  eleventyConfig.addFilter("otherBooksByAuthor", function(books, authorLast, currentId) {
+    if (!books || !authorLast) return [];
+    return books.filter(b =>
+      b.author_last === authorLast && String(b.id) !== String(currentId)
+    ).slice(0, 12);
+  });
+
+  // --- Count books by author ---
+  eleventyConfig.addFilter("countByAuthor", function(books, authorLast, currentId) {
+    if (!books || !authorLast) return 0;
+    return books.filter(b =>
+      b.author_last === authorLast && String(b.id) !== String(currentId)
+    ).length;
+  });
+
   // --- Image Processing Function ---
   async function imageShortcode(src, alt, sizes = "100vw", className = "") {
     let metadata = await Image(src, {
