@@ -737,7 +737,6 @@ class BatchOperations {
 let batchOps;
 document.addEventListener('DOMContentLoaded', function() {
     batchOps = new BatchOperations();
+    // Make available globally for onclick handlers
+    window.batchOps = batchOps;
 });
-
-// Global functions for onclick handlers
-window.batchOps = batchOps;
