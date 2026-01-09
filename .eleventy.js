@@ -68,6 +68,58 @@ module.exports = function(eleventyConfig) {
     });
   });
 
+  // --- Filter books by same author (excluding current book) ---
+  eleventyConfig.addFilter("otherBooksByAuthor", function(books, authorLast, currentId) {
+    if (!books || !authorLast) return [];
+    return books.filter(b =>
+      b.author_last === authorLast && String(b.id) !== String(currentId)
+    ).slice(0, 12);
+  });
+
+  // --- Count books by author ---
+  eleventyConfig.addFilter("countByAuthor", function(books, authorLast, currentId) {
+    if (!books || !authorLast) return 0;
+    return books.filter(b =>
+      b.author_last === authorLast && String(b.id) !== String(currentId)
+    ).length;
+  });
+
+  // --- Generate cover image path from book data ---
+  // Matches the naming convention used by acquire-covers.js
+  eleventyConfig.addFilter("generateCoverPath", function(book) {
+    if (!book) return '/assets/images/placeholder-book.svg';
+
+    // If book already has a valid image_url, use it
+    if (book.image_url &&
+        book.image_url !== 'NULL' &&
+        book.image_url !== '' &&
+        book.image_url !== null &&
+        book.image_url !== 'null') {
+      return book.image_url;
+    }
+
+    // Generate cover path using same logic as acquire-covers.js
+    const authorLast = (book.author_last || 'Unknown').replace(/[^a-zA-Z0-9.-]/g, '_');
+    const title = (book.title || 'Untitled').replace(/[^a-zA-Z0-9.-]/g, '_');
+    const isbn = (book.isbn_asin || '').replace(/[^a-zA-Z0-9.-]/g, '_').replace(/[-\s]/g, '');
+
+    let filename;
+    if (isbn && isbn !== 'NULL' && isbn !== '' && isbn !== 'null') {
+      filename = `${authorLast}_${title}_${isbn}`;
+    } else {
+      filename = `${authorLast}_${title}_NULL`;
+    }
+
+    // Sanitize and truncate
+    const sanitized = filename
+      .replace(/[^a-zA-Z0-9.-]/g, '_')
+      .replace(/_+/g, '_')
+      .replace(/^_|_$/g, '')
+      .substring(0, 100);
+
+    return `/assets/images/books/${sanitized}.jpg`;
+  });
+
   // --- Image Processing Function ---
   async function imageShortcode(src, alt, sizes = "100vw", className = "") {
     let metadata = await Image(src, {
