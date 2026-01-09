@@ -1,0 +1,37 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Book",
+  "name": "{{ book.title | escape }}"
+  {%- if book.author_full_name %},
+  "author": {
+    "@type": "Person",
+    "name": "{{ book.author_full_name | escape }}"
+  }
+  {%- endif %}
+  {%- if book.publisher %},
+  "publisher": {
+    "@type": "Organization",
+    "name": "{{ book.publisher | escape }}"
+  }
+  {%- endif %}
+  {%- if book.isbn_asin %},
+  "isbn": "{{ book.isbn_asin }}"
+  {%- endif %}
+  {%- if book.publication_year %},
+  "datePublished": "{{ book.publication_year }}"
+  {%- endif %}
+  {%- if book.image_url %},
+  "image": "https://hudsonstreetlibrary.com{{ book.image_url }}"
+  {%- endif %}
+  {%- if book.description %},
+  "description": "{{ book.description | truncate(500) | escape | replace('\n', ' ') | replace('\r', '') }}"
+  {%- endif %}
+  {%- if book.page_count %},
+  "numberOfPages": {{ book.page_count }}
+  {%- endif %}
+  {%- if book.binding %},
+  "bookFormat": "{% if 'Hardcover' in book.binding or 'Hardback' in book.binding %}https://schema.org/Hardcover{% elif 'Softcover' in book.binding or 'Paperback' in book.binding %}https://schema.org/Paperback{% else %}https://schema.org/EBook{% endif %}"
+  {%- endif %}
+}
+</script>
