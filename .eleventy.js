@@ -49,9 +49,9 @@ module.exports = function(eleventyConfig) {
     const csvPath = path.join(__dirname, "src/_data/books.csv");
     try {
       console.log(`--- Attempting to read CSV: ${csvPath}`);
-      const bookData = await CSVHandler.readBooks(csvPath);
-      console.log(`--- Parsed ${bookData.length} records from ${csvPath}`);
-      return bookData;
+      const result = await CSVHandler.readBooks(csvPath);
+      console.log(`--- Parsed ${result.data.length} records from ${csvPath}`);
+      return result.data;
     } catch (err) {
       console.error(`--- Error parsing CSV: ${csvPath}`, err);
       return [];
