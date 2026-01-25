@@ -146,6 +146,12 @@ module.exports = function(eleventyConfig) {
     return date.toLocaleDateString('en-US', options);
   });
 
+  // --- Remove trailing slash from URLs ---
+  eleventyConfig.addFilter("removeTrailingSlash", function(url) {
+    if (!url) return '';
+    return url.replace(/\/$/, '');
+  });
+
   // --- Generate cover image path from book data ---
   // Matches the naming convention used by acquire-covers.js
   eleventyConfig.addFilter("generateCoverPath", function(book) {
