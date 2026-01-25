@@ -117,8 +117,8 @@
 
         <!-- Details (moved under description) -->
         <div class="mt-12 pt-10 border-t border-gray-200" style="border-color: rgba(0, 0, 0, 0.06);">
-          <h3 class="text-sm font-semibold text-gray-500 mb-6 uppercase tracking-wider">Details</h3>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-4 text-sm">
+          <h3 class="text-sm font-semibold text-gray-500 mb-5 uppercase tracking-wider">Details</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2.5 text-sm">
             {% if book.is_signed_inscribed == 'true' or book.is_signed_inscribed == '1' %}
               <p><span class="details-label">Signed:</span> Yes</p>
             {% endif %}
@@ -160,9 +160,9 @@
 
       <!-- Contributors -->
       {% if book.editor or book.contributors or book.designer %}
-        <section class="mb-16">
+        <section class="mb-8">
           <h2 class="section-heading">Contributors</h2>
-          <div class="space-y-3 text-sm md:text-base">
+          <div class="space-y-2 text-sm">
             {% if book.editor %}<p><span class="details-label">Editor:</span> {{ book.editor }}</p>{% endif %}
             {% if book.contributors %}<p><span class="details-label">Contributors:</span> {{ book.contributors }}</p>{% endif %}
             {% if book.designer %}<p><span class="details-label">Designer:</span> {{ book.designer }}</p>{% endif %}
@@ -172,12 +172,12 @@
 
       <!-- Tags & Classification -->
       {% if book.tags or book.classification %}
-        <section class="mb-16">
+        <section class="mb-8">
           <h2 class="section-heading">Tags & Classification</h2>
 
           {% if book.tags %}
-            <div class="mb-6">
-              <h3 class="details-label mb-3">Tags</h3>
+            <div class="mb-4">
+              <h3 class="details-label mb-2">Tags</h3>
               <p class="text-sm text-gray-600">
                 {% set tag_list = book.tags.split(',') %}
                 {% for tag in tag_list %}<a href="/static-demo/?tag={{ tag.trim() | urlencode }}" class="text-teal-700 hover:text-teal-900" style="text-decoration: none; border-bottom: 1px solid rgba(13, 148, 136, 0.3);">{{ tag.trim() }}</a>{% if not loop.last %}, {% endif %}{% endfor %}
@@ -186,15 +186,15 @@
           {% endif %}
 
           {% if book.classification %}
-            <div class="mb-6">
-              <h3 class="details-label mb-3">Classification</h3>
+            <div class="mb-4">
+              <h3 class="details-label mb-2">Classification</h3>
               <p class="text-sm text-gray-600">{{ book.classification }}</p>
             </div>
           {% endif %}
 
           {% if book.collection_grouping %}
             <div>
-              <h3 class="details-label mb-3">Collections</h3>
+              <h3 class="details-label mb-2">Collections</h3>
               <p class="text-sm text-gray-600">{{ book.collection_grouping }}</p>
             </div>
           {% endif %}
@@ -204,7 +204,7 @@
       <!-- Library Information -->
       <section class="mb-16">
         <h2 class="section-heading">Library Information</h2>
-        <div class="space-y-3 text-sm md:text-base">
+        <div class="space-y-2 text-sm">
           <p><span class="details-label">Location:</span> {{ book.location or 'Hudson Street Library, NYC' }}</p>
           <p><span class="details-label">Acquired:</span> {{ book.accession_no or 'Original Collection' }}</p>
         </div>
