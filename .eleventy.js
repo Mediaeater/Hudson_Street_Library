@@ -118,8 +118,16 @@ module.exports = function(eleventyConfig) {
       parsedDate: parseAccessionDate(b.accession_no)
     })).filter(b => b.parsedDate !== null);
 
-    // Sort by parsed date (descending - most recent first)
+    // Sort by featured first, then by parsed date (descending - most recent first)
     const sorted = booksWithDates.sort((a, b) => {
+      // Featured books come first
+      const aFeatured = a.featured === 'true' || a.featured === true;
+      const bFeatured = b.featured === 'true' || b.featured === true;
+
+      if (aFeatured && !bFeatured) return -1;
+      if (!aFeatured && bFeatured) return 1;
+
+      // Within same featured status, sort by date
       return b.parsedDate - a.parsedDate;
     });
 
