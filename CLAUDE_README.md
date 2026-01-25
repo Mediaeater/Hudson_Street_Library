@@ -8,10 +8,10 @@ This is the Hudson Street Library website - a photography book collection with 1
 ### ⚠️ ESTABLISHED SYSTEMS - DO NOT CHANGE
 
 #### 1. BOOK COVER ACQUISITION SYSTEM
-**USE ONLY**: `acquire-covers.js`
+**USE ONLY**: `scripts/covers/acquire-covers.js`
 ```bash
 # This is the ONLY way to acquire covers
-node acquire-covers.js --limit 50
+node scripts/covers/acquire-covers.js --limit 50
 ```
 
 **WHY**: 
@@ -60,7 +60,7 @@ See README.md files in each directory for details.
 ### 📁 KEY FILES TO KNOW
 
 1. **README.md** - Project overview and current status
-2. **acquire-covers.js** - The ONLY cover acquisition script to use
+2. **scripts/covers/acquire-covers.js** - The ONLY cover acquisition script to use
 3. **src/_data/books.csv** - Book database (1,306 entries)
 4. **src/_includes/layouts/book.njk** - How individual book pages work
 
@@ -76,7 +76,7 @@ See README.md files in each directory for details.
 
 1. **To add book covers**:
    ```bash
-   node acquire-covers.js --limit 50
+   node scripts/covers/acquire-covers.js --limit 50
    git add -A && git commit -m "Add book covers" && git push
    ```
 
@@ -125,7 +125,7 @@ See README.md files in each directory for details.
 
 ### ⏰ LAST SUCCESSFUL APPROACH
 See README.md Daily Log for recent progress:
-- Use acquire-covers.js for cover acquisition
+- Use scripts/covers/acquire-covers.js for cover acquisition
 - Zero cost using free APIs (Open Library, Google Books)
 - Strict matching prevents false positives
 

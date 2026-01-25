@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const CSVHandler = require('./scripts/utils/csv-handler');
+const CSVHandler = require('../utils/csv-handler');
 
 // Configuration
 const CSV_PATH = './src/_data/books.csv';

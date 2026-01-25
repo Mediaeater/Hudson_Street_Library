@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const CSVHandler = require('./scripts/utils/csv-handler');
+const CSVHandler = require('../utils/csv-handler');
 const path = require('path');
 
 const csvPath = path.join(__dirname, 'src/_data/books.csv');

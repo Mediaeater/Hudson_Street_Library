@@ -227,7 +227,7 @@ All path logic is preserved from the template, so fixing paths in the template f
 npm run build
   → npm run build:css     # Tailwind CSS
   → eleventy              # Build static site
-  → node generate-book-pages.js   # Generate 1440 book pages (uses paths from template)
+  → node scripts/generators/generate-book-pages.js   # Generate 1440 book pages (uses paths from template)
 ```
 
 ## Related Documentation

@@ -8,8 +8,8 @@
 // Load environment variables
 require('dotenv').config();
 
-const CSVHandler = require('./scripts/utils/csv-handler');
-const { BookAPIClient } = require('./scripts/utils/book-api-client');
+const CSVHandler = require('../utils/csv-handler');
+const { BookAPIClient } = require('../utils/book-api-client');
 const path = require('path');
 const fs = require('fs');
 

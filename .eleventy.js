@@ -14,14 +14,14 @@ module.exports = function(eleventyConfig) {
   console.log("--- Running Eleventy configuration ---");
 
   // Cover acquisition removed from build for performance
-  // Run manually when needed: node acquire-covers.js --limit 50
+  // Run manually when needed: node scripts/covers/acquire-covers.js --limit 50
   // This saves 15+ seconds on every build and avoids rate limiting
   //
   // To re-enable in development only, uncomment:
   // eleventyConfig.on("beforeBuild", () => {
   //   if (process.env.NODE_ENV !== 'production') {
   //     console.log("--- Acquiring book covers ---");
-  //     exec("node acquire-covers.js --limit 10 --strict", (error, stdout, stderr) => {
+  //     exec("node scripts/covers/acquire-covers.js --limit 10 --strict", (error, stdout, stderr) => {
   //       if (error) {
   //         console.error(`exec error: ${error}`);
   //         return;
@@ -82,6 +82,30 @@ module.exports = function(eleventyConfig) {
     return books.filter(b =>
       b.author_last === authorLast && String(b.id) !== String(currentId)
     ).length;
+  });
+
+  // --- Filter books by accession date ---
+  // Returns books sorted by accession date (most recent first)
+  eleventyConfig.addFilter("recentlyAdded", function(books, limit) {
+    if (!books) return [];
+
+    // Filter books with valid accession dates (YYYY-MM-DD format)
+    const booksWithDates = books.filter(b => {
+      if (!b.accession_no) return false;
+      // Match YYYY-MM-DD or other date formats
+      return /\d{4}-\d{2}-\d{2}/.test(b.accession_no) ||
+             /20\d{2}/.test(b.accession_no);
+    });
+
+    // Sort by accession date (descending - most recent first)
+    const sorted = booksWithDates.sort((a, b) => {
+      const dateA = a.accession_no || '';
+      const dateB = b.accession_no || '';
+      return dateB.localeCompare(dateA);
+    });
+
+    // Return limited or all
+    return limit ? sorted.slice(0, limit) : sorted;
   });
 
   // --- Generate cover image path from book data ---

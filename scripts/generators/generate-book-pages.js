@@ -10,9 +10,9 @@ const path = require('path');
 const csv = require('csv-parser');
 
 // Paths
-const CSV_PATH = path.join(__dirname, 'src/_data/books.csv');
-const TEMPLATE_PATH = path.join(__dirname, '_site/books/templates/BOOK-TEMPLATE/index.html');
-const OUTPUT_DIR = path.join(__dirname, '_site/books');
+const CSV_PATH = path.join(__dirname, '../../src/_data/books.csv');
+const TEMPLATE_PATH = path.join(__dirname, '../../_site/books/templates/BOOK-TEMPLATE/index.html');
+const OUTPUT_DIR = path.join(__dirname, '../../_site/books');
 
 // Helper function to create URL-friendly slug
 function createSlug(author, title) {

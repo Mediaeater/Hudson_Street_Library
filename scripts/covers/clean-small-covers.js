@@ -6,7 +6,7 @@
  * Useful for cleaning up small responsive image variants
  */
 
-const { IMAGE_CONFIG } = require('./scripts/utils/image-core');
+const { IMAGE_CONFIG } = require('../utils/image-core');
 const path = require('path');
 const fs = require('fs');
 
