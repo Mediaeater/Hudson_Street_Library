@@ -35,7 +35,10 @@ currentPage: recently-added
                     <!-- {{ book.author_full_name }} - {{ book.title }} - {{ book.accession_no }} -->
                     <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
                         <div class="h-64 overflow-hidden bg-neutral-100">
-                            <img src="{{ book | generateCoverPath }}" alt="Cover of {{ book.title }}" class="w-full h-full object-contain">
+                            <img src="{{ book | generateCoverPath }}"
+                                 alt="Cover of {{ book.title }}"
+                                 onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg';"
+                                 class="w-full h-full object-contain">
                         </div>
                         <div class="p-6">
                             <div class="mb-4">
