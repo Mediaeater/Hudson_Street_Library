@@ -2,11 +2,11 @@
 
 const fs = require('fs');
 const path = require('path');
-const CSVHandler = require('./scripts/utils/csv-handler');
-const ImageProcessor = require('./scripts/utils/image-processor');
-const { generateStandardFilename, sanitizeFilename, validateImage, checkImageExists, IMAGE_CONFIG } = require('./scripts/utils/image-core');
-const { getGlobalLogger } = require('./scripts/utils/logger');
-const { directories } = require('./scripts/config/image-config');
+const CSVHandler = require('../utils/csv-handler');
+const ImageProcessor = require('../utils/image-processor');
+const { generateStandardFilename, sanitizeFilename, validateImage, checkImageExists, IMAGE_CONFIG } = require('../utils/image-core');
+const { getGlobalLogger } = require('../utils/logger');
+const { directories } = require('../config/image-config');
 const { exec } = require('child_process');
 const util = require('util');
 

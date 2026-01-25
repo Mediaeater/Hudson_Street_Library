@@ -122,7 +122,7 @@ After testing a few books:
 
 4. **Bulk process** (when confident):
    ```bash
-   node acquire-covers.js --artist "Tillmans" --limit 50
+   node scripts/covers/acquire-covers.js --artist "Tillmans" --limit 50
    ```
 
 ## Troubleshooting

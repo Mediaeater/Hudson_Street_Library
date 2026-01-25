@@ -8,7 +8,7 @@ The `generate-book-pages.js` script automatically creates individual book detail
 
 ## Files
 
-- **Script**: `generate-book-pages.js` (root directory)
+- **Script**: `scripts/generators/generate-book-pages.js`
 - **Template**: `_site/books/templates/BOOK-TEMPLATE/index.html`
 - **Data Source**: `src/_data/books.csv`
 - **Output Directory**: `_site/books/`
@@ -65,7 +65,7 @@ Example:
 
 ### Basic Usage
 ```bash
-node generate-book-pages.js
+node scripts/generators/generate-book-pages.js
 ```
 
 ### Requirements
@@ -128,17 +128,17 @@ To modify the book page layout:
 
 ### Adding New Books
 1. Add book data to `src/_data/books.csv`
-2. Run `node generate-book-pages.js`
+2. Run `node scripts/generators/generate-book-pages.js`
 3. New pages will be generated automatically
 
 ### Updating Existing Books
 1. Edit book data in `src/_data/books.csv`
-2. Run `node generate-book-pages.js`
+2. Run `node scripts/generators/generate-book-pages.js`
 3. Pages will be regenerated with updated data
 
 ### Template Updates
 1. Modify `_site/books/templates/BOOK-TEMPLATE/index.html`
-2. Run `node generate-book-pages.js`
+2. Run `node scripts/generators/generate-book-pages.js`
 3. All 1300+ pages will use the new template
 
 ## Technical Details

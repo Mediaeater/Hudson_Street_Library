@@ -6,9 +6,9 @@
  * and attempts to re-acquire them from the APIs
  */
 
-const CSVHandler = require('./scripts/utils/csv-handler');
-const { BookAPIClient } = require('./scripts/utils/book-api-client');
-const { IMAGE_CONFIG } = require('./scripts/utils/image-core');
+const CSVHandler = require('../utils/csv-handler');
+const { BookAPIClient } = require('../utils/book-api-client');
+const { IMAGE_CONFIG } = require('../utils/image-core');
 const path = require('path');
 const fs = require('fs');
 

@@ -6,8 +6,8 @@ Thank you for your interest in contributing to the Hudson Street Library project
 
 Before you start, please be aware of these strict constraints to ensure data integrity and build stability:
 
-1.  **Do Not Create New Acquisition Scripts**: Use the existing consolidated script `acquire-covers.js`.
-    *   Usage: `node acquire-covers.js --limit 50`
+1.  **Do Not Create New Acquisition Scripts**: Use the existing consolidated script `scripts/covers/acquire-covers.js`.
+    *   Usage: `node scripts/covers/acquire-covers.js --limit 50`
     *   This script enforces the specific file naming conventions required by the site.
 2.  **File Naming is Strict**: Covers MUST be named `Author_Name_Book_Title_ISBN.jpg`.
     *   The frontend JavaScript relies on this exact pattern.

@@ -3,10 +3,10 @@
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
-const CSVHandler = require('./scripts/utils/csv-handler');
-const { generateStandardFilename, IMAGE_CONFIG } = require('./scripts/utils/image-core');
-const { getGlobalLogger } = require('./scripts/utils/logger');
-const { directories, apis, rateLimiting, validation } = require('./scripts/config/image-config');
+const CSVHandler = require('../utils/csv-handler');
+const { generateStandardFilename, IMAGE_CONFIG } = require('../utils/image-core');
+const { getGlobalLogger } = require('../utils/logger');
+const { directories, apis, rateLimiting, validation } = require('../config/image-config');
 
 // Initialize logger
 const logger = getGlobalLogger({ level: 'info' });

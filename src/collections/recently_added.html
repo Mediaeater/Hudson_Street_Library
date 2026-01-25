@@ -4,6 +4,19 @@ layout: collection.njk
 title: Recently Added
 currentPage: recently-added
 ---
+{#
+  AUTO-GENERATED RECENTLY ADDED PAGE
+
+  This page is automatically generated from books.csv based on the accession_no field.
+  Books are sorted by accession date (most recent first).
+
+  Manual version archived as: recently_added.html.backup-manual
+
+  To add a book to this page:
+  1. Add the book to books.csv
+  2. Set the accession_no field to YYYY-MM-DD format
+  3. Rebuild the site
+#}
 
 <section id="new-acquisitions" class="py-16 bg-neutral-50">
     <div class="container mx-auto px-6">
@@ -17,598 +30,50 @@ currentPage: recently-added
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
 
-                    <!-- Lisa Yuskavage - Contemporary Artists Series - Jan 24, 2026 -->
+{% set recentBooks = books | recentlyAdded %}
+{% for book in recentBooks %}
+                    <!-- {{ book.author_full_name }} - {{ book.title }} - {{ book.accession_no }} -->
                     <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
                         <div class="h-64 overflow-hidden bg-neutral-100">
-                            <img src="/assets/images/books/Yuskavage_Lisa_Yuskavage_Contemporary_Artists_978_1_83866_811_2.jpg" alt="Cover of Lisa Yuskavage (Contemporary Artists Series)" class="w-full h-full object-contain">
+                            <img src="{{ book | generateCoverPath }}" alt="Cover of {{ book.title }}" class="w-full h-full object-contain">
                         </div>
                         <div class="p-6">
                             <div class="mb-4">
-                                <p class="text-xs text-neutral-500 mb-1">ND237.Y87 A4 2026</p>
-                                <h3 class="text-xl font-bold text-primary-700 mb-1">Lisa Yuskavage (Contemporary Artists Series)</h3>
-                                <p class="italic text-neutral-700">Lisa Yuskavage</p>
+                                {% if book.lcc %}<p class="text-xs text-neutral-500 mb-1">{{ book.lcc }}</p>{% endif %}
+                                <h3 class="text-xl font-bold text-primary-700 mb-1">{{ book.title }}</h3>
+                                <p class="italic text-neutral-700">{{ book.author_full_name }}</p>
                             </div>
                             <div class="space-y-2 text-sm text-neutral-600">
-                                <p><span class="font-semibold">Imprint:</span> <a href="https://www.phaidon.com/en-us/products/lisa-yuskavage" target="_blank" class="text-primary-700 hover:underline">Phaidon Press</a>, January 2026.</p>
-                                <p><span class="font-semibold">Physical Description:</span> 160 pages: 150+ color images; 29.0 x 25.0 cm</p>
-                                <p><span class="font-semibold">ISBN:</span> 978-1-83866-811-2</p>
-                                <p><span class="font-semibold">Contributors:</span> Ariel Levy, Barry Schwabsky, Lena Dunham; Photography by Jason Schmidt</p>
-                                <p><span class="font-semibold">Designer:</span> Phaidon Design</p>
-                                <p><span class="font-semibold">Signed:</span> Yes</p>
-                                <p><span class="font-semibold">Accession Date:</span> January 24, 2026</p>
-                                <p class="mt-2 text-xs">The definitive monograph on the innovative American painter Lisa Yuskavage, published as part of Phaidon's Contemporary Artists Series. Documents over two decades of her work, known for its bold, eccentric, and exhibitionist characters that challenge the conventions of figurative painting. Includes never-before-seen photographs of her studio by Jason Schmidt and essays that explore the tension in her work between the sacred and profane, high art and popular culture.</p>
+                                {% if book.publisher or book.publication_year %}
+                                <p><span class="font-semibold">Imprint:</span>
+                                {% if book.publisher_url %}<a href="{{ book.publisher_url }}" target="_blank" class="text-primary-700 hover:underline">{{ book.publisher }}</a>{% else %}{{ book.publisher }}{% endif %}{% if book.publication_year %}, {{ book.publication_year }}{% endif %}.
+                                </p>
+                                {% endif %}
+                                {% if book.page_count or book.height_cm or book.width_cm %}
+                                <p><span class="font-semibold">Physical Description:</span>
+                                {% if book.page_count %}{{ book.page_count }} pages{% endif %}{% if book.height_cm or book.width_cm %}; {% if book.height_cm %}{{ book.height_cm }}{% endif %}{% if book.width_cm %} x {{ book.width_cm }}{% endif %} cm{% endif %}
+                                </p>
+                                {% endif %}
+                                {% if book.isbn_asin %}<p><span class="font-semibold">ISBN:</span> {{ book.isbn_asin }}</p>{% endif %}
+                                {% if book.editor %}<p><span class="font-semibold">Editor:</span> {{ book.editor }}</p>{% endif %}
+                                {% if book.contributors %}<p><span class="font-semibold">Contributors:</span> {{ book.contributors }}</p>{% endif %}
+                                {% if book.designer %}<p><span class="font-semibold">Designer:</span> {{ book.designer }}</p>{% endif %}
+                                {% if book.binding %}<p><span class="font-semibold">Binding:</span> {{ book.binding }}</p>{% endif %}
+                                {% if book.edition_printrun %}<p><span class="font-semibold">Edition:</span> {{ book.edition_printrun }}</p>{% endif %}
+                                {% if book.language %}<p><span class="font-semibold">Language:</span> {{ book.language }}</p>{% endif %}
+                                {% if book.is_signed_inscribed === 'true' or book.is_signed_inscribed === true %}<p><span class="font-semibold">Signed:</span> Yes</p>{% endif %}
+                                {% if book.artist_url %}<p><span class="font-semibold">Artist Website:</span> <a href="{{ book.artist_url }}" target="_blank" class="text-primary-700 hover:underline">{{ book.artist_url | replace("https://", "") | replace("http://", "") | replace("www.", "") }}</a></p>{% endif %}
+                                {% if book.accession_no %}<p><span class="font-semibold">Accession Date:</span> {{ book.accession_no }}</p>{% endif %}
+                                {% if book.description %}<p class="mt-2 text-xs">{{ book.description }}</p>{% endif %}
                             </div>
                             <div class="mt-4 pt-4 border-t border-neutral-200">
-                                <p class="text-xs text-neutral-500">Keywords: Art, Painting, Contemporary Art, Women Artists, Figurative Painting</p>
-                                <a href="/books/yuskavage_lisa-yuskavage-contemporary-artists-series_1682/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
+                                {% if book.tags %}<p class="text-xs text-neutral-500">Keywords: {{ book.tags }}</p>{% endif %}
+                                <a href="/books/{{ book.author_last | slugify }}_{{ book.title | slugify }}_{{ book.id }}/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
                             </div>
                         </div>
                     </div>
+{% endfor %}
 
-                    <!-- Lisa Yuskavage - Museo Tamayo - Jan 24, 2026 -->
-                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
-                        <div class="h-64 overflow-hidden bg-neutral-100">
-                            <img src="/assets/images/books/Yuskavage_Lisa_Yuskavage_9789685979146.jpg" alt="Cover of Lisa Yuskavage" class="w-full h-full object-contain">
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-4">
-                                <p class="text-xs text-neutral-500 mb-1">ND237.Y87 A4 2006</p>
-                                <h3 class="text-xl font-bold text-primary-700 mb-1">Lisa Yuskavage</h3>
-                                <p class="italic text-neutral-700">Lisa Yuskavage</p>
-                            </div>
-                            <div class="space-y-2 text-sm text-neutral-600">
-                                <p><span class="font-semibold">Imprint:</span> <a href="http://museotamayo.org" target="_blank" class="text-primary-700 hover:underline">Fundación Olga y Rufino Tamayo</a>, 2006.</p>
-                                <p><span class="font-semibold">Physical Description:</span> 65 pages: color illustrations; 25.0 x 20.0 cm</p>
-                                <p><span class="font-semibold">ISBN:</span> 9789685979146</p>
-                                <p><span class="font-semibold">Curator:</span> Tobias Ostrander</p>
-                                <p><span class="font-semibold">Contributors:</span> Christian Viveros-Fauné</p>
-                                <p><span class="font-semibold">Language:</span> Bilingual Spanish/English</p>
-                                <p><span class="font-semibold">Signed:</span> Yes</p>
-                                <p><span class="font-semibold">Accession Date:</span> January 24, 2026</p>
-                                <p class="mt-2 text-xs">Exhibition catalog from Museo Tamayo Arte Contemporáneo in Mexico City (June 22 – September 17, 2006). Features critical essays by curator Tobias Ostrander ("Taste") and critic Christian Viveros-Fauné ("Cursed beauty: the painting of Lisa Yuskavage and the goosing of the great tradition"), alongside full-color reproductions of her work.</p>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-neutral-200">
-                                <p class="text-xs text-neutral-500">Keywords: Art, Painting, Exhibition Catalog, Women Artists, Erotic Art</p>
-                                <a href="/books/yuskavage_lisa-yuskavage_1681/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- MOS - Public Spaces NY - Jan 24, 2026 -->
-                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
-                        <div class="h-64 overflow-hidden bg-neutral-100">
-                            <img src="/assets/images/books/Meredith_Public_Spaces_NY_978_3_03860_434_1.jpg" alt="Cover of Public Spaces NY" class="w-full h-full object-contain">
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-4">
-                                <p class="text-xs text-neutral-500 mb-1">HT168.N5 M47 2025</p>
-                                <h3 class="text-xl font-bold text-primary-700 mb-1">Public Spaces NY</h3>
-                                <p class="italic text-neutral-700">Michael Meredith and Hilary Sample (MOS)</p>
-                            </div>
-                            <div class="space-y-2 text-sm text-neutral-600">
-                                <p><span class="font-semibold">Imprint:</span> <a href="https://www.park-books.com/en/product/public-spaces-ny/1661" target="_blank" class="text-primary-700 hover:underline">Park Books</a>, December 2025.</p>
-                                <p><span class="font-semibold">Physical Description:</span> 632 pages: 462 color, 5 b/w illustrations; 23.0 x 15.5 cm</p>
-                                <p><span class="font-semibold">ISBN:</span> 978-3-03860-434-1</p>
-                                <p><span class="font-semibold">Designer:</span> Studio Lin</p>
-                                <p><span class="font-semibold">Accession Date:</span> January 24, 2026</p>
-                                <p class="mt-2 text-xs">A sequel to Vacant Spaces NY, this volume documents and analyzes Manhattan's public realm—parks, streets, community gardens, POPS (Privately Owned Public Spaces), and waterfronts. It examines the legal, regulatory, and management structures that shape these spaces, arguing that public space is never neutral. The book includes detailed mappings and speculative illustrations on how design facilitates or hinders inclusion in the US's densest city.</p>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-neutral-200">
-                                <p class="text-xs text-neutral-500">Keywords: Architecture, Urban Planning, NYC, Design, Public Space, POPS</p>
-                                <a href="/books/meredith_public-spaces-ny_1680/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Beni Bischof - Meta Cars - Jan 18, 2026 -->
-                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
-                        <div class="h-64 overflow-hidden bg-neutral-100">
-                            <img src="/assets/images/books/Bischof_Meta_Cars_978_3_907179_87_1.jpg" alt="Cover of Meta Cars" class="w-full h-full object-contain">
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-4">
-                                <p class="text-xs text-neutral-500 mb-1">N7433.4.B57 M48 2025</p>
-                                <h3 class="text-xl font-bold text-primary-700 mb-1">Meta Cars</h3>
-                                <p class="italic text-neutral-700">Beni Bischof</p>
-                            </div>
-                            <div class="space-y-2 text-sm text-neutral-600">
-                                <p><span class="font-semibold">Imprint:</span> <a href="https://www.nieves.ch" target="_blank" class="text-primary-700 hover:underline">Nieves</a>, 2025.</p>
-                                <p><span class="font-semibold">Physical Description:</span> 44 pages: color offset; 19.5 x 25.5 cm</p>
-                                <p><span class="font-semibold">ISBN:</span> 978-3-907179-87-1</p>
-                                <p><span class="font-semibold">Edition:</span> First Edition</p>
-                                <p><span class="font-semibold">Artist Website:</span> <a href="http://www.benibischof.ch" target="_blank" class="text-primary-700 hover:underline">benibischof.ch</a></p>
-                                <p><span class="font-semibold">Accession Date:</span> January 18, 2026</p>
-                                <p class="mt-2 text-xs">Beni Bischof transforms found images of cars into visual distortions through digital manipulation and radical simplification. The original shapes are abstracted – reduced to ghostly and ridiculous silhouettes that feel both familiar and alien. Drawing on the aesthetics of American muscle cars and TV shows of the 1980s and '90s, Bischof reframes coolness for the digital age with irony, intensity, and unsettling beauty.</p>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-neutral-200">
-                                <p class="text-xs text-neutral-500">Keywords: Digital Art, Photography, Artist Book, Collage, Cars, Visual Distortion, Contemporary Art</p>
-                                <a href="/books/bischof_meta-cars_1679/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Theaster Gates - 1965: Malcolm in Winter - Jan 17, 2026 -->
-                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
-                        <div class="h-64 overflow-hidden bg-neutral-100">
-                            <img src="/assets/images/books/Gates_1965-Malcolm-in-Winter_978_1_910844_77_9.jpg" alt="Cover of Theaster Gates: 1965: Malcolm in Winter" class="w-full h-full object-contain">
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-4">
-                                <p class="text-xs text-neutral-500 mb-1">N6537.G38 A4 2025</p>
-                                <h3 class="text-xl font-bold text-primary-700 mb-1">1965: Malcolm in Winter: A Translation Exercise</h3>
-                                <p class="italic text-neutral-700">Theaster Gates</p>
-                            </div>
-                            <div class="space-y-2 text-sm text-neutral-600">
-                                <p><span class="font-semibold">Imprint:</span> White Cube, September 2025.</p>
-                                <p><span class="font-semibold">Physical Description:</span> 140 pages: colour illustrations; 320 x 230 mm</p>
-                                <p><span class="font-semibold">ISBN:</span> 978-1-910844-77-9</p>
-                                <p><span class="font-semibold">Editors:</span> Honey Luard, Elaine ML Tam</p>
-                                <p><span class="font-semibold">Designer:</span> Guillaume Chuard (Studio Ardworks)</p>
-                                <p><span class="font-semibold">Accession Date:</span> January 17, 2026</p>
-                                <p class="mt-2 text-xs">Documents Theaster Gates's exhibition commemorating the centenary of Malcolm X's birth and 60 years since his assassination. Features archival materials from the Black radical archive of journalist Ei Nagata and partner Haruhi Ishitani. Silver screen-printed cover. Includes essays by Najha Zigbi-Johnson and conversation between Gates, Zoé Whitley, and John Akomfrah.</p>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-neutral-200">
-                                <p class="text-xs text-neutral-500">Keywords: Contemporary Art, Malcolm X, Black History, Archival Practice, Exhibition Catalog, Afro-Asian Alliances</p>
-                                <a href="/books/gates_1965-malcolm-in-winter-a-translation-exercise_1676/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Lawrence Weiner - Revue Faire 49 - Jan 17, 2026 -->
-                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
-                        <div class="h-64 overflow-hidden bg-neutral-100">
-                            <img src="/assets/images/books/Weiner_Revue_Faire_49_Lawrence_Weiner_9791095991458.jpg" alt="Cover of Revue Faire: 49: Lawrence Weiner" class="w-full h-full object-contain">
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-4">
-                                <p class="text-xs text-neutral-500 mb-1">N7433.4.W45 R48 2025</p>
-                                <h3 class="text-xl font-bold text-primary-700 mb-1">Revue Faire: 49: Lawrence Weiner</h3>
-                                <p class="italic text-neutral-700">Lawrence Weiner</p>
-                            </div>
-                            <div class="space-y-2 text-sm text-neutral-600">
-                                <p><span class="font-semibold">Imprint:</span> Editions Empire.</p>
-                                <p><span class="font-semibold">Physical Description:</span> 62 pages: mixed color; 30 x 21 cm</p>
-                                <p><span class="font-semibold">ISBN:</span> 9791095991458</p>
-                                <p><span class="font-semibold">Binding:</span> Staple Bound</p>
-                                <p><span class="font-semibold">Accession Date:</span> January 17, 2026</p>
-                                <p class="mt-2 text-xs">The 49th issue of the critical graphic design journal is about Lawrence Weiner and his relationship with typography, titled "We Are Ships at Sea, Not Ducks On a Pond" and written by Joris Kritis. Its glossy, full-colour pages honor Weiner's use of graphic design, which has always in turn fascinated graphic designers. Features interviews with graphic designer Linda Van Deursen and artist Nora Turato.</p>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-neutral-200">
-                                <p class="text-xs text-neutral-500">Keywords: Graphic Design, Typography, Artist Book, Magazine, Conceptual Art, Language Art</p>
-                                <a href="/books/weiner_revue-faire-49-lawrence-weiner_1678/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Maxime Muller - Safe Word - Jan 17, 2026 -->
-                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
-                        <div class="h-64 overflow-hidden bg-neutral-100">
-                            <img src="/assets/images/books/Muller_Safe_Word_9782957808489.jpg" alt="Cover of Safe Word" class="w-full h-full object-contain">
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-4">
-                                <p class="text-xs text-neutral-500 mb-1">TR647.M85 S34 2023</p>
-                                <h3 class="text-xl font-bold text-primary-700 mb-1">Safe Word</h3>
-                                <p class="italic text-neutral-700">Maxime Muller</p>
-                            </div>
-                            <div class="space-y-2 text-sm text-neutral-600">
-                                <p><span class="font-semibold">Imprint:</span> Les Éditions Rien Ne Va Plus, 2023.</p>
-                                <p><span class="font-semibold">Physical Description:</span> 300 pages: risograph; 22.0 x 17.5 cm</p>
-                                <p><span class="font-semibold">ISBN:</span> 9782957808489</p>
-                                <p><span class="font-semibold">Edition:</span> Edition of 300 copies</p>
-                                <p><span class="font-semibold">Binding:</span> Perfect Binding, Risograph</p>
-                                <p><span class="font-semibold">Accession Date:</span> January 17, 2026</p>
-                                <p class="mt-2 text-xs">Muller's 300-page publication is an account of an obsessive, staggering practice of photography and self-publishing. His dark and raw work is intended to exist as a cross-section as well as a chronology in the heart of dense and dazzling archives. Maxime Muller advances on a fault line where image and violence collide, he speaks to us of politics and identity.</p>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-neutral-200">
-                                <p class="text-xs text-neutral-500">Keywords: Photography, Artist Book, Risograph, Black-and-White, Color, Self-Publishing</p>
-                                <a href="/books/muller_safe-word_1677/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Christopher Wool - See Stop Run - Jan 10, 2026 -->
-                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
-                        <div class="h-64 overflow-hidden bg-neutral-100">
-                            <img src="/assets/images/books/IMG_3371.jpeg" alt="Cover of Christopher Wool: See Stop Run" class="w-full h-full object-contain">
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-4">
-                                <p class="text-xs text-neutral-500 mb-1">N6537.W66 A4 2025</p>
-                                <h3 class="text-xl font-bold text-primary-700 mb-1">Christopher Wool: See Stop Run</h3>
-                                <p class="italic text-neutral-700">Christopher Wool</p>
-                            </div>
-                            <div class="space-y-2 text-sm text-neutral-600">
-                                <p><span class="font-semibold">Imprint:</span> Wool 101 Greenwich Inc., 2025.</p>
-                                <p><span class="font-semibold">Physical Description:</span> 400 pages: 295 color and black-and-white photographs; 29.3 x 23.0 cm</p>
-                                <p><span class="font-semibold">ISBN:</span> 978-3-947127-55-9</p>
-                                <p><span class="font-semibold">Contributors:</span> Anne Pontégnie, Christopher Wool</p>
-                                <p><span class="font-semibold">Designer:</span> Joseph Logan</p>
-                                <p><span class="font-semibold">Accession Date:</span> January 10, 2026</p>
-                                <p class="mt-2 text-xs">Published on the occasion of the exhibition at 101 Greenwich Street, New York (2024). Taking the form of an expanded artist's book, this catalogue gathers nearly three hundred candid photographs of the installation taken by dozens of artists, friends, and Instagram users. Includes an extensive interview between Wool and Pontégnie situating the project within the artist's three-decades-long use of photography and installation. Printed by Trifolio, Verona. Distributed by D.A.P./Distributed Art Publishers.</p>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-neutral-200">
-                                <p class="text-xs text-neutral-500">Keywords: Contemporary Art, Photography, Installation Art, Artist Books, Exhibition Catalogs, New York</p>
-                                <a href="/books/wool_see-stop-run_1664/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Theaster Gates - Unto Thee - Dec 26, 2025 -->
-                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
-                        <div class="h-64 overflow-hidden bg-neutral-100">
-                            <img src="/assets/images/books/Gates_Theaster_Gates_Unto_Thee.jpg" alt="Cover of Theaster Gates: Unto Thee" class="w-full h-full object-contain">
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-4">
-                                <p class="text-xs text-neutral-500 mb-1">N6537.G38 A4 2025</p>
-                                <h3 class="text-xl font-bold text-primary-700 mb-1">Theaster Gates: Unto Thee</h3>
-                                <p class="italic text-neutral-700">Theaster Gates</p>
-                            </div>
-                            <div class="space-y-2 text-sm text-neutral-600">
-                                <p><span class="font-semibold">Imprint:</span> Smart Museum of Art, 2025.</p>
-                                <p><span class="font-semibold">Physical Description:</span> 176 pages: 113 color plates; 28.3 x 21.0 cm</p>
-                                <p><span class="font-semibold">ISBN:</span> 979-8-9922160-0-4</p>
-                                <p><span class="font-semibold">Editors:</span> Galina Mardilovich, Vanja Malloy</p>
-                                <p><span class="font-semibold">Accession Date:</span> December 26, 2025</p>
-                                <p class="mt-2 text-xs">Catalog accompanying the Smart Museum of Art exhibition—the first major museum presentation of Chicago artist Theaster Gates in his hometown. Features five scholarly essays examining Gates's practice of institutional critique and community-building on Chicago's South Side.</p>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-neutral-200">
-                                <p class="text-xs text-neutral-500">Keywords: Contemporary Art, Exhibition Catalog, Chicago, Community Art, Institutional Critique, African American Artists</p>
-                                <a href="/books/gates_theaster_gates_unto_thee/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Lukas Birk - MUG SHOT - Dec 23, 2025 -->
-                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
-                        <div class="h-64 overflow-hidden bg-neutral-100">
-                            <img src="/assets/images/books/Birk_MUG_SHOT_guilty_until_proven_innocent.jpg" alt="Cover of MUG SHOT – guilty until proven innocent" class="w-full h-full object-contain">
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-4">
-                                <p class="text-xs text-neutral-500 mb-1">TR647.B57 M8 2025</p>
-                                <h3 class="text-xl font-bold text-primary-700 mb-1">MUG SHOT – guilty until proven innocent</h3>
-                                <p class="italic text-neutral-700">Lukas Birk</p>
-                            </div>
-                            <div class="space-y-2 text-sm text-neutral-600">
-                                <p><span class="font-semibold">Imprint:</span> Fraglich Publishing, 2025.</p>
-                                <p><span class="font-semibold">Physical Description:</span> 336 pages; 17.5 x 14.0 cm</p>
-                                <p><span class="font-semibold">Edition:</span> Edition of 500</p>
-                                <p><span class="font-semibold">Accession Date:</span> December 23, 2025</p>
-                                <p class="mt-2 text-xs">An examination of forced identity photography from historic archives, exploring representations of criminals, victims of persecution, political prisoners, and war camp inmates. Part of the Surveillance Index collection.</p>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-neutral-200">
-                                <p class="text-xs text-neutral-500">Keywords: Photography, Surveillance, Criminal Justice, Political Prisoners, Identity, Archives, Documentary Photography</p>
-                                <a href="/books/birk_mug_shot_guilty_until_proven_innocent/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Jack Pierson - Array (Miami Beach) - Dec 23, 2025 -->
-                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
-                        <div class="h-64 overflow-hidden bg-neutral-100">
-                            <img src="/assets/images/books/Pierson_Array_Miami_Beach_9781940881713.jpg" alt="Cover of Array (Miami Beach)" class="w-full h-full object-contain">
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-4">
-                                <p class="text-xs text-neutral-500 mb-1">TR647.P54 A7 2025</p>
-                                <h3 class="text-xl font-bold text-primary-700 mb-1">Array (Miami Beach)</h3>
-                                <p class="italic text-neutral-700">Jack Pierson</p>
-                            </div>
-                            <div class="space-y-2 text-sm text-neutral-600">
-                                <p><span class="font-semibold">Imprint:</span> Hassla, 2025.</p>
-                                <p><span class="font-semibold">Physical Description:</span> 168 pages: color photographs; 30.5 x 22.9 cm</p>
-                                <p><span class="font-semibold">ISBN:</span> 978-1-940881-71-3</p>
-                                <p><span class="font-semibold">Edition:</span> Limited edition of 500 copies</p>
-                                <p><span class="font-semibold">Accession Date:</span> December 23, 2025</p>
-                                <p class="mt-2 text-xs">Jack Pierson's Array (Miami Beach) is a collection of photographic works capturing the essence of Miami Beach. Signed by the artist.</p>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-neutral-200">
-                                <p class="text-xs text-neutral-500">Keywords: Photography, Contemporary Art, Miami, Signed, Limited Edition</p>
-                                <a href="/books/pierson_array_miami_beach/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Jack Pierson - Andre - Dec 23, 2025 -->
-                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
-                        <div class="h-64 overflow-hidden bg-neutral-100">
-                            <img src="/assets/images/books/Pierson_Andre_9781940881706.jpg" alt="Cover of Andre" class="w-full h-full object-contain">
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-4">
-                                <p class="text-xs text-neutral-500 mb-1">TR647.P54 A5 2025</p>
-                                <h3 class="text-xl font-bold text-primary-700 mb-1">Andre</h3>
-                                <p class="italic text-neutral-700">Jack Pierson</p>
-                            </div>
-                            <div class="space-y-2 text-sm text-neutral-600">
-                                <p><span class="font-semibold">Imprint:</span> Hassla, 2025.</p>
-                                <p><span class="font-semibold">Physical Description:</span> softcover; 19.1 x 14.0 cm</p>
-                                <p><span class="font-semibold">ISBN:</span> 978-1-940881-70-6</p>
-                                <p><span class="font-semibold">Edition:</span> Edition of 500</p>
-                                <p><span class="font-semibold">Accession Date:</span> December 23, 2025</p>
-                                <p class="mt-2 text-xs">Jack Pierson's Andre is a photographic exploration presented in an intimate format. Signed by the artist.</p>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-neutral-200">
-                                <p class="text-xs text-neutral-500">Keywords: Photography, Contemporary Art, Signed, Limited Edition</p>
-                                <a href="/books/pierson_andre/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Richard Prince - Folksongs - Nov 7, 2025 -->
-                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
-                        <div class="h-64 overflow-hidden bg-neutral-100">
-                            <img src="/assets/images/books/Prince_Folksongs.jpg" alt="Cover of Richard Prince: Folksongs" class="w-full h-full object-contain">
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-4">
-                                <p class="text-xs text-neutral-500 mb-1">N6537.P745 A4 2025</p>
-                                <h3 class="text-xl font-bold text-primary-700 mb-1">Richard Prince: Folksongs</h3>
-                                <p class="italic text-neutral-700">Richard Prince</p>
-                            </div>
-                            <div class="space-y-2 text-sm text-neutral-600">
-                                <p><span class="font-semibold">Imprint:</span> Fulton Ryder, 2025.</p>
-                                <p><span class="font-semibold">Physical Description:</span> 193 pages: 193 color illustrations; 29.8 x 22.2 cm</p>
-                                <p><span class="font-semibold">ISBN:</span> 9798985236859</p>
-                                <p><span class="font-semibold">Accession Date:</span> November 7, 2025</p>
-                                <p class="mt-2 text-xs">An artist's book and monograph showcasing Prince's conceptual work across multiple mediums. Features new body of paintings alongside studio photos and documentation of various sculptures and installations from his Upstate series. Works incorporate collage, impasto, and oil stick techniques with close-up shots of eyeballs, sutured skin and mouths with a cigarette.</p>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-neutral-200">
-                                <p class="text-xs text-neutral-500">Keywords: Contemporary Art, Photography, Artist Book, Conceptual Art</p>
-                                <a href="/books/prince_folksongs_1577/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Goya - The Disasters of War - Oct 28, 2025 -->
-                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
-                        <div class="h-64 overflow-hidden bg-neutral-100">
-                            <img src="/assets/images/books/Goya_Goya_The_Disasters_of_War_9788410024632.jpg" alt="Cover of Goya: The Disasters of War" class="w-full h-full object-contain">
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-4">
-                                <p class="text-xs text-neutral-500 mb-1">NE2012.G69 A4 2025</p>
-                                <h3 class="text-xl font-bold text-primary-700 mb-1">Goya: The Disasters of War</h3>
-                                <p class="italic text-neutral-700">Francisco de Goya</p>
-                            </div>
-                            <div class="space-y-2 text-sm text-neutral-600">
-                                <p><span class="font-semibold">Imprint:</span> Madrid: La Fábrica, 2025.</p>
-                                <p><span class="font-semibold">Physical Description:</span> 176 pages: 80 etchings; 30 x 25 cm</p>
-                                <p><span class="font-semibold">ISBN:</span> 9788410024632</p>
-                                <p><span class="font-semibold">Accession Date:</span> October 28, 2025</p>
-                                <p class="mt-2 text-xs">Based on the original 1863 edition, this presentation of Goya's 80 etchings decries the consequences of war through his bleak, gruesome and unflinching imagery from the Peninsular War (1808-14). Faithfully reproduces the first edition published 35 years after Goya's death.</p>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-neutral-200">
-                                <p class="text-xs text-neutral-500">Keywords: War, Etchings, Spanish Art, Historical, Political Art, Printmaking</p>
-                                <a href="/books/goya_goya-the-disasters-of-war_1354/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Leo Villareal - Coding Light - Oct 28, 2025 -->
-                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
-                        <div class="h-64 overflow-hidden bg-neutral-100">
-                            <img src="/assets/images/books/Villareal_Leo_Villareal_Coding_Light_9781580936538.jpg" alt="Cover of Leo Villareal: Coding Light" class="w-full h-full object-contain">
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-4">
-                                <p class="text-xs text-neutral-500 mb-1">N6537.V54 A4 2025</p>
-                                <h3 class="text-xl font-bold text-primary-700 mb-1">Leo Villareal: Coding Light</h3>
-                                <p class="italic text-neutral-700">Leo Villareal</p>
-                            </div>
-                            <div class="space-y-2 text-sm text-neutral-600">
-                                <p><span class="font-semibold">Imprint:</span> New York: Monacelli Press, 2025.</p>
-                                <p><span class="font-semibold">Physical Description:</span> 336 pages: 350 color illustrations; 32 x 25 cm</p>
-                                <p><span class="font-semibold">ISBN:</span> 9781580936538</p>
-                                <p><span class="font-semibold">Accession Date:</span> October 28, 2025</p>
-                                <p class="mt-2 text-xs">Expansive monograph of Mexican-American artist Leo Villareal's monumental light installations. Features more than 30 works including Cosmos at Cornell University and Illuminated River along the Thames in London. Includes essays by Molly Donovan, Annie Dell'Aria, and an interview with Sarah Sze.</p>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-neutral-200">
-                                <p class="text-xs text-neutral-500">Keywords: Light Art, Digital Art, Installation Art, Public Art, Contemporary Art</p>
-                                <a href="/books/villareal_leo-villareal-coding-light_1355/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- David Wojnarowicz - Arthur Rimbaud in New York - Oct 28, 2025 -->
-                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
-                        <div class="h-64 overflow-hidden bg-neutral-100">
-                            <img src="/assets/images/books/Wojnarowicz_David_Wojnarowicz_Arthur_Rimbaud_in_New_York_9788857254067.jpg" alt="Cover of David Wojnarowicz: Arthur Rimbaud in New York" class="w-full h-full object-contain">
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-4">
-                                <p class="text-xs text-neutral-500 mb-1">TR647.W65 A4 2025</p>
-                                <h3 class="text-xl font-bold text-primary-700 mb-1">Arthur Rimbaud in New York</h3>
-                                <p class="italic text-neutral-700">David Wojnarowicz</p>
-                            </div>
-                            <div class="space-y-2 text-sm text-neutral-600">
-                                <p><span class="font-semibold">Imprint:</span> Milan: Skira, 2025.</p>
-                                <p><span class="font-semibold">Physical Description:</span> 208 pages: 150 color images; 28 x 24 cm</p>
-                                <p><span class="font-semibold">ISBN:</span> 9788857254067</p>
-                                <p><span class="font-semibold">Accession Date:</span> October 28, 2025</p>
-                                <p class="mt-2 text-xs">Documents Wojnarowicz's 1978-79 photographs of a man wearing a paper mask of Arthur Rimbaud. Essays by Antonio Sergio Bessa, Nicholas Martin, and Craig Dworkin contextualize the work within punk culture, downtown Manhattan, and queer history. Includes interview with photographer Allen Frame.</p>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-neutral-200">
-                                <p class="text-xs text-neutral-500">Keywords: Photography, LGBTQ Art, Performance Art, Punk, Downtown New York</p>
-                                <a href="/books/wojnarowicz_david-wojnarowicz-arthur-rimbaud-in-new-york_1356/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Paul Thek and Peter Hujar - Stay away from nothing - Oct 24, 2025 -->
-                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
-                        <div class="h-64 overflow-hidden bg-neutral-100">
-                            <img src="/assets/images/queer/thek-hujar-stay-away-from-nothing.jpg" alt="Cover of Stay away from nothing" class="w-full h-full object-contain">
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-4">
-                                <p class="text-xs text-neutral-500 mb-1">N6537.T453 A4 2025</p>
-                                <h3 class="text-xl font-bold text-primary-700 mb-1">Stay away from nothing</h3>
-                                <p class="italic text-neutral-700">Paul Thek and Peter Hujar</p>
-                            </div>
-                            <div class="space-y-2 text-sm text-neutral-600">
-                                <p><span class="font-semibold">Imprint:</span> New York: Primary Information, 2025.</p>
-                                <p><span class="font-semibold">Physical Description:</span> 192 pages: illustrations, photographs; 9 x 12 inches</p>
-                                <p><span class="font-semibold">Accession Date:</span> October 24, 2025</p>
-                                <p class="mt-2 text-xs">Explores the relationship between artists Paul Thek and Peter Hujar through over fifty letters, postcards, drawings, and ephemera documenting their travels and creative work from 1956-1975. Includes Hujar's photographs of Thek from the Palermo catacombs and studio portraits during the creation of "The Tomb."</p>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-neutral-200">
-                                <p class="text-xs text-neutral-500">Keywords: Photography, queer art, American artists, artist correspondence, 1960s-1970s, New York art</p>
-                                <a href="/books/thek_stay-away-from-nothing_1309/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Kerry James Marshall - Rythm Mastr - Oct 20, 2025 -->
-                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
-                        <div class="h-64 overflow-hidden bg-neutral-100">
-                            <img src="/assets/images/books/Marshall_Rythm_Mastr_This_Is_How_It_Begins_9780847835614.jpg" alt="Cover of Rythm Mastr: This Is How It Begins" class="w-full h-full object-contain">
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-4">
-                                <p class="text-xs text-neutral-500 mb-1">PN6728.R49 M37 2025</p>
-                                <h3 class="text-xl font-bold text-primary-700 mb-1">Rythm Mastr: This Is How It Begins</h3>
-                                <p class="italic text-neutral-700">Kerry James Marshall</p>
-                            </div>
-                            <div class="space-y-2 text-sm text-neutral-600">
-                                <p><span class="font-semibold">Imprint:</span> New York: Rizzoli Electa, 2025.</p>
-                                <p><span class="font-semibold">Physical Description:</span> 1 volume: illustrations (color); 30 cm</p>
-                                <p><span class="font-semibold">Accession Date:</span> October 20, 2025</p>
-                                <p class="mt-2 text-xs">Marshall's groundbreaking comic series created in the late 1990s as a direct response to the absence of authentic Black characters and authors in mainstream comics. Features Rythm Mastr and his protégé Farell, superheroes whose powers derive from the seven gods of the Yoruba pantheon.</p>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-neutral-200">
-                                <p class="text-xs text-neutral-500">Keywords: Afrofuturism, graphic novels, African American art, contemporary art, superhero comics</p>
-                                <a href="/books/marshall_rythm-mastr-this-is-how-it-begins_1304/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- John Divola - Italian Cars - Oct 20, 2025 -->
-                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
-                        <div class="h-64 overflow-hidden bg-neutral-100">
-                            <img src="/assets/images/books/Divola_One_Picture_Book_Two_Vol_48_-_Italian_Cars_NULL.jpg" alt="Cover of Italian Cars" class="w-full h-full object-contain">
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-4">
-                                <p class="text-xs text-neutral-500 mb-1">TR647 .D58 2025 v.48</p>
-                                <h3 class="text-xl font-bold text-primary-700 mb-1">Italian Cars</h3>
-                                <p class="italic text-neutral-700">John Divola</p>
-                                <p class="text-xs text-neutral-600 mt-1">One Picture Book Two Vol #48</p>
-                            </div>
-                            <div class="space-y-2 text-sm text-neutral-600">
-                                <p><span class="font-semibold">Imprint:</span> Portland: Nazraeli Press, 2025.</p>
-                                <p><span class="font-semibold">Physical Description:</span> 1 volume: color photographs; softcover; 5x7 inch signed print</p>
-                                <p><span class="font-semibold">Accession Date:</span> October 20, 2025</p>
-                                <p class="mt-2 text-xs">Limited to 500 numbered copies. Divola's contemplative automotive studies explore the intersection of landscape, architecture, and vernacular culture through his distinctive photographic vision.</p>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-neutral-200">
-                                <p class="text-xs text-neutral-500">Keywords: Photography, limited edition, automotive studies, contemporary photography</p>
-                                <a href="/books/divola_one-picture-book-two-vol-48-italian-cars_1308/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Benedetta Casagrande - Paperworks - Oct 20, 2025 -->
-                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
-                        <div class="h-64 overflow-hidden bg-neutral-100">
-                            <img src="/assets/images/books/Casagrande_One_Picture_Book_Two_Vol_47_-_Paperworks_NULL.jpg" alt="Cover of Paperworks" class="w-full h-full object-contain">
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-4">
-                                <p class="text-xs text-neutral-500 mb-1">TR647 .C37 2025 v.47</p>
-                                <h3 class="text-xl font-bold text-primary-700 mb-1">Paperworks</h3>
-                                <p class="italic text-neutral-700">Benedetta Casagrande</p>
-                                <p class="text-xs text-neutral-600 mt-1">One Picture Book Two Vol #47</p>
-                            </div>
-                            <div class="space-y-2 text-sm text-neutral-600">
-                                <p><span class="font-semibold">Imprint:</span> Portland: Nazraeli Press, 2025.</p>
-                                <p><span class="font-semibold">Physical Description:</span> 1 volume: color photographs; softcover; 5x7 inch signed print</p>
-                                <p><span class="font-semibold">Accession Date:</span> October 20, 2025</p>
-                                <p class="mt-2 text-xs">Limited to 500 numbered copies. Casagrande's innovative approach to photography and paper explores materiality and process in compelling ways.</p>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-neutral-200">
-                                <p class="text-xs text-neutral-500">Keywords: Photography, limited edition, paper art, materiality, contemporary photography</p>
-                                <a href="/books/casagrande_one-picture-book-two-vol-47-paperworks_1307/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Eikoh Hosoe - Kimono - Oct 20, 2025 -->
-                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
-                        <div class="h-64 overflow-hidden bg-neutral-100">
-                            <img src="/assets/images/books/Hosoe_One_Picture_Book_Two_Vol_48_-_Kimono_NULL.jpg" alt="Cover of Kimono" class="w-full h-full object-contain">
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-4">
-                                <p class="text-xs text-neutral-500 mb-1">TR647 .H67 2025 v.48</p>
-                                <h3 class="text-xl font-bold text-primary-700 mb-1">Kimono</h3>
-                                <p class="italic text-neutral-700">Eikoh Hosoe</p>
-                                <p class="text-xs text-neutral-600 mt-1">One Picture Book Two Vol #48</p>
-                            </div>
-                            <div class="space-y-2 text-sm text-neutral-600">
-                                <p><span class="font-semibold">Imprint:</span> Portland: Nazraeli Press, 2025.</p>
-                                <p><span class="font-semibold">Physical Description:</span> 1 volume: photographs; softcover; 5x7 inch signed print</p>
-                                <p><span class="font-semibold">Accession Date:</span> October 20, 2025</p>
-                                <p class="mt-2 text-xs">Limited to 500 numbered copies. One of Japan's most celebrated photographers brings his distinctive vision to traditional Japanese garments in this compelling work.</p>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-neutral-200">
-                                <p class="text-xs text-neutral-500">Keywords: Photography, limited edition, Japanese photography, fashion, traditional garments</p>
-                                <a href="/books/hosoe_one-picture-book-two-vol-48-kimono_1306/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Susan Zadeh - Toer - Oct 20, 2025 -->
-                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
-                        <div class="h-64 overflow-hidden bg-neutral-100">
-                            <img src="/assets/images/books/Zadeh_One_Picture_Book_Two_Vol_46_-_Susan_Zadeh_Toer_NULL.jpg" alt="Cover of Toer" class="w-full h-full object-contain">
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-4">
-                                <p class="text-xs text-neutral-500 mb-1">TR647 .Z34 2025 v.46</p>
-                                <h3 class="text-xl font-bold text-primary-700 mb-1">Toer</h3>
-                                <p class="italic text-neutral-700">Susan Zadeh</p>
-                                <p class="text-xs text-neutral-600 mt-1">One Picture Book Two Vol #46</p>
-                            </div>
-                            <div class="space-y-2 text-sm text-neutral-600">
-                                <p><span class="font-semibold">Imprint:</span> Portland: Nazraeli Press, 2025.</p>
-                                <p><span class="font-semibold">Physical Description:</span> 1 volume: color photographs; softcover; 5x7 inch signed print</p>
-                                <p><span class="font-semibold">Accession Date:</span> October 20, 2025</p>
-                                <p class="mt-2 text-xs">Limited to 500 numbered copies. Zadeh's photographic practice explores themes of memory, place, and cultural identity.</p>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-neutral-200">
-                                <p class="text-xs text-neutral-500">Keywords: Photography, limited edition, memory, cultural identity, contemporary photography</p>
-                                <a href="/books/zadeh_one-picture-book-two-vol-46-susan-zadeh-toer_1305/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Felix Gonzalez-Torres - Always to Return - Dec 12, 2024 -->
-                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
-                        <div class="h-64 overflow-hidden bg-neutral-100">
-                            <img src="/assets/images/books/gonzalez-torres_always-to-return/Felix Gonzalez-Torres-Always to Return.jpg" alt="Cover of Felix Gonzalez-Torres: Always to Return" class="w-full h-full object-contain">
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-4">
-                                <p class="text-xs text-neutral-500 mb-1">TR647.G66 A4 2024</p>
-                                <h3 class="text-xl font-bold text-primary-700 mb-1">Felix Gonzalez-Torres: Always to Return</h3>
-                                <p class="italic text-neutral-700">Felix Gonzalez-Torres</p>
-                            </div>
-                            <div class="space-y-2 text-sm text-neutral-600">
-                                <p><span class="font-semibold">Imprint:</span> Radius Books, 2024.</p>
-                                <p><span class="font-semibold">Physical Description:</span> 340 pages: 160 images; 29.85 x 22.23 cm</p>
-                                <p><span class="font-semibold">ISBN:</span> 9798890181107</p>
-                                <p><span class="font-semibold">Accession Date:</span> December 12, 2024</p>
-                                <p class="mt-2 text-xs">This monograph examines the artist's relationship to portraiture, expanding the genre from static representations of individuals to one with the capacity to change, remain resonant, and encourage collaboration. Co-published with the National Portrait Gallery and the Archives of American Art, Smithsonian Institution.</p>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-neutral-200">
-                                <p class="text-xs text-neutral-500">Keywords: Art, Contemporary Art, LGBTQ, Photography, Portraiture</p>
-                                <a href="/books/gonzalez_torres_felix_gonzalez_torres_always_to_return/" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="text-center mt-12">

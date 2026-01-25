@@ -498,7 +498,7 @@ ${mag.specialContent && mag.specialContent.length > 0 ? `
 }
 
 // Create directories and generate all pages
-const baseDir = path.join(__dirname, 'src', 'books', 'magazines', 'apartamento');
+const baseDir = path.join(__dirname, '../../src', 'books', 'magazines', 'apartamento');
 
 // Create directory if it doesn't exist
 if (!fs.existsSync(baseDir)) {

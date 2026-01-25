@@ -59,22 +59,22 @@ import {
   writeHTMLFile,
   validatePrerequisites,
   fileExists,
-} from './lib/file-system-utils.js';
+} from '../lib/file-system-utils.js';
 
 import {
   extractPrinceBooks,
   sortBooks,
-} from './lib/book-data-extractor.js';
+} from '../lib/book-data-extractor.js';
 
 import {
   generateCollectionPage,
   validateHTML,
-} from './lib/html-generator.js';
+} from '../lib/html-generator.js';
 
 // Configuration
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const PROJECT_ROOT = resolve(__dirname, '..');
+const PROJECT_ROOT = resolve(__dirname, '../..');
 
 const CONFIG = {
   csvFile: resolve(PROJECT_ROOT, 'src/_data/books.csv'),

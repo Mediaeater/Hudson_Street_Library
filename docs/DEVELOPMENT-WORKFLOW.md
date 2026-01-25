@@ -326,7 +326,7 @@ node scripts/add-books-to-db.js
 
 ```bash
 # ONLY USE THIS SCRIPT for acquiring covers
-node acquire-covers.js --limit 50
+node scripts/covers/acquire-covers.js --limit 50
 
 # This script:
 # - Reads books.csv
@@ -925,7 +925,7 @@ Author_Name_Book_Title_ISBN.jpg
 src/assets/images/books/Berenice_Abbott_Documenting_Science_9783869304311.jpg
 
 # Automated acquisition
-node acquire-covers.js --limit 50
+node scripts/covers/acquire-covers.js --limit 50
 ```
 
 #### Other Images
@@ -1721,7 +1721,7 @@ npm run build
 npm run clean
 
 # Add book covers
-node acquire-covers.js --limit 50
+node scripts/covers/acquire-covers.js --limit 50
 
 # Git workflow
 git add .
