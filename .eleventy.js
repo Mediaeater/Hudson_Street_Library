@@ -137,10 +137,12 @@ module.exports = function(eleventyConfig) {
     }
 
     // Format YYYY-MM-DD to "Month DD, YYYY"
-    const date = new Date(dateStr);
+    // Parse as UTC to avoid timezone issues
+    const parts = dateStr.split('-');
+    const date = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2]));
     if (isNaN(date.getTime())) return dateStr;
 
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options = { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' };
     return date.toLocaleDateString('en-US', options);
   });
 
