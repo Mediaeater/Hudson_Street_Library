@@ -63,7 +63,7 @@ currentPage: recently-added
                                 {% if book.language %}<p><span class="font-semibold">Language:</span> {{ book.language }}</p>{% endif %}
                                 {% if book.is_signed_inscribed === 'true' or book.is_signed_inscribed === true %}<p><span class="font-semibold">Signed:</span> Yes</p>{% endif %}
                                 {% if book.artist_url %}<p><span class="font-semibold">Artist Website:</span> <a href="{{ book.artist_url }}" target="_blank" class="text-primary-700 hover:underline">{{ book.artist_url | replace("https://", "") | replace("http://", "") | replace("www.", "") }}</a></p>{% endif %}
-                                {% if book.accession_no %}<p><span class="font-semibold">Accession Date:</span> {{ book.accession_no }}</p>{% endif %}
+                                {% if book.accession_no %}<p><span class="font-semibold">Accession Date:</span> {{ book.accession_no | formatAccessionDate }}</p>{% endif %}
                                 {% if book.description %}<p class="mt-2 text-xs">{{ book.description }}</p>{% endif %}
                             </div>
                             <div class="mt-4 pt-4 border-t border-neutral-200">

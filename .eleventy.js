@@ -84,28 +84,64 @@ module.exports = function(eleventyConfig) {
     ).length;
   });
 
+  // --- Parse accession date to sortable format ---
+  function parseAccessionDate(dateStr) {
+    if (!dateStr) return null;
+
+    // Handle YYYY-MM-DD format
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+      return new Date(dateStr);
+    }
+
+    // Handle formats like "October 29, 2025" or "December 2024"
+    const parsed = new Date(dateStr);
+    if (!isNaN(parsed.getTime())) {
+      return parsed;
+    }
+
+    // Handle just year "2025"
+    if (/^20\d{2}$/.test(dateStr)) {
+      return new Date(`${dateStr}-01-01`);
+    }
+
+    return null;
+  }
+
   // --- Filter books by accession date ---
   // Returns books sorted by accession date (most recent first)
   eleventyConfig.addFilter("recentlyAdded", function(books, limit) {
     if (!books) return [];
 
-    // Filter books with valid accession dates (YYYY-MM-DD format)
-    const booksWithDates = books.filter(b => {
-      if (!b.accession_no) return false;
-      // Match YYYY-MM-DD or other date formats
-      return /\d{4}-\d{2}-\d{2}/.test(b.accession_no) ||
-             /20\d{2}/.test(b.accession_no);
-    });
+    // Filter books with valid accession dates and parse them
+    const booksWithDates = books.map(b => ({
+      ...b,
+      parsedDate: parseAccessionDate(b.accession_no)
+    })).filter(b => b.parsedDate !== null);
 
-    // Sort by accession date (descending - most recent first)
+    // Sort by parsed date (descending - most recent first)
     const sorted = booksWithDates.sort((a, b) => {
-      const dateA = a.accession_no || '';
-      const dateB = b.accession_no || '';
-      return dateB.localeCompare(dateA);
+      return b.parsedDate - a.parsedDate;
     });
 
     // Return limited or all
     return limit ? sorted.slice(0, limit) : sorted;
+  });
+
+  // --- Format accession date for display ---
+  eleventyConfig.addFilter("formatAccessionDate", function(dateStr) {
+    if (!dateStr) return '';
+
+    // If already in readable format, return as-is
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+      return dateStr;
+    }
+
+    // Format YYYY-MM-DD to "Month DD, YYYY"
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return dateStr;
+
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
   });
 
   // --- Generate cover image path from book data ---
