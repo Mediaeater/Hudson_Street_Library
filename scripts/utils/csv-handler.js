@@ -174,7 +174,7 @@ class CSVHandler {
     /**
      * Stream process large CSV files
      * @param {string} filePath - Path to CSV file
-     * @param {Function} processRow - Function to process each row
+     * @param {Function} processRow - Function to process each row (can be async)
      * @param {Object} options - CSV parse options
      */
     static async stream(filePath, processRow, options = {}) {
@@ -187,14 +187,45 @@ class CSVHandler {
 
         return new Promise((resolve, reject) => {
             let rowCount = 0;
-            fs.createReadStream(filePath)
-                .pipe(parse(defaultOptions))
-                .on('data', async (record) => {
-                    rowCount++;
+            let pendingOperations = 0;
+            let streamEnded = false;
+            const parser = parse(defaultOptions);
+            const stream = fs.createReadStream(filePath);
+
+            const checkComplete = () => {
+                if (streamEnded && pendingOperations === 0) {
+                    resolve(rowCount);
+                }
+            };
+
+            parser.on('data', async (record) => {
+                rowCount++;
+                pendingOperations++;
+                parser.pause(); // Pause to handle async processing
+
+                try {
                     await processRow(record, rowCount);
-                })
-                .on('end', () => resolve(rowCount))
-                .on('error', reject);
+                } catch (error) {
+                    stream.destroy();
+                    parser.destroy();
+                    reject(error);
+                    return;
+                } finally {
+                    pendingOperations--;
+                    parser.resume(); // Resume after processing
+                    checkComplete();
+                }
+            });
+
+            parser.on('end', () => {
+                streamEnded = true;
+                checkComplete();
+            });
+
+            parser.on('error', reject);
+            stream.on('error', reject);
+
+            stream.pipe(parser);
         });
     }
 
@@ -559,8 +590,14 @@ class CSVHandler {
         const originalBook = { ...readResult.data[bookIndex] };
         Object.assign(readResult.data[bookIndex], updates);
 
-        // Add update timestamp
-        readResult.data[bookIndex].updated_at = new Date().toISOString().split('T')[0];
+        // Add update timestamp to all records for consistency
+        const timestamp = new Date().toISOString().split('T')[0];
+        readResult.data.forEach(book => {
+            if (!book.updated_at) {
+                book.updated_at = timestamp;
+            }
+        });
+        readResult.data[bookIndex].updated_at = timestamp;
 
         // Write back to file
         const writeResult = await this.write(booksPath, readResult.data);
