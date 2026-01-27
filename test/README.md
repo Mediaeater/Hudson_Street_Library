@@ -2,6 +2,16 @@
 
 This project uses testing patterns inspired by [datasette-enrichments](https://github.com/datasette/datasette-enrichments).
 
+## Migration Status
+
+Tests are being migrated from the custom TestRunner framework (`scripts/tests/`) to Mocha:
+- ✅ **test-image-core** - Migrated (19 tests passing)
+- ⏳ **test-logger** - Pending migration
+- ⏳ **test-csv-handler** - Pending migration
+- ⏳ **test-book-api-client** - Pending migration
+
+See [MIGRATION_GUIDE.md](./MIGRATION_GUIDE.md) for migration patterns and instructions.
+
 ## Key Patterns
 
 ### 1. Fixture-Based Setup
