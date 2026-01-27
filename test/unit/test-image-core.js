@@ -82,6 +82,21 @@ describe('Image Core Utilities', function() {
       assert.ok(filename.endsWith('.png'), 'Should use custom extension');
       assert.ok(filename.length <= 24, 'Should respect maxLength (including extension)');
     });
+
+    it('should use standard structure when pattern has no placeholders', function() {
+      const bookData = {
+        author_last: 'Tolkien',
+        title: 'Hobbit',
+        isbn_asin: '123456'
+      };
+
+      // Pattern without '{' uses standard structure (line 100)
+      const filename = generateStandardFilename(bookData, {
+        pattern: 'simple-pattern'
+      });
+
+      assert.strictEqual(filename, 'Tolkien_Hobbit_123456.jpg');
+    });
   });
 
   describe('sanitizeFilename', function() {
@@ -154,18 +169,32 @@ describe('Image Core Utilities', function() {
       );
     });
 
-    it.skip('should warn on very large file', async function() {
-      // Skipped: Creating large files is slow and times out
-      // TODO: Mock file stats instead of creating actual large file
-      this.timeout(10000);
-      const largeFile = fixtures.createTestImage('large.jpg', 6000000);
-      const result = await validateImage(largeFile);
+    it('should warn on very large file', async function() {
+      // Use mocking instead of creating actual large file
+      const testFile = fixtures.createTestImage('test.jpg', 5000);
 
-      assert.ok(result.valid, 'Should still be valid');
-      assert.ok(
-        result.warnings.some(warn => warn.includes('File very large')),
-        'Should have size warning'
-      );
+      // Mock fs.statSync to return size > 5MB
+      const originalStatSync = fs.statSync;
+      fs.statSync = function(filePath) {
+        const stats = originalStatSync.call(fs, filePath);
+        if (filePath === testFile) {
+          return { ...stats, size: 6000000 }; // 6MB
+        }
+        return stats;
+      };
+
+      try {
+        const result = await validateImage(testFile);
+
+        assert.ok(result.valid, 'Should still be valid');
+        assert.ok(
+          result.warnings.some(warn => warn.includes('File very large')),
+          'Should have size warning'
+        );
+      } finally {
+        // Always restore original function
+        fs.statSync = originalStatSync;
+      }
     });
   });
 
@@ -197,6 +226,82 @@ describe('Image Core Utilities', function() {
         /does not exist/,
         'Should throw error for non-existent directory'
       );
+    });
+
+    it('should handle stat errors and log warning', async function() {
+      const testDir = fixtures.createTempDir();
+
+      // Create two files
+      const file1 = path.join(testDir, 'good.jpg');
+      const file2 = path.join(testDir, 'bad.jpg');
+      fs.writeFileSync(file1, Buffer.alloc(5000));
+      fs.writeFileSync(file2, Buffer.alloc(5000));
+      fixtures.tempFiles.push(file1, file2);
+
+      // Mock console.warn to capture warnings (line 318)
+      const originalWarn = console.warn;
+      const warnings = [];
+      console.warn = function(...args) {
+        warnings.push(args.join(' '));
+      };
+
+      // Mock fs.statSync to throw error for file2
+      const originalStatSync = fs.statSync;
+      fs.statSync = function(filePath) {
+        if (filePath === file2) {
+          throw new Error('Mock stat error');
+        }
+        return originalStatSync.call(fs, filePath);
+      };
+
+      try {
+        const duplicates = await findDuplicateImages(testDir);
+
+        // Should handle error gracefully and continue
+        assert.ok(Array.isArray(duplicates));
+
+        // Should have logged warning for the error
+        assert.ok(
+          warnings.some(w => w.includes('Could not stat file')),
+          'Should log stat error warning'
+        );
+      } finally {
+        fs.statSync = originalStatSync;
+        console.warn = originalWarn;
+      }
+    });
+
+    it('should check image dimensions if image-size available', async function() {
+      // Create a minimal valid 1x1 PNG that image-size can read
+      const pngData = Buffer.from([
+        0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, // PNG signature
+        0x00, 0x00, 0x00, 0x0D, // IHDR length
+        0x49, 0x48, 0x44, 0x52, // IHDR
+        0x00, 0x00, 0x00, 0x01, // width: 1
+        0x00, 0x00, 0x00, 0x01, // height: 1
+        0x08, 0x06, 0x00, 0x00, 0x00, // bit depth, color, compression, filter, interlace
+        0x1F, 0x15, 0xC4, 0x89, // CRC
+        0x00, 0x00, 0x00, 0x0A, // IDAT length
+        0x49, 0x44, 0x41, 0x54, // IDAT
+        0x78, 0x9C, 0x62, 0x00, 0x01, 0x00, 0x00, 0x05, 0x00, 0x01,
+        0x0D, 0x0A, 0x2D, 0xB4, // CRC
+        0x00, 0x00, 0x00, 0x00, // IEND length
+        0x49, 0x45, 0x4E, 0x44, // IEND
+        0xAE, 0x42, 0x60, 0x82  // CRC
+      ]);
+
+      const testFile = fixtures.createTempFile('tiny.png', pngData);
+      const result = await validateImage(testFile);
+
+      // If image-size is available, should have dimensions (lines 188-194)
+      if (result.stats.width !== undefined) {
+        assert.strictEqual(result.stats.width, 1);
+        assert.strictEqual(result.stats.height, 1);
+        assert.ok(
+          result.warnings.some(w => w.includes('Small dimensions')),
+          'Should warn about small dimensions'
+        );
+      }
     });
   });
 
@@ -406,6 +511,30 @@ describe('Image Core Utilities', function() {
       assert.strictEqual(result.valid, false);
       assert.ok(Array.isArray(result.errors));
       assert.ok(result.errors.length > 0);
+    });
+
+    it('should catch general validation errors', async function() {
+      // Create a valid test file
+      const testFile = fixtures.createTestImage('test.jpg', 5000);
+
+      // Mock fs.statSync to throw an error (lines 207-208)
+      const originalStatSync = fs.statSync;
+      fs.statSync = function(filePath) {
+        if (filePath === testFile) {
+          throw new Error('Mock stat error');
+        }
+        return originalStatSync.call(fs, filePath);
+      };
+
+      try {
+        const result = await validateImage(testFile);
+
+        assert.strictEqual(result.valid, false);
+        assert.ok(result.errors.some(err => err.includes('Validation error')));
+        assert.ok(result.errors.some(err => err.includes('Mock stat error')));
+      } finally {
+        fs.statSync = originalStatSync;
+      }
     });
 
     it('should handle stat errors in findDuplicateImages', async function() {

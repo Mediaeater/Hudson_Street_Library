@@ -508,4 +508,58 @@ describe('CSV Handler Integration Tests', function() {
       assert.strictEqual(result.data[0].title, 'Sync Book');
     });
   });
+
+  describe('Merge Operations', function() {
+    it('should merge multiple CSV files', async function() {
+      const file1 = path.join(testDir, 'file1.csv');
+      const file2 = path.join(testDir, 'file2.csv');
+      const outputPath = path.join(testDir, 'merged.csv');
+
+      const csv1 = `id,title,author_full_name
+1,Book 1,Author 1
+2,Book 2,Author 2`;
+
+      const csv2 = `id,title,author_full_name
+3,Book 3,Author 3
+4,Book 4,Author 4`;
+
+      fs.writeFileSync(file1, csv1);
+      fs.writeFileSync(file2, csv2);
+
+      const result = await CSVHandler.merge([file1, file2], outputPath);
+
+      assert.ok(result.success, 'Merge should succeed');
+      assert.strictEqual(result.totalRows, 4, 'Should have 4 total rows');
+
+      // Verify merged file
+      const merged = await CSVHandler.read(outputPath);
+      assert.strictEqual(merged.data.length, 4);
+    });
+
+    it('should remove duplicates when merging', async function() {
+      const file1 = path.join(testDir, 'dup1.csv');
+      const file2 = path.join(testDir, 'dup2.csv');
+      const outputPath = path.join(testDir, 'merged-unique.csv');
+
+      const csv1 = `id,title,author_full_name
+1,Book 1,Author 1
+2,Book 2,Author 2`;
+
+      const csv2 = `id,title,author_full_name
+2,Book 2,Author 2
+3,Book 3,Author 3`;
+
+      fs.writeFileSync(file1, csv1);
+      fs.writeFileSync(file2, csv2);
+
+      const result = await CSVHandler.merge([file1, file2], outputPath, true);
+
+      assert.ok(result.success);
+      assert.strictEqual(result.totalRows, 3, 'Should have 3 unique rows');
+
+      // Verify no duplicates
+      const merged = await CSVHandler.read(outputPath);
+      assert.strictEqual(merged.data.length, 3);
+    });
+  });
 });
