@@ -120,6 +120,12 @@ npm run test:watch
 
 # Verbose output
 npm run test:verbose
+
+# Run with code coverage
+npm run test:coverage
+
+# Open HTML coverage report
+npm run test:coverage:html
 ```
 
 ## Writing New Tests
