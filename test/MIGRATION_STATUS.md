@@ -4,7 +4,7 @@
 
 Successfully migrated custom TestRunner framework to Mocha-based testing infrastructure using patterns from datasette-enrichments.
 
-**Current Status:** 85 tests passing (1 pending)
+**Current Status:** 99 tests passing (1 pending)
 
 ## Completed Migrations
 
@@ -20,12 +20,23 @@ Successfully migrated custom TestRunner framework to Mocha-based testing infrast
   - ✅ checkImageExists (3 tests)
   - ✅ IMAGE_CONFIG (3 tests)
 
-## Pending Migrations
+### ✅ test-logger.js
+- **Original:** 701 lines, custom TestRunner framework
+- **Migrated to:** `test/unit/test-logger.js`
+- **Tests:** 14 tests (all passing)
+- **Coverage:**
+  - ✅ Logger initialization (3 tests)
+  - ✅ Log level filtering (2 tests)
+  - ✅ Console output (2 tests)
+  - ✅ File output (2 tests)
+  - ✅ Statistics tracking (2 tests)
+  - ✅ Batch processing (2 tests)
+  - ✅ Metadata handling (1 test)
+- **Special Features:**
+  - Added console-capture helper for testing console output
+  - MockLogger class included for testing
 
-### ⏳ test-logger.js
-- **Size:** 701 lines
-- **Focus:** Logger system functionality
-- **Complexity:** Medium (requires console capture)
+## Pending Migrations
 
 ### ⏳ test-csv-handler.js
 - **Size:** 831 lines
@@ -42,6 +53,7 @@ Successfully migrated custom TestRunner framework to Mocha-based testing infrast
 ### Test Helpers
 - `test/helpers/fixtures.js` - Fixture system with automatic cleanup
 - `test/helpers/async-utils.js` - Async utilities (waitFor, poll, retry)
+- `test/helpers/console-capture.js` - Console output capture for testing
 
 ### Configuration
 - `.mocharc.json` - Mocha configuration
@@ -100,10 +112,12 @@ npm run test:legacy:api    # API client tests (old)
 - `test/setup.js`
 - `test/helpers/fixtures.js`
 - `test/helpers/async-utils.js`
+- `test/helpers/console-capture.js`
 - `test/integration/test-data-integrity.js`
 - `test/unit/test-parametrized.js`
 - `test/unit/test-csv-operations.js`
 - `test/unit/test-image-core.js`
+- `test/unit/test-logger.js`
 - `test/README.md`
 - `test/MIGRATION_GUIDE.md`
 - `test/MIGRATION_STATUS.md`
@@ -115,21 +129,21 @@ npm run test:legacy:api    # API client tests (old)
 
 ### Legacy Files (Deprecated, but functional)
 - `scripts/tests/test-runner.js` - Custom framework
-- `scripts/tests/test-image-core.js` - Will be removed after full migration
-- `scripts/tests/test-logger.js` - To be migrated
-- `scripts/tests/test-csv-handler.js` - To be migrated
-- `scripts/tests/test-book-api-client.js` - To be migrated
+- `scripts/tests/test-image-core.js` - ✅ Migrated
+- `scripts/tests/test-logger.js` - ✅ Migrated
+- `scripts/tests/test-csv-handler.js` - ⏳ To be migrated
+- `scripts/tests/test-book-api-client.js` - ⏳ To be migrated
 
 ## Test Count Comparison
 
 | Framework | Tests | Status |
 |-----------|-------|--------|
-| Mocha (new) | 85 passing, 1 pending | ✅ Active |
+| Mocha (new) | 99 passing, 1 pending | ✅ Active |
 | Custom TestRunner | ~50+ tests | ⚠️ Being phased out |
 
 ## Performance
 
-- **Test execution:** ~210ms for 85 tests
+- **Test execution:** ~243ms for 99 tests
 - **Cleanup:** Automatic via fixtures
 - **Watch mode:** Available for rapid iteration
 
