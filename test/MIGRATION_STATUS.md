@@ -87,19 +87,15 @@ Successfully migrated custom TestRunner framework to Mocha-based testing infrast
 ## Test Commands
 
 ```bash
-# New Mocha tests (recommended)
+# Mocha tests
 npm test                    # All tests
 npm run test:unit          # Unit tests only
 npm run test:integration   # Integration tests only
 npm run test:watch         # Watch mode
-
-# Legacy custom tests (deprecated)
-npm run test:legacy        # All legacy tests
-npm run test:legacy:image  # Image core tests (old)
-npm run test:legacy:logger # Logger tests (old)
-npm run test:legacy:csv    # CSV handler tests (old)
-npm run test:legacy:api    # API client tests (old)
+npm run test:verbose       # Verbose output
 ```
+
+Legacy test commands have been removed from package.json.
 
 ## Migration Benefits
 
@@ -143,14 +139,16 @@ npm run test:legacy:api    # API client tests (old)
 - `package.json` - Added test scripts
 - `test/test.js` - Original smoke tests (kept)
 
-### Legacy Files (Can be removed)
-- `scripts/tests/test-runner.js` - ✅ Replaced by Mocha
-- `scripts/tests/test-image-core.js` - ✅ Migrated
-- `scripts/tests/test-logger.js` - ✅ Migrated
-- `scripts/tests/test-csv-handler.js` - ✅ Migrated
-- `scripts/tests/test-book-api-client.js` - ✅ Migrated
+### Legacy Files (REMOVED on 2026-01-27)
+- `scripts/tests/test-runner.js` - ✅ REMOVED - Replaced by Mocha
+- `scripts/tests/test-image-core.js` - ✅ REMOVED - Migrated to test/unit/
+- `scripts/tests/test-logger.js` - ✅ REMOVED - Migrated to test/unit/
+- `scripts/tests/test-csv-handler.js` - ✅ REMOVED - Migrated to test/unit/
+- `scripts/tests/test-book-api-client.js` - ✅ REMOVED - Migrated to test/unit/
 
-**All legacy test files can now be safely removed!**
+**All legacy test files have been removed!**
+
+The legacy custom TestRunner framework (~19,014 bytes) and all custom test files (~2,387 lines) have been removed. The `scripts/tests/` directory now contains only a README.md documenting the migration.
 
 ## Test Count Comparison
 

@@ -1,211 +1,100 @@
-# Hudson Street Library Test Suite
+# Hudson Street Library Test Suite - MIGRATED
 
-This directory contains comprehensive tests for the consolidated modules in the Hudson Street Library project.
+**This directory's test files have been migrated to the new Mocha-based test infrastructure.**
 
-## Test Files
+## Migration Complete
 
-### Core Test Files
+All tests from this directory have been successfully migrated to use Mocha with patterns inspired by [datasette-enrichments](https://github.com/datasette/datasette-enrichments).
 
-- **test-image-core.js** - Tests for image utilities (`scripts/utils/image-core.js`)
-  - Filename generation and sanitization
-  - Image validation with size and format checks
-  - Duplicate detection algorithms
-  - Configuration management
+### Migrated Files
 
-- **test-book-api-client.js** - Tests for book API client (`scripts/utils/book-api-client.js`)
-  - API initialization and configuration
-  - Rate limiting functionality
-  - Retry logic with exponential backoff
-  - Caching mechanisms
-  - Mock API responses (no actual API calls)
+The following files have been removed and replaced with modern equivalents:
 
-- **test-logger.js** - Tests for logging system (`scripts/utils/logger.js`)
-  - Different log levels (debug, info, warn, error)
-  - File and console output
-  - Statistics tracking
-  - Batch operation logging
+- ~~`test-runner.js`~~ → Replaced by Mocha test runner (`.mocharc.json`)
+- ~~`test-image-core.js`~~ → Migrated to `test/unit/test-image-core.js`
+- ~~`test-book-api-client.js`~~ → Migrated to `test/unit/test-book-api-client.js`
+- ~~`test-logger.js`~~ → Migrated to `test/unit/test-logger.js`
+- ~~`test-csv-handler.js`~~ → Migrated to `test/unit/test-csv-handler.js`
 
-- **test-csv-handler.js** - Tests for CSV operations (`scripts/utils/csv-handler.js`)
-  - Reading and parsing CSV files
-  - Writing and appending CSV data
-  - Data validation and cleaning
-  - Batch update operations
-  - Error recovery from corrupted files
+## New Test Location
 
-- **test-runner.js** - Main test executor
-  - Runs all test suites
-  - Provides comprehensive reporting
-  - Supports multiple output formats
+All tests are now located in the `test/` directory at the project root:
+
+```
+test/
+├── README.md               # Comprehensive testing guide
+├── MIGRATION_GUIDE.md      # Migration patterns and instructions
+├── MIGRATION_STATUS.md     # Detailed migration status
+├── setup.js                # Global test configuration
+├── helpers/
+│   ├── fixtures.js         # Test fixtures with automatic cleanup
+│   ├── async-utils.js      # Async utilities (waitFor, poll, retry)
+│   └── console-capture.js  # Console output capture for testing
+├── unit/
+│   ├── test-image-core.js       # Image utilities tests
+│   ├── test-book-api-client.js  # API client tests
+│   ├── test-logger.js           # Logger system tests
+│   ├── test-csv-handler.js      # CSV operations tests
+│   └── test-parametrized.js     # Parametrized test examples
+└── integration/
+    └── test-data-integrity.js   # Integration test examples
+```
 
 ## Running Tests
 
-### Run All Tests
+Use the new npm test commands:
+
 ```bash
-# Run all tests with default settings
-node scripts/tests/test-runner.js
+# Run all tests
+npm test
 
-# Run with verbose output
-node scripts/tests/test-runner.js --verbose
+# Run only unit tests
+npm run test:unit
 
-# Run sequentially (instead of parallel)
-node scripts/tests/test-runner.js --sequential
+# Run only integration tests
+npm run test:integration
 
-# Stop on first failure
-node scripts/tests/test-runner.js --fail-fast
+# Watch mode for development
+npm run test:watch
+
+# Verbose output
+npm run test:verbose
 ```
 
-### Run Individual Test Suites
-```bash
-# Run image core tests only
-node scripts/tests/test-image-core.js
+## Benefits of New Test Infrastructure
 
-# Run API client tests only
-node scripts/tests/test-book-api-client.js
+1. **Standard tooling** - Industry-standard Mocha framework with full IDE support
+2. **Better developer experience** - Watch mode, filtered runs, better error messages
+3. **Automatic cleanup** - Fixtures handle setup/teardown automatically
+4. **Parametrization** - Easy to test multiple scenarios without code duplication
+5. **Async support** - Built-in async/await handling with proper error reporting
+6. **Better reporting** - Multiple reporter options and detailed output
+7. **Maintainability** - Clear structure with describe/it blocks
 
-# Run logger tests only
-node scripts/tests/test-logger.js
+## Test Results
 
-# Run CSV handler tests only
-node scripts/tests/test-csv-handler.js
-```
+**Total:** 127 tests passing, 1 pending (~300ms execution time)
 
-### Generate Reports
-```bash
-# Generate HTML report
-node scripts/tests/test-runner.js --report html
+### Test Coverage
 
-# Generate JSON report (default)
-node scripts/tests/test-runner.js --report json
+- ✅ Image processing (19 tests) - Filename generation, validation, duplicate detection
+- ✅ Logging system (14 tests) - Log levels, file/console output, statistics, batch processing
+- ✅ CSV operations (13 tests) - Reading, writing, validation, error recovery
+- ✅ API client (14 tests) - Initialization, caching, rate limiting, error handling
+- ✅ Data integrity (11 tests) - Database operations, file handling, async patterns
+- ✅ Parametrized patterns (56 tests) - Multiple scenario testing
 
-# Generate JUnit XML report
-node scripts/tests/test-runner.js --report junit
+## Documentation
 
-# Generate all report formats
-node scripts/tests/test-runner.js --report all
+See the following files for detailed information:
 
-# Specify output directory
-node scripts/tests/test-runner.js --report html --output ./test-reports
-```
+- **`test/README.md`** - Comprehensive testing guide with examples
+- **`test/MIGRATION_GUIDE.md`** - Patterns for migrating tests
+- **`test/MIGRATION_STATUS.md`** - Detailed migration status and file changes
+- **`TESTING_PATTERNS.md`** - datasette-enrichments pattern mappings
 
-## Test Framework
+## Migration Date
 
-The tests use a simple, lightweight testing framework with no external dependencies:
+All legacy test files were removed on: **2026-01-27**
 
-- **Assertions**: `assert()`, `assertEqual()`, `assertGreaterThan()`, `assertContains()`, `assertObjectHasProperty()`
-- **Test Organization**: Each test suite uses a `TestRunner` class to organize and execute tests
-- **Mocking**: Simple mocking for external dependencies (API calls, file system operations)
-- **Cleanup**: Automatic cleanup of temporary files and directories
-- **Error Handling**: Comprehensive error catching and reporting
-
-## Test Features
-
-### Image Core Tests
-- ✅ Filename generation with various book data combinations
-- ✅ Sanitization of invalid characters and special cases
-- ✅ Image validation (format, size, dimensions)
-- ✅ Duplicate detection by file size
-- ✅ Configuration testing
-- ✅ File existence checking with fuzzy matching
-
-### Book API Client Tests
-- ✅ Client initialization and configuration
-- ✅ Rate limiting enforcement
-- ✅ Caching functionality (store, retrieve, clear)
-- ✅ Retry logic simulation
-- ✅ Mock API responses for Google Books and Open Library
-- ✅ Error handling and recovery
-- ✅ Request counting and statistics
-
-### Logger Tests
-- ✅ Log level filtering (debug, info, warn, error)
-- ✅ Console and file output formatting
-- ✅ Statistics tracking (operations, errors, warnings)
-- ✅ Operation timing and tracking
-- ✅ Batch processing with progress reporting
-- ✅ Metadata handling and preservation
-
-### CSV Handler Tests
-- ✅ Reading valid and invalid CSV files
-- ✅ Data validation and cleaning
-- ✅ Writing CSV files with proper escaping
-- ✅ Appending records to existing files
-- ✅ Batch update operations
-- ✅ Error recovery from corrupted files
-- ✅ Schema validation for book data
-
-## Output Formats
-
-### Console Output
-- Real-time test execution progress
-- Summary statistics and performance metrics
-- Color-coded pass/fail indicators
-- Detailed error messages in verbose mode
-
-### JSON Report
-```json
-{
-  "startTime": "2023-09-23T10:00:00.000Z",
-  "endTime": "2023-09-23T10:00:05.234Z",
-  "duration": 5234,
-  "totalTests": 42,
-  "totalPassed": 40,
-  "totalFailed": 2,
-  "suiteResults": [...],
-  "summary": {...},
-  "environment": {...}
-}
-```
-
-### HTML Report
-- Interactive web-based report
-- Visual charts and graphs
-- Detailed suite breakdowns
-- Environment information
-- Professional styling
-
-### JUnit XML
-- Compatible with CI/CD systems
-- Jenkins, GitHub Actions, etc.
-- Standard XML format for test results
-
-## Integration with CI/CD
-
-The test suite is designed to integrate with continuous integration systems:
-
-```yaml
-# Example GitHub Actions workflow
-- name: Run Tests
-  run: node scripts/tests/test-runner.js --report junit --output ./test-results
-
-- name: Publish Test Results
-  uses: dorny/test-reporter@v1
-  if: always()
-  with:
-    name: Test Results
-    path: './test-results/junit.xml'
-    reporter: java-junit
-```
-
-## Performance Considerations
-
-- **Parallel Execution**: Tests run in parallel by default for faster completion
-- **Memory Management**: Automatic cleanup of temporary files and resources
-- **Mock Operations**: No actual API calls or heavy I/O operations during testing
-- **Performance Metrics**: Duration tracking for each test suite and individual operations
-
-## Error Handling
-
-- **Graceful Degradation**: Tests continue even if individual tests fail
-- **Detailed Reporting**: Clear error messages with context
-- **Cleanup**: Automatic cleanup even when tests fail
-- **Recovery**: CSV corruption recovery testing
-- **Isolation**: Tests don't interfere with each other
-
-## Best Practices
-
-- **No External Dependencies**: Tests use only Node.js built-in modules
-- **Deterministic**: Tests produce consistent results
-- **Fast Execution**: Average runtime under 10 seconds
-- **Comprehensive Coverage**: Tests cover happy path, edge cases, and error conditions
-- **Clear Naming**: Test names clearly describe what is being tested
-- **Isolated**: Each test is independent and doesn't rely on external state
+The custom TestRunner framework served its purpose well but has been replaced with modern, industry-standard testing practices that provide better maintainability and developer experience.
