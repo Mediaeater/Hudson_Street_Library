@@ -28,19 +28,25 @@ Coverage is configured in `.nycrc`:
 
 ## Current Coverage Status
 
-### Overall: 3.83% (as of 2026-01-27)
+### Overall: 11.34% (as of 2026-01-27)
 
-This low percentage is **expected and by design**. Here's why:
+Updated after adding CSV handler integration tests.
 
 ### Coverage by File
 
-| File | Coverage | Reason |
+| File | Coverage | Status |
 |------|----------|--------|
-| image-core.js | 63.55% | ✅ Tests use real implementation |
-| book-api-client.js | 0% | Tests use mock implementation |
-| csv-handler.js | 0% | Tests use mock implementation |
-| logger.js | 0% | Tests use mock implementation |
+| image-core.js | 63.55% | ✅ Real implementation tests |
+| csv-handler.js | 57.42% | ✅ Integration tests added |
+| book-api-client.js | 0% | Mock implementation (unit tests) |
+| logger.js | 0% | Mock implementation (unit tests) |
 | Other utilities | 0% | Not yet tested |
+
+### Coverage Improvements
+
+- **Initial:** 3.83% (mock-based unit tests only)
+- **After CSV integration:** 11.34% (+7.51%)
+- **csv-handler.js:** 0% → 57.42% (+57.42%)
 
 ## Why Mock-Based Testing?
 
