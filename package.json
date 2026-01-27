@@ -16,7 +16,9 @@
     "test:integration": "mocha test/integration/**/*.js",
     "test:watch": "mocha --watch",
     "test:verbose": "mocha --reporter tap",
-    "test:coverage": "echo 'Coverage not yet configured'",
+    "test:coverage": "nyc mocha",
+    "test:coverage:report": "nyc report --reporter=text-lcov > coverage/lcov.info",
+    "test:coverage:html": "nyc mocha && open coverage/index.html",
     "add": "node scripts/add-book-from-text.js --interactive",
     "add:file": "node scripts/add-book-from-text.js --file",
     "cleanup": "npm run cleanup:logs && npm run cleanup:temp && npm run cleanup:build",
@@ -53,6 +55,7 @@
     "eleventy-plugin-tailwindcss": "^0.3.0",
     "glob": "^11.0.3",
     "mocha": "^11.7.5",
+    "nyc": "^17.1.0",
     "postcss": "^8.5.6",
     "slugify": "^1.6.6",
     "tailwindcss": "^3.4.18"
