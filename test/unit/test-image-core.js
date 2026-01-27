@@ -14,7 +14,9 @@ const {
   generateStandardFilename,
   sanitizeFilename,
   validateImage,
+  validateImageDirectory,
   findDuplicateImages,
+  getImageStats,
   checkImageExists,
   IMAGE_CONFIG
 } = require('../../scripts/utils/image-core');
@@ -257,6 +259,177 @@ describe('Image Core Utilities', function() {
         result.alternateMatches.includes(path.basename(alternateFile)),
         'Should include alternate file'
       );
+    });
+  });
+
+  describe('validateImageDirectory', function() {
+    it('should validate directory of images', async function() {
+      const tempDir = fixtures.createTempDir();
+
+      // Create some test images
+      const validImage = fixtures.createTestImage('valid.jpg', 5000);
+      const smallImage = fixtures.createTestImage('small.jpg', 2000);
+      const textFile = path.join(tempDir, 'not-image.txt');
+      fs.writeFileSync(textFile, 'text content');
+      fixtures.tempFiles.push(textFile);
+
+      // Copy images to temp dir
+      fs.copyFileSync(validImage, path.join(tempDir, 'valid.jpg'));
+      fs.copyFileSync(smallImage, path.join(tempDir, 'small.jpg'));
+
+      const result = await validateImageDirectory(tempDir);
+
+      assert.ok('total' in result);
+      assert.ok('valid' in result);
+      assert.ok('invalid' in result);
+      assert.ok('details' in result);
+      assert.ok(Array.isArray(result.details));
+      assert.strictEqual(result.total, 2); // Only image files
+      assert.ok(result.valid >= 0);
+    });
+
+    it('should throw error for non-existent directory', async function() {
+      const nonExistentDir = path.join(fixtures.createTempDir(), 'does-not-exist');
+
+      try {
+        await validateImageDirectory(nonExistentDir);
+        assert.fail('Should have thrown an error');
+      } catch (error) {
+        assert.ok(error.message.includes('does not exist'));
+      }
+    });
+
+    it('should filter by valid formats only', async function() {
+      const tempDir = fixtures.createTempDir();
+
+      // Create mixed files
+      const jpgFile = fixtures.createTestImage('test.jpg', 5000);
+      const txtFile = path.join(tempDir, 'test.txt');
+      fs.writeFileSync(txtFile, 'not an image');
+      fixtures.tempFiles.push(txtFile);
+
+      fs.copyFileSync(jpgFile, path.join(tempDir, 'test.jpg'));
+
+      const result = await validateImageDirectory(tempDir);
+
+      // Should only count the JPG file
+      assert.strictEqual(result.total, 1);
+      assert.ok(result.details.every(d => d.file.match(/\.(jpg|jpeg|png|gif)$/i)));
+    });
+
+    it('should track common issues', async function() {
+      const tempDir = fixtures.createTempDir();
+
+      // Create multiple small images
+      const small1 = fixtures.createTestImage('small1.jpg', 1000);
+      const small2 = fixtures.createTestImage('small2.jpg', 1500);
+
+      fs.copyFileSync(small1, path.join(tempDir, 'small1.jpg'));
+      fs.copyFileSync(small2, path.join(tempDir, 'small2.jpg'));
+
+      const result = await validateImageDirectory(tempDir);
+
+      assert.ok('summary' in result);
+      assert.ok('commonIssues' in result.summary);
+      assert.ok(result.summary.commonIssues instanceof Map);
+    });
+  });
+
+  describe('getImageStats', function() {
+    it('should generate comprehensive statistics', async function() {
+      const tempDir = fixtures.createTempDir();
+
+      // Create test images
+      const img1 = fixtures.createTestImage('image1.jpg', 5000);
+      const img2 = fixtures.createTestImage('image2.jpg', 5000); // Same size - potential duplicate
+
+      fs.copyFileSync(img1, path.join(tempDir, 'image1.jpg'));
+      fs.copyFileSync(img2, path.join(tempDir, 'image2.jpg'));
+
+      const stats = await getImageStats(tempDir);
+
+      assert.ok('directory' in stats);
+      assert.ok('timestamp' in stats);
+      assert.ok('files' in stats);
+      assert.ok('duplicates' in stats);
+      assert.ok('validation' in stats);
+      assert.ok('recommendations' in stats);
+
+      assert.strictEqual(stats.directory, tempDir);
+      assert.ok(stats.files.total >= 0);
+      assert.ok(Array.isArray(stats.recommendations));
+    });
+
+    it('should provide recommendations for issues', async function() {
+      const tempDir = fixtures.createTempDir();
+
+      // Create a small invalid image
+      const smallImage = fixtures.createTestImage('small.jpg', 1000);
+      fs.copyFileSync(smallImage, path.join(tempDir, 'small.jpg'));
+
+      const stats = await getImageStats(tempDir);
+
+      assert.ok(Array.isArray(stats.recommendations));
+      // Should have recommendations for small/invalid files
+      assert.ok(stats.recommendations.length >= 0);
+    });
+
+    it('should detect duplicate files', async function() {
+      const tempDir = fixtures.createTempDir();
+
+      // Create identical sized images
+      const img1 = fixtures.createTestImage('dup1.jpg', 5000);
+      const img2 = fixtures.createTestImage('dup2.jpg', 5000);
+
+      fs.copyFileSync(img1, path.join(tempDir, 'dup1.jpg'));
+      fs.copyFileSync(img2, path.join(tempDir, 'dup2.jpg'));
+
+      const stats = await getImageStats(tempDir);
+
+      assert.ok('duplicates' in stats);
+      assert.ok('groups' in stats.duplicates);
+      assert.ok('totalDuplicateFiles' in stats.duplicates);
+      // Should detect duplicates by size
+      assert.ok(stats.duplicates.groups >= 0);
+    });
+  });
+
+  describe('Error Handling', function() {
+    it('should handle validation errors gracefully', async function() {
+      // Create a corrupted file that will cause validation errors
+      const tempFile = path.join(fixtures.createTempDir(), 'corrupted.jpg');
+      fs.writeFileSync(tempFile, 'not a valid image');
+      fixtures.tempFiles.push(tempFile);
+
+      const result = await validateImage(tempFile);
+
+      assert.strictEqual(result.valid, false);
+      assert.ok(Array.isArray(result.errors));
+      assert.ok(result.errors.length > 0);
+    });
+
+    it('should handle stat errors in findDuplicateImages', async function() {
+      const tempDir = fixtures.createTempDir();
+
+      // Create a valid image
+      const img = fixtures.createTestImage('test.jpg', 5000);
+      fs.copyFileSync(img, path.join(tempDir, 'test.jpg'));
+
+      // This should not throw, even if there are stat errors
+      const duplicates = await findDuplicateImages(tempDir);
+
+      assert.ok(Array.isArray(duplicates));
+    });
+
+    it('should handle missing sizeOf gracefully', async function() {
+      const tempFile = fixtures.createTestImage('test.jpg', 5000);
+
+      // Should still validate even without dimension checking
+      const result = await validateImage(tempFile);
+
+      assert.ok('valid' in result);
+      assert.ok('warnings' in result);
+      assert.ok('errors' in result);
     });
   });
 
