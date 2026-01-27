@@ -128,6 +128,67 @@ npm run test:coverage
 npm run test:coverage:html
 ```
 
+## Pre-Commit Hook
+
+A pre-commit hook is available that automatically runs tests before allowing commits. This helps catch issues early and keeps the codebase stable.
+
+### Installation
+
+The pre-commit hook is opt-in. To install it:
+
+```bash
+npm run setup:hooks
+```
+
+This will:
+- Copy the pre-commit hook to `.git/hooks/`
+- Make it executable
+- Back up any existing pre-commit hook
+
+### Usage
+
+Once installed, tests run automatically on every commit:
+
+```bash
+# Normal commit - tests run automatically
+git commit -m "Fix bug in CSV handler"
+
+# If tests pass:
+✓ All tests passed
+✓ Commit allowed
+
+# If tests fail:
+✗ Tests failed
+Fix the failing tests before committing.
+```
+
+### Bypassing the Hook
+
+Sometimes you need to commit work-in-progress code that doesn't pass all tests. Use `--no-verify` to skip the hook:
+
+```bash
+git commit --no-verify -m "WIP: Refactoring in progress"
+```
+
+Use this sparingly. The hook exists to prevent broken code from entering the repository.
+
+### Uninstalling
+
+To remove the pre-commit hook:
+
+```bash
+rm .git/hooks/pre-commit
+```
+
+### How It Works
+
+The pre-commit hook:
+1. Runs `npm test` before each commit
+2. Blocks the commit if tests fail
+3. Shows clear success/failure messages
+4. Runs fast (under 500ms typically)
+5. Provides instructions for skipping if needed
+
 ## Writing New Tests
 
 ### Basic Template
