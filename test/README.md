@@ -6,9 +6,11 @@ This project uses testing patterns inspired by [datasette-enrichments](https://g
 
 Tests are being migrated from the custom TestRunner framework (`scripts/tests/`) to Mocha:
 - ✅ **test-image-core** - Migrated (19 tests passing)
-- ⏳ **test-logger** - Pending migration
+- ✅ **test-logger** - Migrated (14 tests passing)
 - ⏳ **test-csv-handler** - Pending migration
 - ⏳ **test-book-api-client** - Pending migration
+
+**Total:** 99 tests passing, 1 pending
 
 See [MIGRATION_GUIDE.md](./MIGRATION_GUIDE.md) for migration patterns and instructions.
 
