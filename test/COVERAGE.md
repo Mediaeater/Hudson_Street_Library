@@ -28,16 +28,16 @@ Coverage is configured in `.nycrc`:
 
 ## Current Coverage Status
 
-### Overall: 12.92% (as of 2026-01-27)
+### Overall: 16.64% (as of 2026-01-27)
 
-Updated after improving image-core.js coverage.
+Updated after achieving 95%+ targets for critical utilities.
 
 ### Coverage by File
 
 | File | Coverage | Status |
 |------|----------|--------|
-| image-core.js | 89.83% | ✅ Comprehensive tests (63.55% → 89.83%) |
-| csv-handler.js | 57.42% | ✅ Integration tests added |
+| image-core.js | 98.3% | ✅ Exceeds 95% target (89.83% → 98.3%) |
+| csv-handler.js | 75.88% | ✅ Good coverage (70.92% → 75.88%) |
 | book-api-client.js | 0% | Mock implementation (unit tests) |
 | logger.js | 0% | Mock implementation (unit tests) |
 | Other utilities | 0% | Not yet tested |
@@ -46,9 +46,10 @@ Updated after improving image-core.js coverage.
 
 - **Initial:** 3.83% (mock-based unit tests only)
 - **After CSV integration:** 11.34% (+7.51%)
-- **After image-core improvement:** 12.92% (+9.09% total)
-- **csv-handler.js:** 0% → 57.42% (+57.42%)
-- **image-core.js:** 63.55% → 89.83% (+26.28%)
+- **After image-core improvement:** 12.92% (+9.09%)
+- **After 95% target push:** 16.64% (+12.81% total)
+- **csv-handler.js:** 0% → 75.88% (+75.88%)
+- **image-core.js:** 63.55% → 98.3% (+34.75%)
 
 ## Why Mock-Based Testing?
 
