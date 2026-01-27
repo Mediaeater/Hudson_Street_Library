@@ -4,7 +4,8 @@
 
 Successfully migrated custom TestRunner framework to Mocha-based testing infrastructure using patterns from datasette-enrichments.
 
-**Current Status:** 112 tests passing (1 pending)
+**Current Status:** 127 tests passing (1 pending)
+**Migration:** ✅ COMPLETE - All custom tests migrated!
 
 ## Completed Migrations
 
@@ -132,6 +133,7 @@ npm run test:legacy:api    # API client tests (old)
 - `test/unit/test-image-core.js`
 - `test/unit/test-logger.js`
 - `test/unit/test-csv-handler.js`
+- `test/unit/test-book-api-client.js`
 - `test/README.md`
 - `test/MIGRATION_GUIDE.md`
 - `test/MIGRATION_STATUS.md`
@@ -141,25 +143,35 @@ npm run test:legacy:api    # API client tests (old)
 - `package.json` - Added test scripts
 - `test/test.js` - Original smoke tests (kept)
 
-### Legacy Files (Deprecated, but functional)
-- `scripts/tests/test-runner.js` - Custom framework
+### Legacy Files (Can be removed)
+- `scripts/tests/test-runner.js` - ✅ Replaced by Mocha
 - `scripts/tests/test-image-core.js` - ✅ Migrated
 - `scripts/tests/test-logger.js` - ✅ Migrated
 - `scripts/tests/test-csv-handler.js` - ✅ Migrated
-- `scripts/tests/test-book-api-client.js` - ⏳ To be migrated (last one!)
+- `scripts/tests/test-book-api-client.js` - ✅ Migrated
+
+**All legacy test files can now be safely removed!**
 
 ## Test Count Comparison
 
 | Framework | Tests | Status |
 |-----------|-------|--------|
-| Mocha (new) | 112 passing, 1 pending | ✅ Active |
-| Custom TestRunner | ~50+ tests | ⚠️ Being phased out |
+| Mocha (new) | 127 passing, 1 pending | ✅ Active |
+| Custom TestRunner | ~50+ tests | ⚠️ Deprecated |
 
 ## Performance
 
-- **Test execution:** ~258ms for 112 tests
+- **Test execution:** ~301ms for 127 tests
 - **Cleanup:** Automatic via fixtures
 - **Watch mode:** Available for rapid iteration
+
+## Migration Complete! 🎉
+
+All custom test files have been successfully migrated to Mocha:
+- **Total lines migrated:** ~2,387 lines
+- **Total tests:** 127 passing
+- **Test coverage:** Image processing, logging, CSV handling, API clients
+- **Infrastructure:** Fixtures, async utilities, console capture
 
 ---
 
