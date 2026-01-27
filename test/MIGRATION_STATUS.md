@@ -4,7 +4,7 @@
 
 Successfully migrated custom TestRunner framework to Mocha-based testing infrastructure using patterns from datasette-enrichments.
 
-**Current Status:** 99 tests passing (1 pending)
+**Current Status:** 112 tests passing (1 pending)
 
 ## Completed Migrations
 
@@ -36,12 +36,25 @@ Successfully migrated custom TestRunner framework to Mocha-based testing infrast
   - Added console-capture helper for testing console output
   - MockLogger class included for testing
 
-## Pending Migrations
+### ✅ test-csv-handler.js
+- **Original:** 831 lines, custom TestRunner framework
+- **Migrated to:** `test/unit/test-csv-handler.js`
+- **Tests:** 13 tests (all passing)
+- **Coverage:**
+  - ✅ CSV reading (4 tests)
+  - ✅ CSV writing (2 tests)
+  - ✅ CSV appending (1 test)
+  - ✅ Batch updates (1 test)
+  - ✅ Error recovery (1 test)
+  - ✅ Data validation (2 tests)
+  - ✅ Edge cases (2 tests)
+- **Special Features:**
+  - MockCSV utility for parsing/stringifying
+  - MockCSVHandler class with full CRUD operations
+  - Field validation and cleaning
+  - Corruption recovery
 
-### ⏳ test-csv-handler.js
-- **Size:** 831 lines
-- **Focus:** CSV parsing and manipulation
-- **Complexity:** Medium (file I/O, data validation)
+## Pending Migrations
 
 ### ⏳ test-book-api-client.js
 - **Size:** 487 lines
@@ -118,6 +131,7 @@ npm run test:legacy:api    # API client tests (old)
 - `test/unit/test-csv-operations.js`
 - `test/unit/test-image-core.js`
 - `test/unit/test-logger.js`
+- `test/unit/test-csv-handler.js`
 - `test/README.md`
 - `test/MIGRATION_GUIDE.md`
 - `test/MIGRATION_STATUS.md`
@@ -131,19 +145,19 @@ npm run test:legacy:api    # API client tests (old)
 - `scripts/tests/test-runner.js` - Custom framework
 - `scripts/tests/test-image-core.js` - ✅ Migrated
 - `scripts/tests/test-logger.js` - ✅ Migrated
-- `scripts/tests/test-csv-handler.js` - ⏳ To be migrated
-- `scripts/tests/test-book-api-client.js` - ⏳ To be migrated
+- `scripts/tests/test-csv-handler.js` - ✅ Migrated
+- `scripts/tests/test-book-api-client.js` - ⏳ To be migrated (last one!)
 
 ## Test Count Comparison
 
 | Framework | Tests | Status |
 |-----------|-------|--------|
-| Mocha (new) | 99 passing, 1 pending | ✅ Active |
+| Mocha (new) | 112 passing, 1 pending | ✅ Active |
 | Custom TestRunner | ~50+ tests | ⚠️ Being phased out |
 
 ## Performance
 
-- **Test execution:** ~243ms for 99 tests
+- **Test execution:** ~258ms for 112 tests
 - **Cleanup:** Automatic via fixtures
 - **Watch mode:** Available for rapid iteration
 
