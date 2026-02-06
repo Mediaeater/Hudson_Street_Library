@@ -39,81 +39,23 @@ permalink: /news.html
             <div class="container mx-auto px-6">
                 <div class="max-w-4xl mx-auto">
 
-                    <!-- News Item 1 -->
-                    <article class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    {% for item in news %}
+                    <article class="bg-white rounded-lg shadow-md p-6 mb-6 {% if item.featured %}border-l-4 border-teal-600{% endif %}">
                         <div class="flex items-start justify-between mb-3">
-                            <time class="text-sm text-neutral-500">January 24, 2026</time>
+                            <time class="text-sm text-neutral-500">{{ item.date }}</time>
+                            {% if item.featured %}
+                            <span class="text-xs bg-teal-100 text-teal-800 px-2 py-1 rounded">Featured</span>
+                            {% endif %}
                         </div>
-                        <h3 class="text-xl font-bold text-teal-900 mb-3">New Artist Books & Signed Acquisitions</h3>
+                        <h3 class="text-xl font-bold text-teal-900 mb-3">{{ item.title }}</h3>
                         <p class="text-neutral-700 mb-4">
-                            Exciting new additions to the collection this week, including two signed <a href="https://yuskavage.com/" target="_blank" class="text-teal-700 hover:text-teal-900 font-medium">Lisa Yuskavage</a> monographs acquired at <a href="https://www.strandbooks.com/" target="_blank" class="text-teal-700 hover:text-teal-900 font-medium">Strand Books'</a> artist signing event. The collection now includes the <a href="/books/yuskavage_lisa-yuskavage_1681/" class="text-teal-700 hover:text-teal-900 font-medium">2006 Museo Tamayo exhibition catalog</a> and Phaidon's <a href="/books/yuskavage_lisa-yuskavage-contemporary-artists-series_1682/" class="text-teal-700 hover:text-teal-900 font-medium">2026 <em>Contemporary Artists Series</em> volume</a>, both signed by the artist. These join recent architecture acquisitions from <a href="https://mos.nyc/" target="_blank" class="text-teal-700 hover:text-teal-900 font-medium">MOS</a> (Michael Meredith and Hilary Sample): <a href="/books/meredith_public-spaces-ny_1680/" class="text-teal-700 hover:text-teal-900 font-medium"><em>Public Spaces NY</em></a> (Park Books, 2025) and the updated entry for <a href="/books/meredith_vacant-spaces-ny_1197/" class="text-teal-700 hover:text-teal-900 font-medium"><em>Vacant Spaces NY</em></a> (Actar, 2021), part of their ongoing documentation of New York City's urban fabric. Both MOS volumes are beautifully designed by <a href="https://studiolin.org/about" target="_blank" class="text-teal-700 hover:text-teal-900 font-medium">Alex Lin / Studio Lin</a>.
+                            {{ item.content | safe }}
                         </p>
-                        <p class="text-neutral-700 mb-4">
-                            Also new: <a href="/books/bischof_meta-cars_1679/" class="text-teal-700 hover:text-teal-900 font-medium">Beni Bischof's <em>Meta Cars</em></a> (Nieves, 2025), transforming found car images into digital distortions; <a href="/books/weiner_revue-faire-49-lawrence-weiner_1678/" class="text-teal-700 hover:text-teal-900 font-medium">Lawrence Weiner's <em>Revue Faire #49</em></a> (Éditions Empire, 2024), exploring his relationship with typography; and <a href="/books/muller_safe-word_1677/" class="text-teal-700 hover:text-teal-900 font-medium">Maxime Muller's <em>Safe Word</em></a> (Les Éditions Rien Ne Va Plus, 2023), a 300-page risograph publication from his photographic archives.
-                        </p>
-                        <a href="/collections/recently_added.html" class="text-teal-700 hover:text-teal-900 font-medium text-sm">View recently added books →</a>
+                        {% if item.link %}
+                        <a href="{{ item.link }}" class="text-teal-700 hover:text-teal-900 font-medium text-sm">Learn more →</a>
+                        {% endif %}
                     </article>
-
-                    <!-- News Item 2 -->
-                    <article class="bg-white rounded-lg shadow-md p-6 mb-6">
-                        <div class="flex items-start justify-between mb-3">
-                            <time class="text-sm text-neutral-500">November 2025</time>
-                        </div>
-                        <h3 class="text-xl font-bold text-teal-900 mb-3">Winter–Spring 2025 Internship Opportunity</h3>
-                        <p class="text-neutral-700 mb-4">
-                            Hudson Street Library is seeking a Winter–Spring 2025 intern with a strong interest in photobooks, visual culture, and archival work. This internship offers hands-on experience supporting the organization and preservation of our growing photobook collection. The intern will assist with cataloging, condition checks, metadata entry, and developing archival systems that improve long-term accessibility. Ideal candidates are detail-oriented, curious about art and photography, and eager to learn the fundamentals of library and archive practice. This is a great opportunity for students exploring library science, art history, or cultural heritage fields.
-                        </p>
-                        <p class="text-neutral-700">
-                            To apply, send your resume and a brief statement of interest to <a href="mailto:info@hudsonstreetlibrary.com" class="text-teal-700 hover:text-teal-900 font-medium">info@hudsonstreetlibrary.com</a>
-                        </p>
-                    </article>
-
-                    <!-- News Item 3 -->
-                    <article class="bg-white rounded-lg shadow-md p-6 mb-6">
-                        <div class="flex items-start justify-between mb-3">
-                            <time class="text-sm text-neutral-500">December 2025</time>
-                        </div>
-                        <h3 class="text-xl font-bold text-teal-900 mb-3">New Magazines Collections Page</h3>
-                        <p class="text-neutral-700 mb-4">
-                            We've launched a dedicated magazines page showcasing our growing collection of design, photography, and culture magazines. The collection includes complete or near-complete runs of Apartamento (34 issues), Toilet Paper by Cattelan & Ferrari (20 issues), Purple Books (27 issues), Erik Kessels' Useful Photography series (15 issues), and more. Each magazine series now has its own dedicated page with covers and details for individual issues.
-                        </p>
-                        <a href="/collections/magazines.html" class="text-teal-700 hover:text-teal-900 font-medium text-sm">Explore magazines →</a>
-                    </article>
-
-                    <!-- News Item 4 -->
-                    <article class="bg-white rounded-lg shadow-md p-6 mb-6">
-                        <div class="flex items-start justify-between mb-3">
-                            <time class="text-sm text-neutral-500">November 24, 2025</time>
-                        </div>
-                        <h3 class="text-xl font-bold text-teal-900 mb-3">New Photography Acquisition: Les Oiseaux</h3>
-                        <p class="text-neutral-700 mb-4">
-                            We're excited to announce the addition of <em>Les Oiseaux</em> by Lola Raban-Oliva and Jean-René Etienne to our collection. This unique photobook documents the Notre-Dame Cathedral fire from an unprecedented aerial perspective, presenting 97 screenshots captured from the artists' window two kilometers from the blaze.
-                        </p>
-                        <a href="/books/raban-oliva_les-oiseaux_1580/" class="text-teal-700 hover:text-teal-900 font-medium text-sm">View book details →</a>
-                    </article>
-
-                    <!-- News Item 5 -->
-                    <article class="bg-white rounded-lg shadow-md p-6 mb-6">
-                        <div class="flex items-start justify-between mb-3">
-                            <time class="text-sm text-neutral-500">November 2025</time>
-                        </div>
-                        <h3 class="text-xl font-bold text-teal-900 mb-3">Enhanced Tag System & Search</h3>
-                        <p class="text-neutral-700 mb-4">
-                            We've significantly improved our book tagging system, increasing coverage from 18.5% to 39.4% of the collection. Books are now enriched with keywords inferred from titles, authors, and publishers, making it easier to discover related materials through our search interface.
-                        </p>
-                        <a href="/static-demo/" class="text-teal-700 hover:text-teal-900 font-medium text-sm">Try the search →</a>
-                    </article>
-
-                    <!-- News Item 6 -->
-                    <article class="bg-white rounded-lg shadow-md p-6">
-                        <div class="flex items-start justify-between mb-3">
-                            <time class="text-sm text-neutral-500">November 2025</time>
-                        </div>
-                        <h3 class="text-xl font-bold text-teal-900 mb-3">Collection Data Quality Report</h3>
-                        <p class="text-neutral-700 mb-4">
-                            Our latest data quality assessment shows excellent collection integrity with a 98/100 quality score. All 1,580 books have been validated for ISBN accuracy, proper cataloging, and complete metadata. View our comprehensive data quality documentation for full details.
-                        </p>
-                    </article>
+                    {% endfor %}
 
                 </div>
             </div>
