@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Book Title: Specific Objects Without Specific Form -->
+    <title>Specific Objects Without Specific Form | Hudson Street Library Collection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Inter:wght@300;400;500;600&display=swap');
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .serif {
+            font-family: 'Libre Baskerville', Georgia, serif;
+        }
+
+        .book-title {
+            font-size: 3rem;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.75rem;
+        }
+
+        .book-author {
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 0.01em;
+            color: #6b7280;
+        }
+
+        .section-heading {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #374151;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .field-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #9ca3af;
+            min-width: 140px;
+            display: inline-block;
+        }
+
+        .field-value {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #1f2937;
+        }
+
+        .description-text {
+            font-size: 0.9375rem;
+            line-height: 1.8;
+            color: #374151;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, #e5e7eb, transparent);
+            margin: 3rem 0;
+        }
+
+        .subject-tag {
+            display: inline-block;
+            padding: 0.375rem 0.875rem;
+            background-color: #f3f4f6;
+            color: #0f766e;
+            border: 1px solid #e5e7eb;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .subject-tag:hover {
+            background-color: #0f766e;
+            color: white;
+            border-color: #0f766e;
+        }
+
+        @media (max-width: 768px) {
+            .book-title {
+                font-size: 2rem;
+            }
+            .book-author {
+                font-size: 1.25rem;
+            }
+        }
+
+        @media print {
+            .no-print { display: none; }
+            body { font-size: 12pt; }
+            .book-title { font-size: 24pt; page-break-after: avoid; }
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-800">
+
+    <!-- Standard Header -->
+    <header class="no-print sticky top-0 w-full bg-white/95 backdrop-blur-sm z-50 py-4 border-b border-gray-100">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-between items-center">
+                <a href="/" class="text-lg font-semibold tracking-tight text-gray-900">HUDSON STREET LIBRARY</a>
+                <nav class="desktop-nav hidden md:flex space-x-8 items-center text-gray-700 text-sm">
+                    <a href="/#about" class="nav-item hover:text-teal-700">About</a>
+                    <a href="/collection-explore.html" class="nav-item hover:text-teal-700">Collections</a>
+                    <a href="/static-demo/" class="nav-item hover:text-teal-700">Search</a>
+                    <a href="/#publications" class="nav-item hover:text-teal-700">Publications</a>
+                    <a href="/collections/recently_added.html" class="nav-item hover:text-teal-700">News</a>
+                    <a href="/#contact" class="nav-item hover:text-teal-700">Contact</a>
+                </nav>
+                <button class="mobile-nav-button md:hidden focus:outline-none text-teal-800" aria-label="Toggle menu">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+            <!-- Mobile Menu -->
+            <nav class="mobile-menu hidden md:hidden">
+                <div class="px-6 py-4 space-y-3">
+                    <a href="/#about" class="block py-2 text-neutral-700 hover:text-teal-700">About</a>
+                    <a href="/collection-explore.html" class="block py-2 text-neutral-700 hover:text-teal-700">Collections</a>
+                    <a href="/static-demo/" class="block py-2 text-neutral-700 hover:text-teal-700">Search</a>
+                    <a href="/#publications" class="block py-2 text-neutral-700 hover:text-teal-700">Publications</a>
+                    <a href="/collections/recently_added.html" class="block py-2 text-neutral-700 hover:text-teal-700">News</a>
+                    <a href="/#contact" class="block py-2 text-neutral-700 hover:text-teal-700">Contact</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 lg:px-12 py-12 max-w-7xl">
+        <!-- Breadcrumb -->
+        <nav class="no-print breadcrumb mb-8 text-sm text-gray-500" aria-label="Breadcrumb">
+            <a href="/" class="hover:text-gray-700">Home</a>
+            <span class="mx-2">/</span>
+            <a href="/collection-explore.html" class="hover:text-gray-700">Collections</a>
+            <span class="mx-2">/</span>
+            <span class="text-gray-900">Specific Objects Without Specific Form</span>
+        </nav>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+            <!-- Left Column: Book Cover -->
+            <div class="lg:col-span-3">
+                <div class="sticky top-24">
+                    <div class="aspect-[3/4] relative overflow-hidden rounded-sm shadow-2xl border-neutral-200">
+                        <img src="/assets/images/books/Gonzalez-Torres_Specific_Objects_Without_Specific_Form_9783863359737.jpg"
+                             alt="Specific Objects Without Specific Form book cover"
+                             class="w-full h-full object-contain bg-gray-50"
+                             onerror="this.src='/assets/images/placeholder-book.svg';">
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="no-print mt-6 flex gap-4 text-sm">
+                        <button onclick="window.print()" class="flex items-center gap-2 text-gray-600 hover:text-gray-900">
+                            <i class="fas fa-print"></i>
+                            <span>Print</span>
+                        </button>
+                        <button class="flex items-center gap-2 text-gray-600 hover:text-gray-900">
+                            <i class="fas fa-share-alt"></i>
+                            <span>Share</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Book Details -->
+            <div class="lg:col-span-9">
+                <!-- Title & Author -->
+                <div class="mb-12">
+                    <h1 class="book-title serif">Specific Objects Without Specific Form</h1>
+                    <p class="book-author">by <a href="https://www.felixgonzalez-torresfoundation.org/" target="_blank" class="text-teal-700 hover:text-teal-900 underline">Felix Gonzalez-Torres</a></p>
+                </div>
+
+                <!-- Exhibition Information -->
+                <section class="mb-12 bg-gray-50 -mx-6 px-6 py-8 rounded-lg">
+                    <h2 class="section-heading">Exhibition</h2>
+                    <div class="space-y-3">
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Exhibition</span>
+                            <span class="field-value"><a href="https://www.felixgonzalez-torresfoundation.org/exhibitions/felix-gonzalez-torres-specific-objects-without-specific-form3" target="_blank" class="text-teal-700 hover:text-teal-900 underline">Felix Gonzalez-Torres: Specific Objects without Specific Form</a></span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Curator</span>
+                            <span class="field-value">Elena Filipovic</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Venues</span>
+                            <span class="field-value">Wiels, Brussels · Fondation Beyeler, Basel · Museum für Moderne Kunst, Frankfurt</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Dates</span>
+                            <span class="field-value">January 2010 – April 2011</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Installation Artists</span>
+                            <span class="field-value">Danh Vo · Carol Bove · Tino Sehgal</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Publishing Information -->
+                <section class="mb-12">
+                    <h2 class="section-heading">Publication Details</h2>
+                    <div class="space-y-3">
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Publisher</span>
+                            <span class="field-value">Koenig Books</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Published</span>
+                            <span class="field-value">2017</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">ISBN</span>
+                            <span class="field-value">9783863359737</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Format</span>
+                            <span class="field-value">Hardcover</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Pages</span>
+                            <span class="field-value">656 pages</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Language</span>
+                            <span class="field-value">English</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Contributors</span>
+                            <span class="field-value">Elena Filipovic, Danh Vo, Carol Bove, Tino Sehgal</span>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <!-- About This Book -->
+                <section class="mb-12">
+                    <h2 class="section-heading">About This Book</h2>
+                    <div class="description-text space-y-4">
+                        <p>This comprehensive 656-page catalogue documents the traveling retrospective <em>Felix Gonzalez-Torres: Specific Objects without Specific Form</em>, which showcased work from throughout the artist's career including paintings, sculptures, photographic works, and public projects.</p>
+                        <p>The exhibition employed an innovative format where it was re-installed by a different invited artist midway through its run at each venue, resulting in multiple distinct versions rather than a single definitive presentation. The show deliberately rejected the traditional retrospective model, allowing artists like Carol Bove, Danh Vo, and Tino Sehgal to modify lighting, labels, and the order of presentation.</p>
+                        <p>The exhibition premiered at Wiels in Brussels (January–May 2010) with a version curated by Danh Vo, traveled to Fondation Beyeler in Basel (July–August 2010) with Carol Bove as installation curator, and concluded at Frankfurt's Museum für Moderne Kunst (January–April 2011) with Tino Sehgal.</p>
+                    </div>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <!-- About the Artist -->
+                <section class="mb-12">
+                    <h2 class="section-heading">About the Artist</h2>
+                    <div class="description-text space-y-4">
+                        <p><strong>Felix Gonzalez-Torres</strong> (1957–1996) was a Cuban-born American visual artist known for his minimal installations and sculptures. His work frequently referenced his personal experiences, particularly relating to his identity as a gay man and the loss of his partner Ross Laycock to AIDS-related illness in 1991.</p>
+                        <p>Gonzalez-Torres is best known for his "candy spills," stacks of paper, and light string installations that invite viewer participation and contemplation of themes including love, loss, and mortality. His work challenges traditional notions of authorship and ownership, often allowing pieces to be replenished or reconfigured according to written certificates of authenticity.</p>
+                        <p>He represented the United States at the 52nd Venice Biennale in 2007, more than a decade after his death. His work is held in major collections worldwide including MoMA, the Guggenheim, Tate Modern, and the Art Institute of Chicago.</p>
+                        <p><a href="https://www.felixgonzalez-torresfoundation.org/" target="_blank" class="text-teal-700 hover:text-teal-900 underline">Visit the Felix Gonzalez-Torres Foundation →</a></p>
+                    </div>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <!-- Featured Works -->
+                <section class="mb-12">
+                    <h2 class="section-heading">Featured Works</h2>
+                    <p class="text-sm text-gray-500 mb-4">Selection from the <a href="https://www.felixgonzalez-torresfoundation.org/exhibitions/felix-gonzalez-torres-specific-objects-without-specific-form3/works" target="_blank" class="text-teal-700 hover:text-teal-900 underline">Fondation Beyeler installation</a></p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="border-l-2 border-teal-600 pl-4 py-2">
+                            <p class="font-medium text-gray-800">"Untitled" (Perfect Lovers)</p>
+                            <p class="text-sm text-gray-600">1987-1990 · Two synchronized wall clocks</p>
+                        </div>
+                        <div class="border-l-2 border-teal-600 pl-4 py-2">
+                            <p class="font-medium text-gray-800">"Untitled" (Portrait of Ross in L.A.)</p>
+                            <p class="text-sm text-gray-600">1991 · Multicolored candies, endless supply (175 lb ideal weight)</p>
+                        </div>
+                        <div class="border-l-2 border-teal-600 pl-4 py-2">
+                            <p class="font-medium text-gray-800">"Untitled" (Placebo)</p>
+                            <p class="text-sm text-gray-600">1991 · Silver-wrapped candies, endless supply (1,000-1,200 lb)</p>
+                        </div>
+                        <div class="border-l-2 border-teal-600 pl-4 py-2">
+                            <p class="font-medium text-gray-800">"Untitled" (Loverboy)</p>
+                            <p class="text-sm text-gray-600">1989 · Sheer blue fabric curtain installation</p>
+                        </div>
+                        <div class="border-l-2 border-teal-600 pl-4 py-2">
+                            <p class="font-medium text-gray-800">"Untitled" (Go-Go Dancing Platform)</p>
+                            <p class="text-sm text-gray-600">1991 · Wood platform with lights (21½ x 72 x 72 inches)</p>
+                        </div>
+                        <div class="border-l-2 border-teal-600 pl-4 py-2">
+                            <p class="font-medium text-gray-800">"Untitled" (Natural History)</p>
+                            <p class="text-sm text-gray-600">1990 · Thirteen framed black and white photographs</p>
+                        </div>
+                        <div class="border-l-2 border-teal-600 pl-4 py-2">
+                            <p class="font-medium text-gray-800">"Untitled" (Golden)</p>
+                            <p class="text-sm text-gray-600">1995 · Beaded strands curtain installation</p>
+                        </div>
+                        <div class="border-l-2 border-teal-600 pl-4 py-2">
+                            <p class="font-medium text-gray-800">"Untitled" (Portrait of Dad)</p>
+                            <p class="text-sm text-gray-600">1991 · White wrapped candies, endless supply (175 lb)</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-4">28 works total · <a href="https://www.felixgonzalez-torresfoundation.org/exhibitions/felix-gonzalez-torres-specific-objects-without-specific-form3/works" target="_blank" class="text-teal-700 hover:text-teal-900 underline">View complete checklist →</a></p>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <!-- Library Information -->
+                <section class="mb-12">
+                    <h2 class="section-heading">Library Information</h2>
+                    <div class="space-y-3">
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Location</span>
+                            <span class="field-value">Hudson Street Library, NYC</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Acquisition</span>
+                            <span class="field-value">Original Collection</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Condition</span>
+                            <span class="field-value">New</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Special Notes</span>
+                            <span class="field-value">Signed by author</span>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <!-- Related Books by Author -->
+                <section class="mb-12">
+                    <h2 class="section-heading">Other Books by Felix Gonzalez-Torres in Our Collection</h2>
+                    <div class="space-y-6">
+                        <div class="flex gap-4 hover:bg-gray-50 p-3 -m-3 rounded transition-colors">
+                            <div class="flex-shrink-0 w-20 h-28 bg-gray-100 rounded-sm shadow overflow-hidden">
+                                <img src="/assets/images/covers/9798890181107.jpg" alt="Cover of Felix Gonzalez-Torres: Always to Return" class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex-1">
+                                <a href="/books/gonzalez_torres_felix_gonzalez_torres_always_to_return/" class="block">
+                                    <h4 class="font-semibold text-gray-900 mb-1 hover:text-teal-700">Felix Gonzalez-Torres: Always to Return</h4>
+                                    <p class="text-sm text-gray-600 mb-2">Radius Books · 2024</p>
+                                    <p class="text-sm text-gray-700 line-clamp-2">This monograph examines the artist's relationship to portraiture, expanding the genre from static representations of individuals...</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="no-print bg-gray-50 border-t border-gray-100 mt-24 py-12">
+        <div class="container mx-auto px-6 text-center text-sm text-gray-600">
+            <p>© 2025 Hudson Street Library</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileNavButton = document.querySelector('.mobile-nav-button');
+        const mobileMenu = document.querySelector('.mobile-menu');
+
+        if (mobileNavButton) {
+            mobileNavButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                const icon = mobileNavButton.querySelector('i');
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            });
+        }
+    </script>
+
+</body>
+</html>

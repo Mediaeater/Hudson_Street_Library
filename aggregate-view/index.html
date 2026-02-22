@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search & Browse - Hudson Street Library</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .line-clamp-1 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
+        .line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .line-clamp-3 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+        .clickable-meta { cursor: pointer; transition: all 0.2s; }
+        .clickable-meta:hover { color: #0d9488; text-decoration: underline; }
+        .tag-pill { cursor: pointer; transition: all 0.2s; }
+        .tag-pill:hover { background-color: #0d9488; color: white; }
+    </style>
+</head>
+<body class="bg-white text-neutral-800">
+
+<header class="sticky top-0 w-full bg-white z-50 py-4 shadow-md">
+    <div class="container mx-auto px-6">
+        <div class="flex justify-between items-center">
+            <a href="/index.html" class="text-xl sm:text-2xl font-bold tracking-tight text-teal-900">
+                HUDSON STREET LIBRARY
+            </a>
+
+            <nav id="main-nav" class="hidden md:flex space-x-6 lg:space-x-8 items-center text-neutral-700 text-sm lg:text-base">
+                <a href="/index.html#about" class="nav-item hover:text-teal-700">About</a>
+                <a href="/collection-explore.html" class="nav-item hover:text-teal-700">Collections</a>
+                <a href="/static-demo/" class="nav-item hover:text-teal-700 text-teal-700">Search</a>
+                <a href="/index.html#publications" class="nav-item hover:text-teal-700">Publications</a>
+                <a href="/collections/recently_added.html" class="nav-item hover:text-teal-700">News</a>
+                <a href="/index.html#contact" class="nav-item hover:text-teal-700">Contact</a>
+            </nav>
+
+            <button class="md:hidden focus:outline-none text-teal-800" aria-label="Toggle menu" aria-controls="mobile-nav-menu" aria-expanded="false">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+    </div>
+
+    <nav id="mobile-nav-menu" class="hidden md:hidden absolute top-full left-0 right-0 bg-white shadow-lg px-6 py-4 space-y-3 flex-col z-40">
+        <a href="/index.html#about" class="block py-2 text-neutral-700 hover:text-teal-700">About</a>
+        <a href="/collection-explore.html" class="block py-2 text-neutral-700 hover:text-teal-700">Collections</a>
+        <a href="/static-demo/" class="block py-2 text-neutral-700 hover:text-teal-700">Search</a>
+        <a href="/index.html#publications" class="block py-2 text-neutral-700 hover:text-teal-700">Publications</a>
+        <a href="/collections/recently_added.html" class="block py-2 text-neutral-700 hover:text-teal-700">News</a>
+        <a href="/index.html#contact" class="block py-2 text-neutral-700 hover:text-teal-700">Contact</a>
+    </nav>
+</header>
+
+<main class="container mx-auto px-6 py-8 mt-20">
+    <div class="max-w-7xl mx-auto">
+
+        <!-- Active Filter Display -->
+        <div id="active-filter" class="mb-6 hidden">
+            <div class="bg-teal-50 border border-teal-200 rounded-lg p-4 flex items-center justify-between">
+                <div>
+                    <span class="text-sm text-neutral-600">Viewing:</span>
+                    <span id="filter-description" class="font-medium text-teal-900 ml-2"></span>
+                </div>
+                <button onclick="bookSearch.clearActiveFilter()" class="text-red-600 hover:text-red-800 text-sm font-medium">
+                    <i class="fas fa-times mr-1"></i>Clear Filter
+                </button>
+            </div>
+        </div>
+
+        <!-- Search & Filter Section -->
+        <div class="mb-8 bg-white rounded-lg shadow p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <!-- Search Input -->
+                <div class="lg:col-span-2">
+                    <input type="text" 
+                           id="search-input" 
+                           placeholder="Search books..." 
+                           class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+                
+                <!-- Sort Select -->
+                <div>
+                    <select id="sort-select" class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+                        <option value="title">Sort by Title</option>
+                        <option value="author">Sort by Author</option>
+                        <option value="year">Sort by Year</option>
+                        <option value="publisher">Sort by Publisher</option>
+                    </select>
+                </div>
+                
+                <!-- Items per page -->
+                <div>
+                    <select id="items-per-page" class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+                        <option value="12">12 per page</option>
+                        <option value="24" selected>24 per page</option>
+                        <option value="48">48 per page</option>
+                        <option value="100">100 per page</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
+                <!-- Publisher Filter -->
+                <div>
+                    <select id="publisher-filter" class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+                        <option value="">All Publishers</option>
+                    </select>
+                </div>
+                
+                <!-- Year Filter -->
+                <div>
+                    <select id="year-filter" class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+                        <option value="">All Years</option>
+                    </select>
+                </div>
+                
+                <!-- Collection Filter -->
+                <div>
+                    <select id="collection-filter" class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+                        <option value="">All Collections</option>
+                    </select>
+                </div>
+                
+                <!-- Cover Filter -->
+                <div>
+                    <select id="cover-filter" class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+                        <option value="">All Books</option>
+                        <option value="with-covers">With Covers</option>
+                        <option value="without-covers">Without Covers</option>
+                    </select>
+                </div>
+
+                <!-- Tag Filter -->
+                <div>
+                    <select id="tag-filter" class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+                        <option value="">All Tags</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <label class="flex items-center cursor-pointer">
+                        <input type="checkbox" id="visual-browse" class="mr-2">
+                        <span class="text-neutral-700">Visual Browse</span>
+                    </label>
+                </div>
+                <button onclick="bookSearch.clearAllFilters()" class="text-red-600 hover:text-red-800 text-sm font-medium">
+                    <i class="fas fa-times mr-1"></i>Clear All Filters
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Info -->
+        <div class="mb-4">
+            <p class="text-neutral-600">
+                Showing <span id="results-count" class="font-semibold">0</span> books
+            </p>
+        </div>
+
+        <!-- Results Container -->
+        <div id="results-container" class="space-y-4">
+            <!-- Books will be rendered here -->
+        </div>
+
+        <!-- Pagination -->
+        <div id="pagination" class="mt-8 flex justify-center items-center space-x-2 hidden">
+            <button id="prev-page" class="px-4 py-2 bg-white border border-neutral-300 rounded hover:bg-neutral-50 disabled:opacity-50" disabled>
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <div id="page-numbers" class="flex space-x-2">
+                <!-- Page numbers will be generated here -->
+            </div>
+            <button id="next-page" class="px-4 py-2 bg-white border border-neutral-300 rounded hover:bg-neutral-50 disabled:opacity-50">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+    </div>
+</main>
+
+<footer class="bg-neutral-100 py-8 mt-16">
+    <div class="container mx-auto px-6 text-center">
+        <div class="mb-4">
+            <a href="/index.html" class="text-xl sm:text-2xl font-bold tracking-tight text-teal-900">HUDSON STREET LIBRARY</a>
+        </div>
+        <p class="text-neutral-600 text-sm">
+            A research library dedicated to photography books, fashion catalogs, and visual ephemera
+        </p>
+        <div class="mt-4 flex justify-center space-x-6 text-sm text-neutral-500">
+            <a href="/index.html#about" class="hover:text-teal-700">About</a>
+            <a href="/collection-explore.html" class="hover:text-teal-700">Collections</a>
+            <a href="/collections/recently_added.html" class="hover:text-teal-700">News</a>
+            <a href="/index.html#contact" class="hover:text-teal-700">Contact</a>
+        </div>
+    </div>
+</footer>
+
+<script src="/assets/js/shared.js"></script>
+
+    <script>
+class BookSearch {
+    constructor() {
+        this.books = [];
+        this.filteredBooks = [];
+        this.searchTerm = '';
+        this.filters = { publisher: '', year: '', collection: '', cover: '', tag: '' };
+        this.activeFilter = null; // For aggregate views
+        this.sortBy = 'title';
+        this.currentPage = 1;
+        this.itemsPerPage = 24;
+        this.visualBrowse = false;
+        this.init();
+    }
+    
+    async init() {
+        try {
+            // Load CSV data
+            const response = await fetch('/cms/data/books.csv');
+            const csvText = await response.text();
+            
+            // Parse CSV data
+            this.books = this.parseCSV(csvText);
+            console.log(`Loaded ${this.books.length} books`);
+            
+            // Check URL parameters for aggregate views
+            this.checkUrlParams();
+            
+            // Populate filter dropdowns
+            this.populateFilters();
+            
+            // Set up event listeners
+            this.setupEventListeners();
+            
+            // Initial search/display
+            this.performSearch();
+        } catch (error) {
+            console.error('Error loading book data:', error);
+            document.getElementById('results-container').innerHTML = 
+                '<p class="text-red-600">Error loading book data. Please try again later.</p>';
+        }
+    }
+    
+    checkUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+        const filterType = params.get('filter');
+        const filterValue = params.get('value');
+        
+        if (filterType && filterValue) {
+            this.activeFilter = { type: filterType, value: decodeURIComponent(filterValue) };
+            
+            // Set the appropriate filter
+            if (filterType === 'publisher') {
+                this.filters.publisher = filterValue;
+            } else if (filterType === 'year') {
+                this.filters.year = filterValue;
+            } else if (filterType === 'tag') {
+                this.filters.tag = filterValue;
+            } else if (filterType === 'collection') {
+                this.filters.collection = filterValue;
+            }
+            
+            // Show active filter UI
+            this.showActiveFilter();
+        }
+    }
+    
+    showActiveFilter() {
+        if (!this.activeFilter) return;
+        
+        const filterDiv = document.getElementById('active-filter');
+        const filterDesc = document.getElementById('filter-description');
+        
+        filterDiv.classList.remove('hidden');
+        
+        let description = '';
+        if (this.activeFilter.type === 'publisher') {
+            description = `All books by ${this.activeFilter.value}`;
+        } else if (this.activeFilter.type === 'year') {
+            description = `All books from ${this.activeFilter.value}`;
+        } else if (this.activeFilter.type === 'tag') {
+            description = `All books tagged with "${this.activeFilter.value}"`;
+        } else if (this.activeFilter.type === 'collection') {
+            description = `All books in ${this.activeFilter.value} collection`;
+        }
+        
+        filterDesc.textContent = description;
+    }
+    
+    clearActiveFilter() {
+        this.activeFilter = null;
+        window.history.pushState({}, '', window.location.pathname);
+        document.getElementById('active-filter').classList.add('hidden');
+        this.clearAllFilters();
+    }
+    
+    navigateToAggregate(filterType, filterValue) {
+        // Navigate to aggregate view with URL parameters
+        const url = `${window.location.pathname}?filter=${filterType}&value=${encodeURIComponent(filterValue)}`;
+        window.location.href = url;
+    }
+    
+    parseCSV(csvText) {
+        const lines = csvText.split('\n').filter(line => line.trim());
+        if (lines.length === 0) return [];
+        
+        // Parse headers
+        const headers = this.parseCSVLine(lines[0]);
+        
+        // Parse data rows
+        const books = [];
+        for (let i = 1; i < lines.length; i++) {
+            const values = this.parseCSVLine(lines[i]);
+            if (values.length === headers.length) {
+                const book = {};
+                headers.forEach((header, index) => {
+                    book[header] = values[index] || '';
+                });
+                books.push(book);
+            }
+        }
+        
+        return books;
+    }
+    
+    parseCSVLine(line) {
+        const values = [];
+        let current = '';
+        let inQuotes = false;
+        
+        for (let i = 0; i < line.length; i++) {
+            const char = line[i];
+            const nextChar = line[i + 1];
+            
+            if (char === '"' && inQuotes && nextChar === '"') {
+                current += '"';
+                i++; // Skip next quote
+            } else if (char === '"') {
+                inQuotes = !inQuotes;
+            } else if (char === ',' && !inQuotes) {
+                values.push(current.trim());
+                current = '';
+            } else {
+                current += char;
+            }
+        }
+        
+        values.push(current.trim());
+        return values;
+    }
+    
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
+    setupEventListeners() {
+        // Search input
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            this.searchTerm = e.target.value.toLowerCase();
+            this.currentPage = 1;
+            this.performSearch();
+        });
+        
+        // Sort select
+        document.getElementById('sort-select').addEventListener('change', (e) => {
+            this.sortBy = e.target.value;
+            this.currentPage = 1;
+            this.performSearch();
+        });
+        
+        // Filter selects
+        ['publisher-filter', 'year-filter', 'collection-filter', 'cover-filter', 'tag-filter'].forEach(id => {
+            document.getElementById(id).addEventListener('change', (e) => {
+                const filterType = id.replace('-filter', '');
+                this.filters[filterType] = e.target.value;
+                this.currentPage = 1;
+                this.performSearch();
+            });
+        });
+        
+        // Visual browse checkbox
+        document.getElementById('visual-browse').addEventListener('change', (e) => {
+            this.visualBrowse = e.target.checked;
+            this.performSearch();
+        });
+        
+        // Items per page
+        document.getElementById('items-per-page').addEventListener('change', (e) => {
+            this.itemsPerPage = parseInt(e.target.value);
+            this.currentPage = 1;
+            this.performSearch();
+        });
+        
+        // Pagination buttons
+        document.getElementById('prev-page').addEventListener('click', () => {
+            if (this.currentPage > 1) {
+                this.currentPage--;
+                this.performSearch();
+            }
+        });
+        
+        document.getElementById('next-page').addEventListener('click', () => {
+            const totalPages = Math.ceil(this.filteredBooks.length / this.itemsPerPage);
+            if (this.currentPage < totalPages) {
+                this.currentPage++;
+                this.performSearch();
+            }
+        });
+    }
+    
+    populateFilters() {
+        const publishers = [...new Set(this.books.map(book => book.publisher).filter(p => p && p !== 'NULL'))].sort();
+        const years = [...new Set(this.books.map(book => book.publication_year).filter(y => y && y !== 'NULL'))].sort((a, b) => b - a);
+        const collections = [...new Set(this.books.map(book => book.collection_grouping).filter(c => c && c !== 'NULL'))].sort();
+        
+        // Extract all unique tags
+        const allTags = new Set();
+        this.books.forEach(book => {
+            if (book.tags && book.tags !== 'NULL') {
+                const tags = book.tags.split(',').map(t => t.trim()).filter(t => t);
+                tags.forEach(tag => allTags.add(tag));
+            }
+        });
+        const tags = [...allTags].sort();
+        
+        this.populateSelect('publisher-filter', publishers);
+        this.populateSelect('year-filter', years);
+        this.populateSelect('collection-filter', collections);
+        this.populateSelect('tag-filter', tags);
+    }
+    
+    populateSelect(selectId, options) {
+        const select = document.getElementById(selectId);
+        const currentValue = select.value;
+        
+        // Clear existing options except the first one
+        while (select.children.length > 1) {
+            select.removeChild(select.lastChild);
+        }
+        
+        options.forEach(option => {
+            const optionElement = document.createElement('option');
+            optionElement.value = option;
+            optionElement.textContent = option;
+            select.appendChild(optionElement);
+        });
+        
+        select.value = currentValue;
+    }
+    
+    clearAllFilters() {
+        document.getElementById('search-input').value = '';
+        document.getElementById('sort-select').value = 'title';
+        document.getElementById('publisher-filter').value = '';
+        document.getElementById('year-filter').value = '';
+        document.getElementById('collection-filter').value = '';
+        document.getElementById('cover-filter').value = '';
+        document.getElementById('tag-filter').value = '';
+        document.getElementById('visual-browse').checked = false;
+        
+        this.searchTerm = '';
+        this.filters = { publisher: '', year: '', collection: '', cover: '', tag: '' };
+        this.visualBrowse = false;
+        this.sortBy = 'title';
+        this.currentPage = 1;
+        this.performSearch();
+    }
+    
+    performSearch() {
+        this.filteredBooks = this.books.filter(book => {
+            // Search term filter
+            if (this.searchTerm) {
+                const searchableText = [
+                    book.title,
+                    book.author_full_name,
+                    book.publisher,
+                    book.description,
+                    book.tags
+                ].join(' ').toLowerCase();
+                
+                if (!searchableText.includes(this.searchTerm)) {
+                    return false;
+                }
+            }
+            
+            // Publisher filter
+            if (this.filters.publisher && book.publisher !== this.filters.publisher) {
+                return false;
+            }
+            
+            // Year filter
+            if (this.filters.year && book.publication_year !== this.filters.year) {
+                return false;
+            }
+            
+            // Collection filter
+            if (this.filters.collection && book.collection_grouping !== this.filters.collection) {
+                return false;
+            }
+            
+            // Tag filter
+            if (this.filters.tag) {
+                if (!book.tags || book.tags === 'NULL') return false;
+                const bookTags = book.tags.split(',').map(t => t.trim());
+                if (!bookTags.includes(this.filters.tag)) return false;
+            }
+            
+            // Cover availability filter
+            if (this.filters.cover) {
+                const hasCover = this.generateCoverImagePath(book) !== '/assets/images/placeholder-book.svg';
+                if (this.filters.cover === 'with-covers' && !hasCover) {
+                    return false;
+                }
+                if (this.filters.cover === 'without-covers' && hasCover) {
+                    return false;
+                }
+            }
+            
+            return true;
+        });
+        
+        this.sortResults();
+        this.displayResults();
+    }
+    
+    sortResults() {
+        this.filteredBooks.sort((a, b) => {
+            let aVal, bVal;
+            
+            switch (this.sortBy) {
+                case 'title':
+                    aVal = a.title || '';
+                    bVal = b.title || '';
+                    break;
+                case 'author':
+                    aVal = a.author_full_name || '';
+                    bVal = b.author_full_name || '';
+                    break;
+                case 'year':
+                    aVal = parseInt(a.publication_year) || 0;
+                    bVal = parseInt(b.publication_year) || 0;
+                    return bVal - aVal; // Descending for years
+                case 'publisher':
+                    aVal = a.publisher || '';
+                    bVal = b.publisher || '';
+                    break;
+                default:
+                    return 0;
+            }
+            
+            return aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+        });
+    }
+    
+    displayResults() {
+        const resultsContainer = document.getElementById('results-container');
+        const resultsCount = document.getElementById('results-count');
+        
+        resultsCount.textContent = this.filteredBooks.length;
+        
+        if (this.filteredBooks.length === 0) {
+            resultsContainer.innerHTML = '<p class="text-neutral-600 text-center py-8">No books found matching your criteria.</p>';
+            this.updatePagination();
+            return;
+        }
+        
+        // Calculate pagination
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        const endIndex = startIndex + this.itemsPerPage;
+        const pageBooks = this.filteredBooks.slice(startIndex, endIndex);
+        
+        // Render books
+        if (this.visualBrowse) {
+            resultsContainer.innerHTML = this.renderVisualGrid(pageBooks);
+        } else {
+            resultsContainer.innerHTML = pageBooks.map(book => this.renderBookCard(book)).join('');
+        }
+        
+        this.updatePagination();
+    }
+    
+    renderVisualGrid(books) {
+        return `
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                ${books.map(book => this.renderVisualCard(book)).join('')}
+            </div>
+        `;
+    }
+    
+    renderVisualCard(book) {
+        const imageUrl = this.generateCoverImagePath(book);
+        const hasRealCover = imageUrl !== '/assets/images/placeholder-book.svg';
+        const author = (book.author_full_name && book.author_full_name !== 'NULL') ? book.author_full_name : 'Unknown Author';
+        
+        return `
+            <div class="group cursor-pointer" onclick="this.classList.toggle('expanded')">
+                <div class="aspect-[3/4] relative overflow-hidden rounded-lg border ${hasRealCover ? 'border-neutral-200 shadow-sm' : 'border-neutral-100'}">
+                    <img src="${imageUrl}" 
+                         alt="${this.escapeHtml(book.title)}"
+                         class="w-full h-full object-cover ${hasRealCover ? '' : 'opacity-40'} group-hover:scale-105 transition-transform duration-300"
+                         onerror="this.src='/assets/images/placeholder-book.svg'"
+                         loading="lazy">
+                    ${hasRealCover ? '' : '<div class="absolute inset-0 flex items-center justify-center bg-neutral-50 bg-opacity-80"><i class="fas fa-book text-neutral-400 text-2xl"></i></div>'}
+                </div>
+                <div class="mt-2 text-center">
+                    <h4 class="text-sm font-medium text-neutral-900 line-clamp-2 group-hover:text-teal-700 transition-colors">
+                        ${this.escapeHtml(book.title.length > 40 ? book.title.substring(0, 40) + '...' : book.title)}
+                    </h4>
+                    <p class="text-xs text-neutral-600 mt-1 line-clamp-1 clickable-meta" 
+                       onclick="event.stopPropagation(); bookSearch.navigateToAggregate('publisher', '${this.escapeHtml(author).replace(/'/g, "\\'")}')">
+                        ${this.escapeHtml(author.length > 30 ? author.substring(0, 30) + '...' : author)}
+                    </p>
+                    ${book.publication_year && book.publication_year !== 'NULL' ? 
+                        `<p class="text-xs text-neutral-500 mt-1 clickable-meta" 
+                            onclick="event.stopPropagation(); bookSearch.navigateToAggregate('year', '${book.publication_year}')">${book.publication_year}</p>` : ''}
+                </div>
+            </div>
+        `;
+    }
+    
+    generateCoverImagePath(book) {
+        // First check if book already has a valid image_url
+        if (book.image_url && 
+            book.image_url !== 'NULL' && 
+            book.image_url !== '' && 
+            book.image_url !== null &&
+            book.image_url !== 'null') {
+            return book.image_url;
+        }
+        
+        // Generate cover path from acquired images using the same naming convention
+        // as our acquisition script: Author_Title_ISBN.jpg or Author_Title_NULL.jpg
+        const author = (book.author_last || 'Unknown').replace(/[^a-zA-Z0-9.-]/g, '_');
+        const title = (book.title || 'Untitled').replace(/[^a-zA-Z0-9.-]/g, '_');
+        const isbn = (book.isbn_asin || '').replace(/[^a-zA-Z0-9.-]/g, '_');
+
+        // Try with ISBN if available
+        if (isbn && isbn !== 'NULL' && isbn !== '') {
+            const coverFileName = `${author}_${title}_${isbn}`.replace(/_+/g, '_').replace(/^_|_$/g, '').substring(0, 150) + '.jpg';
+            return `/assets/images/books/${coverFileName}`;
+        } else {
+            // Try with NULL suffix for books without ISBN
+            const coverFileName = `${author}_${title}_NULL`.replace(/_+/g, '_').replace(/^_|_$/g, '').substring(0, 150) + '.jpg';
+            return `/assets/images/books/${coverFileName}`;
+        }
+        
+        // Note: The image tag will fallback to placeholder if this path doesn't exist
+    }
+
+    generateBookPageUrl(book) {
+        // Generate URL slug matching the books.njk permalink format
+        // Format: /books/{author_last}_{title}_{id}/
+        const author = (book.author_last || 'unknown')
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+
+        const title = (book.title || 'untitled')
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+
+        const id = book.id || '';
+
+        return `/books/${author}_${title}_${id}/`;
+    }
+
+    renderBookCard(book) {
+        const imageUrl = this.generateCoverImagePath(book);
+        const hasRealCover = imageUrl !== '/assets/images/placeholder-book.svg';
+        
+        const year = (book.publication_year && book.publication_year !== 'NULL') ? book.publication_year : '';
+        const pages = (book.page_count && book.page_count !== 'NULL') ? `${book.page_count} pages` : '';
+        const binding = (book.binding && book.binding !== 'NULL') ? book.binding : '';
+        const publisher = (book.publisher && book.publisher !== 'NULL') ? book.publisher : '';
+        const author = (book.author_full_name && book.author_full_name !== 'NULL') ? book.author_full_name : 'Unknown Author';
+        
+        // Parse tags
+        const tags = [];
+        if (book.tags && book.tags !== 'NULL') {
+            book.tags.split(',').forEach(tag => {
+                const trimmedTag = tag.trim();
+                if (trimmedTag) tags.push(trimmedTag);
+            });
+        }
+        
+        return `
+            <div class="bg-white border border-neutral-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="md:w-32 md:flex-shrink-0 relative">
+                        <img src="${imageUrl}" 
+                             alt="${this.escapeHtml(book.title)}"
+                             class="w-full h-40 md:h-48 object-cover rounded border ${hasRealCover ? 'shadow-sm' : 'opacity-50'}"
+                             onerror="this.src='/assets/images/placeholder-book.svg'"
+                             loading="lazy">
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-semibold text-teal-900 mb-2">
+                            <a href="${this.generateBookPageUrl(book)}" class="hover:text-teal-700 transition-colors">
+                                ${this.escapeHtml(book.title)}
+                            </a>
+                        </h3>
+                        <p class="text-neutral-700 mb-2">
+                            by <span class="clickable-meta" onclick="bookSearch.navigateToAggregate('publisher', '${this.escapeHtml(author).replace(/'/g, "\\'")}')">${this.escapeHtml(author)}</span>
+                        </p>
+                        <div class="text-sm text-neutral-600 mb-3">
+                            <div class="flex flex-wrap gap-4">
+                                ${publisher ? `<span><strong>Publisher:</strong> <span class="clickable-meta" onclick="bookSearch.navigateToAggregate('publisher', '${this.escapeHtml(publisher).replace(/'/g, "\\'")}')">${this.escapeHtml(publisher)}</span></span>` : ''}
+                                ${year ? `<span><strong>Year:</strong> <span class="clickable-meta" onclick="bookSearch.navigateToAggregate('year', '${year}')">${year}</span></span>` : ''}
+                                ${binding ? `<span><strong>Format:</strong> ${this.escapeHtml(binding)}</span>` : ''}
+                                ${pages ? `<span><strong>Pages:</strong> ${pages}</span>` : ''}
+                            </div>
+                        </div>
+                        ${book.description && book.description !== 'NULL' ? `
+                            <p class="text-neutral-700 text-sm leading-relaxed mb-3 line-clamp-3">
+                                ${this.escapeHtml(book.description.substring(0, 200))}${book.description.length > 200 ? '...' : ''}
+                            </p>
+                        ` : ''}
+                        
+                        <!-- Tags Display -->
+                        ${tags.length > 0 ? `
+                            <div class="mb-3">
+                                <div class="flex flex-wrap gap-2">
+                                    ${tags.map(tag => `
+                                        <span class="tag-pill inline-block bg-neutral-100 text-neutral-700 text-xs px-2 py-1 rounded"
+                                              onclick="bookSearch.navigateToAggregate('tag', '${this.escapeHtml(tag).replace(/'/g, "\\'")}')">
+                                            ${this.escapeHtml(tag)}
+                                        </span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        <div class="flex justify-between items-center">
+                            ${book.collection_grouping && book.collection_grouping !== 'NULL' ? `
+                                <span class="inline-block bg-neutral-100 text-neutral-700 text-xs px-2 py-1 rounded border border-neutral-300 clickable-meta"
+                                      onclick="bookSearch.navigateToAggregate('collection', '${this.escapeHtml(book.collection_grouping).replace(/'/g, "\\'")}')">
+                                    ${this.escapeHtml(book.collection_grouping)}
+                                </span>
+                            ` : '<span></span>'}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    updatePagination() {
+        const totalPages = Math.ceil(this.filteredBooks.length / this.itemsPerPage);
+        const paginationContainer = document.getElementById('pagination');
+        const prevButton = document.getElementById('prev-page');
+        const nextButton = document.getElementById('next-page');
+        const pageNumbers = document.getElementById('page-numbers');
+        
+        if (totalPages <= 1) {
+            paginationContainer.classList.add('hidden');
+            return;
+        }
+        
+        paginationContainer.classList.remove('hidden');
+        
+        prevButton.disabled = this.currentPage <= 1;
+        nextButton.disabled = this.currentPage >= totalPages;
+        
+        // Generate page numbers
+        pageNumbers.innerHTML = '';
+        const maxVisiblePages = 5;
+        let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+        
+        if (endPage - startPage + 1 < maxVisiblePages) {
+            startPage = Math.max(1, endPage - maxVisiblePages + 1);
+        }
+        
+        for (let i = startPage; i <= endPage; i++) {
+            const pageButton = document.createElement('button');
+            pageButton.textContent = i;
+            pageButton.className = `px-3 py-2 rounded ${
+                i === this.currentPage 
+                    ? 'bg-teal-600 text-white' 
+                    : 'bg-white border border-neutral-300 hover:bg-neutral-50'
+            }`;
+            pageButton.addEventListener('click', () => {
+                this.currentPage = i;
+                this.performSearch();
+            });
+            pageNumbers.appendChild(pageButton);
+        }
+    }
+}
+
+// Initialize the search when the page loads
+let bookSearch;
+document.addEventListener('DOMContentLoaded', () => {
+    bookSearch = new BookSearch();
+});
+    </script>
+</body>
+</html>

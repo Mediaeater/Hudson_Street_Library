@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Book Title: Otherhow: Essays and Documents on Art and Disability 1985–2024 -->
+    <title>Otherhow | Hudson Street Library Collection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Inter:wght@300;400;500;600&display=swap');
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .serif {
+            font-family: 'Libre Baskerville', Georgia, serif;
+        }
+
+        .book-title {
+            font-size: 3rem;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.75rem;
+        }
+
+        .book-author {
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 0.01em;
+            color: #6b7280;
+        }
+
+        .section-heading {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #374151;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .field-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #9ca3af;
+            min-width: 140px;
+            display: inline-block;
+        }
+
+        .field-value {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #1f2937;
+        }
+
+        .description-text {
+            font-size: 0.9375rem;
+            line-height: 1.8;
+            color: #374151;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, #e5e7eb, transparent);
+            margin: 3rem 0;
+        }
+
+        .subject-tag {
+            display: inline-block;
+            padding: 0.375rem 0.875rem;
+            background-color: #f3f4f6;
+            color: #0f766e;
+            border: 1px solid #e5e7eb;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .subject-tag:hover {
+            background-color: #0f766e;
+            color: white;
+            border-color: #0f766e;
+        }
+
+        .spread-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+        }
+
+        .spread-grid img {
+            width: 100%;
+            height: auto;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .spread-grid img:hover {
+            opacity: 0.85;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90vw;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+
+        @media (max-width: 768px) {
+            .book-title {
+                font-size: 2rem;
+            }
+            .book-author {
+                font-size: 1.25rem;
+            }
+            .spread-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media print {
+            .no-print { display: none; }
+            body { font-size: 12pt; }
+            .book-title { font-size: 24pt; page-break-after: avoid; }
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-800">
+
+    <!-- Standard Header -->
+    <header class="no-print sticky top-0 w-full bg-white/95 backdrop-blur-sm z-50 py-4 border-b border-gray-100">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-between items-center">
+                <a href="/" class="text-lg font-semibold tracking-tight text-gray-900">HUDSON STREET LIBRARY</a>
+                <nav class="desktop-nav hidden md:flex space-x-8 items-center text-gray-700 text-sm">
+                    <a href="/#about" class="nav-item hover:text-teal-700">About</a>
+                    <a href="/collection-explore.html" class="nav-item hover:text-teal-700">Collections</a>
+                    <a href="/static-demo/" class="nav-item hover:text-teal-700">Search</a>
+                    <a href="/#publications" class="nav-item hover:text-teal-700">Publications</a>
+                    <a href="/collections/recently_added.html" class="nav-item hover:text-teal-700">News</a>
+                    <a href="/#contact" class="nav-item hover:text-teal-700">Contact</a>
+                </nav>
+                <button class="mobile-nav-button md:hidden focus:outline-none text-teal-800" aria-label="Toggle menu">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+            <nav class="mobile-menu hidden md:hidden">
+                <div class="px-6 py-4 space-y-3">
+                    <a href="/#about" class="block py-2 text-neutral-700 hover:text-teal-700">About</a>
+                    <a href="/collection-explore.html" class="block py-2 text-neutral-700 hover:text-teal-700">Collections</a>
+                    <a href="/static-demo/" class="block py-2 text-neutral-700 hover:text-teal-700">Search</a>
+                    <a href="/#publications" class="block py-2 text-neutral-700 hover:text-teal-700">Publications</a>
+                    <a href="/collections/recently_added.html" class="block py-2 text-neutral-700 hover:text-teal-700">News</a>
+                    <a href="/#contact" class="block py-2 text-neutral-700 hover:text-teal-700">Contact</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 lg:px-12 py-12 max-w-7xl">
+        <!-- Breadcrumb -->
+        <nav class="no-print breadcrumb mb-8 text-sm text-gray-500" aria-label="Breadcrumb">
+            <a href="/" class="hover:text-gray-700">Home</a>
+            <span class="mx-2">/</span>
+            <a href="/collection-explore.html" class="hover:text-gray-700">Collections</a>
+            <span class="mx-2">/</span>
+            <a href="/collections/art-books-collection.html" class="hover:text-gray-700">Art Books</a>
+            <span class="mx-2">/</span>
+            <span class="text-gray-900">Otherhow</span>
+        </nav>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+            <!-- Left Column: Book Cover -->
+            <div class="lg:col-span-3">
+                <div class="sticky top-24">
+                    <div class="aspect-[3/4] relative overflow-hidden rounded-sm shadow-2xl">
+                        <img src="/assets/images/books/Grigely_Otherhow/cover.jpg"
+                             alt="Otherhow: Essays and Documents on Art and Disability 1985–2024"
+                             class="w-full h-full object-cover"
+                             onerror="this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-40');">
+                    </div>
+
+                    <div class="no-print mt-6 flex gap-4 text-sm">
+                        <button onclick="window.print()" class="flex items-center gap-2 text-gray-600 hover:text-gray-900">
+                            <i class="fas fa-print"></i>
+                            <span>Print</span>
+                        </button>
+                        <button class="flex items-center gap-2 text-gray-600 hover:text-gray-900">
+                            <i class="fas fa-share-alt"></i>
+                            <span>Share</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Book Details -->
+            <div class="lg:col-span-9">
+                <!-- Title & Author -->
+                <div class="mb-12">
+                    <h1 class="book-title serif">Otherhow</h1>
+                    <p class="text-xl text-gray-500 font-light mb-2">Essays and Documents on Art and Disability 1985–2024</p>
+                    <p class="book-author">by Joseph Grigely</p>
+                </div>
+
+                <!-- Publishing Information -->
+                <section class="mb-12">
+                    <h2 class="section-heading">Publication Details</h2>
+                    <div class="space-y-3">
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Publisher</span>
+                            <span class="field-value">
+                                <a href="https://primaryinformation.org" target="_blank" class="text-teal-700 hover:text-teal-900 underline">Primary Information</a>
+                            </span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Published</span>
+                            <span class="field-value">2026</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">ISBN</span>
+                            <span class="field-value">979-8-9910367-1-9</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Format</span>
+                            <span class="field-value">Softcover</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Dimensions</span>
+                            <span class="field-value">7.75 x 10 inches (19.7 x 25.4 cm)</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Pages</span>
+                            <span class="field-value">432 pages</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Language</span>
+                            <span class="field-value">English</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Edition</span>
+                            <span class="field-value">1st edition</span>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <!-- Contributors -->
+                <section class="mb-12">
+                    <h2 class="section-heading">Contributors</h2>
+                    <div class="space-y-3">
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Editor</span>
+                            <span class="field-value">James Hoff</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Designer</span>
+                            <span class="field-value">Siiri Tännler</span>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <!-- About This Book -->
+                <section class="mb-12">
+                    <h2 class="section-heading">About This Book</h2>
+                    <div class="description-text space-y-4">
+                        <p>A collection spanning four decades of writings by deaf artist Joseph Grigely, examining ableism embedded in cultural and media production through various communication modes.</p>
+
+                        <p>The work includes essays, lectures, postcards, and documentation exploring the intersection of disability and art, with sections on advocacy and accessibility.</p>
+                    </div>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <!-- Interior Spreads -->
+                <section class="mb-12">
+                    <h2 class="section-heading">Interior Spreads</h2>
+                    <div class="spread-grid">
+                        <img src="/assets/images/books/Grigely_Otherhow/spread_02.jpg" alt="Interior spread" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/Grigely_Otherhow/spread_03.jpg" alt="Interior spread" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/Grigely_Otherhow/spread_04.jpg" alt="Interior spread" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/Grigely_Otherhow/spread_05.jpg" alt="Interior spread" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/Grigely_Otherhow/spread_06.jpg" alt="Interior spread" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/Grigely_Otherhow/spread_07.jpg" alt="Interior spread" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/Grigely_Otherhow/spread_08.jpg" alt="Interior spread" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/Grigely_Otherhow/spread_09.jpg" alt="Interior spread" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/Grigely_Otherhow/spread_10.jpg" alt="Interior spread" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/Grigely_Otherhow/spread_11.jpg" alt="Interior spread" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/Grigely_Otherhow/spread_12.jpg" alt="Interior spread" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/Grigely_Otherhow/spread_13.jpg" alt="Interior spread" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/Grigely_Otherhow/spread_14.jpg" alt="Interior spread" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/Grigely_Otherhow/spread_15.jpg" alt="Interior spread" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/Grigely_Otherhow/spread_16.jpg" alt="Interior spread" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/Grigely_Otherhow/spread_17.jpg" alt="Interior spread" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/Grigely_Otherhow/spread_18.jpg" alt="Interior spread" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/Grigely_Otherhow/spread_19.jpg" alt="Interior spread" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/Grigely_Otherhow/spread_20.jpg" alt="Interior spread" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/Grigely_Otherhow/spread_21.jpg" alt="Interior spread" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/Grigely_Otherhow/spread_22.jpg" alt="Interior spread" onclick="openLightbox(this)">
+                    </div>
+                    <div class="mt-4 flex justify-end">
+                        <img src="/assets/images/books/Grigely_Otherhow/back_cover.jpg" alt="Back cover" class="w-1/4 rounded-sm shadow cursor-pointer" onclick="openLightbox(this)">
+                    </div>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <!-- Classification -->
+                <section class="mb-12">
+                    <h2 class="section-heading">Subjects</h2>
+                    <div class="flex flex-wrap gap-2">
+                        <a href="/collections/art-books-collection.html" class="subject-tag">Art</a>
+                        <a href="/static-demo/?q=Disability" class="subject-tag">Disability</a>
+                        <a href="/static-demo/?q=Essays" class="subject-tag">Essays</a>
+                        <a href="/static-demo/?q=Accessibility" class="subject-tag">Accessibility</a>
+                        <a href="/static-demo/?q=Contemporary+Art" class="subject-tag">Contemporary Art</a>
+                        <a href="/static-demo/?q=Criticism" class="subject-tag">Criticism</a>
+                    </div>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <!-- Library Information -->
+                <section class="mb-12">
+                    <h2 class="section-heading">Library Information</h2>
+                    <div class="space-y-3">
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Location</span>
+                            <span class="field-value">Hudson Street Library, NYC</span>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Classification</span>
+                            <span class="field-value">Art; General</span>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" alt="Enlarged spread">
+    </div>
+
+    <!-- Footer -->
+    <footer class="no-print bg-gray-50 border-t border-gray-100 mt-24 py-12">
+        <div class="container mx-auto px-6 text-center text-sm text-gray-600">
+            <p>&copy; 2025 Hudson Street Library</p>
+        </div>
+    </footer>
+
+    <script>
+        const mobileNavButton = document.querySelector('.mobile-nav-button');
+        const mobileMenu = document.querySelector('.mobile-menu');
+
+        if (mobileNavButton) {
+            mobileNavButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                const icon = mobileNavButton.querySelector('i');
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            });
+        }
+
+        function openLightbox(img) {
+            document.getElementById('lightbox-img').src = img.src;
+            document.getElementById('lightbox').classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+    </script>
+
+</body>
+</html>
