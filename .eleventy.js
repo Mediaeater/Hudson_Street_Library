@@ -156,6 +156,26 @@ module.exports = function(eleventyConfig) {
     return limit ? sorted.slice(0, limit) : sorted;
   });
 
+  // --- Filter books by accession date (simple chronological, no featured sorting) ---
+  // For cataloging/accessioning changelog
+  eleventyConfig.addFilter("recentlyAccessioned", function(books, limit) {
+    if (!books) return [];
+
+    // Filter books with valid accession dates and parse them
+    const booksWithDates = books.map(b => ({
+      ...b,
+      parsedDate: parseAccessionDate(b.accession_no)
+    })).filter(b => b.parsedDate !== null);
+
+    // Sort purely by date (descending - most recent first)
+    const sorted = booksWithDates.sort((a, b) => {
+      return b.parsedDate - a.parsedDate;
+    });
+
+    // Return limited or all
+    return limit ? sorted.slice(0, limit) : sorted;
+  });
+
   // --- Format accession date for display ---
   eleventyConfig.addFilter("formatAccessionDate", function(dateStr) {
     if (!dateStr) return '';
