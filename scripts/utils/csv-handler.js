@@ -137,7 +137,8 @@ class CSVHandler {
 
             // Create backup if file exists
             if (fs.existsSync(filePath)) {
-                const backupPath = this.createBackup(filePath);
+                const backupOpts = options.allowedDir ? { allowedDir: options.allowedDir } : {};
+                const backupPath = this.createBackup(filePath, backupOpts);
                 result.backup = backupPath;
             }
 
@@ -306,6 +307,36 @@ class CSVHandler {
     }
 
     /**
+     * Sanitize CSV field to prevent formula injection
+     * Spreadsheet applications (Excel, Google Sheets, LibreOffice) interpret
+     * cells starting with =, +, -, @, \t, \r, \n as formulas. An attacker
+     * can craft CSV data that executes arbitrary commands when opened.
+     * (CWE-1236, OWASP injection)
+     *
+     * @param {string} value - Field value
+     * @returns {string} Sanitized value
+     */
+    static sanitizeCSVField(value) {
+        if (typeof value !== 'string') return value;
+
+        // Characters that trigger formula interpretation in spreadsheet apps
+        const formulaPrefixes = ['=', '+', '-', '@', '\t', '\r', '\n'];
+
+        if (formulaPrefixes.some(char => value.startsWith(char))) {
+            // Prefix with single quote to force text interpretation
+            return "'" + value;
+        }
+
+        // Strip pipe and semicolon characters used in DDE/command injection
+        // payloads like =cmd|'/C calc'!A0 or =HYPERLINK("http://evil";...)
+        if (value.includes('|') || value.includes(';')) {
+            return value.replace(/[|;]/g, '');
+        }
+
+        return value;
+    }
+
+    /**
      * Validate and clean a single record
      * @param {Object} record - CSV record
      * @param {number} rowIndex - Row number for error reporting
@@ -333,6 +364,9 @@ class CSVHandler {
                 cleaned = cleaned.replace(/\u00e2\u20ac\u2122/g, "'");
                 cleaned = cleaned.replace(/\u00e2\u20ac\u0153/g, '"');
                 cleaned = cleaned.replace(/\u00e2\u20ac/g, '"');
+
+                // SECURITY: Prevent CSV formula injection (CWE-1236)
+                cleaned = this.sanitizeCSVField(cleaned);
 
                 if (original !== cleaned) {
                     result.corrected = true;
@@ -435,13 +469,40 @@ class CSVHandler {
     }
 
     /**
+     * Default allowed directory for backup operations.
+     * All file paths passed to createBackup must resolve within this directory.
+     */
+    static get ALLOWED_BACKUP_DIR() {
+        return path.resolve(__dirname, '../../src/_data');
+    }
+
+    /**
      * Create a backup of existing file
      * @param {string} filePath - Original file path
+     * @param {Object} [options] - Options
+     * @param {string} [options.allowedDir] - Override allowed directory (for testing only)
      * @returns {string} - Backup file path
+     * @throws {Error} If filePath resolves outside the allowed directory
      */
-    static createBackup(filePath) {
+    static createBackup(filePath, options = {}) {
+        // SECURITY: Validate filePath is within the allowed data directory
+        // Prevents path traversal attacks (CWE-22, OWASP A01:2021)
+        const resolvedPath = path.resolve(filePath);
+        const baseDir = path.resolve(options.allowedDir || this.ALLOWED_BACKUP_DIR);
+
+        if (!resolvedPath.startsWith(baseDir + path.sep) && resolvedPath !== baseDir) {
+            throw new Error('Security: Invalid file path outside allowed directory');
+        }
+
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
         const backupPath = filePath.replace(/\.csv$/, `_backup_${timestamp}.csv`);
+
+        // Validate the generated backup path as well
+        const resolvedBackup = path.resolve(backupPath);
+        if (!resolvedBackup.startsWith(baseDir + path.sep) && resolvedBackup !== baseDir) {
+            throw new Error('Security: Invalid backup path generated');
+        }
+
         fs.copyFileSync(filePath, backupPath);
         return backupPath;
     }
@@ -569,7 +630,7 @@ class CSVHandler {
      * @param {string} csvPath - Path to books.csv (optional)
      * @returns {Promise<Object>} - Update result
      */
-    static async updateBook(identifier, updates, csvPath = null) {
+    static async updateBook(identifier, updates, csvPath = null, options = {}) {
         const booksPath = csvPath || path.join(__dirname, '../../src/_data/books.csv');
         const readResult = await this.readBooks(booksPath);
 
@@ -600,7 +661,8 @@ class CSVHandler {
         readResult.data[bookIndex].updated_at = timestamp;
 
         // Write back to file
-        const writeResult = await this.write(booksPath, readResult.data);
+        const writeOpts = options.allowedDir ? { allowedDir: options.allowedDir } : {};
+        const writeResult = await this.write(booksPath, readResult.data, writeOpts);
 
         return {
             success: writeResult.success,
@@ -617,7 +679,7 @@ class CSVHandler {
      * @param {string} csvPath - Path to books.csv (optional)
      * @returns {Promise<Object>} - Batch update result
      */
-    static async batchUpdateBooks(updates, csvPath = null) {
+    static async batchUpdateBooks(updates, csvPath = null, options = {}) {
         const booksPath = csvPath || path.join(__dirname, '../../src/_data/books.csv');
         const readResult = await this.readBooks(booksPath);
 
@@ -654,7 +716,8 @@ class CSVHandler {
 
         // Write back to file if any updates were successful
         if (results.successful > 0) {
-            const writeResult = await this.write(booksPath, readResult.data);
+            const writeOpts = options.allowedDir ? { allowedDir: options.allowedDir } : {};
+            const writeResult = await this.write(booksPath, readResult.data, writeOpts);
             results.writeSuccess = writeResult.success;
             results.writeErrors = writeResult.errors;
             results.backup = writeResult.backup;

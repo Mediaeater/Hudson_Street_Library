@@ -116,22 +116,48 @@ function generateStandardFilename(bookData, options = {}) {
 }
 
 /**
- * Sanitize filename by removing invalid characters
- * Consolidates sanitization logic from multiple files
+ * Sanitize filename by removing invalid and dangerous characters.
+ * Defends against path traversal (OWASP A01:2021 - Broken Access Control),
+ * hidden file creation, and filesystem injection.
+ *
+ * Security layers:
+ *   1. path.basename() strips all directory components
+ *   2. Leading dots removed to prevent hidden files
+ *   3. Dot-dot sequences blocked as defense in depth
+ *   4. Non-empty output validated with safe fallback
  *
  * @param {string} filename - Raw filename to sanitize
- * @returns {string} Sanitized filename
+ * @returns {string} Sanitized filename safe for filesystem use
  */
 function sanitizeFilename(filename) {
-    return filename
+    if (!filename || typeof filename !== 'string') {
+        return 'untitled';
+    }
+
+    // Strip all directory components -- prevents path traversal
+    let cleaned = path.basename(filename);
+
+    // Remove leading dots -- prevents hidden files (.env, .htaccess)
+    cleaned = cleaned.replace(/^\.+/, '');
+
+    cleaned = cleaned
         // Remove invalid filesystem characters
         .replace(/[<>:"/\\|?*]/g, '')
         // Replace spaces and other special chars with underscores
         .replace(/[^a-zA-Z0-9.-]/g, '_')
+        // Replace consecutive dots (defense in depth against ..)
+        .replace(/\.{2,}/g, '_')
         // Collapse multiple underscores
         .replace(/_+/g, '_')
         // Remove leading/trailing underscores
         .replace(/^_|_$/g, '');
+
+    // Fail-safe: if sanitization stripped everything, use a default
+    if (!cleaned) {
+        return 'untitled';
+    }
+
+    return cleaned;
 }
 
 /**

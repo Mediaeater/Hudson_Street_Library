@@ -128,17 +128,17 @@ describe('CSV Handler Integration Tests', function() {
     it('should create backup before overwriting', async function() {
       const csvPath = path.join(testDir, 'books.csv');
 
-      // Write initial file
+      // Write initial file (allowedDir permits backup in temp dir)
       const initialData = [
         { id: '1', title: 'Original', author_full_name: 'Author' }
       ];
-      await CSVHandler.write(csvPath, initialData);
+      await CSVHandler.write(csvPath, initialData, { allowedDir: testDir });
 
       // Overwrite with new data
       const newData = [
         { id: '2', title: 'Updated', author_full_name: 'New Author' }
       ];
-      const result = await CSVHandler.write(csvPath, newData);
+      const result = await CSVHandler.write(csvPath, newData, { allowedDir: testDir });
 
       assert.strictEqual(result.success, true);
       assert.ok(result.backup, 'Should create backup');
@@ -207,7 +207,7 @@ describe('CSV Handler Integration Tests', function() {
         publication_year: '2024'
       };
 
-      const result = await CSVHandler.updateBook('1', updates, booksPath);
+      const result = await CSVHandler.updateBook('1', updates, booksPath, { allowedDir: testDir });
 
       assert.strictEqual(result.success, true);
       assert.ok(result.backup, 'Should create backup');
@@ -228,7 +228,7 @@ describe('CSV Handler Integration Tests', function() {
         description: 'Updated description'
       };
 
-      const result = await CSVHandler.updateBook('9780451524935', updates, booksPath);
+      const result = await CSVHandler.updateBook('9780451524935', updates, booksPath, { allowedDir: testDir });
 
       assert.strictEqual(result.success, true);
       assert.ok(result.backup, 'Should create backup');
@@ -258,7 +258,7 @@ describe('CSV Handler Integration Tests', function() {
         { identifier: '3', updates: { publisher: 'Publisher C' } }
       ];
 
-      const result = await CSVHandler.batchUpdateBooks(updates, booksPath);
+      const result = await CSVHandler.batchUpdateBooks(updates, booksPath, { allowedDir: testDir });
 
       assert.ok(result.writeSuccess, 'Write should succeed');
       assert.strictEqual(result.successful, 3, 'All 3 books should update');
@@ -481,7 +481,7 @@ describe('CSV Handler Integration Tests', function() {
       const csvPath = path.join(testDir, 'books.csv');
       fs.writeFileSync(csvPath, 'id,title\n1,Test');
 
-      const backupPath = CSVHandler.createBackup(csvPath);
+      const backupPath = CSVHandler.createBackup(csvPath, { allowedDir: testDir });
 
       assert.ok(backupPath);
       assert.ok(fs.existsSync(backupPath));

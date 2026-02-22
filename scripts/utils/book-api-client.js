@@ -18,8 +18,83 @@
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
+const { URL } = require('url');
 const { promisify } = require('util');
 const { IMAGE_CONFIG, generateStandardFilename, validateImage, checkImageExists } = require('./image-core');
+
+// --- SSRF Protection ---
+// Whitelist of hosts this client is allowed to contact.
+// Any request to a host not on this list will be rejected.
+// OWASP ref: https://owasp.org/Top10/A10_2021-Server-Side_Request_Forgery_%28SSRF%29/
+const ALLOWED_HOSTS = [
+    'www.googleapis.com',
+    'openlibrary.org',
+    'covers.openlibrary.org',
+    'covers.oclc.org',
+    'covers.librarything.com',
+    'books.google.com'
+];
+
+/**
+ * Validate a URL against the security policy.
+ *
+ * Rules enforced (order matters):
+ *  1. Protocol must be HTTPS (no plaintext HTTP).
+ *  2. Hostname must not be a private/internal/loopback address.
+ *     This check runs first so that an attacker cannot sneak a private
+ *     IP onto the whitelist or bypass it via DNS rebinding.
+ *  3. Hostname must appear in ALLOWED_HOSTS.
+ *
+ * @param {string} urlString - The URL to validate.
+ * @returns {string} The validated, canonical URL string.
+ * @throws {Error} If the URL violates any rule.
+ */
+function validateURL(urlString) {
+    let parsed;
+    try {
+        parsed = new URL(urlString);
+    } catch (e) {
+        throw new Error(`Malformed URL: ${urlString}`);
+    }
+
+    // Rule 1 -- HTTPS only
+    if (parsed.protocol !== 'https:') {
+        throw new Error('Only HTTPS URLs are allowed');
+    }
+
+    // Rule 2 -- block private/loopback/link-local addresses
+    // Checked before the whitelist so internal addresses are always denied
+    // regardless of what appears in ALLOWED_HOSTS.
+    const host = parsed.hostname;
+    if (
+        host === 'localhost' ||
+        host === '0.0.0.0' ||
+        host.startsWith('127.') ||
+        host.startsWith('10.') ||
+        host.startsWith('192.168.') ||
+        host.startsWith('172.16.') || host.startsWith('172.17.') ||
+        host.startsWith('172.18.') || host.startsWith('172.19.') ||
+        host.startsWith('172.20.') || host.startsWith('172.21.') ||
+        host.startsWith('172.22.') || host.startsWith('172.23.') ||
+        host.startsWith('172.24.') || host.startsWith('172.25.') ||
+        host.startsWith('172.26.') || host.startsWith('172.27.') ||
+        host.startsWith('172.28.') || host.startsWith('172.29.') ||
+        host.startsWith('172.30.') || host.startsWith('172.31.') ||
+        host.startsWith('169.254.') ||
+        host === '[::1]' ||
+        host.startsWith('fd') ||
+        host.startsWith('fe80')
+    ) {
+        throw new Error('Internal network access denied');
+    }
+
+    // Rule 3 -- host whitelist
+    if (!ALLOWED_HOSTS.includes(parsed.hostname)) {
+        throw new Error(`Host not allowed: ${parsed.hostname}`);
+    }
+
+    return parsed.href;
+}
 
 // Default configuration
 const DEFAULT_CONFIG = {
@@ -281,45 +356,103 @@ class BookAPIClient {
 
     /**
      * Internal HTTP request implementation
+     *
+     * Security controls:
+     *  - Connection timeout: kills the socket if the server doesn't respond
+     *    within the configured window (default 15 s).
+     *  - Read-stall timeout: destroys the request if no data arrives for 10 s
+     *    after the connection is established. Prevents slow-loris style resource
+     *    exhaustion.
+     *  - Response size cap: rejects responses larger than 10 MB to prevent
+     *    memory exhaustion from oversized payloads.
+     *
+     * OWASP ref: A05:2021 - Security Misconfiguration (resource limits)
      */
     _httpRequest(url, options = {}) {
         return new Promise((resolve, reject) => {
+            const timeout = options.timeout || this.config.request.timeout;
+            const READ_STALL_MS = 10000;   // 10 s with no data = stall
+            const MAX_RESPONSE_BYTES = 10 * 1024 * 1024; // 10 MB
+
+            let settled = false;
+            let connectionTimer;
+            let readStallTimer;
+
+            function settle(fn, value) {
+                if (settled) return;
+                settled = true;
+                clearTimeout(connectionTimer);
+                clearInterval(readStallTimer);
+                fn(value);
+            }
+
             const requestOptions = {
                 headers: {
                     'User-Agent': options.userAgent || this.config.request.userAgent,
                     'Accept': 'application/json'
-                },
-                timeout: options.timeout || this.config.request.timeout
+                }
+                // NOTE: we manage timeouts ourselves instead of passing
+                // `timeout` to https.get, which only covers the socket idle
+                // timeout and does not protect against slow reads.
             };
 
             const req = https.get(url, requestOptions, (res) => {
+                // Connection established -- cancel the connection timer.
+                clearTimeout(connectionTimer);
+
                 let data = '';
+                let lastDataTime = Date.now();
+
+                // Read-stall monitor: check every second whether data is still
+                // arriving. If the gap exceeds READ_STALL_MS, kill the request.
+                readStallTimer = setInterval(() => {
+                    if (Date.now() - lastDataTime > READ_STALL_MS) {
+                        req.destroy();
+                        settle(reject, new Error('Read timeout - no data received for 10s'));
+                    }
+                }, 1000);
 
                 res.on('data', chunk => {
                     data += chunk;
+                    lastDataTime = Date.now();
+
+                    // Response size guard
+                    if (data.length > MAX_RESPONSE_BYTES) {
+                        req.destroy();
+                        settle(reject, new Error('Response too large (>10 MB)'));
+                    }
                 });
 
                 res.on('end', () => {
                     if (res.statusCode === 200) {
                         try {
-                            // Try to parse as JSON, fall back to raw data
                             const parsed = data.trim() ? JSON.parse(data) : data;
-                            resolve(parsed);
+                            settle(resolve, parsed);
                         } catch (e) {
-                            resolve(data);
+                            settle(resolve, data);
                         }
                     } else if (res.statusCode === 429) {
-                        reject(new Error(`Rate limited (HTTP 429)`));
+                        settle(reject, new Error('Rate limited (HTTP 429)'));
                     } else {
-                        reject(new Error(`HTTP ${res.statusCode}: ${res.statusMessage}`));
+                        const err = new Error(`HTTP ${res.statusCode}: ${res.statusMessage}`);
+                        err.code = res.statusCode;
+                        settle(reject, err);
                     }
+                });
+
+                res.on('error', (err) => {
+                    settle(reject, err);
                 });
             });
 
-            req.on('error', reject);
-            req.on('timeout', () => {
+            // Connection timeout: fires if the server never responds.
+            connectionTimer = setTimeout(() => {
                 req.destroy();
-                reject(new Error('Request timeout'));
+                settle(reject, new Error('Connection timeout'));
+            }, timeout);
+
+            req.on('error', (err) => {
+                settle(reject, err);
             });
         });
     }
@@ -740,9 +873,31 @@ class BookAPIClient {
 
     /**
      * Internal file download implementation
+     *
+     * Security controls:
+     *  - URL validation: the target URL is checked against the SSRF whitelist
+     *    before any network I/O occurs.
+     *  - Redirect handling: HTTP 3xx redirects are validated against the same
+     *    whitelist. If the redirect target is not on an allowed host the
+     *    download is aborted. A maximum of maxRedirects hops (default 5) is
+     *    enforced to prevent redirect loops.
+     *  - File-handle cleanup: the write stream is destroyed on every error
+     *    path so we never leak file descriptors.
+     *
+     * OWASP ref: A10:2021 - Server-Side Request Forgery (SSRF)
      */
-    _downloadFile(url, filepath) {
+    _downloadFile(url, filepath, _redirectCount) {
+        const redirectCount = _redirectCount || 0;
+        const maxRedirects = this.config.request.maxRedirects || 5;
+
         return new Promise((resolve, reject) => {
+            // --- SSRF gate ---
+            try {
+                url = validateURL(url);
+            } catch (err) {
+                return reject(new Error(`SSRF blocked: ${err.message}`));
+            }
+
             const file = fs.createWriteStream(filepath);
             const headers = {
                 'User-Agent': this.config.request.userAgent
@@ -751,6 +906,34 @@ class BookAPIClient {
             const options = { headers };
 
             https.get(url, options, (response) => {
+                // --- Redirect handling ---
+                if (response.statusCode >= 300 && response.statusCode < 400) {
+                    file.close();
+                    const redirectURL = response.headers.location;
+
+                    if (!redirectURL) {
+                        return reject(new Error(`Redirect with no Location header (HTTP ${response.statusCode})`));
+                    }
+
+                    if (redirectCount >= maxRedirects) {
+                        return reject(new Error(`Too many redirects (>${maxRedirects})`));
+                    }
+
+                    // Validate the redirect target against the same whitelist.
+                    // Resolve relative redirects against the original URL.
+                    let absoluteRedirect;
+                    try {
+                        absoluteRedirect = new URL(redirectURL, url).href;
+                        validateURL(absoluteRedirect);
+                    } catch (err) {
+                        return reject(new Error(`Unsafe redirect blocked: ${err.message}`));
+                    }
+
+                    // Follow the redirect recursively.
+                    return this._downloadFile(absoluteRedirect, filepath, redirectCount + 1)
+                        .then(resolve, reject);
+                }
+
                 if (response.statusCode === 200) {
                     response.pipe(file);
 
@@ -813,5 +996,7 @@ class BookAPIClient {
 module.exports = {
     BookAPIClient,
     calculateSimilarity,
+    validateURL,
+    ALLOWED_HOSTS,
     DEFAULT_CONFIG
 };
