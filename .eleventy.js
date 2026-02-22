@@ -71,17 +71,38 @@ module.exports = function(eleventyConfig) {
   // --- Filter books by same author (excluding current book) ---
   eleventyConfig.addFilter("otherBooksByAuthor", function(books, authorLast, currentId) {
     if (!books || !authorLast) return [];
-    return books.filter(b =>
-      b.author_last === authorLast && String(b.id) !== String(currentId)
-    ).slice(0, 12);
+
+    // Get unique books that either match author_last OR have author's name in title
+    const matchedBooks = books.filter(b => {
+      if (String(b.id) === String(currentId)) return false;
+
+      // Match by author last name
+      if (b.author_last === authorLast) return true;
+
+      // Match by author name in title (case-insensitive)
+      if (b.title && b.title.toLowerCase().includes(authorLast.toLowerCase())) return true;
+
+      return false;
+    });
+
+    return matchedBooks.slice(0, 12);
   });
 
   // --- Count books by author ---
   eleventyConfig.addFilter("countByAuthor", function(books, authorLast, currentId) {
     if (!books || !authorLast) return 0;
-    return books.filter(b =>
-      b.author_last === authorLast && String(b.id) !== String(currentId)
-    ).length;
+
+    return books.filter(b => {
+      if (String(b.id) === String(currentId)) return false;
+
+      // Match by author last name
+      if (b.author_last === authorLast) return true;
+
+      // Match by author name in title (case-insensitive)
+      if (b.title && b.title.toLowerCase().includes(authorLast.toLowerCase())) return true;
+
+      return false;
+    }).length;
   });
 
   // --- Parse accession date to sortable format ---

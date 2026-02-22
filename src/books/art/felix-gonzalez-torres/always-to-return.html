@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Book Title: Felix Gonzalez-Torres Roni Horn -->
-    <title>Felix Gonzalez-Torres Roni Horn | Hudson Street Library Collection</title>
+    <title>Felix Gonzalez-Torres: Always to Return | Hudson Street Library Collection</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/assets/css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -92,12 +91,53 @@
             border-color: #0f766e;
         }
 
+        .spread-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+        }
+
+        .spread-grid img {
+            width: 100%;
+            height: auto;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .spread-grid img:hover {
+            opacity: 0.85;
+        }
+
+        .lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90vw;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+
         @media (max-width: 768px) {
             .book-title {
                 font-size: 2rem;
             }
             .book-author {
                 font-size: 1.25rem;
+            }
+            .spread-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -127,7 +167,6 @@
                     <i class="fas fa-bars text-xl"></i>
                 </button>
             </div>
-            <!-- Mobile Menu -->
             <nav class="mobile-menu hidden md:hidden">
                 <div class="px-6 py-4 space-y-3">
                     <a href="/#about" class="block py-2 text-neutral-700 hover:text-teal-700">About</a>
@@ -150,7 +189,7 @@
             <span class="mx-2">/</span>
             <a href="/collections/art-books-collection.html" class="hover:text-gray-700">Art Books</a>
             <span class="mx-2">/</span>
-            <span class="text-gray-900">Felix Gonzalez-Torres Roni Horn</span>
+            <span class="text-gray-900">Always to Return</span>
         </nav>
 
         <!-- Main Content Grid -->
@@ -159,13 +198,12 @@
             <div class="lg:col-span-3">
                 <div class="sticky top-24">
                     <div class="aspect-[3/4] relative overflow-hidden rounded-sm shadow-2xl">
-                        <img src="/assets/images/books/horn_gonzalez-torres/felix-gonzalez-torres-roni-horn.jpeg"
-                             alt="Felix Gonzalez-Torres Roni Horn"
+                        <img src="/assets/images/books/gonzalez-torres_always-to-return/Felix Gonzalez-Torres-Always to Return.jpg"
+                             alt="Felix Gonzalez-Torres: Always to Return"
                              class="w-full h-full object-cover"
-                             onerror="this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-40'); this.classList.remove('opacity-100');">
+                             onerror="this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-40');">
                     </div>
 
-                    <!-- Quick Actions -->
                     <div class="no-print mt-6 flex gap-4 text-sm">
                         <button onclick="window.print()" class="flex items-center gap-2 text-gray-600 hover:text-gray-900">
                             <i class="fas fa-print"></i>
@@ -183,8 +221,8 @@
             <div class="lg:col-span-9">
                 <!-- Title & Author -->
                 <div class="mb-12">
-                    <h1 class="book-title serif">Felix Gonzalez-Torres Roni Horn</h1>
-                    <p class="book-author">by <a href="https://www.rfrfrfrfr.com/" target="_blank" class="text-teal-700 hover:text-teal-900">Roni Horn</a></p>
+                    <h1 class="book-title serif">Felix Gonzalez-Torres: Always to Return</h1>
+                    <p class="book-author">by Felix Gonzalez-Torres</p>
                 </div>
 
                 <!-- Publishing Information -->
@@ -194,16 +232,16 @@
                         <div class="flex flex-wrap">
                             <span class="field-label">Publisher</span>
                             <span class="field-value">
-                                <a href="https://steidl.de" target="_blank" class="text-teal-700 hover:text-teal-900 underline">Steidl</a>
+                                <a href="https://www.radiusbooks.org" target="_blank" class="text-teal-700 hover:text-teal-900 underline">Radius Books</a>
                             </span>
                         </div>
                         <div class="flex flex-wrap">
                             <span class="field-label">Published</span>
-                            <span class="field-value">2022</span>
+                            <span class="field-value">2024</span>
                         </div>
                         <div class="flex flex-wrap">
                             <span class="field-label">ISBN</span>
-                            <span class="field-value">978-3-96999-179-4</span>
+                            <span class="field-value">979-8-8901811-0-7</span>
                         </div>
                         <div class="flex flex-wrap">
                             <span class="field-label">Format</span>
@@ -211,23 +249,32 @@
                         </div>
                         <div class="flex flex-wrap">
                             <span class="field-label">Dimensions</span>
-                            <span class="field-value">17.8 x 23.5 cm</span>
+                            <span class="field-value">11.75 x 8.75 inches (29.85 x 22.23 cm)</span>
                         </div>
                         <div class="flex flex-wrap">
                             <span class="field-label">Pages</span>
-                            <span class="field-value">80 pages</span>
-                        </div>
-                        <div class="flex flex-wrap">
-                            <span class="field-label">Images</span>
-                            <span class="field-value">47</span>
+                            <span class="field-value">340 pages</span>
                         </div>
                         <div class="flex flex-wrap">
                             <span class="field-label">Language</span>
                             <span class="field-value">English</span>
                         </div>
                         <div class="flex flex-wrap">
-                            <span class="field-label">Edition</span>
-                            <span class="field-value">1st edition</span>
+                            <span class="field-label">Images</span>
+                            <span class="field-value">160</span>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="section-divider"></div>
+
+                <!-- Contributors -->
+                <section class="mb-12">
+                    <h2 class="section-heading">Contributors</h2>
+                    <div class="space-y-3">
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Contributors</span>
+                            <span class="field-value">Charlotte Ickes, Josh T Franco, Julie Ault, Joshua Chambers-Letson, Teresita Fernández</span>
                         </div>
                     </div>
                 </section>
@@ -238,11 +285,31 @@
                 <section class="mb-12">
                     <h2 class="section-heading">About This Book</h2>
                     <div class="description-text space-y-4">
-                        <p>This photographic essay explores the artistic dialogue between Felix Gonzalez-Torres and Roni Horn, initiated in 1990 when Gonzalez-Torres encountered Horn's work <em>Gold Field</em> (1980/82).</p>
+                        <p>This monograph examines the artist's relationship to portraiture, expanding the genre from static representations of individuals to one with the capacity to change, remain resonant, and encourage collaboration.</p>
 
-                        <p>The publication examines four iconic pieces: <em>Untitled (For Stockholm)</em> (1992) and <em>Untitled (Blood)</em> (1992) by Gonzalez-Torres, alongside <em>Well and Truly</em> (2009-10) and <em>a.k.a.</em> (2008-09) by Horn. Images were captured during a 2022 exhibition at the Bourse de Commerce-Pinault Collection in Paris, revealing both artists' radical visual vocabularies as well as their shared passion for language, writing, and poetry.</p>
+                        <p>The publication accompanies a major exhibition at the Smithsonian and combines exhibition documentation with new scholarship and archival materials. Co-published with the National Portrait Gallery and the Archives of American Art, Smithsonian Institution.</p>
+                    </div>
+                </section>
 
-                        <p>The work emphasizes themes of doubling, duality, repetition, and identity, exploring the inexpressible and the immeasurable.</p>
+                <div class="section-divider"></div>
+
+                <!-- Interior Images -->
+                <section class="mb-12">
+                    <h2 class="section-heading">Interior Images</h2>
+                    <div class="spread-grid">
+                        <img src="/assets/images/books/gonzalez-torres_always-to-return/image-01.jpg" alt="Interior image" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/gonzalez-torres_always-to-return/image-02.jpg" alt="Interior image" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/gonzalez-torres_always-to-return/image-03.jpg" alt="Interior image" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/gonzalez-torres_always-to-return/image-04.jpg" alt="Interior image" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/gonzalez-torres_always-to-return/image-05.jpg" alt="Interior image" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/gonzalez-torres_always-to-return/image-06.jpg" alt="Interior image" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/gonzalez-torres_always-to-return/image-07.jpg" alt="Interior image" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/gonzalez-torres_always-to-return/image-08.jpg" alt="Interior image" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/gonzalez-torres_always-to-return/image-09.jpg" alt="Interior image" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/gonzalez-torres_always-to-return/image-10.jpg" alt="Interior image" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/gonzalez-torres_always-to-return/image-11.jpg" alt="Interior image" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/gonzalez-torres_always-to-return/image-12.jpg" alt="Interior image" onclick="openLightbox(this)">
+                        <img src="/assets/images/books/gonzalez-torres_always-to-return/image-13.jpg" alt="Interior image" onclick="openLightbox(this)">
                     </div>
                 </section>
 
@@ -254,9 +321,9 @@
                     <div class="flex flex-wrap gap-2">
                         <a href="/collections/art-books-collection.html" class="subject-tag">Art</a>
                         <a href="/static-demo/?q=Contemporary+Art" class="subject-tag">Contemporary Art</a>
+                        <a href="/static-demo/?q=LGBTQ" class="subject-tag">LGBTQ</a>
                         <a href="/static-demo/?q=Photography" class="subject-tag">Photography</a>
-                        <a href="/static-demo/?q=Collaboration" class="subject-tag">Collaboration</a>
-                        <a href="/static-demo/?q=Installation+Art" class="subject-tag">Installation Art</a>
+                        <a href="/static-demo/?q=Portraiture" class="subject-tag">Portraiture</a>
                     </div>
                 </section>
 
@@ -274,26 +341,9 @@
                             <span class="field-label">Classification</span>
                             <span class="field-value">Photography; Individual Photographers; General Monographs</span>
                         </div>
-                    </div>
-                </section>
-
-                <div class="section-divider"></div>
-
-                <!-- Related Books -->
-                <section class="mb-12">
-                    <h2 class="section-heading">Other Felix Gonzalez-Torres Books in Our Collection</h2>
-                    <div class="space-y-6">
-                        <div class="border-l-4 border-teal-700 pl-4 py-2 hover:bg-gray-50 transition-colors">
-                            <a href="/books/manual/gonzalez_torres_specific_objects_without_specific_form/" class="block">
-                                <h4 class="font-semibold text-gray-800 hover:text-teal-700">Specific Objects Without Specific Form</h4>
-                                <p class="text-sm text-gray-600">Koenig Books, 2017. Comprehensive 656-page catalogue of the traveling retrospective.</p>
-                            </a>
-                        </div>
-                        <div class="border-l-4 border-teal-700 pl-4 py-2 hover:bg-gray-50 transition-colors">
-                            <a href="#" class="block">
-                                <h4 class="font-semibold text-gray-800 hover:text-teal-700">Felix Gonzalez-Torres: Always to Return</h4>
-                                <p class="text-sm text-gray-600">Radius Books, 2024. Examines the artist's relationship to portraiture.</p>
-                            </a>
+                        <div class="flex flex-wrap">
+                            <span class="field-label">Acquired</span>
+                            <span class="field-value">December 12, 2024</span>
                         </div>
                     </div>
                 </section>
@@ -301,6 +351,11 @@
             </div>
         </div>
     </main>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" alt="Enlarged image">
+    </div>
 
     <!-- Footer -->
     <footer class="no-print bg-gray-50 border-t border-gray-100 mt-24 py-12">
@@ -321,6 +376,19 @@
                 icon.classList.toggle('fa-times');
             });
         }
+
+        function openLightbox(img) {
+            document.getElementById('lightbox-img').src = img.src;
+            document.getElementById('lightbox').classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
     </script>
 
 </body>
