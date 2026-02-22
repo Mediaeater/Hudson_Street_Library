@@ -10,6 +10,87 @@ const CSVHandler = require("./scripts/utils/csv-handler");
 
 const { exec } = require("child_process");
 
+// --- Parse accession date to sortable format ---
+// SECURITY: Hardened against ReDoS (OWASP: Input Validation)
+// - Limits input length to prevent processing oversized strings
+// - Validates character whitelist before any parsing
+// - Uses strict regex for each known format (no arbitrary Date.parse fallback)
+// - Validates month names explicitly (V8 Date is too lenient)
+// - Validates date ranges to reject nonsensical values
+const VALID_MONTHS = [
+  'january', 'february', 'march', 'april', 'may', 'june',
+  'july', 'august', 'september', 'october', 'november', 'december'
+];
+
+function parseAccessionDate(dateStr) {
+  if (!dateStr || typeof dateStr !== 'string') return null;
+
+  // Limit length to prevent DoS via oversized input
+  const MAX_DATE_LENGTH = 50;
+  const cleaned = dateStr.trim().slice(0, MAX_DATE_LENGTH);
+  if (cleaned.length === 0) return null;
+
+  // Character whitelist: only digits, hyphens, spaces, commas, forward slashes, letters
+  if (!/^[0-9\-\/\s,A-Za-z]+$/.test(cleaned)) {
+    return null;
+  }
+
+  // Handle YYYY-MM-DD format (most common in this dataset)
+  if (/^\d{4}-\d{2}-\d{2}$/.test(cleaned)) {
+    const [year, month, day] = cleaned.split('-').map(Number);
+    if (year < 1900 || year > 2100 || month < 1 || month > 12 || day < 1 || day > 31) {
+      return null;
+    }
+    return new Date(Date.UTC(year, month - 1, day));
+  }
+
+  // Handle year-only: "2025", "1998", etc.
+  if (/^(19|20)\d{2}$/.test(cleaned)) {
+    const year = parseInt(cleaned, 10);
+    if (year >= 1900 && year <= 2100) {
+      return new Date(Date.UTC(year, 0, 1));
+    }
+    return null;
+  }
+
+  // Handle "Month Day, Year" (e.g., "October 29, 2025")
+  if (/^[A-Za-z]+ \d{1,2}, \d{4}$/.test(cleaned)) {
+    // Validate month name explicitly -- V8 Date is too lenient with partial matches
+    const monthWord = cleaned.split(' ')[0].toLowerCase();
+    if (!VALID_MONTHS.includes(monthWord)) {
+      return null;
+    }
+    const parsed = new Date(cleaned);
+    if (!isNaN(parsed.getTime())) {
+      const year = parsed.getFullYear();
+      if (year >= 1900 && year <= 2100) {
+        return parsed;
+      }
+    }
+    return null;
+  }
+
+  // Handle "Month Year" (e.g., "December 2024")
+  if (/^[A-Za-z]+ \d{4}$/.test(cleaned)) {
+    // Validate month name explicitly
+    const monthWord = cleaned.split(' ')[0].toLowerCase();
+    if (!VALID_MONTHS.includes(monthWord)) {
+      return null;
+    }
+    const parsed = new Date(cleaned);
+    if (!isNaN(parsed.getTime())) {
+      const year = parsed.getFullYear();
+      if (year >= 1900 && year <= 2100) {
+        return parsed;
+      }
+    }
+    return null;
+  }
+
+  // No fallback to arbitrary Date.parse -- reject unrecognized formats
+  return null;
+}
+
 module.exports = function(eleventyConfig) {
   console.log("--- Running Eleventy configuration ---");
 
@@ -104,29 +185,6 @@ module.exports = function(eleventyConfig) {
       return false;
     }).length;
   });
-
-  // --- Parse accession date to sortable format ---
-  function parseAccessionDate(dateStr) {
-    if (!dateStr) return null;
-
-    // Handle YYYY-MM-DD format
-    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
-      return new Date(dateStr);
-    }
-
-    // Handle formats like "October 29, 2025" or "December 2024"
-    const parsed = new Date(dateStr);
-    if (!isNaN(parsed.getTime())) {
-      return parsed;
-    }
-
-    // Handle just year "2025"
-    if (/^20\d{2}$/.test(dateStr)) {
-      return new Date(`${dateStr}-01-01`);
-    }
-
-    return null;
-  }
 
   // --- Filter books by accession date ---
   // Returns books sorted by accession date (most recent first)
@@ -335,3 +393,6 @@ module.exports = function(eleventyConfig) {
     templateFormats: ["njk", "html", "liquid", "md"]
   };
 };
+
+// Export internal functions for testing
+module.exports.parseAccessionDate = parseAccessionDate;

@@ -8,6 +8,56 @@ const fs = require('fs').promises;
 const path = require('path');
 const util = require('util');
 
+// SECURITY: Keys whose values must be redacted from log metadata (CWE-532)
+const SENSITIVE_KEYS = [
+  'password', 'token', 'apikey', 'secret', 'authorization',
+  'cookie', 'session', 'credential', 'key', 'auth'
+];
+
+/**
+ * Sanitize a log message string to prevent log injection / log forging.
+ * Strips newlines (which forge extra log lines), control characters
+ * (which can manipulate terminal emulators), and enforces a length cap.
+ * Ref: OWASP Logging Cheat Sheet, CWE-117.
+ */
+function sanitizeMessage(message) {
+  return String(message)
+    .replace(/[\n\r]/g, ' ')              // Newlines enable log forging
+    .replace(/[\x00-\x1F\x7F]/g, '')      // Control chars can exploit terminals
+    .slice(0, 5000);                       // Prevent log-based DoS via huge messages
+}
+
+/**
+ * Recursively walk a metadata object and redact values for sensitive keys.
+ * Caps recursion depth to prevent stack overflow from circular or deeply
+ * nested structures.
+ * Ref: OWASP Logging Cheat Sheet, CWE-532.
+ */
+function sanitizeMetadata(obj, depth = 0) {
+  if (depth > 3) return '[Max Depth]';
+  if (obj === null || obj === undefined) return obj;
+  if (typeof obj !== 'object') return obj;
+  if (Array.isArray(obj)) {
+    return obj.map(item => sanitizeMetadata(item, depth + 1));
+  }
+
+  const sanitized = {};
+  for (const [key, value] of Object.entries(obj)) {
+    const keyLower = key.toLowerCase();
+
+    if (SENSITIVE_KEYS.some(sensitive => keyLower.includes(sensitive))) {
+      sanitized[key] = '[REDACTED]';
+    } else if (typeof value === 'object' && value !== null) {
+      sanitized[key] = sanitizeMetadata(value, depth + 1);
+    } else if (typeof value === 'string') {
+      sanitized[key] = sanitizeMessage(value);
+    } else {
+      sanitized[key] = value;
+    }
+  }
+  return sanitized;
+}
+
 class Logger {
   constructor(options = {}) {
     this.config = {
@@ -110,6 +160,9 @@ class Logger {
       formatted += `[${new Date().toISOString()}] `;
     }
 
+    // SECURITY: Sanitize message to prevent log injection (CWE-117)
+    const sanitizedMessage = sanitizeMessage(message);
+
     if (this.config.includeColors) {
       formatted += this.colors[level];
     }
@@ -118,7 +171,7 @@ class Logger {
       formatted += `${emoji} `;
     }
 
-    formatted += `[${level.toUpperCase()}] ${message}`;
+    formatted += `[${level.toUpperCase()}] ${sanitizedMessage}`;
 
     if (this.config.includeColors) {
       formatted += this.colors.reset;
@@ -132,8 +185,8 @@ class Logger {
     const logEntry = {
       timestamp,
       level: level.toUpperCase(),
-      message,
-      metadata,
+      message: sanitizeMessage(message),
+      metadata: sanitizeMetadata(metadata),
       pid: process.pid
     };
 
@@ -240,54 +293,62 @@ class Logger {
   debug(message, metadata = {}) {
     if (!this.shouldLog('debug')) return;
 
+    const safeMetadata = sanitizeMetadata(metadata);
+
     if (this.config.enableConsole) {
       console.log(this.formatConsoleMessage('debug', message, this.emojis.debug));
-      if (Object.keys(metadata).length > 0) {
-        console.log(util.inspect(metadata, { colors: this.config.includeColors, depth: 2 }));
+      if (Object.keys(safeMetadata).length > 0) {
+        console.log(util.inspect(safeMetadata, { colors: this.config.includeColors, depth: 2 }));
       }
     }
 
-    this.writeToFile(this.formatFileMessage('debug', message, metadata));
+    this.writeToFile(this.formatFileMessage('debug', message, safeMetadata));
   }
 
   info(message, metadata = {}) {
     if (!this.shouldLog('info')) return;
 
+    const safeMetadata = sanitizeMetadata(metadata);
+
     if (this.config.enableConsole) {
       console.log(this.formatConsoleMessage('info', message, this.emojis.info));
-      if (Object.keys(metadata).length > 0) {
-        console.log(util.inspect(metadata, { colors: this.config.includeColors, depth: 2 }));
+      if (Object.keys(safeMetadata).length > 0) {
+        console.log(util.inspect(safeMetadata, { colors: this.config.includeColors, depth: 2 }));
       }
     }
 
-    this.writeToFile(this.formatFileMessage('info', message, metadata));
+    this.writeToFile(this.formatFileMessage('info', message, safeMetadata));
   }
 
   warn(message, metadata = {}) {
     if (!this.shouldLog('warn')) return;
 
+    const safeMetadata = sanitizeMetadata(metadata);
+
     this.stats.warnings.push({
-      message,
-      metadata,
+      message: sanitizeMessage(message),
+      metadata: safeMetadata,
       timestamp: new Date().toISOString()
     });
 
     if (this.config.enableConsole) {
       console.warn(this.formatConsoleMessage('warn', message, this.emojis.warn));
-      if (Object.keys(metadata).length > 0) {
-        console.warn(util.inspect(metadata, { colors: this.config.includeColors, depth: 2 }));
+      if (Object.keys(safeMetadata).length > 0) {
+        console.warn(util.inspect(safeMetadata, { colors: this.config.includeColors, depth: 2 }));
       }
     }
 
-    this.writeToFile(this.formatFileMessage('warn', message, metadata));
+    this.writeToFile(this.formatFileMessage('warn', message, safeMetadata));
   }
 
   error(message, error = null, metadata = {}) {
     if (!this.shouldLog('error')) return;
 
+    const safeMetadata = sanitizeMetadata(metadata);
+
     const errorData = {
-      message,
-      metadata,
+      message: sanitizeMessage(message),
+      metadata: safeMetadata,
       timestamp: new Date().toISOString(),
       stack: error?.stack || new Error().stack
     };
@@ -299,25 +360,27 @@ class Logger {
       if (error) {
         console.error(error);
       }
-      if (Object.keys(metadata).length > 0) {
-        console.error(util.inspect(metadata, { colors: this.config.includeColors, depth: 2 }));
+      if (Object.keys(safeMetadata).length > 0) {
+        console.error(util.inspect(safeMetadata, { colors: this.config.includeColors, depth: 2 }));
       }
     }
 
     // Write errors to separate error log
     const errorLogFile = this.generateLogFileName('error');
-    this.writeToFile(this.formatFileMessage('error', message, { ...metadata, error: error?.message, stack: error?.stack }), errorLogFile);
+    this.writeToFile(this.formatFileMessage('error', message, { ...safeMetadata, error: error?.message, stack: error?.stack }), errorLogFile);
   }
 
   // Specialized logging methods with emojis
   success(message, metadata = {}) {
+    const safeMetadata = sanitizeMetadata(metadata);
+
     if (this.config.enableConsole) {
       console.log(this.formatConsoleMessage('info', message, this.emojis.success));
-      if (Object.keys(metadata).length > 0) {
-        console.log(util.inspect(metadata, { colors: this.config.includeColors, depth: 2 }));
+      if (Object.keys(safeMetadata).length > 0) {
+        console.log(util.inspect(safeMetadata, { colors: this.config.includeColors, depth: 2 }));
       }
     }
-    this.writeToFile(this.formatFileMessage('info', message, metadata));
+    this.writeToFile(this.formatFileMessage('info', message, safeMetadata));
   }
 
   processing(message, metadata = {}) {
@@ -483,5 +546,8 @@ function getGlobalLogger(options = {}) {
 module.exports = {
   Logger,
   createLogger,
-  getGlobalLogger
+  getGlobalLogger,
+  sanitizeMessage,
+  sanitizeMetadata,
+  SENSITIVE_KEYS
 };
