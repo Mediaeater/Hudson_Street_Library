@@ -262,6 +262,14 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy({"src/_data/news.json": "cms/data/news.json"});
   eleventyConfig.addPassthroughCopy({"data": "data"});
 
+  // Favicon files
+  eleventyConfig.addPassthroughCopy({"src/favicon.ico": "favicon.ico"});
+  eleventyConfig.addPassthroughCopy({"src/favicon-16x16.png": "favicon-16x16.png"});
+  eleventyConfig.addPassthroughCopy({"src/favicon-32x32.png": "favicon-32x32.png"});
+  eleventyConfig.addPassthroughCopy({"src/apple-touch-icon.png": "apple-touch-icon.png"});
+  eleventyConfig.addPassthroughCopy({"src/android-chrome-192x192.png": "android-chrome-192x192.png"});
+  eleventyConfig.addPassthroughCopy({"src/android-chrome-512x512.png": "android-chrome-512x512.png"});
+
   // Copy CNAME for GitHub Pages
   eleventyConfig.addPassthroughCopy("CNAME");
 
