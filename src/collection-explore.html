@@ -6,194 +6,614 @@ permalink: /collection-explore.html
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Curated Collections | Hudson Street Library</title>
+<title>Collections · Hudson Street Library</title>
 <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
 <link rel="stylesheet" href="/assets/css/design-system.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Crimson+Pro:wght@300;400;600&family=Oswald:wght@400;600&display=swap" rel="stylesheet">
 <style>
-    .title-font {
-        font-family: Playfair Display, serif;
+    :root {
+        --color-ink: #0A0A0A;
+        --color-paper: #F8F7F4;
+        --color-vellum: #EEEDE8;
+        --color-brown: #8B7355;
+        --color-red: #C8102E;
+        --color-border: rgba(10, 10, 10, 0.12);
     }
 
-    .collection-item {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
 
-    .collection-item:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+    body {
+        background: var(--color-paper);
+        color: var(--color-ink);
+        font-family: 'Crimson Pro', serif;
+        line-height: 1.5;
+        overflow-x: hidden;
     }
 
-    .collection-cover-placeholder {
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    /* Subtle paper texture */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.03;
+        background-image:
+            repeating-linear-gradient(0deg, transparent, transparent 2px, var(--color-ink) 2px, var(--color-ink) 3px);
+        pointer-events: none;
+        z-index: 1;
     }
 
-    .filter-control {
-        transition: all 0.2s ease;
+    .page-wrapper {
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Massive Editorial Header */
+    .hero-section {
+        padding: 8rem 2rem 4rem;
+        max-width: 1600px;
+        margin: 0 auto;
+        border-bottom: 3px solid var(--color-ink);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(4rem, 12vw, 11rem);
+        font-weight: 700;
+        line-height: 0.9;
+        letter-spacing: -0.03em;
+        margin-bottom: 1.5rem;
+        text-transform: uppercase;
+        animation: slideInDown 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .hero-subtitle {
+        font-family: 'Oswald', sans-serif;
+        font-size: clamp(0.875rem, 1.5vw, 1.125rem);
+        font-weight: 400;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 3rem;
+        animation: fadeIn 1s 0.3s both;
+    }
+
+    .hero-description {
+        max-width: 52ch;
+        font-size: clamp(1.125rem, 2vw, 1.5rem);
+        line-height: 1.6;
+        font-weight: 300;
+        animation: fadeIn 1s 0.5s both;
+    }
+
+    /* Filter Bar - Editorial Style */
+    .filter-bar {
+        padding: 2rem;
+        max-width: 1600px;
+        margin: 0 auto 4rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--color-border);
+        animation: fadeIn 1s 0.7s both;
+    }
+
+    .filter-group {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .filter-label {
+        font-family: 'Oswald', sans-serif;
+        font-size: 0.75rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        padding: 0.5rem 0;
+        align-self: center;
+    }
+
+    .filter-btn {
+        font-family: 'Oswald', sans-serif;
+        font-size: 0.875rem;
+        padding: 0.75rem 1.5rem;
+        background: transparent;
+        border: 1px solid var(--color-border);
+        color: var(--color-ink);
         cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
 
-    /* Style for the new link */
+    .filter-btn:hover {
+        background: var(--color-ink);
+        color: var(--color-paper);
+        border-color: var(--color-ink);
+        transform: translateY(-2px);
+    }
+
+    .filter-btn.active {
+        background: var(--color-ink);
+        color: var(--color-paper);
+        border-color: var(--color-ink);
+    }
+
     .recent-link {
-         transition: all 0.2s ease;
-         cursor: pointer;
+        font-family: 'Oswald', sans-serif;
+        font-size: 0.875rem;
+        padding: 0.75rem 1.5rem;
+        background: var(--color-red);
+        color: var(--color-paper);
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: 1px solid var(--color-red);
+    }
+
+    .recent-link:hover {
+        background: transparent;
+        color: var(--color-red);
+        transform: translateY(-2px);
+    }
+
+    /* Collections Masonry Grid */
+    .collections-container {
+        max-width: 1600px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .collections-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2rem;
+        animation: fadeIn 1s 0.9s both;
+    }
+
+    /* Featured collections span 2 columns */
+    .collection-card.featured {
+        grid-column: span 2;
+    }
+
+    .collection-card {
+        position: relative;
+        background: white;
+        border: 1px solid var(--color-border);
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        animation: cardSlideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .collection-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 60px rgba(10, 10, 10, 0.15);
+        border-color: var(--color-ink);
+    }
+
+    .collection-image-wrapper {
+        position: relative;
+        aspect-ratio: 4/3;
+        overflow: hidden;
+        background: var(--color-vellum);
+    }
+
+    .collection-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-card:hover .collection-image {
+        transform: scale(1.08);
+    }
+
+    .collection-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(10, 10, 10, 0.9) 0%, transparent 60%);
+        opacity: 0;
+        transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        display: flex;
+        align-items: flex-end;
+        padding: 2rem;
+    }
+
+    .collection-card:hover .collection-overlay {
+        opacity: 1;
+    }
+
+    .collection-overlay-text {
+        color: var(--color-paper);
+        font-size: 0.875rem;
+        line-height: 1.6;
+        transform: translateY(10px);
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+    }
+
+    .collection-card:hover .collection-overlay-text {
+        transform: translateY(0);
+    }
+
+    /* Category badge */
+    .collection-category {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        font-family: 'Oswald', sans-serif;
+        font-size: 0.625rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        background: white;
+        color: var(--color-ink);
+        padding: 0.375rem 0.75rem;
+        border: 1px solid var(--color-border);
+        z-index: 2;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-card:hover .collection-category {
+        background: var(--color-ink);
+        color: var(--color-paper);
+        border-color: var(--color-ink);
+    }
+
+    .collection-info {
+        padding: 1.5rem;
+        background: white;
+    }
+
+    .collection-number {
+        font-family: 'Oswald', sans-serif;
+        font-size: 0.75rem;
+        letter-spacing: 0.15em;
+        color: var(--color-brown);
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+    }
+
+    .collection-name {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.75rem;
+        font-weight: 600;
+        line-height: 1.2;
+        margin-bottom: 0.5rem;
+        transition: color 0.3s ease;
+    }
+
+    .collection-card:hover .collection-name {
+        color: var(--color-brown);
+    }
+
+    .collection-description {
+        font-size: 0.9375rem;
+        line-height: 1.5;
+        color: rgba(10, 10, 10, 0.7);
+        margin-bottom: 1rem;
+    }
+
+    .collection-count {
+        font-family: 'Oswald', sans-serif;
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    /* Placeholder styles for collections without images */
+    .collection-placeholder {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .collection-placeholder-text {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.5rem;
+        font-weight: 600;
+        line-height: 1.2;
+    }
+
+    .fashion-bg { background: linear-gradient(135deg, #f5f3f0, #e8e6e1); }
+    .photography-bg { background: linear-gradient(135deg, #e8eef5, #d6dfe8); }
+    .art-bg { background: linear-gradient(135deg, #f5e8e8, #e8d6d6); }
+    .ephemera-bg { background: linear-gradient(135deg, #e8f2f5, #d6e5e8); }
+    .magazines-bg { background: linear-gradient(135deg, #f5e8f2, #e8d6e5); }
+
+    /* Loading State */
+    .loading-indicator {
+        text-align: center;
+        padding: 4rem 2rem;
+        display: none;
+    }
+
+    .loading-indicator.active {
+        display: block;
     }
 
     .loading-spinner {
-        animation: spin 1.5s linear infinite;
+        width: 48px;
+        height: 48px;
+        border: 2px solid var(--color-border);
+        border-top-color: var(--color-ink);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
     }
 
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+    .loading-text {
+        font-family: 'Oswald', sans-serif;
+        font-size: 0.875rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-brown);
     }
 
-    .fade-in {
-        animation: fadeIn 0.5s ease-out;
+    /* Animations */
+    @keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-40px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
     }
 
-    /* Category Background Gradients */
-    .fashion-bg { background: linear-gradient(135deg, #f3f4f6, #e5e7eb); color: #1f2937; }
-    .photography-bg { background: linear-gradient(135deg, #e0f2fe, #dbeafe); color: #1e3a8a; }
-    .art-bg { background: linear-gradient(135deg, #fef2f2, #fee2e2); color: #991b1b; }
-    .ephemera-bg { background: linear-gradient(135deg, #eff6ff, #e0f2fe); color: #075985; }
-    .magazines-bg { background: linear-gradient(135deg, #fdf4ff, #fae8ff); color: #86198f; }
-    .books-bg { background: linear-gradient(135deg, #f5f5f4, #e7e5e4); color: #44403c; }
+    @keyframes cardSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero-section {
+            padding: 4rem 1.5rem 3rem;
+        }
+
+        .filter-bar {
+            padding: 1.5rem;
+            gap: 1rem;
+        }
+
+        .collections-container {
+            padding: 1.5rem;
+        }
+
+        .collections-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .collection-card.featured {
+            grid-column: span 1;
+        }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+        .collections-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    /* Stagger animation delays for cards */
+    .collection-card:nth-child(1) { animation-delay: 0s; }
+    .collection-card:nth-child(2) { animation-delay: 0.05s; }
+    .collection-card:nth-child(3) { animation-delay: 0.1s; }
+    .collection-card:nth-child(4) { animation-delay: 0.15s; }
+    .collection-card:nth-child(5) { animation-delay: 0.2s; }
+    .collection-card:nth-child(6) { animation-delay: 0.25s; }
+    .collection-card:nth-child(7) { animation-delay: 0.3s; }
+    .collection-card:nth-child(8) { animation-delay: 0.35s; }
 </style>
-
-
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body>
 
-{% set currentPage = 'collections' %}
-{% include "components/site-header.njk" %}
+<div class="page-wrapper">
+    {% set currentPage = 'collections' %}
+    {% include "components/site-header.njk" %}
 
-
-<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 max-w-7xl">
-
-    <!-- Header Section -->
-    <div class="text-center mb-16 md:mb-20">
-        <h1 class="title-font text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Curated Collections</h1>
-        <p class="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
-            Explore our thematic archives of visual culture, highlighting specific areas within the library's holdings.
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-subtitle">Thematic Archives</div>
+        <h1 class="hero-title">Collections</h1>
+        <p class="hero-description">
+            Curated groupings of visual culture—rare publications, ephemera, and significant bodies of work
+            from photographers, artists, and fashion houses that define our holdings.
         </p>
-    </div>
+    </section>
 
-    <!-- Filter Controls -->
-    <div id="collection-controls" class="mb-12 md:mb-16 p-4 sm:p-6 bg-white rounded-lg shadow-sm flex flex-wrap gap-4 sm:gap-6 items-center justify-center border border-gray-200">
-        <!-- Category Filter -->
-        <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <i class="fas fa-folder-open text-gray-400"></i>
-            </div>
-            <select id="filter-category" name="category"
-                    class="filter-control pl-10 pr-8 py-2 rounded-md border border-gray-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 appearance-none bg-white text-gray-700 text-sm sm:text-base">
-                <option value="all">All Collections</option>
-                <option value="fashion">Fashion</option>
-                <option value="photography">Photography</option>
-                <option value="magazines">Magazines</option>
-                <option value="art">Art Books</option>
-                <option value="ephemera">Ephemera</option>
-            </select>
-            <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                <i class="fas fa-chevron-down text-gray-400 text-xs"></i>
-            </div>
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+        <div class="filter-group">
+            <span class="filter-label">Filter:</span>
+            <button class="filter-btn active" data-category="all">All</button>
+            <button class="filter-btn" data-category="fashion">Fashion</button>
+            <button class="filter-btn" data-category="photography">Photography</button>
+            <button class="filter-btn" data-category="magazines">Magazines</button>
+            <button class="filter-btn" data-category="art">Art</button>
+            <button class="filter-btn" data-category="ephemera">Ephemera</button>
         </div>
-
-        <!-- Link to Recently Added Page -->
-        <div> <!-- Wrapper div for consistent spacing -->
-            <a href="collections/recently_added.html"
-               class="recent-link inline-flex items-center px-4 py-2 rounded-md border border-teal-600 text-teal-700 hover:bg-teal-50 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 transition-colors text-sm sm:text-base">
-                 <i class="fas fa-history mr-2"></i> <!-- Icon for history/recent -->
-                 View Recently Added
-            </a>
-        </div>
-
+        <a href="collections/recently_added.html" class="recent-link">
+            <i class="fas fa-clock"></i>
+            Recently Added
+        </a>
     </div>
 
     <!-- Collections Grid -->
-    <div id="collections-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 md:gap-10">
-        <!-- Collection cards will be loaded dynamically -->
+    <div class="collections-container">
+        <div id="collections-grid" class="collections-grid">
+            <!-- Collections will be loaded dynamically -->
+        </div>
     </div>
 
     <!-- Loading Indicator -->
-    <div id="loading-indicator" class="text-center py-16 hidden">
-        <div class="loading-spinner inline-block w-10 h-10 border-4 border-teal-500 border-t-transparent rounded-full mb-4"></div>
-        <p class="text-gray-500">Updating collections...</p>
+    <div id="loading-indicator" class="loading-indicator">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Loading Collections...</p>
     </div>
 </div>
 
-<!-- Standard Footer -->
 {% include "components/site-footer.njk" %}
 
 <script>
     let allCollections = [];
+    let currentFilter = 'all';
 
     // Load collections from JSON
     async function loadCollections() {
+        const loadingIndicator = document.getElementById('loading-indicator');
+        loadingIndicator.classList.add('active');
+
         try {
             const response = await fetch('/cms/data/libraryCollections.json');
             const data = await response.json();
             allCollections = data.collections;
+
+            // Sort to put featured collections first
+            allCollections.sort((a, b) => {
+                if (a.featured && !b.featured) return -1;
+                if (!a.featured && b.featured) return 1;
+                return 0;
+            });
+
             renderCollections();
         } catch (error) {
             console.error('Error loading collections:', error);
-            document.getElementById('collections-grid').innerHTML =
-                '<p class="text-gray-500 col-span-full text-center">Error loading collections. Please try again later.</p>';
+            document.getElementById('collections-grid').innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 4rem 2rem;">
+                    <p style="font-size: 1.125rem; color: var(--color-brown);">
+                        Unable to load collections. Please try again later.
+                    </p>
+                </div>
+            `;
+        } finally {
+            loadingIndicator.classList.remove('active');
         }
     }
 
     function renderCollections() {
         const grid = document.getElementById('collections-grid');
-        const selectedCategory = document.getElementById('filter-category').value;
 
         // Filter collections
         const filtered = allCollections.filter(collection =>
-            selectedCategory === 'all' || collection.category === selectedCategory
+            currentFilter === 'all' || collection.category === currentFilter
         );
 
         if (filtered.length === 0) {
-            grid.innerHTML = '<p class="text-gray-500 col-span-full text-center">No collections match your criteria.</p>';
+            grid.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 4rem 2rem;">
+                    <p style="font-family: 'Oswald', sans-serif; font-size: 0.875rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-brown);">
+                        No collections found in this category
+                    </p>
+                </div>
+            `;
             return;
         }
 
         // Render collection cards
-        grid.innerHTML = filtered.map(collection => {
+        grid.innerHTML = filtered.map((collection, index) => {
             const categoryClass = collection.category + '-bg';
+            const featuredClass = collection.featured ? 'featured' : '';
+            const lotNumber = String(index + 1).padStart(3, '0');
+
             return `
-                <a href="${collection.path}" class="collection-item group block bg-white rounded-lg overflow-hidden border border-gray-100" data-category="${collection.category}">
-                    <div class="relative overflow-hidden aspect-[4/3]">
+                <a href="${collection.path}"
+                   class="collection-card ${featuredClass}"
+                   data-category="${collection.category}">
+                    <div class="collection-image-wrapper">
                         ${collection.image ? `
-                            <img src="${collection.image}" alt="${collection.name}" class="w-full h-full object-cover">
+                            <img src="${collection.image}"
+                                 alt="${collection.name}"
+                                 class="collection-image"
+                                 loading="lazy">
                         ` : ''}
-                        <div class="collection-cover-placeholder ${categoryClass} absolute inset-0 flex items-center justify-center p-4 text-center">
-                            <span class="text-base font-medium">${collection.name}</span>
+                        <div class="collection-placeholder ${categoryClass}">
+                            <div class="collection-placeholder-text">${collection.name}</div>
                         </div>
-                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-5 transition-all duration-300"></div>
+                        <div class="collection-overlay">
+                            <div class="collection-overlay-text">${collection.description}</div>
+                        </div>
+                        <div class="collection-category">${collection.category}</div>
                     </div>
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-800 truncate group-hover:text-teal-600 transition-colors">${collection.name}</h3>
-                        <p class="text-sm text-gray-500 mt-1">${collection.description}</p>
+                    <div class="collection-info">
+                        <div class="collection-number">Lot ${lotNumber}</div>
+                        <h2 class="collection-name">${collection.name}</h2>
+                        <p class="collection-description">${collection.description}</p>
+                        <div class="collection-count">${collection.bookCount || 0} Items</div>
                     </div>
                 </a>
             `;
         }).join('');
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Load collections
+    // Filter functionality
+    function setupFilters() {
+        const filterButtons = document.querySelectorAll('.filter-btn');
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Update active state
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                // Update current filter and render
+                currentFilter = button.dataset.category;
+                renderCollections();
+            });
+        });
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
         loadCollections();
-
-        // Filter event listener
-        document.getElementById('filter-category').addEventListener('change', renderCollections);
-
+        setupFilters();
     });
 </script>
+
 </body>
 </html>
