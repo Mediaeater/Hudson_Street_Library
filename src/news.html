@@ -6,62 +6,429 @@ permalink: /news.html
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News & Updates | Hudson Street Library</title>
+    <title>News & Updates · Hudson Street Library</title>
     <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
     <link rel="stylesheet" href="/assets/css/design-system.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Crimson+Pro:wght@300;400;600&family=Archivo+Narrow:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        .line-divider { position: relative; padding-bottom: 8px; margin-bottom: 16px; }
-        .line-divider::after { content: ''; position: absolute; left: 50%; transform: translateX(-50%); bottom: 0; width: 60px; height: 1px; background: #0f766e; }
+        :root {
+            --color-ink: #0A0A0A;
+            --color-paper: #F8F7F4;
+            --color-vellum: #EEEDE8;
+            --color-brown: #8B7355;
+            --color-border: rgba(10, 10, 10, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--color-paper);
+            color: var(--color-ink);
+            font-family: 'Crimson Pro', serif;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .page-header {
+            background: var(--color-paper);
+            padding: 6rem 2rem 3rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-label {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--brown);
+            margin-bottom: 1rem;
+        }
+
+        .header-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 700;
+            line-height: 0.95;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+            color: var(--color-ink);
+        }
+
+        .header-subtitle {
+            font-size: clamp(1rem, 2vw, 1.125rem);
+            line-height: 1.6;
+            max-width: 65ch;
+            font-weight: 300;
+            color: var(--color-brown);
+        }
+
+        /* Timeline Container */
+        .timeline-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .timeline {
+            position: relative;
+        }
+
+        /* Vertical timeline line */
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 140px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: var(--color-border);
+        }
+
+        /* News Article */
+        .news-article {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 3rem;
+            margin-bottom: 4rem;
+            position: relative;
+            animation: slideInArticle 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .news-article:nth-child(1) { animation-delay: 0s; }
+        .news-article:nth-child(2) { animation-delay: 0.1s; }
+        .news-article:nth-child(3) { animation-delay: 0.2s; }
+        .news-article:nth-child(4) { animation-delay: 0.3s; }
+        .news-article:nth-child(5) { animation-delay: 0.4s; }
+
+        /* Timeline dot */
+        .news-article::before {
+            content: '';
+            position: absolute;
+            left: 134px;
+            top: 6px;
+            width: 13px;
+            height: 13px;
+            background: var(--color-paper);
+            border: 3px solid var(--color-ink);
+            border-radius: 50%;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .news-article.featured::before {
+            background: var(--color-ink);
+            border-color: var(--color-ink);
+            width: 15px;
+            height: 15px;
+            left: 133px;
+        }
+
+        .news-article:hover::before {
+            transform: scale(1.3);
+        }
+
+        /* Date column */
+        .news-date-wrapper {
+            text-align: right;
+            padding-top: 0.25rem;
+        }
+
+        .news-date {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--color-brown);
+            display: block;
+            line-height: 1.3;
+        }
+
+        .news-month {
+            font-size: 0.75rem;
+            font-weight: 400;
+            opacity: 0.7;
+        }
+
+        /* Content column */
+        .news-content {
+            background: white;
+            padding: 2rem;
+            border: 1px solid var(--color-border);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .news-article.featured .news-content {
+            border-left: 3px solid var(--color-ink);
+        }
+
+        .news-article:hover .news-content {
+            box-shadow: 0 12px 40px rgba(10, 10, 10, 0.12);
+            transform: translateY(-4px);
+        }
+
+        .featured-badge {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.625rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-brown);
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .news-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: var(--color-ink);
+            transition: color 0.3s ease;
+        }
+
+        .news-article:hover .news-title {
+            color: var(--color-brown);
+        }
+
+        .news-article.featured .news-title {
+            color: var(--color-brown);
+        }
+
+        .news-text {
+            font-size: 1.0625rem;
+            line-height: 1.7;
+            color: var(--color-ink);
+            margin-bottom: 1.5rem;
+        }
+
+        .news-text p {
+            margin-bottom: 1rem;
+        }
+
+        .news-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .news-link {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--color-ink);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--color-ink);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .news-link:hover {
+            background: var(--color-ink);
+            color: var(--color-paper);
+            transform: translateX(4px);
+        }
+
+        .news-link i {
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .news-link:hover i {
+            transform: translateX(4px);
+        }
+
+        /* Empty state */
+        .no-news {
+            text-align: center;
+            padding: 6rem 2rem;
+        }
+
+        .no-news-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--color-brown);
+        }
+
+        .no-news-text {
+            font-size: 1.125rem;
+            color: var(--color-brown);
+        }
+
+        /* Animations */
+        @keyframes slideInArticle {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .masthead {
+                padding: 2rem 1.5rem 1.5rem;
+            }
+
+            .timeline-section {
+                padding: 2rem 1.5rem;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .news-article {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                margin-bottom: 3rem;
+                padding-left: 2.5rem;
+            }
+
+            .news-article::before {
+                left: 14px;
+            }
+
+            .news-article.featured::before {
+                left: 13px;
+            }
+
+            .news-date-wrapper {
+                text-align: left;
+                padding-top: 0;
+                margin-bottom: 0.5rem;
+            }
+
+            .news-date {
+                display: inline;
+            }
+
+            .news-month {
+                display: inline;
+                margin-left: 0.5rem;
+            }
+
+            .news-content {
+                padding: 1.5rem;
+            }
+
+            .featured-badge {
+                margin-bottom: 0.5rem;
+            }
+
+            .news-title {
+                font-size: 1.5rem;
+            }
+
+            .news-text {
+                font-size: 1rem;
+            }
+        }
+
+        /* Print-style decorative elements */
+        .section-break {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 3rem 0;
+            gap: 1rem;
+        }
+
+        .section-break::before,
+        .section-break::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--color-border);
+        }
+
+        .section-break span {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-brown);
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body>
 
 {% set currentPage = 'news' %}
 {% include "components/site-header.njk" %}
 
-    <main>
-        <!-- Page Header -->
-        <section class="py-16 bg-white">
-            <div class="container mx-auto px-6">
-                <div class="max-w-4xl mx-auto text-center">
-                    <h1 class="text-4xl font-bold mb-6 text-teal-900">Library News & Updates</h1>
-                    <div class="line-divider inline-block"></div>
-                    <p class="text-lg leading-relaxed text-neutral-600 mt-4">
-                        Stay informed about new initiatives, opportunities, and developments at Hudson Street Library, plus select industry news and events.
-                    </p>
+<main>
+    <!-- Header -->
+    <header class="page-header">
+        <div class="header-inner">
+            <div class="header-label">Library Dispatch</div>
+            <h1 class="header-title">News & Updates</h1>
+            <p class="header-subtitle">
+                New acquisitions, exhibitions, programming, and developments from Hudson Street Library,
+                plus select industry news and cultural events.
+            </p>
+        </div>
+    </header>
+
+    <!-- Timeline -->
+    <section class="timeline-section">
+        {% if news and news.length > 0 %}
+        <div class="timeline">
+            {% for item in news %}
+            <article class="news-article {% if item.featured %}featured{% endif %}">
+                <div class="news-date-wrapper">
+                    <time class="news-date">
+                        {{ item.date }}
+                    </time>
                 </div>
-            </div>
-        </section>
-
-        <!-- News Items -->
-        <section class="py-12 bg-gray-50">
-            <div class="container mx-auto px-6">
-                <div class="max-w-4xl mx-auto">
-
-                    {% for item in news %}
-                    <article class="bg-white rounded-lg shadow-md p-6 mb-6 {% if item.featured %}border-l-4 border-teal-600{% endif %}">
-                        <div class="flex items-start justify-between mb-3">
-                            <time class="text-sm text-neutral-500">{{ item.date }}</time>
-                            {% if item.featured %}
-                            <span class="text-xs bg-teal-100 text-teal-800 px-2 py-1 rounded">Featured</span>
-                            {% endif %}
-                        </div>
-                        <h3 class="text-xl font-bold text-teal-900 mb-3">{{ item.title }}</h3>
-                        <p class="text-neutral-700 mb-4">
-                            {{ item.content | safe }}
-                        </p>
-                        {% if item.link %}
-                        <a href="{{ item.link }}" class="text-teal-700 hover:text-teal-900 font-medium text-sm">Learn more →</a>
-                        {% endif %}
-                    </article>
-                    {% endfor %}
-
+                <div class="news-content">
+                    {% if item.featured %}
+                    <span class="featured-badge">Featured</span>
+                    {% endif %}
+                    <h2 class="news-title">{{ item.title }}</h2>
+                    <div class="news-text">
+                        {{ item.content | safe }}
+                    </div>
+                    {% if item.link %}
+                    <a href="{{ item.link }}" class="news-link" target="_blank" rel="noopener noreferrer">
+                        Read More
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    {% endif %}
                 </div>
-            </div>
-        </section>
-
-    </main>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-news">
+            <h2 class="no-news-title">No News Yet</h2>
+            <p class="no-news-text">Check back soon for updates and announcements.</p>
+        </div>
+        {% endif %}
+    </section>
+</main>
 
 {% include "components/site-footer.njk" %}
 
