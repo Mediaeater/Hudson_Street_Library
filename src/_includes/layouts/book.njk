@@ -224,7 +224,7 @@
     <h2 class="text-xl font-semibold text-gray-900 mb-10 tracking-tight">More by {{ book.author_full_name }}</h2>
     <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-8 gap-4">
       {% for otherBook in authorBooks %}
-      <a href="{% if otherBook.custom_page_url %}{{ otherBook.custom_page_url }}{% else %}/books/{{ otherBook.author_last | slugify }}_{{ otherBook.title | slugify }}_{{ otherBook.id }}/{% endif %}" class="group">
+      <a href="{% if otherBook.custom_page_url %}{{ otherBook.custom_page_url }}{% else %}/books/{{ otherBook.author_last | slugify }}_{{ otherBook.title | slugify }}_{{ otherBook.id }}/{% endif %}" class="group" style="text-decoration: none;">
         <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
           {% set otherCoverPath = otherBook | generateCoverPath %}
           <img
