@@ -32,6 +32,7 @@ currentPage: recently-added
 
 {% set recentBooks = books | recentlyAdded %}
 {% for book in recentBooks %}
+{% if book.publisher != "BUTT Publications" %}
                     <!-- {{ book.author_full_name }} - {{ book.title }} - {{ book.accession_no }} -->
                     <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
                         <div class="h-64 overflow-hidden bg-neutral-100">
@@ -75,6 +76,7 @@ currentPage: recently-added
                             </div>
                         </div>
                     </div>
+{% endif %}
 {% endfor %}
 
                 </div>

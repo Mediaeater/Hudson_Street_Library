@@ -24,133 +24,34 @@ currentPage: collections
 
             <!-- Grid for Items within this Collection -->
             <div id="item-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 md:gap-8">
-                <!-- Items will be loaded dynamically -->
+
+                {%- for book in books -%}
+                {%- if book.publisher == "Wombat Paris" -%}
+                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
+                    <a href="/books/{{ book.author_last | slugify }}_{{ book.title | slugify }}_{{ book.id }}/" class="block">
+                        <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
+                            {% set coverPath = book | generateCoverPath %}
+                            <img src="{{ coverPath }}"
+                                 alt="{{ book.author_full_name }} - {{ book.title }}"
+                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                 loading="lazy"
+                                 onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');">
+                        </div>
+                        <div class="p-3 sm:p-4">
+                            <h3 class="text-base font-semibold text-gray-800 truncate group-hover:text-primary-700 transition-colors">
+                                {{ book.author_full_name }}
+                            </h3>
+                            <p class="text-sm text-gray-500 mt-1 truncate">{{ book.title }}</p>
+                            <p class="text-xs text-gray-400 mt-1">Wombat Paris</p>
+                        </div>
+                    </a>
+                </article>
+                {%- endif -%}
+                {%- endfor -%}
+
             </div>
 
              <p id="no-items-message" class="text-center text-gray-500 py-12 hidden">No items currently displayed in this collection.</p>
 
         </div>
     </main>
-
-    <script>
-        // Simple CSV parser that handles quoted fields
-        function parseCSVLine(line) {
-            const result = [];
-            let current = '';
-            let inQuotes = false;
-
-            for (let i = 0; i < line.length; i++) {
-                const char = line[i];
-                const nextChar = line[i + 1];
-
-                if (char === '"' && inQuotes && nextChar === '"') {
-                    current += '"';
-                    i++; // Skip next quote
-                } else if (char === '"') {
-                    inQuotes = !inQuotes;
-                } else if (char === ',' && !inQuotes) {
-                    result.push(current);
-                    current = '';
-                } else {
-                    current += char;
-                }
-            }
-            result.push(current);
-            return result;
-        }
-
-        // Load and display Wombat boxes
-        async function loadWombatBoxes() {
-            try {
-                const response = await fetch('/cms/data/books.csv');
-                const csvText = await response.text();
-                const lines = csvText.split('\n');
-                const wombatBooks = [];
-
-                // Parse CSV and find Wombat entries
-                for (let i = 1; i < lines.length; i++) {
-                    const line = lines[i].trim();
-                    if (!line) continue;
-
-                    // Parse CSV line properly
-                    const fields = parseCSVLine(line);
-
-                    // Check if publisher is Wombat Paris (field index 5)
-                    if (fields[5] === 'Wombat Paris') {
-                        const id = fields[0];
-                        const authorLast = fields[1];
-                        const authorFirst = fields[2];
-                        const displayName = fields[3];
-                        const title = fields[4];
-                        const imageUrl = fields[28]; // Field 28 is image_url
-
-                        // Create author slug for URL
-                        const authorSlug = authorLast.toLowerCase().replace(/[^a-z0-9]+/g, '_');
-                        const titleSlug = title.toLowerCase().replace(/[^a-z0-9]+/g, '_');
-
-                        wombatBooks.push({
-                            id,
-                            author: authorFirst ? `${authorFirst} ${authorLast}` : authorLast,
-                            displayName,
-                            title,
-                            imageUrl,
-                            url: `/books/${authorSlug}_${titleSlug}/`
-                        });
-                    }
-                }
-
-                // Sort by box number (extract from display name)
-                wombatBooks.sort((a, b) => {
-                    const numA = parseInt(a.displayName.match(/\d+/)?.[0] || '0');
-                    const numB = parseInt(b.displayName.match(/\d+/)?.[0] || '0');
-                    return numB - numA; // Descending order
-                });
-
-                // Render the boxes
-                const grid = document.getElementById('item-grid');
-                const noItemsMsg = document.getElementById('no-items-message');
-
-                if (wombatBooks.length === 0) {
-                    noItemsMsg.classList.remove('hidden');
-                    return;
-                }
-
-                wombatBooks.forEach(book => {
-                    const article = document.createElement('article');
-                    article.className = 'item-card group bg-white rounded-lg overflow-hidden border border-gray-100';
-
-                    article.innerHTML = `
-                        <a href="${book.url}" class="block">
-                            <div class="relative overflow-hidden aspect-[3/4] bg-gray-200">
-                                ${book.imageUrl && book.imageUrl !== 'NULL' ? `
-                                    <img src="${book.imageUrl}"
-                                         alt="${book.displayName} - ${book.title}"
-                                         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-                                ` : `
-                                    <div class="w-full h-full flex items-center justify-center text-gray-400">
-                                        <i class="fas fa-image text-4xl"></i>
-                                    </div>
-                                `}
-                            </div>
-                            <div class="p-3 sm:p-4">
-                                <h3 class="text-base font-semibold text-gray-800 truncate group-hover:text-primary-700 transition-colors">
-                                    ${book.displayName}
-                                </h3>
-                                <p class="text-sm text-gray-500 mt-1 truncate">${book.title}</p>
-                                <p class="text-xs text-gray-400 mt-1">Wombat Paris</p>
-                            </div>
-                        </a>
-                    `;
-
-                    grid.appendChild(article);
-                });
-
-            } catch (error) {
-                console.error('Error loading Wombat boxes:', error);
-                document.getElementById('no-items-message').classList.remove('hidden');
-            }
-        }
-
-        // Load boxes when page loads
-        loadWombatBoxes();
-    </script>
