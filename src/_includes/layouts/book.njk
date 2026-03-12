@@ -620,7 +620,10 @@
         <div class="tags">
             {% set tag_list = book.tags.split(',') %}
             {% for tag in tag_list %}
-            <a href="/static-demo/?tag={{ tag.trim() | urlencode }}" class="tag">{{ tag.trim() }}</a>
+            {% set cleanTag = tag.trim() %}
+            {% if cleanTag and cleanTag.length <= 60 and cleanTag.indexOf('http') === -1 and cleanTag.indexOf(';') === -1 %}
+            <a href="/aggregate-view/?filter=tag&value={{ cleanTag | urlencode }}" class="tag">{{ cleanTag }}</a>
+            {% endif %}
             {% endfor %}
         </div>
         {% endif %}
