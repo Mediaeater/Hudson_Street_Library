@@ -20,8 +20,15 @@ Press Enter twice, review details, type `y` to add.
 
 ### What It Does
 
-1. **Parses your text** - Extracts author, title, publisher, year, pages, binding
-2. **Looks up ISBN** - Searches Google Books API automatically
+1. **Parses your text** - Extracts author, title, publisher, year, pages, binding, URLs
+2. **Comprehensive metadata search** - Searches 7 high-quality sources in priority order:
+   - Publisher's website (primary source, most accurate)
+   - Library of Congress
+   - Internet Archive
+   - Google Books API
+   - Open Library
+   - WorldCat
+   - LibraryThing
 3. **Assigns next ID** - Gets sequential ID (e.g., 1577)
 4. **Adds accession date** - Today's date as YYYY-MM-DD
 5. **Generates cover filename** - Following strict naming convention
@@ -51,7 +58,13 @@ The National Asian Culture Center | 228 pages | paperback | 150 color images
 
 Wolfgang Tillmans: Truth Study Center
 Walther König, 2005 | Hardcover | 256 pages
+
+Roe Ethridge: In the Beginning
+Loose Joints Publishing, 2026 | Three volume set
+https://loosejoints.biz/products/in-the-beginning
 ```
+
+**💡 Pro Tip:** Include the publisher's product URL in your text. The script will scrape the publisher's website first for the most accurate data!
 
 ### After Adding
 
@@ -352,3 +365,164 @@ If creating cover filenames manually:
 3. **URL-safe**: No encoding needed for web paths
 4. **Sortable**: Alphabetical sorting works correctly
 5. **Automated**: Script handles complexity
+
+---
+
+## 🔍 Multi-Source Metadata Search
+
+### How It Works
+
+The script searches **7 high-quality data sources** in priority order, stopping when sufficient data is found. Each source provides different strengths:
+
+| Priority | Source | Best For | Data Provided |
+|----------|--------|----------|---------------|
+| 1 | **Publisher Website** | Most accurate, primary source | Everything (varies by publisher) |
+| 2 | **Library of Congress** | Authoritative, comprehensive | Full bibliographic data, subjects |
+| 3 | **Internet Archive** | Older/rare books, public domain | Full text, scans, metadata |
+| 4 | **Google Books** | General books, broad coverage | ISBN, description, covers |
+| 5 | **Open Library** | Community-driven, extensive | ISBN, covers, editions |
+| 6 | **WorldCat** | Library holdings worldwide | Bibliographic data |
+| 7 | **LibraryThing** | Community metadata | Cover images, tags |
+
+### Priority Strategy
+
+**Why publisher first?**
+- Primary source = most accurate
+- Latest editions and printings
+- Correct specifications (dimensions, binding)
+- Best quality cover images
+- Price and availability
+
+**Why Library of Congress second?**
+- Authoritative cataloging
+- Subject classifications
+- LCCN for identification
+- Historical accuracy
+
+**Why Internet Archive third?**
+- Excellent for rare/out-of-print
+- Full-text access when available
+- Historical editions
+- Public domain works
+
+### Providing Publisher URLs
+
+Include the publisher's product page URL in your book text for best results:
+
+```
+Roe Ethridge: In the Beginning
+Loose Joints Publishing, 2026 | Hardcover
+https://loosejoints.biz/products/in-the-beginning
+```
+
+**Supported Publishers** (optimized scraping patterns):
+- Walther König (walther-koenig.de)
+- Steidl (steidl.de)
+- Aperture (aperture.org)
+- MoMA (moma.org)
+- Loose Joints (loosejoints.biz)
+- Photobooks.io (photobooks.io)
+- Generic pattern for others
+
+### What Gets Enriched
+
+When multiple sources are found, the script intelligently merges data:
+
+**From publisher websites:**
+- Exact title and author
+- Precise specifications (size, binding, pages)
+- Current price
+- Best description
+- High-res cover images
+
+**From Library of Congress:**
+- LCCN (Library of Congress Control Number)
+- Subject classifications (detailed)
+- Cataloging standards
+- Historical publication data
+
+**From Internet Archive:**
+- Historical editions
+- Full text when available
+- Digitized images
+- Public domain status
+
+**From book APIs:**
+- ISBNs (13 and 10)
+- Categories and genres
+- Publisher info
+- Publication dates
+- Descriptions
+
+### Confidence Levels
+
+The script assigns a confidence level based on source agreement:
+
+- **High** (4+ sources): Data found in 4 or more sources
+- **Medium** (2-3 sources): Data found in 2-3 sources
+- **Low** (1 source): Data found in only 1 source
+- **None** (0 sources): No data found, manual entry needed
+
+### Example Output
+
+```
+🔍 COMPREHENSIVE METADATA SEARCH
+═══════════════════════════════════════════════════
+Title: In the Beginning
+Author: Roe Ethridge
+Publisher: Loose Joints Publishing
+Publisher URL: https://loosejoints.biz/products/in-the-beginning
+═══════════════════════════════════════════════════
+
+📚 [1] Searching: Publisher Website
+  🌐 Fetching: https://loosejoints.biz/products/in-the-beginning
+  ✅ Found data in Publisher Website
+  Title: In the Beginning
+  Author: Roe Ethridge
+  Publisher: Loose Joints Publishing
+  Year: 2026
+  ISBN: 978-1-912719-71-6
+  Description: Three-volume facsimile set reuniting Ethridge's formative...
+
+📚 [2] Searching: Library of Congress
+  ✅ Found data in Library of Congress
+  LCCN: 2026000123
+  Subjects: Photography; American photographers; Documentary photography
+
+📚 [3] Searching: Google Books API
+  ✅ Found data in Google Books
+  ISBN: 9781912719716
+  Pages: 140
+
+📊 AGGREGATING RESULTS
+═══════════════════════════════════════════════════
+Found data in 3 source(s):
+  ✓ Publisher Website
+  ✓ Library of Congress
+  ✓ Google Books
+
+Confidence: high
+```
+
+### Advanced Usage
+
+**Control which sources to search:**
+```javascript
+const aggregator = new BookMetadataAggregator({
+  sources: {
+    publishers: { enabled: true, priority: 1 },
+    googleBooks: { enabled: true, priority: 2 },
+    // Disable others
+    internetArchive: { enabled: false }
+  }
+});
+```
+
+**Disable publisher scraping:**
+```javascript
+const aggregator = new BookMetadataAggregator({
+  enablePublisherScraping: false
+});
+```
+
+This comprehensive approach ensures you get the most complete, accurate book data possible!
