@@ -169,6 +169,83 @@ module.exports = function(eleventyConfig) {
     return matchedBooks.slice(0, 12);
   });
 
+  // --- Find related books based on metadata (collection_grouping, tags, classification) ---
+  eleventyConfig.addFilter("relatedBooks", function(books, currentBook, limit = 12) {
+    if (!books || !currentBook) return [];
+
+    const currentId = String(currentBook.id);
+
+    // Pre-process current book's tags for faster comparison
+    const currentTags = currentBook.tags
+      ? currentBook.tags.toLowerCase().split(';').map(t => t.trim())
+      : [];
+    const currentTagsSet = new Set(currentTags);
+
+    const scored = [];
+
+    // Process each book
+    for (let i = 0; i < books.length; i++) {
+      const b = books[i];
+
+      // Skip current book
+      if (String(b.id) === currentId) continue;
+
+      let score = 0;
+
+      // Same collection_grouping (highest priority, +10 points)
+      if (currentBook.collection_grouping &&
+          b.collection_grouping &&
+          b.collection_grouping === currentBook.collection_grouping) {
+        score += 10;
+      }
+
+      // Overlapping tags (+2 points per matching tag)
+      if (currentTags.length > 0 && b.tags) {
+        const bookTags = b.tags.toLowerCase().split(';').map(t => t.trim());
+        let overlap = 0;
+        for (let j = 0; j < bookTags.length; j++) {
+          if (currentTagsSet.has(bookTags[j])) {
+            overlap++;
+          }
+        }
+        if (overlap > 0) {
+          score += overlap * 2;
+        }
+      }
+
+      // Same classification (+3 points)
+      if (currentBook.classification &&
+          b.classification &&
+          b.classification === currentBook.classification) {
+        score += 3;
+      }
+
+      // Same publisher (+2 points)
+      if (currentBook.publisher &&
+          b.publisher &&
+          b.publisher === currentBook.publisher) {
+        score += 2;
+      }
+
+      // Same author (fallback, +1 point)
+      if (currentBook.author_last &&
+          b.author_last &&
+          b.author_last === currentBook.author_last) {
+        score += 1;
+      }
+
+      // Only keep books with positive score
+      if (score > 0) {
+        scored.push({ book: b, score });
+      }
+    }
+
+    // Sort by score (descending) and return books
+    scored.sort((a, b) => b.score - a.score);
+
+    return scored.slice(0, limit).map(item => item.book);
+  });
+
   // --- Count books by author ---
   eleventyConfig.addFilter("countByAuthor", function(books, authorLast, currentId) {
     if (!books || !authorLast) return 0;
