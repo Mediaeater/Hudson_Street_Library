@@ -1,0 +1,502 @@
+---
+permalink: /tags/index.html
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse by Subject · Hudson Street Library</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Crimson+Pro:wght@300;400;600&family=Archivo+Narrow:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-ink: #0A0A0A;
+            --color-paper: #F8F7F4;
+            --color-vellum: #EEEDE8;
+            --color-brown: #8B7355;
+            --color-border: rgba(10, 10, 10, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--color-paper);
+            color: var(--color-ink);
+            font-family: 'Crimson Pro', serif;
+            line-height: 1.6;
+        }
+
+        /* Page Header */
+        .page-header {
+            padding: 4rem 2rem 3rem;
+            border-bottom: 1px solid var(--color-border);
+            text-align: center;
+        }
+
+        .page-label {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-brown);
+            margin-bottom: 1rem;
+        }
+
+        .page-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            line-height: 1;
+            color: var(--color-ink);
+        }
+
+        .page-intro {
+            max-width: 600px;
+            margin: 1.5rem auto 0;
+            font-size: 1.0625rem;
+            color: var(--color-ink);
+            opacity: 0.8;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Section Headers */
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--color-ink);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-description {
+            font-size: 1rem;
+            color: var(--color-ink);
+            opacity: 0.7;
+        }
+
+        /* Featured Tags Grid */
+        .featured-tags {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 5rem;
+        }
+
+        .tag-tile {
+            background: white;
+            border: 1px solid var(--color-border);
+            padding: 2rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .tag-tile:hover {
+            border-color: var(--color-brown);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .tag-tile-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--color-ink);
+            margin-bottom: 0.5rem;
+        }
+
+        .tag-tile-count {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            color: var(--color-brown);
+            text-transform: uppercase;
+        }
+
+        /* Alphabetical Tags */
+        .alphabetical-tags {
+            margin-top: 4rem;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 2rem;
+        }
+
+        .tag-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: white;
+            border: 1px solid var(--color-border);
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            font-size: 0.9375rem;
+            color: var(--color-ink);
+            transition: all 0.15s ease;
+        }
+
+        .tag-pill:hover {
+            border-color: var(--color-brown);
+            background: var(--color-vellum);
+        }
+
+        .tag-pill-name {
+            color: var(--color-ink);
+        }
+
+        .tag-pill-count {
+            font-size: 0.8125rem;
+            color: var(--color-brown);
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .featured-tags {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1rem;
+            }
+
+            .tag-tile {
+                padding: 1.5rem;
+            }
+
+            .tag-tile-name {
+                font-size: 1.5rem;
+            }
+
+            .main-container {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="page-label">Tag Index</div>
+        <h1 class="page-title">Browse by Subject</h1>
+        <p class="page-intro">
+            Explore the collection through shared topics and themes
+        </p>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Featured Tags -->
+        <section>
+            <div class="section-header">
+                <h2 class="section-title">Featured Topics</h2>
+                <p class="section-description">Most common subjects across the collection</p>
+            </div>
+
+            <div class="featured-tags">
+                <a href="/aggregate-view/?filter=tag&value=Photography" class="tag-tile">
+                    <div class="tag-tile-name">Photography</div>
+                    <div class="tag-tile-count">256 books</div>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Art" class="tag-tile">
+                    <div class="tag-tile-name">Art</div>
+                    <div class="tag-tile-count">250 books</div>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Fashion" class="tag-tile">
+                    <div class="tag-tile-name">Fashion</div>
+                    <div class="tag-tile-count">79 books</div>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Magazines" class="tag-tile">
+                    <div class="tag-tile-name">Magazines</div>
+                    <div class="tag-tile-count">72 books</div>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Music" class="tag-tile">
+                    <div class="tag-tile-name">Music</div>
+                    <div class="tag-tile-count">60 books</div>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Periodical" class="tag-tile">
+                    <div class="tag-tile-name">Periodical</div>
+                    <div class="tag-tile-count">54 books</div>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Punk" class="tag-tile">
+                    <div class="tag-tile-name">Punk</div>
+                    <div class="tag-tile-count">47 books</div>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=New%20York%20City" class="tag-tile">
+                    <div class="tag-tile-name">New York City</div>
+                    <div class="tag-tile-count">46 books</div>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Pop%20Culture" class="tag-tile">
+                    <div class="tag-tile-name">Pop Culture</div>
+                    <div class="tag-tile-count">45 books</div>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Rock" class="tag-tile">
+                    <div class="tag-tile-name">Rock</div>
+                    <div class="tag-tile-count">45 books</div>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Catalogs" class="tag-tile">
+                    <div class="tag-tile-name">Catalogs</div>
+                    <div class="tag-tile-count">37 books</div>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=1980s" class="tag-tile">
+                    <div class="tag-tile-name">1980s</div>
+                    <div class="tag-tile-count">36 books</div>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=1990s" class="tag-tile">
+                    <div class="tag-tile-name">1990s</div>
+                    <div class="tag-tile-count">36 books</div>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Japanese%20Fashion" class="tag-tile">
+                    <div class="tag-tile-name">Japanese Fashion</div>
+                    <div class="tag-tile-count">36 books</div>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Menswear" class="tag-tile">
+                    <div class="tag-tile-name">Menswear</div>
+                    <div class="tag-tile-count">36 books</div>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=LGBTQ%2B" class="tag-tile">
+                    <div class="tag-tile-name">LGBTQ+</div>
+                    <div class="tag-tile-count">35 books</div>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Queer%20Culture" class="tag-tile">
+                    <div class="tag-tile-name">Queer Culture</div>
+                    <div class="tag-tile-count">35 books</div>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Purple%20Magazine" class="tag-tile">
+                    <div class="tag-tile-name">Purple Magazine</div>
+                    <div class="tag-tile-count">33 books</div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Alphabetical Tags -->
+        <section class="alphabetical-tags">
+            <div class="section-header">
+                <h2 class="section-title">All Topics A-Z</h2>
+                <p class="section-description">Browse all tags with multiple books</p>
+            </div>
+
+            <div class="tag-list">
+                <a href="/aggregate-view/?filter=tag&value=1970s" class="tag-pill">
+                    <span class="tag-pill-name">1970s</span>
+                    <span class="tag-pill-count">9</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=2000s" class="tag-pill">
+                    <span class="tag-pill-name">2000s</span>
+                    <span class="tag-pill-count">7</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Activism" class="tag-pill">
+                    <span class="tag-pill-name">Activism</span>
+                    <span class="tag-pill-count">3</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Architecture" class="tag-pill">
+                    <span class="tag-pill-name">Architecture</span>
+                    <span class="tag-pill-count">8</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Art%20Book" class="tag-pill">
+                    <span class="tag-pill-name">Art Book</span>
+                    <span class="tag-pill-count">24</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Artist%20Book" class="tag-pill">
+                    <span class="tag-pill-name">Artist Book</span>
+                    <span class="tag-pill-count">3</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Biography" class="tag-pill">
+                    <span class="tag-pill-name">Biography</span>
+                    <span class="tag-pill-count">12</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Clubs" class="tag-pill">
+                    <span class="tag-pill-name">Clubs</span>
+                    <span class="tag-pill-count">4</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Collectibles" class="tag-pill">
+                    <span class="tag-pill-name">Collectibles</span>
+                    <span class="tag-pill-count">3</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Contemporary%20Art" class="tag-pill">
+                    <span class="tag-pill-name">Contemporary Art</span>
+                    <span class="tag-pill-count">22</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Culture" class="tag-pill">
+                    <span class="tag-pill-name">Culture</span>
+                    <span class="tag-pill-count">10</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=DJs" class="tag-pill">
+                    <span class="tag-pill-name">DJs</span>
+                    <span class="tag-pill-count">10</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Documentary" class="tag-pill">
+                    <span class="tag-pill-name">Documentary</span>
+                    <span class="tag-pill-count">5</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Electronic%20Music" class="tag-pill">
+                    <span class="tag-pill-name">Electronic Music</span>
+                    <span class="tag-pill-count">10</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Ephemera" class="tag-pill">
+                    <span class="tag-pill-name">Ephemera</span>
+                    <span class="tag-pill-count">4</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Exhibition%20Catalog" class="tag-pill">
+                    <span class="tag-pill-name">Exhibition Catalog</span>
+                    <span class="tag-pill-count">8</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Experimental" class="tag-pill">
+                    <span class="tag-pill-name">Experimental</span>
+                    <span class="tag-pill-count">3</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Film" class="tag-pill">
+                    <span class="tag-pill-name">Film</span>
+                    <span class="tag-pill-count">8</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Fine%20Art" class="tag-pill">
+                    <span class="tag-pill-name">Fine Art</span>
+                    <span class="tag-pill-count">3</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Graffiti" class="tag-pill">
+                    <span class="tag-pill-name">Graffiti</span>
+                    <span class="tag-pill-count">3</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Graphic%20Design" class="tag-pill">
+                    <span class="tag-pill-name">Graphic Design</span>
+                    <span class="tag-pill-count">8</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Hip%20Hop" class="tag-pill">
+                    <span class="tag-pill-name">Hip Hop</span>
+                    <span class="tag-pill-count">5</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=History" class="tag-pill">
+                    <span class="tag-pill-name">History</span>
+                    <span class="tag-pill-count">5</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Independent%20Publishing" class="tag-pill">
+                    <span class="tag-pill-name">Independent Publishing</span>
+                    <span class="tag-pill-count">3</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Interviews" class="tag-pill">
+                    <span class="tag-pill-name">Interviews</span>
+                    <span class="tag-pill-count">3</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Japan" class="tag-pill">
+                    <span class="tag-pill-name">Japan</span>
+                    <span class="tag-pill-count">8</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Limited%20Edition" class="tag-pill">
+                    <span class="tag-pill-name">Limited Edition</span>
+                    <span class="tag-pill-count">48</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Memoir" class="tag-pill">
+                    <span class="tag-pill-name">Memoir</span>
+                    <span class="tag-pill-count">3</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Monograph" class="tag-pill">
+                    <span class="tag-pill-name">Monograph</span>
+                    <span class="tag-pill-count">6</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Nature" class="tag-pill">
+                    <span class="tag-pill-name">Nature</span>
+                    <span class="tag-pill-count">12</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Nazraeli%20Press" class="tag-pill">
+                    <span class="tag-pill-name">Nazraeli Press</span>
+                    <span class="tag-pill-count">48</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Nightlife" class="tag-pill">
+                    <span class="tag-pill-name">Nightlife</span>
+                    <span class="tag-pill-count">7</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=One%20Picture%20Book" class="tag-pill">
+                    <span class="tag-pill-name">One Picture Book</span>
+                    <span class="tag-pill-count">48</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Photographers" class="tag-pill">
+                    <span class="tag-pill-name">Photographers</span>
+                    <span class="tag-pill-count">9</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Photobook" class="tag-pill">
+                    <span class="tag-pill-name">Photobook</span>
+                    <span class="tag-pill-count">8</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Poetry" class="tag-pill">
+                    <span class="tag-pill-name">Poetry</span>
+                    <span class="tag-pill-count">2</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Politics" class="tag-pill">
+                    <span class="tag-pill-name">Politics</span>
+                    <span class="tag-pill-count">3</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Portraiture" class="tag-pill">
+                    <span class="tag-pill-name">Portraiture</span>
+                    <span class="tag-pill-count">6</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Reference" class="tag-pill">
+                    <span class="tag-pill-name">Reference</span>
+                    <span class="tag-pill-count">12</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Skateboarding" class="tag-pill">
+                    <span class="tag-pill-name">Skateboarding</span>
+                    <span class="tag-pill-count">5</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Sneakers" class="tag-pill">
+                    <span class="tag-pill-name">Sneakers</span>
+                    <span class="tag-pill-count">2</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Social%20Commentary" class="tag-pill">
+                    <span class="tag-pill-name">Social Commentary</span>
+                    <span class="tag-pill-count">2</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Streetwear" class="tag-pill">
+                    <span class="tag-pill-name">Streetwear</span>
+                    <span class="tag-pill-count">7</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Subculture" class="tag-pill">
+                    <span class="tag-pill-name">Subculture</span>
+                    <span class="tag-pill-count">8</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Typography" class="tag-pill">
+                    <span class="tag-pill-name">Typography</span>
+                    <span class="tag-pill-count">2</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Vintage" class="tag-pill">
+                    <span class="tag-pill-name">Vintage</span>
+                    <span class="tag-pill-count">2</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Visual%20Culture" class="tag-pill">
+                    <span class="tag-pill-name">Visual Culture</span>
+                    <span class="tag-pill-count">2</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=Zines" class="tag-pill">
+                    <span class="tag-pill-name">Zines</span>
+                    <span class="tag-pill-count">9</span>
+                </a>
+                <a href="/aggregate-view/?filter=tag&value=artist-monograph" class="tag-pill">
+                    <span class="tag-pill-name">artist-monograph</span>
+                    <span class="tag-pill-count">11</span>
+                </a>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
