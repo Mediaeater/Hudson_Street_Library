@@ -31,6 +31,7 @@ const https = require('https');
 const { parse } = require('csv-parse/sync');
 const { stringify } = require('csv-stringify/sync');
 const { execSync } = require('child_process');
+const { BookMetadataAggregator } = require('./utils/book-metadata-aggregator');
 
 // Configuration
 const CSV_PATH = path.join(__dirname, '../src/_data/books.csv');
@@ -160,6 +161,13 @@ function parseBookText(text) {
     description = `${imageMatch[0]}`;
   }
 
+  // Extract publisher URL if provided (http:// or https://)
+  let publisher_url = '';
+  const urlMatch = text.match(/(https?:\/\/[^\s\n]+)/i);
+  if (urlMatch) {
+    publisher_url = urlMatch[1].trim();
+  }
+
   return {
     author_first,
     author_last,
@@ -169,60 +177,39 @@ function parseBookText(text) {
     publication_year,
     page_count,
     binding,
-    description
+    description,
+    publisher_url
   };
 }
 
 /**
- * Search for ISBN using Google Books API
+ * Search for book metadata using comprehensive multi-source aggregator
  */
-async function searchISBN(title, author) {
-  return new Promise((resolve) => {
-    const query = encodeURIComponent(`${title} ${author}`.trim());
-    const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=3`;
-
-    https.get(url, (res) => {
-      let data = '';
-      res.on('data', chunk => data += chunk);
-      res.on('end', () => {
-        try {
-          const json = JSON.parse(data);
-          if (json.items && json.items.length > 0) {
-            for (const item of json.items) {
-              const volumeInfo = item.volumeInfo;
-
-              // Try to find ISBN-13 first, then ISBN-10
-              if (volumeInfo.industryIdentifiers) {
-                const isbn13 = volumeInfo.industryIdentifiers.find(id => id.type === 'ISBN_13');
-                const isbn10 = volumeInfo.industryIdentifiers.find(id => id.type === 'ISBN_10');
-
-                if (isbn13) {
-                  return resolve({
-                    isbn: isbn13.identifier,
-                    publisher: volumeInfo.publisher || '',
-                    year: volumeInfo.publishedDate ? volumeInfo.publishedDate.substring(0, 4) : '',
-                    pageCount: volumeInfo.pageCount || '',
-                    description: volumeInfo.description || ''
-                  });
-                } else if (isbn10) {
-                  return resolve({
-                    isbn: isbn10.identifier,
-                    publisher: volumeInfo.publisher || '',
-                    year: volumeInfo.publishedDate ? volumeInfo.publishedDate.substring(0, 4) : '',
-                    pageCount: volumeInfo.pageCount || '',
-                    description: volumeInfo.description || ''
-                  });
-                }
-              }
-            }
-          }
-          resolve(null);
-        } catch (e) {
-          resolve(null);
-        }
-      });
-    }).on('error', () => resolve(null));
+async function searchBookMetadata(bookInfo) {
+  const aggregator = new BookMetadataAggregator({
+    enablePublisherScraping: true,
+    apiClient: {
+      cache: { enabled: true }
+    }
   });
+
+  try {
+    const results = await aggregator.searchAll(bookInfo);
+
+    if (results.sources.length > 0) {
+      return {
+        found: true,
+        confidence: results.confidence,
+        sources: results.sources,
+        metadata: results.metadata
+      };
+    }
+
+    return { found: false };
+  } catch (error) {
+    console.log(`⚠️  Metadata search error: ${error.message}`);
+    return { found: false, error: error.message };
+  }
 }
 
 /**
@@ -354,31 +341,66 @@ async function processBook(text) {
     const parsed = parseBookText(text);
     console.log('Parsed:', parsed);
 
-    // Look up ISBN
-    console.log('\n🔍 Searching for ISBN...');
-    const lookupData = await searchISBN(parsed.title, parsed.author_full_name);
+    // Comprehensive metadata search
+    console.log('\n🔍 Searching multiple high-quality sources...');
+
+    const searchInfo = {
+      title: parsed.title,
+      author: parsed.author_full_name,
+      publisher: parsed.publisher,
+      publication_year: parsed.publication_year,
+      publisher_url: parsed.publisher_url // If provided in text
+    };
+
+    const lookupData = await searchBookMetadata(searchInfo);
 
     let bookData = { ...parsed };
 
-    if (lookupData) {
-      console.log('✓ Found ISBN:', lookupData.isbn);
-      bookData.isbn_asin = lookupData.isbn;
+    if (lookupData.found) {
+      console.log(`\n✅ Found data in ${lookupData.sources.length} source(s) [${lookupData.confidence} confidence]`);
+      console.log(`   Sources: ${lookupData.sources.join(', ')}`);
 
-      // Fill in missing data from lookup
-      if (!bookData.publisher && lookupData.publisher) {
-        bookData.publisher = lookupData.publisher;
+      const metadata = lookupData.metadata;
+
+      // Merge found data with parsed data (parsed takes priority if already set)
+      if (!bookData.isbn_asin && metadata.isbn) {
+        bookData.isbn_asin = metadata.isbn;
+        console.log(`   + ISBN: ${metadata.isbn} (from ${metadata.isbn_source})`);
       }
-      if (!bookData.publication_year && lookupData.year) {
-        bookData.publication_year = lookupData.year;
+
+      if (!bookData.publisher && metadata.publisher) {
+        bookData.publisher = metadata.publisher;
+        console.log(`   + Publisher: ${metadata.publisher} (from ${metadata.publisher_source})`);
       }
-      if (!bookData.page_count && lookupData.pageCount) {
-        bookData.page_count = lookupData.pageCount.toString();
+
+      if (!bookData.publication_year && (metadata.publishedDate || metadata.publication_year)) {
+        const year = metadata.publishedDate?.substring(0, 4) || metadata.publication_year;
+        bookData.publication_year = year;
+        console.log(`   + Year: ${year} (from ${metadata.publishedDate_source || metadata.publication_year_source})`);
       }
-      if (!bookData.description && lookupData.description) {
-        bookData.description = lookupData.description.substring(0, 500);
+
+      if (!bookData.page_count && (metadata.pageCount || metadata.pages)) {
+        bookData.page_count = (metadata.pageCount || metadata.pages).toString();
+        console.log(`   + Pages: ${bookData.page_count} (from ${metadata.pageCount_source || metadata.pages_source})`);
+      }
+
+      if (!bookData.description && metadata.description) {
+        bookData.description = metadata.description.substring(0, 500);
+        console.log(`   + Description: ${bookData.description.substring(0, 80)}...`);
+      }
+
+      // Additional enrichment
+      if (metadata.subjects && metadata.subjects.length > 0) {
+        bookData.subjects = metadata.subjects.slice(0, 5).join('; ');
+        console.log(`   + Subjects: ${bookData.subjects}`);
+      }
+
+      if (metadata.binding && !bookData.binding) {
+        bookData.binding = metadata.binding;
+        console.log(`   + Binding: ${metadata.binding}`);
       }
     } else {
-      console.log('⚠ ISBN not found - you can add it manually later');
+      console.log('⚠️  No data found in any source - you can add details manually later');
       bookData.isbn_asin = '';
     }
 
