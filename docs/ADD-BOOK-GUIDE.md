@@ -94,20 +94,25 @@ node scripts/add-book-from-text.js --file books-to-add.txt
 # 1. Add book(s)
 node scripts/add-book-from-text.js --interactive
 
-# 2. Add cover images manually
+# 2. CRITICAL: Validate CSV structure immediately
+node scripts/validate-csv-structure.js
+
+# 3. Add cover images manually
 cp cover.jpg src/assets/images/books/[filename shown]
 
-# 3. Validate
+# 4. Run full test suite
 npm test
 
-# 4. Build site
+# 5. Build site
 npm run build
 
-# 5. Commit
+# 6. Commit
 git add src/_data/books.csv src/assets/images/books/
 git commit -m "Add: Ayoung Kim - Synthetic Storyteller"
 git push
 ```
+
+**⚠️ IMPORTANT:** Always run `node scripts/validate-csv-structure.js` immediately after modifying books.csv (whether using the script or manually). This catches column misalignment errors before they cause build failures.
 
 ### What Gets Filled In
 
@@ -209,3 +214,141 @@ Your manually entered data always takes priority over API data.
 - ✅ More accurate for art books
 
 This is the **one optimal method** for your workflow.
+
+---
+
+## 🛡️ CSV Error Prevention
+
+**Critical: Always validate after CSV changes to prevent column misalignment errors.**
+
+### The Problem
+
+Manual CSV editing can introduce column misalignment (wrong number of commas), causing:
+- Books not appearing in "Recently Added"
+- Build failures
+- Data in wrong fields (e.g., accession_no containing location value)
+
+### Prevention Strategies
+
+#### 1. Use the add-book-from-text.js script (Preferred)
+The script ensures correct column count and structure.
+
+#### 2. Validate immediately after any manual CSV edits
+```bash
+node scripts/validate-csv-structure.js
+```
+This catches column count errors before committing.
+
+#### 3. Never manually add CSV rows via bash/heredoc
+Manual comma counting is error-prone. Always use the script or CSV validation.
+
+#### 4. Pre-commit hook already validates
+Your test suite includes CSV validation, but only if you commit. Run validation earlier to catch issues sooner.
+
+### Quick Validation Check
+
+After adding books:
+```bash
+# Quick validation (< 1 second)
+node scripts/validate-csv-structure.js
+
+# If issues found, check the specific line numbers reported
+# Fix the comma count, then re-validate
+```
+
+The validator checks:
+- All rows have exactly 36 columns
+- No unescaped quotes
+- No embedded newlines
+- Proper CSV parsing
+
+---
+
+## 📸 Cover Image Naming Convention
+
+### Standard Format
+
+```
+{author_last}_{author_first}_{title}_{isbn}.jpg
+```
+
+### Rules
+
+1. **Author name**: First and last name, underscore-separated
+   - Remove all special characters (except underscores)
+   - Convert spaces to underscores
+   - Truncate at 50 characters
+
+2. **Title**: Book title, underscore-separated
+   - Remove special characters
+   - Convert spaces to underscores
+   - Truncate at 50 characters
+
+3. **ISBN**: Optional but recommended
+   - Strip all non-numeric characters (except X for ISBN-10)
+   - Format: `_{isbn}` appended to filename
+
+4. **Extension**: Always `.jpg` (lowercase)
+   - Never use `.jpeg`, `.JPG`, `.JPEG`
+   - If image is .png, convert to .jpg first
+
+### Examples
+
+**With ISBN:**
+```
+kim_ayoung_synthetic_storyteller_9783000841156.jpg
+tillmans_wolfgang_truth_study_center_9783865601234.jpg
+```
+
+**Without ISBN:**
+```
+fischer_marc_who_shares_the_restroom_code_with_ice_agents.jpg
+morgan_paul_static_magic_current_editions_no_10.jpg
+```
+
+**Complex names:**
+```
+gonzalez-torres_felix_forbidden_colors_9781739364946.jpg
+→ Special character (hyphen) removed automatically
+```
+
+### Script Generation
+
+The `add-book-from-text.js` script automatically generates correct filenames:
+
+```javascript
+// From: scripts/add-book-from-text.js line 231-246
+function generateCoverFilename(author_last, author_first, title, isbn) {
+  const cleanName = (str) => str
+    .replace(/[^a-zA-Z0-9\s]/g, '')  // Remove special chars
+    .replace(/\s+/g, '_')            // Spaces to underscores
+    .substring(0, 50);                // Truncate at 50 chars
+
+  const authorPart = author_last ?
+    cleanName(`${author_first} ${author_last}`.trim()) :
+    cleanName(author_first || 'Unknown');
+
+  const titlePart = cleanName(title);
+  const isbnPart = isbn ? `_${isbn.replace(/[^0-9X]/g, '')}` : '';
+
+  return `${authorPart}_${titlePart}${isbnPart}.jpg`;
+}
+```
+
+### Manual Naming Checklist
+
+If creating cover filenames manually:
+- ✅ All lowercase letters
+- ✅ Underscores for spaces
+- ✅ No special characters (hyphens, apostrophes, quotes)
+- ✅ Extension is `.jpg` (not `.jpeg`)
+- ✅ ISBN stripped of hyphens
+- ✅ Total filename under ~150 characters
+
+### Why This Convention?
+
+1. **Consistent**: All covers follow same pattern
+2. **Searchable**: Easy to find by author or title
+3. **URL-safe**: No encoding needed for web paths
+4. **Sortable**: Alphabetical sorting works correctly
+5. **Automated**: Script handles complexity

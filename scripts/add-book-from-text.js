@@ -421,6 +421,27 @@ async function processBook(text) {
         const record = addBookToCSV(bookData, nextId);
 
         console.log('\n✅ Book added successfully!\n');
+
+        // Validate CSV structure immediately
+        console.log('🔍 Validating CSV structure...');
+        try {
+          const validateScript = path.join(__dirname, 'validate-csv-structure.js');
+          if (fs.existsSync(validateScript)) {
+            execSync(`node "${validateScript}"`, {
+              stdio: 'inherit',
+              cwd: path.join(__dirname, '..')
+            });
+            console.log('✅ CSV validation passed!\n');
+          } else {
+            console.log('⚠️  CSV validator not found, skipping validation\n');
+          }
+        } catch (error) {
+          console.error('❌ CSV VALIDATION FAILED!');
+          console.error('   This means the CSV has structural errors.');
+          console.error('   Please run: node scripts/validate-csv-structure.js');
+          console.error('   Fix any issues before committing.\n');
+          process.exit(1);
+        }
         console.log('📸 Cover Image Instructions:');
         console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
         console.log(`Place cover image at: src/assets/images/books/${coverFilename}\n`);
@@ -449,9 +470,11 @@ async function processBook(text) {
 
         console.log('🔨 Next Steps:');
         console.log('  1. Add cover image to books/ folder');
-        console.log('  2. Run: npm test');
+        console.log('  2. Run: npm test (full test suite)');
         console.log('  3. Run: npm run build');
-        console.log('  4. Commit changes\n');
+        console.log('  4. Commit changes');
+        console.log('\n💡 Tip: CSV validation ran automatically. If you manually edit books.csv later,');
+        console.log('   always run: node scripts/validate-csv-structure.js\n');
       } else {
         console.log('\n❌ Cancelled - no changes made\n');
       }
