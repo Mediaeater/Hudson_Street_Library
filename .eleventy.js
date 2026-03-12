@@ -160,8 +160,8 @@ module.exports = function(eleventyConfig) {
       // Match by author last name
       if (b.author_last === authorLast) return true;
 
-      // Match by author name in title (case-insensitive)
-      if (b.title && b.title.toLowerCase().includes(authorLast.toLowerCase())) return true;
+      // Match by author name in title (skip short names like "Ma" to avoid false positives)
+      if (authorLast.length >= 4 && b.title && b.title.toLowerCase().includes(authorLast.toLowerCase())) return true;
 
       return false;
     });
@@ -179,8 +179,8 @@ module.exports = function(eleventyConfig) {
       // Match by author last name
       if (b.author_last === authorLast) return true;
 
-      // Match by author name in title (case-insensitive)
-      if (b.title && b.title.toLowerCase().includes(authorLast.toLowerCase())) return true;
+      // Match by author name in title (skip short names like "Ma" to avoid false positives)
+      if (authorLast.length >= 4 && b.title && b.title.toLowerCase().includes(authorLast.toLowerCase())) return true;
 
       return false;
     }).length;
