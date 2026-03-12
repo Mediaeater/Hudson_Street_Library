@@ -3,12 +3,13 @@
 /**
  * Add Book From Text Description
  *
- * Simple workflow: Paste book text → Auto-populate CSV → Get cover filename
+ * Simple workflow: Paste book text → Auto-populate CSV → Get cover filename → Update Datasette
  *
  * Usage:
  *   node scripts/add-book-from-text.js --text "Book description here"
  *   node scripts/add-book-from-text.js --file books-to-add.txt
  *   node scripts/add-book-from-text.js --interactive
+ *   node scripts/add-book-from-text.js --interactive --no-rebuild  # Skip Datasette update
  *
  * Example text format:
  *   Ayoung Kim: Synthetic Storyteller
@@ -19,7 +20,8 @@
  *   2. Look up ISBN and additional info from APIs
  *   3. Generate next sequential ID
  *   4. Add to books.csv with today's accession date
- *   5. Provide cover filename for you to add
+ *   5. Automatically rebuild Datasette catalog (unless --no-rebuild)
+ *   6. Provide cover filename for you to add
  */
 
 const fs = require('fs');
@@ -28,6 +30,7 @@ const readline = require('readline');
 const https = require('https');
 const { parse } = require('csv-parse/sync');
 const { stringify } = require('csv-stringify/sync');
+const { execSync } = require('child_process');
 
 // Configuration
 const CSV_PATH = path.join(__dirname, '../src/_data/books.csv');
@@ -39,6 +42,7 @@ const args = process.argv.slice(2);
 let inputText = '';
 let inputFile = '';
 let interactive = false;
+let rebuildDatasette = true;
 
 for (let i = 0; i < args.length; i++) {
   if (args[i] === '--text') {
@@ -47,6 +51,8 @@ for (let i = 0; i < args.length; i++) {
     inputFile = args[++i];
   } else if (args[i] === '--interactive') {
     interactive = true;
+  } else if (args[i] === '--no-rebuild') {
+    rebuildDatasette = false;
   } else if (args[i] === '--help') {
     console.log(`
 Add Book From Text Description
@@ -60,6 +66,7 @@ Options:
   --text <description>    Book description text
   --file <path>           File with book descriptions (one per paragraph)
   --interactive           Interactive mode with prompts
+  --no-rebuild            Skip Datasette catalog rebuild (faster)
   --help                  Show this help
 
 Example text format:
@@ -417,6 +424,28 @@ async function processBook(text) {
         console.log('📸 Cover Image Instructions:');
         console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
         console.log(`Place cover image at: src/assets/images/books/${coverFilename}\n`);
+
+        // Rebuild Datasette catalog
+        if (rebuildDatasette) {
+          console.log('🔄 Updating Datasette catalog...');
+          try {
+            const updateScript = path.join(__dirname, 'update-datasette-catalog.sh');
+            if (fs.existsSync(updateScript)) {
+              execSync(updateScript, {
+                stdio: 'inherit',
+                cwd: path.join(__dirname, '..')
+              });
+              console.log('✅ Datasette catalog updated!\n');
+            } else {
+              console.log('⚠️  Datasette update script not found, skipping rebuild\n');
+            }
+          } catch (error) {
+            console.error('⚠️  Failed to update Datasette catalog:', error.message);
+            console.log('   You can manually rebuild with: ./scripts/update-datasette-catalog.sh\n');
+          }
+        } else {
+          console.log('⚠️  Skipped Datasette catalog rebuild (use --no-rebuild flag)\n');
+        }
 
         console.log('🔨 Next Steps:');
         console.log('  1. Add cover image to books/ folder');

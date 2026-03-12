@@ -2,7 +2,31 @@
 
 ## 📚 Overview
 
+This guide documents the **web-based admin panel** workflow for adding books. For most users, the **command-line workflow** is faster and simpler.
+
+### Command-Line Workflow (Recommended)
+
+**Quick Method** - Add books via command line with automatic Datasette catalog updates:
+
+```bash
+npm run add
+# or
+node scripts/add-book-from-text.js --interactive
+```
+
+**Features**:
+- Paste book text (title, author, publisher, year)
+- Auto-lookup ISBN via Google Books
+- **Automatically updates Datasette catalog**
+- Generates proper cover filename
+
+See [scripts/add-book-from-text.js](../scripts/add-book-from-text.js) for details.
+
+### Web Admin Panel Workflow (This Guide)
+
 The Hudson Street Library Book Addition Workflow is a comprehensive, 4-step guided process designed to streamline the addition of new books to the library collection. This system combines intelligent automation with user control to create an efficient and user-friendly experience.
+
+**Note**: This web interface may be in development/archived. The command-line workflow above is the primary method.
 
 ## 🚀 Getting Started
 
