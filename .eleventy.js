@@ -177,11 +177,15 @@ module.exports = function(eleventyConfig) {
 
     // Pre-process current book's tags for faster comparison
     const currentTags = currentBook.tags
-      ? currentBook.tags.toLowerCase().split(';').map(t => t.trim())
+      ? currentBook.tags.toLowerCase().split(',').map(t => t.trim())
       : [];
     const currentTagsSet = new Set(currentTags);
 
+    // Broad categories that shouldn't dominate scoring
+    const broadCategories = new Set(['photography', 'art', 'magazines']);
+
     const scored = [];
+    const authorCounts = {}; // Track books per author to ensure diversity
 
     // Process each book
     for (let i = 0; i < books.length; i++) {
@@ -192,19 +196,22 @@ module.exports = function(eleventyConfig) {
 
       let score = 0;
 
-      // Same collection_grouping (highest priority, +10 points)
+      // Same collection_grouping (reduced score for broad categories)
       if (currentBook.collection_grouping &&
           b.collection_grouping &&
           b.collection_grouping === currentBook.collection_grouping) {
-        score += 10;
+        const isBroad = broadCategories.has(currentBook.collection_grouping.toLowerCase());
+        score += isBroad ? 3 : 10; // Only +3 for broad categories, +10 for specific
       }
 
-      // Overlapping tags (+2 points per matching tag)
+      // Overlapping tags (+2 points per matching tag, skip very common ones)
       if (currentTags.length > 0 && b.tags) {
-        const bookTags = b.tags.toLowerCase().split(';').map(t => t.trim());
+        const bookTags = b.tags.toLowerCase().split(',').map(t => t.trim());
         let overlap = 0;
         for (let j = 0; j < bookTags.length; j++) {
-          if (currentTagsSet.has(bookTags[j])) {
+          const tag = bookTags[j];
+          // Skip overly broad tags like "photography" alone
+          if (currentTagsSet.has(tag) && !broadCategories.has(tag)) {
             overlap++;
           }
         }
@@ -234,16 +241,29 @@ module.exports = function(eleventyConfig) {
         score += 1;
       }
 
-      // Only keep books with positive score
-      if (score > 0) {
-        scored.push({ book: b, score });
+      // Only keep books with score >= 4 (minimum threshold)
+      if (score >= 4) {
+        scored.push({ book: b, score, author: b.author_last });
       }
     }
 
-    // Sort by score (descending) and return books
+    // Sort by score (descending)
     scored.sort((a, b) => b.score - a.score);
 
-    return scored.slice(0, limit).map(item => item.book);
+    // Filter for diversity - limit to 2 books per author in related section
+    const diverseResults = [];
+    for (const item of scored) {
+      const author = item.author || 'unknown';
+      authorCounts[author] = (authorCounts[author] || 0) + 1;
+
+      if (authorCounts[author] <= 2) {
+        diverseResults.push(item.book);
+      }
+
+      if (diverseResults.length >= limit) break;
+    }
+
+    return diverseResults;
   });
 
   // --- Count books by author ---
