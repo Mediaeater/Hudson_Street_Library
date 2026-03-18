@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karlheinz Weinberger - Vol 1 Halbstarke P by  | Hudson Street Library</title>
+    <title>Karlheinz Weinberger - Vol 1 Halbstarke P by Karlheinz Weinberger | Hudson Street Library</title>
     
 <meta name="description" content="In 1958, Zürich photographer Karlheinz Weinberger first captured the likeness of Halbstarke (rebel) Jimmy Oechslin, an artistic moment which marks the...">
     
@@ -12,50 +12,385 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .details-label {
-            font-size: 0.75rem;
-            font-weight: 500;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #faf9f6;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 1.5rem 4rem;
+        }
+
+        /* Cover Image */
+        .cover-section {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .cover-image {
+            max-height: 400px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+        }
+
+        /* Title */
+        .title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 28px;
+            font-weight: 400;
+            color: #1a1a1a;
+            margin-bottom: 0.75rem;
+            text-align: center;
+        }
+
+        /* Author */
+        .author {
+            font-size: 16px;
+            font-weight: 300;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .author .by {
+            color: #a3a3a3;
+        }
+
+        .author a {
+            color: #404040;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .author a:hover {
+            color: #000;
+            text-decoration: underline;
+        }
+
+        /* Vitals */
+        .vitals {
+            font-size: 13px;
+            font-weight: 400;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #6b7280;
-            margin-right: 0.5rem;
+            letter-spacing: 0.08em;
+            color: #737373;
+            text-align: center;
+            margin-bottom: 2.5rem;
         }
-        .section-heading {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #111827;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.01em;
-        }
-        .availability-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-        .availability-badge.available {
-            background-color: #D1FAE5;
-            color: #065F46;
-        }
-        .prose {
+
+        /* Description */
+        .description {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 16px;
             line-height: 1.8;
             color: #374151;
-            max-width: 70ch;
+            margin-bottom: 2.5rem;
         }
-        .prose p {
-            margin-bottom: 1rem;
+
+        /* Separator */
+        .separator {
+            border: 0;
+            border-top: 1px solid rgba(0,0,0,0.06);
+            margin: 2.5rem 0;
         }
-        .prose a {
+
+        /* Section Headings */
+        .section-heading {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #737373;
+            margin-bottom: 1.25rem;
+        }
+
+        /* Catalog Data Table */
+        .catalog-data {
+            margin-bottom: 2.5rem;
+        }
+
+        .catalog-row {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 0.65rem;
+            gap: 0.5rem;
+        }
+
+        .catalog-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #a3a3a3;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .catalog-dots {
+            flex-grow: 1;
+            height: 1px;
+            border-bottom: 1px dotted #e5e5e5;
+            margin: 0 0.5rem;
+            align-self: center;
+        }
+
+        .catalog-value {
+            font-size: 14px;
+            color: #404040;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .catalog-value.empty {
+            color: #d4d4d4;
+        }
+
+        .catalog-value a {
+            color: #404040;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .catalog-value a:hover {
+            color: #000;
+            text-decoration: underline;
+        }
+
+        /* Notes */
+        .notes-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .notes-content {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #404040;
+            white-space: pre-line;
+        }
+
+        .notes-content a {
             color: #0d9488;
             text-decoration: none;
             border-bottom: 1px solid #0d948844;
         }
-        .prose a:hover {
+
+        .notes-content a:hover {
             color: #115e59;
             border-bottom-color: #115e59;
+        }
+
+        /* Contributors */
+        .contributors {
+            margin-bottom: 2.5rem;
+        }
+
+        .contributor-item {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 0.65rem;
+            gap: 0.5rem;
+        }
+
+        .contributor-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #a3a3a3;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .contributor-dots {
+            flex-grow: 1;
+            height: 1px;
+            border-bottom: 1px dotted #e5e5e5;
+            margin: 0 0.5rem;
+            align-self: center;
+        }
+
+        .contributor-value {
+            font-size: 14px;
+            color: #404040;
+            text-align: right;
+        }
+
+        /* Tags */
+        .tags-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            background: #f5f5f5;
+            color: #525252;
+            font-size: 12px;
+            font-weight: 400;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .tag:hover {
+            background: #e5e5e5;
+            color: #000;
+        }
+
+        .classification {
+            font-size: 11px;
+            color: #a3a3a3;
+            letter-spacing: 0.02em;
+        }
+
+        /* Related Books */
+        .related-books {
+            margin-top: 3rem;
+        }
+
+        .books-scroll {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+            scrollbar-width: thin;
+            scrollbar-color: #d4d4d4 transparent;
+        }
+
+        .books-scroll::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .books-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .books-scroll::-webkit-scrollbar-thumb {
+            background: #d4d4d4;
+            border-radius: 3px;
+        }
+
+        .books-scroll::-webkit-scrollbar-thumb:hover {
+            background: #a3a3a3;
+        }
+
+        .related-book {
+            flex: 0 0 auto;
+            width: 140px;
+            text-decoration: none;
+        }
+
+        .related-book-cover {
+            width: 100%;
+            aspect-ratio: 3/4;
+            background: #e5e5e5;
+            border-radius: 2px;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.2s ease;
+            object-fit: cover;
+        }
+
+        .related-book:hover .related-book-cover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+        }
+
+        .related-book-title {
+            font-size: 12px;
+            color: #404040;
+            line-height: 1.4;
+            display: block;
+        }
+
+        .related-book-year {
+            font-size: 11px;
+            color: #a3a3a3;
+        }
+
+        .view-all-link {
+            display: inline-block;
+            margin-top: 1.5rem;
+            font-size: 13px;
+            color: #404040;
+            text-decoration: none;
+            border-bottom: 1px solid #d4d4d4;
+            transition: all 0.2s ease;
+        }
+
+        .view-all-link:hover {
+            color: #000;
+            border-bottom-color: #737373;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 640px) {
+            .container {
+                padding: 0 1rem 3rem;
+            }
+
+            .cover-image {
+                max-height: 300px;
+            }
+
+            .title {
+                font-size: 24px;
+            }
+
+            .author {
+                font-size: 15px;
+            }
+
+            .vitals {
+                font-size: 12px;
+            }
+
+            .description {
+                font-size: 15px;
+                line-height: 1.75;
+            }
+
+            .catalog-label,
+            .contributor-label {
+                font-size: 10px;
+            }
+
+            .catalog-value,
+            .contributor-value {
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .cover-image {
+                max-height: 250px;
+            }
+
+            .title {
+                font-size: 22px;
+            }
+
+            .related-book {
+                width: 120px;
+            }
         }
     </style>
     <script>
@@ -218,125 +553,323 @@ function toggleMobileMenu() {
 </script>
 
 
-<div class="book-page-container max-w-7xl mx-auto px-6 md:px-8 lg:px-12 py-16">
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-    <!-- Left Column: Image Only -->
-    <div class="lg:col-span-4">
-      <!-- Book Cover Image -->
-      
-      <div class="book-cover-container lg:sticky lg:top-24">
-        <img
-          src="/assets/images/books/Weinberger_Karlheinz_Weinberger_-_Vol_1_Halbstarke_P_9783906822143.jpg"
-          alt="Cover of Karlheinz Weinberger - Vol 1 Halbstarke P"
-          class="w-full max-w-xs mx-auto lg:mx-0 h-auto object-contain bg-white rounded-lg shadow-xl border border-neutral-200"
-          onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-        />
-      </div>
+<main class="container">
+    <!-- Cover Image -->
+    <div class="cover-section">
+        
+        <img src="/assets/images/books/Weinberger_Karlheinz_Weinberger_-_Vol_1_Halbstarke_P_9783906822143.jpg"
+             alt="Karlheinz Weinberger - Vol 1 Halbstarke P by Karlheinz Weinberger"
+             class="cover-image"
+             onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
     </div>
 
-    <!-- Right Column: Title, Author, Description, Details, etc. -->
-    <div class="lg:col-span-8">
-      <!-- Title and Author -->
-      <header class="mb-12">
-        <h1 class="text-3xl font-normal text-gray-900 mb-3 tracking-tight leading-tight">Karlheinz Weinberger - Vol 1 Halbstarke P</h1>
-        <p class="text-xl text-gray-600 font-light">
-          by
-          
+    <!-- Title -->
+    <h1 class="title">Karlheinz Weinberger - Vol 1 Halbstarke P</h1>
+
+    <!-- Author -->
+    <div class="author">
+        <span class="by">by</span>
+        
             Karlheinz Weinberger
-          
-        </p>
-      </header>
-
-      <!-- Description -->
-      <section class="mb-16">
-        <h2 class="section-heading">Description</h2>
-        <div class="prose mb-10">
-          In 1958, Zürich photographer Karlheinz Weinberger first captured the likeness of Halbstarke (rebel) Jimmy Oechslin, an artistic moment which marks the genesis of this collection of images focused on young Swiss teenagers. That particular photographic encounter triggered Weinbergers life-long fascination with outsiders and nonconformists in the otherwise staid environment of Switzerland. The photographs presented in this first of several volumes about his work offer a rare glimpse into a bygone world that seems almost cute and quaint from a contemporary perspective, but make no mistake: just dressing in jeans and hanging chains around ones neck was a statement as loud as blasting music by Buddy Holly on a quiet Swiss Sunday afternoon.
-        </div>
-
-        <!-- Details (moved under description) -->
-        <div class="mt-12 pt-10 border-t border-gray-200" style="border-color: rgba(0, 0, 0, 0.06);">
-          <h3 class="text-sm font-semibold text-gray-500 mb-5 uppercase tracking-wider">Details</h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2.5 text-sm">
-            
-            <p><span class="details-label">Publisher:</span>
-              
-                Sturm &amp; Drang
-              
-            </p>
-            <p><span class="details-label">Published:</span> 2017</p>
-            <p><span class="details-label">ISBN:</span> 9783906822143</p>
-            <p><span class="details-label">Format:</span> Softcover</p>
-            <p><span class="details-label">Pages:</span> Not specified</p>
-            
-            <p><span class="details-label">Dimensions:</span>
-              
-                28.45cm × 1.02cm
-                
-              
-            </p>
-            
-            
-            <p><span class="details-label">Edition:</span> First Edition, mylar covered</p>
-            
-          </div>
-        </div>
-      </section>
-
-      <!-- Notes (for non-uniform information) -->
-      
-
-      <!-- Contributors -->
-      
-
-      <!-- Tags & Classification -->
-      
-        <section class="mb-8">
-          <h2 class="section-heading">Tags & Classification</h2>
-
-          
-            <div class="mb-4">
-              <h3 class="details-label mb-2">Tags</h3>
-              <p class="text-sm text-gray-600">
-                
-                <a href="/static-demo/?tag=Music" class="text-teal-700 hover:text-teal-900" style="text-decoration: none; border-bottom: 1px solid rgba(13, 148, 136, 0.3);">Music</a>, <a href="/static-demo/?tag=Photography" class="text-teal-700 hover:text-teal-900" style="text-decoration: none; border-bottom: 1px solid rgba(13, 148, 136, 0.3);">Photography</a>, <a href="/static-demo/?tag=Pop%20Culture" class="text-teal-700 hover:text-teal-900" style="text-decoration: none; border-bottom: 1px solid rgba(13, 148, 136, 0.3);">Pop Culture</a>, <a href="/static-demo/?tag=Punk" class="text-teal-700 hover:text-teal-900" style="text-decoration: none; border-bottom: 1px solid rgba(13, 148, 136, 0.3);">Punk</a>, <a href="/static-demo/?tag=Rock" class="text-teal-700 hover:text-teal-900" style="text-decoration: none; border-bottom: 1px solid rgba(13, 148, 136, 0.3);">Rock</a>
-              </p>
-            </div>
-          
-
-          
-            <div class="mb-4">
-              <h3 class="details-label mb-2">Classification</h3>
-              <p class="text-sm text-gray-600">Music Photography</p>
-            </div>
-          
-
-          
-            <div>
-              <h3 class="details-label mb-2">Collections</h3>
-              <p class="text-sm text-gray-600">Music Photobooks</p>
-            </div>
-          
-        </section>
-      
-
-      <!-- Library Information -->
-      <section class="mb-16">
-        <h2 class="section-heading">Library Information</h2>
-        <div class="space-y-2 text-sm">
-          <p><span class="details-label">Location:</span> Hudson Street Library, NYC</p>
-          <p><span class="details-label">Acquired:</span> Original Collection</p>
-        </div>
-      </section>
+        
     </div>
-  </div>
 
-  <!-- Other Books by Same Author -->
-  
-  
+    <!-- Vitals -->
+    <div class="vitals">
+        
+            
+                Sturm &amp; Drang
+            
+        
+         · 2017
+         · Softcover
+    </div>
 
-  
-</div>
+    <!-- Description -->
+    
+    <div class="description">
+        In 1958, Zürich photographer Karlheinz Weinberger first captured the likeness of Halbstarke (rebel) Jimmy Oechslin, an artistic moment which marks the genesis of this collection of images focused on young Swiss teenagers. That particular photographic encounter triggered Weinbergers life-long fascination with outsiders and nonconformists in the otherwise staid environment of Switzerland. The photographs presented in this first of several volumes about his work offer a rare glimpse into a bygone world that seems almost cute and quaint from a contemporary perspective, but make no mistake: just dressing in jeans and hanging chains around ones neck was a statement as loud as blasting music by Buddy Holly on a quiet Swiss Sunday afternoon.
+    </div>
+    
+
+    <hr class="separator">
+
+    <!-- Catalog Data -->
+    <div class="catalog-data">
+        <h2 class="section-heading">Details</h2>
+
+        <div class="catalog-row">
+            <span class="catalog-label">Publisher</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value">
+                
+                    
+                        Sturm &amp; Drang
+                    
+                
+            </span>
+        </div>
+
+        <div class="catalog-row">
+            <span class="catalog-label">Year</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value">2017</span>
+        </div>
+
+        <div class="catalog-row">
+            <span class="catalog-label">ISBN</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value">9783906822143</span>
+        </div>
+
+        <div class="catalog-row">
+            <span class="catalog-label">Format</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value">Softcover</span>
+        </div>
+
+        <div class="catalog-row">
+            <span class="catalog-label">Pages</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value empty">—</span>
+        </div>
+
+        <div class="catalog-row">
+            <span class="catalog-label">Dimensions</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value">
+                
+                    28.45cm × 1.02cm
+                
+            </span>
+        </div>
+
+        
+
+        
+
+        
+
+        
+
+        
+        <div class="catalog-row">
+            <span class="catalog-label">Edition</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value">First Edition, mylar covered</span>
+        </div>
+        
+
+        
+    </div>
+
+    
+
+    
+
+    
+    <hr class="separator">
+
+    <!-- Tags -->
+    <div class="tags-section">
+        <h2 class="section-heading">Tags</h2>
+        
+        <div class="tags">
+            
+            
+            
+            
+            <a href="/aggregate-view/?filter=tag&value=Music" class="tag">Music</a>
+            
+            
+            
+            
+            <a href="/aggregate-view/?filter=tag&value=Photography" class="tag">Photography</a>
+            
+            
+            
+            
+            <a href="/aggregate-view/?filter=tag&value=Pop%20Culture" class="tag">Pop Culture</a>
+            
+            
+            
+            
+            <a href="/aggregate-view/?filter=tag&value=Punk" class="tag">Punk</a>
+            
+            
+            
+            
+            <a href="/aggregate-view/?filter=tag&value=Rock" class="tag">Rock</a>
+            
+            
+        </div>
+        
+        
+        <div class="classification">Music Photography</div>
+        
+    </div>
+    
+
+    <!-- Related Books (by tags, collection, classification) -->
+    
+
+    
+    <hr class="separator">
+
+    <div class="related-books">
+        <h2 class="section-heading">Related Books</h2>
+        <div class="books-scroll">
+            
+            <a href="/books/macindoe_all-the-young-punks_1393/" class="related-book">
+                
+                <img src="/assets/images/books/Macindoe_All_The_Young_Punks_NULL.jpg"
+                     alt="All The Young Punks"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">All The Young Punks</span>
+                
+            </a>
+            
+            <a href="/books/magazine_another-magazine-bjork_1394/" class="related-book">
+                
+                <img src="/assets/images/books/Magazine_AnOther_Magazine_-_Bjork_NULL.jpg"
+                     alt="AnOther Magazine - Bjork"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">AnOther Magazine - Bjork</span>
+                
+            </a>
+            
+            <a href="/books/obrien_backstage-pass-rock-and-roll-photography-portland-museum-of-art_1395/" class="related-book">
+                
+                <img src="/assets/images/books/O_Brien_Backstage_Pass_Rock_Roll_Photography_Portland_Museum_of_Art_9780300151633.jpg"
+                     alt="Backstage Pass: Rock &amp; Roll Photography (Portland Museum of Art)"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Backstage Pass: Rock &amp; Roll Photography (Portland Museum of Art)</span>
+                
+                <span class="related-book-year">2009</span>
+                
+            </a>
+            
+            <a href="/books/williams_bob-dylan-a-man-called-alias_1397/" class="related-book">
+                
+                <img src="/assets/images/books/Williams_Bob_Dylan_-_a_man_called_alias_NULL.jpg"
+                     alt="Bob Dylan - a man called alias"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Bob Dylan - a man called alias</span>
+                
+            </a>
+            
+            <a href="/books/prestel_bob-dylan-the-darwin-blank-series_1398/" class="related-book">
+                
+                <img src="/assets/images/books/Prestel_Bob_Dylan_-_The_Darwin_Blank_Series_NULL.jpg"
+                     alt="Bob Dylan - The Darwin Blank Series"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Bob Dylan - The Darwin Blank Series</span>
+                
+            </a>
+            
+            <a href="/books/gallery_bob-dylan-the-darwin-blank-series_1399/" class="related-book">
+                
+                <img src="/assets/images/books/Gallery_Bob_Dylan_-_The_Darwin_Blank_Series_NULL.jpg"
+                     alt="Bob Dylan - The Darwin Blank Series"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Bob Dylan - The Darwin Blank Series</span>
+                
+            </a>
+            
+            <a href="/books/springsteen_bruce-springsteen-songs-hardcover-two-copies-one-sealed_1400/" class="related-book">
+                
+                <img src="/assets/images/books/Springsteen_Bruce_Springsteen_Songs_Hardcover_two_copies_one_sealed_NULL.jpg"
+                     alt="Bruce Springsteen: Songs Hardcover  (two copies one sealed)"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Bruce Springsteen: Songs Hardcover  (two copies one sealed)</span>
+                
+            </a>
+            
+            <a href="/books/miller_cash-an-american-man_1401/" class="related-book">
+                
+                <img src="/assets/images/books/Miller_Cash_-_An_American_Man_NULL.jpg"
+                     alt="Cash - An American Man"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Cash - An American Man</span>
+                
+            </a>
+            
+            <a href="/books/matheu_creem-americas-only-rock-n-roll-magazine-3-copies_1402/" class="related-book">
+                
+                <img src="/assets/images/books/Matheu_CREEM_America_s_Only_Rock_N_Roll_Magazine_3_copies_9780061374562.jpg"
+                     alt="CREEM: America&#39;s Only Rock &#39;N&#39; Roll Magazine (3 copies)"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">CREEM: America&#39;s Only Rock &#39;N&#39; Roll Magazine (3 copies)</span>
+                
+                <span class="related-book-year">2007</span>
+                
+            </a>
+            
+            <a href="/books/broackes_david-bowie-is-museum-of-contemporary-art-chicago-exhibition-catalogues-2-copies_1403/" class="related-book">
+                
+                <img src="/assets/images/books/Broackes_David_Bowie_Is_Museum_of_Contemporary_Art_Chicago_Exhibition_Catalogues_2_copies_9781851777.jpg"
+                     alt="David Bowie Is (Museum of Contemporary Art, Chicago: Exhibition Catalogues)   (2 copies)"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">David Bowie Is (Museum of Contemporary Art, Chicago: Exhibition Catalogues)   (2 copies)</span>
+                
+                <span class="related-book-year">2013</span>
+                
+            </a>
+            
+            <a href="/books/byrne_david-byrne-tribal-textiles-from-persia-neiriz-collection-in-the-ethnographical-museum-berlin-by-david-byrne-2003-hardcover_1404/" class="related-book">
+                
+                <img src="/assets/images/books/Byrne_David_Byrne_Tribal_Textiles_from_Persia_Neiriz_Collection_in_the_Ethnographical_Museum_Berlin_.jpg"
+                     alt="David Byrne : Tribal Textiles from Persia: Neiriz Collection in the Ethnographical Museum Berlin by David Byrne (2003, Hardcover)"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">David Byrne : Tribal Textiles from Persia: Neiriz Collection in the Ethnographical Museum Berlin by David Byrne (2003, Hardcover)</span>
+                
+            </a>
+            
+            <a href="/books/paz_dust-and-grooves-adventures-in-record-collecting_1405/" class="related-book">
+                
+                <img src="/assets/images/books/Paz_Dust_Grooves_Adventures_in_Record_Collecting_9781607748694.jpg"
+                     alt="Dust &amp; Grooves: Adventures in Record Collecting"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Dust &amp; Grooves: Adventures in Record Collecting</span>
+                
+                <span class="related-book-year">2015</span>
+                
+            </a>
+            
+        </div>
+    </div>
+    
+
+    <!-- Other Books by Same Author (secondary section) -->
+    
+    
+
+    
+</main>
 
 </body>
 </html>

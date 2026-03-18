@@ -3,10 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page Not Found | Hudson Street Library</title>
+    <title>Page Not Found · Hudson Street Library</title>
     <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
-    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Crimson+Pro:wght@300;400;600&family=Archivo+Narrow:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --color-ink: #0A0A0A;
+            --color-paper: #F8F7F4;
+            --color-vellum: #EEEDE8;
+            --color-brown: #8B7355;
+            --color-border: rgba(10, 10, 10, 0.12);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -14,242 +25,181 @@
         }
 
         body {
-            font-family: Montserrat, sans-serif;
-            background-color: #134e4a;
-            color: #f5f5f4;
+            background: var(--color-paper);
+            color: var(--color-ink);
+            font-family: 'Crimson Pro', serif;
+            line-height: 1.6;
             min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Grid system - library shelf dividers */
-        .grid-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            z-index: 1;
-        }
-
-        .grid-line {
-            border-right: 2px solid rgba(245, 245, 244, 0.15);
-            position: relative;
-        }
-
-        /* Header navigation */
-        .nav-header {
-            position: relative;
-            z-index: 100;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem 2rem;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .nav-header a {
-            color: #f5f5f4;
-            text-decoration: none;
-            transition: opacity 0.2s;
-        }
-
-        .nav-header a:hover {
-            opacity: 0.7;
-        }
-
-        .logo {
-            font-size: 0.875rem;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
-
-        /* Main content */
-        .content {
-            position: relative;
-            z-index: 10;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+        }
+
+        /* Header */
+        .error-header {
             padding: 2rem;
+            border-bottom: 1px solid var(--color-border);
         }
 
-        /* Lost text */
-        .lost-text {
-            font-size: 3rem;
-            font-weight: 900;
-            line-height: 1;
-            margin-bottom: 2rem;
-            color: #f5f5f4;
+        .header-link {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-brown);
+            text-decoration: none;
+            transition: color 0.3s ease;
         }
 
-        /* Call number styling */
-        .call-number-section {
+        .header-link:hover {
+            color: var(--color-ink);
+        }
+
+        /* Main Content */
+        .error-content {
             flex: 1;
             display: flex;
             flex-direction: column;
+            align-items: center;
             justify-content: center;
-            align-items: center;
-            padding: 2rem 0;
+            padding: 4rem 2rem;
+            text-align: center;
         }
 
-        .dewey-label {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
-            font-size: 1rem;
+        .classification-label {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.75rem;
             font-weight: 700;
-            color: #f5f5f4;
-            margin-bottom: 1rem;
-            letter-spacing: 0.1em;
-        }
-
-        .call-number {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-brown);
             margin-bottom: 2rem;
         }
 
-        .number {
-            font-size: clamp(8rem, 20vw, 16rem);
-            font-weight: 900;
+        .error-number {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(6rem, 15vw, 12rem);
+            font-weight: 700;
             line-height: 0.9;
-            color: #f5f5f4;
+            letter-spacing: -0.02em;
+            color: var(--color-ink);
+            margin-bottom: 2rem;
         }
 
-        .classification-text {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
-            font-size: 1.125rem;
-            color: #f5f5f4;
-            margin-bottom: 3rem;
-            max-width: 500px;
-            text-align: center;
-            line-height: 1.6;
+        .error-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--color-brown);
+            margin-bottom: 1.5rem;
         }
 
-        /* Back to home link */
-        .back-link {
-            align-self: flex-end;
-            font-size: 2.5rem;
-            font-weight: 900;
-            line-height: 1;
-            color: #f5f5f4;
+        .error-description {
+            font-size: clamp(1rem, 2vw, 1.125rem);
+            line-height: 1.7;
+            max-width: 60ch;
+            margin: 0 auto 3rem;
+            font-weight: 300;
+            color: var(--color-ink);
+        }
+
+        .error-actions {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .error-link {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 1rem 2rem;
+            border: 2px solid var(--color-ink);
+            color: var(--color-ink);
             text-decoration: none;
-            text-align: right;
-            transition: opacity 0.2s;
-            margin-top: auto;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            background: transparent;
         }
 
-        .back-link:hover {
-            opacity: 0.7;
+        .error-link:hover {
+            background: var(--color-ink);
+            color: var(--color-paper);
+            transform: translateY(-2px);
+        }
+
+        .error-link.secondary {
+            border-color: var(--color-brown);
+            color: var(--color-brown);
+        }
+
+        .error-link.secondary:hover {
+            background: var(--color-brown);
+            color: var(--color-paper);
+        }
+
+        /* Decorative Elements */
+        .decorative-line {
+            width: 200px;
+            height: 1px;
+            background: var(--color-border);
+            margin: 3rem auto;
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
+            .error-header {
+                padding: 1.5rem;
             }
 
-            .lost-text {
-                font-size: 2rem;
+            .error-content {
+                padding: 3rem 1.5rem;
             }
 
-            .number {
-                font-size: clamp(4rem, 15vw, 8rem);
-            }
-
-            .call-number {
-                gap: 1rem;
-            }
-
-            .back-link {
-                font-size: 1.75rem;
-            }
-
-            .classification-text {
-                font-size: 1rem;
-                padding: 0 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .content {
-                padding: 1rem;
-            }
-
-            .nav-header {
-                padding: 1rem;
-            }
-
-            .call-number {
+            .error-actions {
                 flex-direction: column;
-                gap: 0.5rem;
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .error-link {
+                width: 100%;
+                text-align: center;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Grid background -->
-    <div class="grid-container">
-        <div class="grid-line"></div>
-        <div class="grid-line"></div>
-        <div class="grid-line"></div>
-        <div class="grid-line"></div>
-        <div class="grid-line"></div>
-        <div class="grid-line"></div>
-        <div class="grid-line"></div>
-        <div class="grid-line"></div>
-        <div class="grid-line"></div>
-        <div class="grid-line"></div>
-    </div>
 
-    <!-- Content -->
-    <div class="content">
-        <!-- Header navigation -->
-        <nav class="nav-header">
-            <a href="/" class="logo">Hudson Street Library</a>
-            <div class="nav-links">
-                <a href="/collection-explore.html">Collections</a>
-                <a href="/static-demo/">Search</a>
-                <a href="/collections/recently_added.html">News</a>
-            </div>
-        </nav>
+    <!-- Header -->
+    <header class="error-header">
+        <a href="/" class="header-link">← Hudson Street Library</a>
+    </header>
 
-        <!-- Lost text -->
-        <div class="lost-text">
-            NOT IN<br>
-            CATALOG?
+    <!-- Main Content -->
+    <main class="error-content">
+        <div class="classification-label">Error Code</div>
+
+        <h1 class="error-number">404</h1>
+
+        <h2 class="error-title">Page Not Found</h2>
+
+        <p class="error-description">
+            The page you're looking for has been misshelved, checked out permanently,
+            or removed from our collection. Perhaps it was never cataloged at all.
+        </p>
+
+        <div class="decorative-line"></div>
+
+        <div class="error-actions">
+            <a href="/" class="error-link">Return Home</a>
+            <a href="/collection-explore.html" class="error-link secondary">Browse Collections</a>
+            <a href="/static-demo/" class="error-link secondary">Search Library</a>
         </div>
+    </main>
 
-        <!-- Call number section -->
-        <div class="call-number-section">
-            <div class="dewey-label">DEWEY DECIMAL CLASSIFICATION</div>
-
-            <div class="call-number">
-                <span class="number">4</span>
-                <span class="number">0</span>
-                <span class="number">4</span>
-            </div>
-
-            <div class="classification-text">
-                404.000 — ERROR: PAGE NOT FOUND<br>
-                <br>
-                This page has been misshelved, checked out permanently,<br>
-                or removed from the collection.
-            </div>
-        </div>
-
-        <!-- Back to home -->
-        <a href="/" class="back-link">
-            BACK TO<br>
-            HOME
-        </a>
-    </div>
 </body>
 </html>

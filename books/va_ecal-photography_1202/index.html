@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ecal Photography by  | Hudson Street Library</title>
+    <title>Ecal Photography by NA VA | Hudson Street Library</title>
     
 <meta name="description" content="An art school is an image factory. New generations of artists are constantly emerging, joining the marathon of exhibitions and publications from the very...">
     
@@ -12,50 +12,385 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .details-label {
-            font-size: 0.75rem;
-            font-weight: 500;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #faf9f6;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 1.5rem 4rem;
+        }
+
+        /* Cover Image */
+        .cover-section {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .cover-image {
+            max-height: 400px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+        }
+
+        /* Title */
+        .title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 28px;
+            font-weight: 400;
+            color: #1a1a1a;
+            margin-bottom: 0.75rem;
+            text-align: center;
+        }
+
+        /* Author */
+        .author {
+            font-size: 16px;
+            font-weight: 300;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .author .by {
+            color: #a3a3a3;
+        }
+
+        .author a {
+            color: #404040;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .author a:hover {
+            color: #000;
+            text-decoration: underline;
+        }
+
+        /* Vitals */
+        .vitals {
+            font-size: 13px;
+            font-weight: 400;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #6b7280;
-            margin-right: 0.5rem;
+            letter-spacing: 0.08em;
+            color: #737373;
+            text-align: center;
+            margin-bottom: 2.5rem;
         }
-        .section-heading {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #111827;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.01em;
-        }
-        .availability-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-        .availability-badge.available {
-            background-color: #D1FAE5;
-            color: #065F46;
-        }
-        .prose {
+
+        /* Description */
+        .description {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 16px;
             line-height: 1.8;
             color: #374151;
-            max-width: 70ch;
+            margin-bottom: 2.5rem;
         }
-        .prose p {
-            margin-bottom: 1rem;
+
+        /* Separator */
+        .separator {
+            border: 0;
+            border-top: 1px solid rgba(0,0,0,0.06);
+            margin: 2.5rem 0;
         }
-        .prose a {
+
+        /* Section Headings */
+        .section-heading {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #737373;
+            margin-bottom: 1.25rem;
+        }
+
+        /* Catalog Data Table */
+        .catalog-data {
+            margin-bottom: 2.5rem;
+        }
+
+        .catalog-row {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 0.65rem;
+            gap: 0.5rem;
+        }
+
+        .catalog-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #a3a3a3;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .catalog-dots {
+            flex-grow: 1;
+            height: 1px;
+            border-bottom: 1px dotted #e5e5e5;
+            margin: 0 0.5rem;
+            align-self: center;
+        }
+
+        .catalog-value {
+            font-size: 14px;
+            color: #404040;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .catalog-value.empty {
+            color: #d4d4d4;
+        }
+
+        .catalog-value a {
+            color: #404040;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .catalog-value a:hover {
+            color: #000;
+            text-decoration: underline;
+        }
+
+        /* Notes */
+        .notes-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .notes-content {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #404040;
+            white-space: pre-line;
+        }
+
+        .notes-content a {
             color: #0d9488;
             text-decoration: none;
             border-bottom: 1px solid #0d948844;
         }
-        .prose a:hover {
+
+        .notes-content a:hover {
             color: #115e59;
             border-bottom-color: #115e59;
+        }
+
+        /* Contributors */
+        .contributors {
+            margin-bottom: 2.5rem;
+        }
+
+        .contributor-item {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 0.65rem;
+            gap: 0.5rem;
+        }
+
+        .contributor-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #a3a3a3;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .contributor-dots {
+            flex-grow: 1;
+            height: 1px;
+            border-bottom: 1px dotted #e5e5e5;
+            margin: 0 0.5rem;
+            align-self: center;
+        }
+
+        .contributor-value {
+            font-size: 14px;
+            color: #404040;
+            text-align: right;
+        }
+
+        /* Tags */
+        .tags-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            background: #f5f5f5;
+            color: #525252;
+            font-size: 12px;
+            font-weight: 400;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .tag:hover {
+            background: #e5e5e5;
+            color: #000;
+        }
+
+        .classification {
+            font-size: 11px;
+            color: #a3a3a3;
+            letter-spacing: 0.02em;
+        }
+
+        /* Related Books */
+        .related-books {
+            margin-top: 3rem;
+        }
+
+        .books-scroll {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+            scrollbar-width: thin;
+            scrollbar-color: #d4d4d4 transparent;
+        }
+
+        .books-scroll::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .books-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .books-scroll::-webkit-scrollbar-thumb {
+            background: #d4d4d4;
+            border-radius: 3px;
+        }
+
+        .books-scroll::-webkit-scrollbar-thumb:hover {
+            background: #a3a3a3;
+        }
+
+        .related-book {
+            flex: 0 0 auto;
+            width: 140px;
+            text-decoration: none;
+        }
+
+        .related-book-cover {
+            width: 100%;
+            aspect-ratio: 3/4;
+            background: #e5e5e5;
+            border-radius: 2px;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.2s ease;
+            object-fit: cover;
+        }
+
+        .related-book:hover .related-book-cover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+        }
+
+        .related-book-title {
+            font-size: 12px;
+            color: #404040;
+            line-height: 1.4;
+            display: block;
+        }
+
+        .related-book-year {
+            font-size: 11px;
+            color: #a3a3a3;
+        }
+
+        .view-all-link {
+            display: inline-block;
+            margin-top: 1.5rem;
+            font-size: 13px;
+            color: #404040;
+            text-decoration: none;
+            border-bottom: 1px solid #d4d4d4;
+            transition: all 0.2s ease;
+        }
+
+        .view-all-link:hover {
+            color: #000;
+            border-bottom-color: #737373;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 640px) {
+            .container {
+                padding: 0 1rem 3rem;
+            }
+
+            .cover-image {
+                max-height: 300px;
+            }
+
+            .title {
+                font-size: 24px;
+            }
+
+            .author {
+                font-size: 15px;
+            }
+
+            .vitals {
+                font-size: 12px;
+            }
+
+            .description {
+                font-size: 15px;
+                line-height: 1.75;
+            }
+
+            .catalog-label,
+            .contributor-label {
+                font-size: 10px;
+            }
+
+            .catalog-value,
+            .contributor-value {
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .cover-image {
+                max-height: 250px;
+            }
+
+            .title {
+                font-size: 22px;
+            }
+
+            .related-book {
+                width: 120px;
+            }
         }
     </style>
     <script>
@@ -219,332 +554,298 @@ function toggleMobileMenu() {
 </script>
 
 
-<div class="book-page-container max-w-7xl mx-auto px-6 md:px-8 lg:px-12 py-16">
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-    <!-- Left Column: Image Only -->
-    <div class="lg:col-span-4">
-      <!-- Book Cover Image -->
-      
-      <div class="book-cover-container lg:sticky lg:top-24">
-        <img
-          src="/assets/images/covers/9783775737258.jpg"
-          alt="Cover of Ecal Photography"
-          class="w-full max-w-xs mx-auto lg:mx-0 h-auto object-contain bg-white rounded-lg shadow-xl border border-neutral-200"
-          onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-        />
-      </div>
+<main class="container">
+    <!-- Cover Image -->
+    <div class="cover-section">
+        
+        <img src="/assets/images/covers/9783775737258.jpg"
+             alt="Ecal Photography by NA VA"
+             class="cover-image"
+             onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
     </div>
 
-    <!-- Right Column: Title, Author, Description, Details, etc. -->
-    <div class="lg:col-span-8">
-      <!-- Title and Author -->
-      <header class="mb-12">
-        <h1 class="text-3xl font-normal text-gray-900 mb-3 tracking-tight leading-tight">Ecal Photography</h1>
-        <p class="text-xl text-gray-600 font-light">
-          by
-          
-            <a href="https://www.ecal.ch" target="_blank" class="text-teal-700 hover:text-teal-900" style="text-decoration: none; border-bottom: 1px solid rgba(13, 148, 136, 0.3);">NA VA</a>
-          
-        </p>
-      </header>
+    <!-- Title -->
+    <h1 class="title">Ecal Photography</h1>
 
-      <!-- Description -->
-      <section class="mb-16">
-        <h2 class="section-heading">Description</h2>
-        <div class="prose mb-10">
-          An art school is an image factory. New generations of artists are constantly emerging, joining the marathon of exhibitions and publications from the very first years of their creative lives. In this context, the art school has become a particularly attractive place for ambitious young artists.
-        </div>
-
-        <!-- Details (moved under description) -->
-        <div class="mt-12 pt-10 border-t border-gray-200" style="border-color: rgba(0, 0, 0, 0.06);">
-          <h3 class="text-sm font-semibold text-gray-500 mb-5 uppercase tracking-wider">Details</h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2.5 text-sm">
-            
-            <p><span class="details-label">Publisher:</span>
-              
-                <a href="http://www.hatjecantz.de" target="_blank" class="text-teal-700 hover:text-teal-900 underline">Hatje Cantz</a>
-              
-            </p>
-            <p><span class="details-label">Published:</span> 2014</p>
-            <p><span class="details-label">ISBN:</span> 9783775737258</p>
-            <p><span class="details-label">Format:</span> Paperback / 296 pgs / 385 color.</p>
-            <p><span class="details-label">Pages:</span> Not specified</p>
-            
-            <p><span class="details-label">Dimensions:</span>
-              
-                34.3cm × 26.7cm
-                
-              
-            </p>
-            
-            
-            
-            
-          </div>
-        </div>
-      </section>
-
-      <!-- Notes (for non-uniform information) -->
-      
-
-      <!-- Contributors -->
-      
-        <section class="mb-8">
-          <h2 class="section-heading">Contributors</h2>
-          <div class="space-y-2 text-sm">
-            <p><span class="details-label">Editor:</span> Edited by Alexis Georgacopoulos.</p>
-            <p><span class="details-label">Contributors:</span> Text by Nathalie Herschdorfer, Milo Keller.</p>
-            <p><span class="details-label">Designer:</span> Art Direction by Julien Gallico &amp; Olga Prader</p>
-          </div>
-        </section>
-      
-
-      <!-- Tags & Classification -->
-      
-        <section class="mb-8">
-          <h2 class="section-heading">Tags & Classification</h2>
-
-          
-            <div class="mb-4">
-              <h3 class="details-label mb-2">Tags</h3>
-              <p class="text-sm text-gray-600">
-                
-                <a href="/static-demo/?tag=Photography" class="text-teal-700 hover:text-teal-900" style="text-decoration: none; border-bottom: 1px solid rgba(13, 148, 136, 0.3);">Photography</a>
-              </p>
-            </div>
-          
-
-          
-
-          
-        </section>
-      
-
-      <!-- Library Information -->
-      <section class="mb-16">
-        <h2 class="section-heading">Library Information</h2>
-        <div class="space-y-2 text-sm">
-          <p><span class="details-label">Location:</span> Hudson Street Library, NYC</p>
-          <p><span class="details-label">Acquired:</span> Original Collection</p>
-        </div>
-      </section>
+    <!-- Author -->
+    <div class="author">
+        <span class="by">by</span>
+        
+            <a href="https://www.ecal.ch" target="_blank" rel="noopener">NA VA</a>
+        
     </div>
-  </div>
 
-  <!-- Other Books by Same Author -->
-  
-  
+    <!-- Vitals -->
+    <div class="vitals">
+        
+            
+                <a href="http://www.hatjecantz.de" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;">Hatje Cantz</a>
+            
+        
+         · 2014
+         · Paperback / 296 pgs / 385 color.
+    </div>
 
-  
-  <section class="mt-20 border-t pt-16" style="border-color: rgba(0, 0, 0, 0.06);">
-    <h2 class="text-xl font-semibold text-gray-900 mb-10 tracking-tight">More by NA VA</h2>
-    <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-8 gap-4">
-      
-      <a href="/books/al-qasimi_arrival-the-third-line-dubai_23/" class="group">
-        <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
-          
-          <img
-            src="/assets/images/books/Al_Qasimi_Arrival_The_Third_Line_Dubai_NULL.jpg"
-            alt="Arrival, The Third Line, Dubai"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-          />
-        </div>
-        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">Arrival, The Third Line, Dubai</h3>
-        
-        <p class="text-xs text-gray-500">2019</p>
-        
-      </a>
-      
-      <a href="/books/baltz_nevada-signed-program_89/" class="group">
-        <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
-          
-          <img
-            src="/assets/images/books/Baltz_Nevada_Signed_program_NULL.jpg"
-            alt="Nevada (Signed program)"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-          />
-        </div>
-        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">Nevada (Signed program)</h3>
-        
-        <p class="text-xs text-gray-500">1978</p>
-        
-      </a>
-      
-      <a href="/books/baltz_bernard-lamarche-vadel_91/" class="group">
-        <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
-          
-          <img
-            src="/assets/images/books/Baltz_Bernard_Lamarche-Vadel_NULL.jpg"
-            alt="Bernard Lamarche-Vadel"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-          />
-        </div>
-        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">Bernard Lamarche-Vadel</h3>
-        
-        <p class="text-xs text-gray-500">1993</p>
-        
-      </a>
-      
-      <a href="/books/cotton_public-private-secret-on-photography-and-the-configuration-of-self_248/" class="group">
-        <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
-          
-          <img
-            src="/assets/images/books/Cotton_Public_Private_Secret_On_Photography_and_the_Configuration_of_Self_NULL.jpg"
-            alt="Public, Private, Secret: On Photography and the Configuration of Self"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-          />
-        </div>
-        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">Public, Private, Secret: On Photography and the Configuration of Self</h3>
-        
-        <p class="text-xs text-gray-500">2018</p>
-        
-      </a>
-      
-      <a href="/books/de-potter_the-vanity-of-certain-flowers-part-two_293/" class="group">
-        <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
-          
-          <img
-            src="/assets/images/books/De_Potter_The_Vanity_of_Certain_Flowers_Part_Two_NULL.jpg"
-            alt="The Vanity of Certain Flowers Part Two"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-          />
-        </div>
-        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">The Vanity of Certain Flowers Part Two</h3>
-        
-      </a>
-      
-      <a href="/books/evans_walker-evans-depth-of-field_347/" class="group">
-        <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
-          
-          <img
-            src="/assets/images/books/Evans_Walker_Evans_Depth_of_Field_NULL.jpg"
-            alt="Walker Evans Depth of Field"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-          />
-        </div>
-        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">Walker Evans Depth of Field</h3>
-        
-      </a>
-      
-      <a href="/books/freger_wilder-mann-the-image-of-the-savage_405/" class="group">
-        <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
-          
-          <img
-            src="/assets/images/books/Freger_Wilder_Mann_The_Image_of_the_Savage_NULL.jpg"
-            alt="Wilder Mann The Image of the Savage"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-          />
-        </div>
-        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">Wilder Mann The Image of the Savage</h3>
-        
-      </a>
-      
-      <a href="/books/hanson_private-room_499/" class="group">
-        <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
-          
-          <img
-            src="/assets/images/books/Hanson_Private_Room_NULL.jpg"
-            alt="Private Room"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-          />
-        </div>
-        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">Private Room</h3>
-        
-      </a>
-      
-      <a href="/books/hatakeyama_excavating-the-future-city_508/" class="group">
-        <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
-          
-          <img
-            src="/assets/images/books/Hatakeyama_Excavating_the_Future_City_NULL.jpg"
-            alt="Excavating the Future City"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-          />
-        </div>
-        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">Excavating the Future City</h3>
-        
-      </a>
-      
-      <a href="/books/lozano_private-book-1_634/" class="group">
-        <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
-          
-          <img
-            src="/assets/images/books/Lozano_Private_Book_1_NULL.jpg"
-            alt="Private Book 1"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-          />
-        </div>
-        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">Private Book 1</h3>
-        
-        <p class="text-xs text-gray-500">2016</p>
-        
-      </a>
-      
-      <a href="/books/lozano_private-book-2_635/" class="group">
-        <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
-          
-          <img
-            src="/assets/images/books/Lozano_Private_Book_2_NULL.jpg"
-            alt="Private Book 2"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-          />
-        </div>
-        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">Private Book 2</h3>
-        
-        <p class="text-xs text-gray-500">2017</p>
-        
-      </a>
-      
-      <a href="/books/lozano_private-book-3_636/" class="group">
-        <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
-          
-          <img
-            src="/assets/images/books/Lozano_Private_Book_3_NULL.jpg"
-            alt="Private Book 3"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-          />
-        </div>
-        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">Private Book 3</h3>
-        
-        <p class="text-xs text-gray-500">2017</p>
-        
-      </a>
-      
+    <!-- Description -->
+    
+    <div class="description">
+        An art school is an image factory. New generations of artists are constantly emerging, joining the marathon of exhibitions and publications from the very first years of their creative lives. In this context, the art school has become a particularly attractive place for ambitious young artists.
     </div>
     
-    <p class="mt-8 text-sm text-gray-600">
-      <a href="/static-demo/?author=VA" class="text-teal-700 hover:text-teal-900" style="text-decoration: none; border-bottom: 1px solid rgba(13, 148, 136, 0.3);">
-        View all 42 books by NA VA →
-      </a>
-    </p>
+
+    <hr class="separator">
+
+    <!-- Catalog Data -->
+    <div class="catalog-data">
+        <h2 class="section-heading">Details</h2>
+
+        <div class="catalog-row">
+            <span class="catalog-label">Publisher</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value">
+                
+                    
+                        <a href="http://www.hatjecantz.de" target="_blank" rel="noopener">Hatje Cantz</a>
+                    
+                
+            </span>
+        </div>
+
+        <div class="catalog-row">
+            <span class="catalog-label">Year</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value">2014</span>
+        </div>
+
+        <div class="catalog-row">
+            <span class="catalog-label">ISBN</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value">9783775737258</span>
+        </div>
+
+        <div class="catalog-row">
+            <span class="catalog-label">Format</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value">Paperback / 296 pgs / 385 color.</span>
+        </div>
+
+        <div class="catalog-row">
+            <span class="catalog-label">Pages</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value empty">—</span>
+        </div>
+
+        <div class="catalog-row">
+            <span class="catalog-label">Dimensions</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value">
+                
+                    34.3cm × 26.7cm
+                
+            </span>
+        </div>
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+    </div>
+
     
-  </section>
-  
-</div>
+
+    
+    <hr class="separator">
+
+    <!-- Contributors -->
+    <div class="contributors">
+        <h2 class="section-heading">Contributors</h2>
+
+        
+        <div class="contributor-item">
+            <span class="contributor-label">Editor</span>
+            <span class="contributor-dots"></span>
+            <span class="contributor-value">Edited by Alexis Georgacopoulos.</span>
+        </div>
+        
+
+        
+        <div class="contributor-item">
+            <span class="contributor-label">Contributors</span>
+            <span class="contributor-dots"></span>
+            <span class="contributor-value">Text by Nathalie Herschdorfer, Milo Keller.</span>
+        </div>
+        
+
+        
+        <div class="contributor-item">
+            <span class="contributor-label">Designer</span>
+            <span class="contributor-dots"></span>
+            <span class="contributor-value">Art Direction by Julien Gallico &amp; Olga Prader</span>
+        </div>
+        
+    </div>
+    
+
+    
+    <hr class="separator">
+
+    <!-- Tags -->
+    <div class="tags-section">
+        <h2 class="section-heading">Tags</h2>
+        
+        <div class="tags">
+            
+            
+            
+            
+            <a href="/aggregate-view/?filter=tag&value=Photography" class="tag">Photography</a>
+            
+            
+        </div>
+        
+        
+    </div>
+    
+
+    <!-- Related Books (by tags, collection, classification) -->
+    
+
+    
+
+    <!-- Other Books by Same Author (secondary section) -->
+    
+    
+
+    
+    <hr class="separator">
+
+    <div class="related-books">
+        <h2 class="section-heading">More by NA VA</h2>
+        <div class="books-scroll">
+            
+            <a href="/books/va_archive-of-modern-conflict-soviet-beauty-queens_1192/" class="related-book">
+                
+                <img src="/assets/images/books/VA_Archive_of_Modern_Conflict_Soviet_Beauty_Queens_NULL.jpg"
+                     alt="Archive of Modern Conflict: Soviet Beauty Queens"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Archive of Modern Conflict: Soviet Beauty Queens</span>
+                
+                <span class="related-book-year">2011</span>
+                
+            </a>
+            
+            <a href="/books/va_credit-12000_1193/" class="related-book">
+                
+                <img src="/assets/images/books/VA_CREDIT_-120.00_NULL.jpg"
+                     alt="CREDIT -120.00"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">CREDIT -120.00</span>
+                
+            </a>
+            
+            <a href="/books/va_images-of-conviction-the-construction-of-visual-evidence-beaux-livres_1194/" class="related-book">
+                
+                <img src="/assets/images/books/VA_Images_of_Conviction_The_Construction_of_Visual_Evidence_Beaux_livres_9782365110839.jpg"
+                     alt="Images of Conviction: The Construction of Visual Evidence (Beaux livres)"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Images of Conviction: The Construction of Visual Evidence (Beaux livres)</span>
+                
+                <span class="related-book-year">2015</span>
+                
+            </a>
+            
+            <a href="/books/va_holding-the-camera_1195/" class="related-book">
+                
+                <img src="/assets/images/covers/9783959053495.jpg"
+                     alt="Holding the Camera"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Holding the Camera</span>
+                
+                <span class="related-book-year">2019</span>
+                
+            </a>
+            
+            <a href="/books/va_berlin-20131983_1196/" class="related-book">
+                
+                <img src="/assets/images/books/VA_Berlin_2013_1983_9783931435424.jpg"
+                     alt="Berlin 2013/1983"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Berlin 2013/1983</span>
+                
+                <span class="related-book-year">2017</span>
+                
+            </a>
+            
+            <a href="/books/va_artists-who-make-books_1198/" class="related-book">
+                
+                <img src="/assets/images/covers/9780714872643.jpg"
+                     alt="Artists Who Make Books"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Artists Who Make Books</span>
+                
+                <span class="related-book-year">2017</span>
+                
+            </a>
+            
+            <a href="/books/va_light-wma_1199/" class="related-book">
+                
+                <img src="/assets/images/books/VA_Light_WMA_NULL.jpg"
+                     alt="Light (WMA)"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Light (WMA)</span>
+                
+            </a>
+            
+            <a href="/books/va_automated-photography_1200/" class="related-book">
+                
+                <img src="/assets/images/books/VA_Automated_Photography_NULL.jpg"
+                     alt="Automated Photography"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Automated Photography</span>
+                
+            </a>
+            
+            <a href="/books/va_magnum-contact-sheets_1203/" class="related-book">
+                
+                <img src="/assets/images/covers/9780500543993.jpg"
+                     alt="Magnum Contact Sheets"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Magnum Contact Sheets</span>
+                
+                <span class="related-book-year">2011</span>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+    
+</main>
 
 </body>
 </html>

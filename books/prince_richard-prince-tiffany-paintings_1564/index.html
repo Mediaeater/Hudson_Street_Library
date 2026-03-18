@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Richard Prince - Tiffany Paintings by  | Hudson Street Library</title>
+    <title>Richard Prince - Tiffany Paintings by Richard Prince | Hudson Street Library</title>
     
 <meta name="description" content="Richard Prince - Tiffany Paintings by Richard Prince. Published by Gagosian Gallery in 2010. From the Hudson Street Library collection.">
     
@@ -12,50 +12,385 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .details-label {
-            font-size: 0.75rem;
-            font-weight: 500;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #faf9f6;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 1.5rem 4rem;
+        }
+
+        /* Cover Image */
+        .cover-section {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .cover-image {
+            max-height: 400px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+        }
+
+        /* Title */
+        .title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 28px;
+            font-weight: 400;
+            color: #1a1a1a;
+            margin-bottom: 0.75rem;
+            text-align: center;
+        }
+
+        /* Author */
+        .author {
+            font-size: 16px;
+            font-weight: 300;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .author .by {
+            color: #a3a3a3;
+        }
+
+        .author a {
+            color: #404040;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .author a:hover {
+            color: #000;
+            text-decoration: underline;
+        }
+
+        /* Vitals */
+        .vitals {
+            font-size: 13px;
+            font-weight: 400;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #6b7280;
-            margin-right: 0.5rem;
+            letter-spacing: 0.08em;
+            color: #737373;
+            text-align: center;
+            margin-bottom: 2.5rem;
         }
-        .section-heading {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #111827;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.01em;
-        }
-        .availability-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-        .availability-badge.available {
-            background-color: #D1FAE5;
-            color: #065F46;
-        }
-        .prose {
+
+        /* Description */
+        .description {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 16px;
             line-height: 1.8;
             color: #374151;
-            max-width: 70ch;
+            margin-bottom: 2.5rem;
         }
-        .prose p {
-            margin-bottom: 1rem;
+
+        /* Separator */
+        .separator {
+            border: 0;
+            border-top: 1px solid rgba(0,0,0,0.06);
+            margin: 2.5rem 0;
         }
-        .prose a {
+
+        /* Section Headings */
+        .section-heading {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #737373;
+            margin-bottom: 1.25rem;
+        }
+
+        /* Catalog Data Table */
+        .catalog-data {
+            margin-bottom: 2.5rem;
+        }
+
+        .catalog-row {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 0.65rem;
+            gap: 0.5rem;
+        }
+
+        .catalog-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #a3a3a3;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .catalog-dots {
+            flex-grow: 1;
+            height: 1px;
+            border-bottom: 1px dotted #e5e5e5;
+            margin: 0 0.5rem;
+            align-self: center;
+        }
+
+        .catalog-value {
+            font-size: 14px;
+            color: #404040;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .catalog-value.empty {
+            color: #d4d4d4;
+        }
+
+        .catalog-value a {
+            color: #404040;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .catalog-value a:hover {
+            color: #000;
+            text-decoration: underline;
+        }
+
+        /* Notes */
+        .notes-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .notes-content {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #404040;
+            white-space: pre-line;
+        }
+
+        .notes-content a {
             color: #0d9488;
             text-decoration: none;
             border-bottom: 1px solid #0d948844;
         }
-        .prose a:hover {
+
+        .notes-content a:hover {
             color: #115e59;
             border-bottom-color: #115e59;
+        }
+
+        /* Contributors */
+        .contributors {
+            margin-bottom: 2.5rem;
+        }
+
+        .contributor-item {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 0.65rem;
+            gap: 0.5rem;
+        }
+
+        .contributor-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #a3a3a3;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .contributor-dots {
+            flex-grow: 1;
+            height: 1px;
+            border-bottom: 1px dotted #e5e5e5;
+            margin: 0 0.5rem;
+            align-self: center;
+        }
+
+        .contributor-value {
+            font-size: 14px;
+            color: #404040;
+            text-align: right;
+        }
+
+        /* Tags */
+        .tags-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            background: #f5f5f5;
+            color: #525252;
+            font-size: 12px;
+            font-weight: 400;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .tag:hover {
+            background: #e5e5e5;
+            color: #000;
+        }
+
+        .classification {
+            font-size: 11px;
+            color: #a3a3a3;
+            letter-spacing: 0.02em;
+        }
+
+        /* Related Books */
+        .related-books {
+            margin-top: 3rem;
+        }
+
+        .books-scroll {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+            scrollbar-width: thin;
+            scrollbar-color: #d4d4d4 transparent;
+        }
+
+        .books-scroll::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .books-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .books-scroll::-webkit-scrollbar-thumb {
+            background: #d4d4d4;
+            border-radius: 3px;
+        }
+
+        .books-scroll::-webkit-scrollbar-thumb:hover {
+            background: #a3a3a3;
+        }
+
+        .related-book {
+            flex: 0 0 auto;
+            width: 140px;
+            text-decoration: none;
+        }
+
+        .related-book-cover {
+            width: 100%;
+            aspect-ratio: 3/4;
+            background: #e5e5e5;
+            border-radius: 2px;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.2s ease;
+            object-fit: cover;
+        }
+
+        .related-book:hover .related-book-cover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+        }
+
+        .related-book-title {
+            font-size: 12px;
+            color: #404040;
+            line-height: 1.4;
+            display: block;
+        }
+
+        .related-book-year {
+            font-size: 11px;
+            color: #a3a3a3;
+        }
+
+        .view-all-link {
+            display: inline-block;
+            margin-top: 1.5rem;
+            font-size: 13px;
+            color: #404040;
+            text-decoration: none;
+            border-bottom: 1px solid #d4d4d4;
+            transition: all 0.2s ease;
+        }
+
+        .view-all-link:hover {
+            color: #000;
+            border-bottom-color: #737373;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 640px) {
+            .container {
+                padding: 0 1rem 3rem;
+            }
+
+            .cover-image {
+                max-height: 300px;
+            }
+
+            .title {
+                font-size: 24px;
+            }
+
+            .author {
+                font-size: 15px;
+            }
+
+            .vitals {
+                font-size: 12px;
+            }
+
+            .description {
+                font-size: 15px;
+                line-height: 1.75;
+            }
+
+            .catalog-label,
+            .contributor-label {
+                font-size: 10px;
+            }
+
+            .catalog-value,
+            .contributor-value {
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .cover-image {
+                max-height: 250px;
+            }
+
+            .title {
+                font-size: 22px;
+            }
+
+            .related-book {
+                width: 120px;
+            }
         }
     </style>
     <script>
@@ -217,318 +552,304 @@ function toggleMobileMenu() {
 </script>
 
 
-<div class="book-page-container max-w-7xl mx-auto px-6 md:px-8 lg:px-12 py-16">
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-    <!-- Left Column: Image Only -->
-    <div class="lg:col-span-4">
-      <!-- Book Cover Image -->
-      
-      <div class="book-cover-container lg:sticky lg:top-24">
-        <img
-          src="/assets/images/books/Prince_Tiffany_Paintings.jpg"
-          alt="Cover of Richard Prince - Tiffany Paintings"
-          class="w-full max-w-xs mx-auto lg:mx-0 h-auto object-contain bg-white rounded-lg shadow-xl border border-neutral-200"
-          onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-        />
-      </div>
+<main class="container">
+    <!-- Cover Image -->
+    <div class="cover-section">
+        
+        <img src="/assets/images/books/Prince_Tiffany_Paintings.jpg"
+             alt="Richard Prince - Tiffany Paintings by Richard Prince"
+             class="cover-image"
+             onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
     </div>
 
-    <!-- Right Column: Title, Author, Description, Details, etc. -->
-    <div class="lg:col-span-8">
-      <!-- Title and Author -->
-      <header class="mb-12">
-        <h1 class="text-3xl font-normal text-gray-900 mb-3 tracking-tight leading-tight">Richard Prince - Tiffany Paintings</h1>
-        <p class="text-xl text-gray-600 font-light">
-          by
-          
-            <a href="http://www.richardprince.com/" target="_blank" class="text-teal-700 hover:text-teal-900" style="text-decoration: none; border-bottom: 1px solid rgba(13, 148, 136, 0.3);">Richard Prince</a>
-          
-        </p>
-      </header>
+    <!-- Title -->
+    <h1 class="title">Richard Prince - Tiffany Paintings</h1>
 
-      <!-- Description -->
-      <section class="mb-16">
-        <h2 class="section-heading">Description</h2>
-        <div class="prose mb-10">
-          
-        </div>
+    <!-- Author -->
+    <div class="author">
+        <span class="by">by</span>
+        
+            <a href="http://www.richardprince.com/" target="_blank" rel="noopener">Richard Prince</a>
+        
+    </div>
 
-        <!-- Details (moved under description) -->
-        <div class="mt-12 pt-10 border-t border-gray-200" style="border-color: rgba(0, 0, 0, 0.06);">
-          <h3 class="text-sm font-semibold text-gray-500 mb-5 uppercase tracking-wider">Details</h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2.5 text-sm">
+    <!-- Vitals -->
+    <div class="vitals">
+        
             
-            <p><span class="details-label">Publisher:</span>
-              
                 Gagosian Gallery
-              
-            </p>
-            <p><span class="details-label">Published:</span> 2010</p>
-            <p><span class="details-label">ISBN:</span> Not specified</p>
-            <p><span class="details-label">Format:</span> Author: McWhinnie, John, Richard Prince Language: English Pages: 66 Size: 30.5 x 25.4 cm Weight: 1.3600 kg Binding: Hardcover ISBN: 9781935263135 Availability: - Price: [Request price.](https://www.mottodistribution.com/shop/contacts) Product DescriptionCondition: MINT Gagosian Gallery is pleased to present an exhibition of new paintings and related newsprint collages by Richard Prince. Prince first attracted attention in the early 1980s with images re-photographed from magazine ads, through which he defined for himself the concepts of authorship, ownership, and aura. Applying his understanding of the complex transactions of representation to the making of art, he has evolved a unique signature filled with echoes of other signatures yet that is unquestionably his own. Begun in 2004 at the juncture of the Nurse and De Kooning paintings and evolving through the Canal Zone and After Dark series, the Tiffany paintings reflect Prince&#39;s continuing attentiveness to the recurring patterns and suggestive potential of advertising, honed by years of perusing newspapers and magazines. These almost abstract, monochrome paintings treat the plain yet distinctive ads that New York&#39;s most famous jewelry brand has run daily for many years in the upper right hand corner of the same page of The New York Times, while echoing associations with another classic, Truman Capote&#39;s Breakfast at Tiffany&#39;s, whose object of desire Holly Golightly lures admirers only to elude them later. 1st Edition</p>
-            <p><span class="details-label">Pages:</span> Not specified</p>
             
-            <p><span class="details-label">Dimensions:</span>
-              
-                Not specified
-              
-            </p>
-            
-            
-            <p><span class="details-label">Edition:</span> Published in 2010</p>
-            
-          </div>
-        </div>
-      </section>
+        
+         · 2010
+         · Author: McWhinnie, John, Richard Prince Language: English Pages: 66 Size: 30.5 x 25.4 cm Weight: 1.3600 kg Binding: Hardcover ISBN: 9781935263135 Availability: - Price: [Request price.](https://www.mottodistribution.com/shop/contacts) Product DescriptionCondition: MINT Gagosian Gallery is pleased to present an exhibition of new paintings and related newsprint collages by Richard Prince. Prince first attracted attention in the early 1980s with images re-photographed from magazine ads, through which he defined for himself the concepts of authorship, ownership, and aura. Applying his understanding of the complex transactions of representation to the making of art, he has evolved a unique signature filled with echoes of other signatures yet that is unquestionably his own. Begun in 2004 at the juncture of the Nurse and De Kooning paintings and evolving through the Canal Zone and After Dark series, the Tiffany paintings reflect Prince&#39;s continuing attentiveness to the recurring patterns and suggestive potential of advertising, honed by years of perusing newspapers and magazines. These almost abstract, monochrome paintings treat the plain yet distinctive ads that New York&#39;s most famous jewelry brand has run daily for many years in the upper right hand corner of the same page of The New York Times, while echoing associations with another classic, Truman Capote&#39;s Breakfast at Tiffany&#39;s, whose object of desire Holly Golightly lures admirers only to elude them later. 1st Edition
+    </div>
 
-      <!-- Notes (for non-uniform information) -->
-      
+    <!-- Description -->
+    
 
-      <!-- Contributors -->
-      
+    <hr class="separator">
 
-      <!-- Tags & Classification -->
-      
-        <section class="mb-8">
-          <h2 class="section-heading">Tags & Classification</h2>
+    <!-- Catalog Data -->
+    <div class="catalog-data">
+        <h2 class="section-heading">Details</h2>
 
-          
-            <div class="mb-4">
-              <h3 class="details-label mb-2">Tags</h3>
-              <p class="text-sm text-gray-600">
+        <div class="catalog-row">
+            <span class="catalog-label">Publisher</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value">
                 
-                <a href="/static-demo/?tag=Art" class="text-teal-700 hover:text-teal-900" style="text-decoration: none; border-bottom: 1px solid rgba(13, 148, 136, 0.3);">Art</a>
-              </p>
-            </div>
-          
-
-          
-
-          
-        </section>
-      
-
-      <!-- Library Information -->
-      <section class="mb-16">
-        <h2 class="section-heading">Library Information</h2>
-        <div class="space-y-2 text-sm">
-          <p><span class="details-label">Location:</span> Hudson Street Library, NYC</p>
-          <p><span class="details-label">Acquired:</span> Original Collection</p>
+                    
+                        Gagosian Gallery
+                    
+                
+            </span>
         </div>
-      </section>
+
+        <div class="catalog-row">
+            <span class="catalog-label">Year</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value">2010</span>
+        </div>
+
+        <div class="catalog-row">
+            <span class="catalog-label">ISBN</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value empty">—</span>
+        </div>
+
+        <div class="catalog-row">
+            <span class="catalog-label">Format</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value">Author: McWhinnie, John, Richard Prince Language: English Pages: 66 Size: 30.5 x 25.4 cm Weight: 1.3600 kg Binding: Hardcover ISBN: 9781935263135 Availability: - Price: [Request price.](https://www.mottodistribution.com/shop/contacts) Product DescriptionCondition: MINT Gagosian Gallery is pleased to present an exhibition of new paintings and related newsprint collages by Richard Prince. Prince first attracted attention in the early 1980s with images re-photographed from magazine ads, through which he defined for himself the concepts of authorship, ownership, and aura. Applying his understanding of the complex transactions of representation to the making of art, he has evolved a unique signature filled with echoes of other signatures yet that is unquestionably his own. Begun in 2004 at the juncture of the Nurse and De Kooning paintings and evolving through the Canal Zone and After Dark series, the Tiffany paintings reflect Prince&#39;s continuing attentiveness to the recurring patterns and suggestive potential of advertising, honed by years of perusing newspapers and magazines. These almost abstract, monochrome paintings treat the plain yet distinctive ads that New York&#39;s most famous jewelry brand has run daily for many years in the upper right hand corner of the same page of The New York Times, while echoing associations with another classic, Truman Capote&#39;s Breakfast at Tiffany&#39;s, whose object of desire Holly Golightly lures admirers only to elude them later. 1st Edition</span>
+        </div>
+
+        <div class="catalog-row">
+            <span class="catalog-label">Pages</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value empty">—</span>
+        </div>
+
+        <div class="catalog-row">
+            <span class="catalog-label">Dimensions</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value empty">
+                
+                    —
+                
+            </span>
+        </div>
+
+        
+
+        
+
+        
+
+        
+
+        
+        <div class="catalog-row">
+            <span class="catalog-label">Edition</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value">Published in 2010</span>
+        </div>
+        
+
+        
     </div>
-  </div>
 
-  <!-- Other Books by Same Author -->
-  
-  
+    
 
-  
-  <section class="mt-20 border-t pt-16" style="border-color: rgba(0, 0, 0, 0.06);">
-    <h2 class="text-xl font-semibold text-gray-900 mb-10 tracking-tight">More by Richard Prince</h2>
-    <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-8 gap-4">
-      
-      <a href="/books/prince_hoods_886/" class="group">
-        <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
-          
-          <img
-            src="/assets/images/books/Prince_Hoods.jpg"
-            alt="Hoods"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-          />
+    
+
+    
+    <hr class="separator">
+
+    <!-- Tags -->
+    <div class="tags-section">
+        <h2 class="section-heading">Tags</h2>
+        
+        <div class="tags">
+            
+            
+            
+            
+            <a href="/aggregate-view/?filter=tag&value=Art" class="tag">Art</a>
+            
+            
         </div>
-        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">Hoods</h3>
         
-        <p class="text-xs text-gray-500">2022</p>
         
-      </a>
-      
-      <a href="/books/prince_american-dream_887/" class="group">
-        <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
-          
-          <img
-            src="/assets/images/books/Prince_American_Dream.jpg"
-            alt="American Dream"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-          />
-        </div>
-        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">American Dream</h3>
-        
-        <p class="text-xs text-gray-500">2005</p>
-        
-      </a>
-      
-      <a href="/books/prince_american-english_888/" class="group">
-        <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
-          
-          <img
-            src="/assets/images/books/Prince_American_English.jpg"
-            alt="American English"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-          />
-        </div>
-        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">American English</h3>
-        
-        <p class="text-xs text-gray-500">2003</p>
-        
-      </a>
-      
-      <a href="/books/prince_bettie-kline_889/" class="group">
-        <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
-          
-          <img
-            src="/assets/images/books/Prince_Bettie_Kline.jpg"
-            alt="Bettie Kline"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-          />
-        </div>
-        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">Bettie Kline</h3>
-        
-        <p class="text-xs text-gray-500">2009</p>
-        
-      </a>
-      
-      <a href="/books/prince_canal-zone_890/" class="group">
-        <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
-          
-          <img
-            src="/assets/images/books/Prince_Canal_Zone_Appeal_Appendix.jpg"
-            alt="Canal Zone"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-          />
-        </div>
-        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">Canal Zone</h3>
-        
-      </a>
-      
-      <a href="/books/prince_check-paintings_891/" class="group">
-        <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
-          
-          <img
-            src="/assets/images/books/Prince_Check_Paintings.jpg"
-            alt="Check Paintings"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-          />
-        </div>
-        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">Check Paintings</h3>
-        
-        <p class="text-xs text-gray-500">2005</p>
-        
-      </a>
-      
-      <a href="/books/prince_covering-pollock-program_892/" class="group">
-        <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
-          
-          <img
-            src="/assets/images/books/Prince_Covering_Pollock.png"
-            alt="Covering Pollock (program)"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-          />
-        </div>
-        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">Covering Pollock (program)</h3>
-        
-      </a>
-      
-      <a href="/books/prince_cowboy_893/" class="group">
-        <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
-          
-          <img
-            src="/assets/images/books/Prince_Cowboy.jpg"
-            alt="Cowboy"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-          />
-        </div>
-        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">Cowboy</h3>
-        
-      </a>
-      
-      <a href="/books/prince_free-love_894/" class="group">
-        <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
-          
-          <img
-            src="/assets/images/books/Prince_Free_Love.jpg"
-            alt="Free Love"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-          />
-        </div>
-        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">Free Love</h3>
-        
-      </a>
-      
-      <a href="/books/prince_good-life_895/" class="group">
-        <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
-          
-          <img
-            src="/assets/images/books/Prince_Good_Life.jpg"
-            alt="Good Life"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-          />
-        </div>
-        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">Good Life</h3>
-        
-      </a>
-      
-      <a href="/books/prince_high-times_896/" class="group">
-        <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
-          
-          <img
-            src="/assets/images/books/Prince_High_Times_new.jpeg"
-            alt="High Times"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-          />
-        </div>
-        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">High Times</h3>
-        
-      </a>
-      
-      <a href="/books/prince_inside-world_897/" class="group">
-        <div class="aspect-[3/4] bg-white rounded-md overflow-hidden mb-2 shadow-md">
-          
-          <img
-            src="/assets/images/books/Prince_Inside_World.jpg"
-            alt="Inside World"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.classList.add('opacity-50');"
-          />
-        </div>
-        <h3 class="text-sm font-medium text-gray-800 group-hover:text-teal-700 line-clamp-2">Inside World</h3>
-        
-      </a>
-      
     </div>
     
-    <p class="mt-8 text-sm text-gray-600">
-      <a href="/static-demo/?author=Prince" class="text-teal-700 hover:text-teal-900" style="text-decoration: none; border-bottom: 1px solid rgba(13, 148, 136, 0.3);">
-        View all 79 books by Richard Prince →
-      </a>
-    </p>
+
+    <!-- Related Books (by tags, collection, classification) -->
     
-  </section>
-  
-</div>
+
+    
+
+    <!-- Other Books by Same Author (secondary section) -->
+    
+    
+
+    
+    <hr class="separator">
+
+    <div class="related-books">
+        <h2 class="section-heading">More by Richard Prince</h2>
+        <div class="books-scroll">
+            
+            <a href="/books/prince_hoods_886/" class="related-book">
+                
+                <img src="/assets/images/books/Prince_Hoods.jpg"
+                     alt="Hoods"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Hoods</span>
+                
+                <span class="related-book-year">2022</span>
+                
+            </a>
+            
+            <a href="/books/prince_american-dream_887/" class="related-book">
+                
+                <img src="/assets/images/books/Prince_American_Dream.jpg"
+                     alt="American Dream"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">American Dream</span>
+                
+                <span class="related-book-year">2005</span>
+                
+            </a>
+            
+            <a href="/books/prince_american-english_888/" class="related-book">
+                
+                <img src="/assets/images/books/Prince_American_English.jpg"
+                     alt="American English"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">American English</span>
+                
+                <span class="related-book-year">2003</span>
+                
+            </a>
+            
+            <a href="/books/prince_bettie-kline_889/" class="related-book">
+                
+                <img src="/assets/images/books/Prince_Bettie_Kline.jpg"
+                     alt="Bettie Kline"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Bettie Kline</span>
+                
+                <span class="related-book-year">2009</span>
+                
+            </a>
+            
+            <a href="/books/prince_canal-zone_890/" class="related-book">
+                
+                <img src="/assets/images/books/Prince_Canal_Zone_Appeal_Appendix.jpg"
+                     alt="Canal Zone"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Canal Zone</span>
+                
+            </a>
+            
+            <a href="/books/prince_check-paintings_891/" class="related-book">
+                
+                <img src="/assets/images/books/Prince_Check_Paintings.jpg"
+                     alt="Check Paintings"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Check Paintings</span>
+                
+                <span class="related-book-year">2005</span>
+                
+            </a>
+            
+            <a href="/books/prince_covering-pollock-program_892/" class="related-book">
+                
+                <img src="/assets/images/books/Prince_Covering_Pollock.png"
+                     alt="Covering Pollock (program)"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Covering Pollock (program)</span>
+                
+            </a>
+            
+            <a href="/books/prince_cowboy_893/" class="related-book">
+                
+                <img src="/assets/images/books/Prince_Cowboy.jpg"
+                     alt="Cowboy"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Cowboy</span>
+                
+            </a>
+            
+            <a href="/books/prince_free-love_894/" class="related-book">
+                
+                <img src="/assets/images/books/Prince_Free_Love.jpg"
+                     alt="Free Love"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Free Love</span>
+                
+            </a>
+            
+            <a href="/books/prince_good-life_895/" class="related-book">
+                
+                <img src="/assets/images/books/Prince_Good_Life.jpg"
+                     alt="Good Life"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Good Life</span>
+                
+            </a>
+            
+            <a href="/books/prince_high-times_896/" class="related-book">
+                
+                <img src="/assets/images/books/Prince_High_Times_new.jpg"
+                     alt="High Times"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">High Times</span>
+                
+            </a>
+            
+            <a href="/books/prince_inside-world_897/" class="related-book">
+                
+                <img src="/assets/images/books/Prince_Inside_World.jpg"
+                     alt="Inside World"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Inside World</span>
+                
+            </a>
+            
+        </div>
+        
+        <a href="/static-demo/?author=Prince" class="view-all-link">
+            View all 80 books by Richard Prince →
+        </a>
+        
+    </div>
+    
+</main>
 
 </body>
 </html>
