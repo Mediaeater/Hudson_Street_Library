@@ -149,6 +149,28 @@ module.exports = function(eleventyConfig) {
     });
   });
 
+  // --- Sort One Picture Book volumes by volume number ---
+  eleventyConfig.addFilter("sortByVolume", function(books) {
+    if (!Array.isArray(books)) return books;
+
+    return books.sort((a, b) => {
+      // Extract volume number from title (e.g., "One Picture Book Two Vol 52: ..." -> 52)
+      const volRegex = /Vol (\d+)/i;
+      const matchA = a.title?.match(volRegex);
+      const matchB = b.title?.match(volRegex);
+
+      if (!matchA && !matchB) return 0;
+      if (!matchA) return 1;
+      if (!matchB) return -1;
+
+      const volA = parseInt(matchA[1], 10);
+      const volB = parseInt(matchB[1], 10);
+
+      // Sort descending (higher volume numbers first)
+      return volB - volA;
+    });
+  });
+
   // --- Filter books by same author (excluding current book) ---
   eleventyConfig.addFilter("otherBooksByAuthor", function(books, authorLast, currentId) {
     if (!books || !authorLast) return [];
