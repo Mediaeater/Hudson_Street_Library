@@ -67,7 +67,7 @@ sqlite-utils --version # Should output: sqlite-utils, version 3.39
 - **Digital**: image_url, custom_page_url, artist_url, publisher_url
 - **Collection**: collection_grouping, location, featured
 
-**Record Count**: 1,718 books (as of 2026-03-08)
+**Record Count**: 1,722 books (as of 2026-03-08)
 
 ### Database Schema
 
@@ -136,7 +136,7 @@ CREATE TABLE "books" (
 - `notes` - Additional metadata and descriptions
 
 **Benefits**:
-- Instant search results across 1,718 books
+- Instant search results across 1,722 books
 - Supports phrase queries, wildcards, boolean operators
 - Ranked results by relevance
 
@@ -1016,5 +1016,5 @@ export DATASETTE_SECRET_KEY="your-secret-key-here"
 
 **Last Updated**: 2026-03-08
 **Datasette Version**: 0.65.2
-**Database Records**: 1,718 books
+**Database Records**: 1,722 books
 **Maintained By**: Hudson Street Library, NYC

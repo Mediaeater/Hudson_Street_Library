@@ -122,7 +122,7 @@ Edit `metadata.json` to customize the interface.
 
 ## 📊 Database Stats
 
-- **Books**: 1,718
+- **Books**: 1,722
 - **Size**: 1.4 MB
 - **FTS**: Enabled on 5 columns
 - **Indexes**: 2 (author, category)

@@ -28,7 +28,7 @@
 ### For Content Managers
 
 1. **[ADD-BOOK-GUIDE](ADD-BOOK-GUIDE.md)** - Adding new books (interactive CLI)
-2. **[Book Workflow Guide](BOOK_WORKFLOW_GUIDE.md)** - Complete book management
+2. **[Datasette Catalog Guide](DATASETTE-CATALOG-GUIDE.md)** - Digital catalog reference
 3. **[Content Manager Guide](CONTENT_MANAGER_GUIDE.md)** - CMS user guide
 
 ### For DevOps
@@ -72,10 +72,14 @@
 - [Quick Start Search](QUICK-START-SEARCH.md) - Search features
 - [Path Structure](PATH-STRUCTURE.md) - URL routing
 
+### Digital Catalog (Datasette)
+
+- [Datasette Quickstart](../DATASETTE-QUICKSTART.md) - Quick setup and common commands
+- [Datasette Catalog Guide](DATASETTE-CATALOG-GUIDE.md) - Comprehensive reference
+
 ### News & Content
 
 - [News Pipeline](NEWS-PIPELINE-DOCUMENTATION.md) - Automated news generation
-- [Book Workflow Guide](BOOK_WORKFLOW_GUIDE.md) - Content workflow
 
 ### API & Integration
 
@@ -119,7 +123,8 @@ Historical documentation moved to `docs/archive/`:
 - `archive/2025-11-deployment-cleanup/` - Old deployment guides
 - `archive/2025-07-current-status.md` - July 2025 status snapshot
 - `archive/2025-07-work-in-progress.md` - July 2025 WIP
-- `archive/unrealized-cms-plan/` - PostgreSQL CMS plans (not implemented)
+- `archive/unrealized-cms-plan/` - PostgreSQL CMS plans and web admin panel (not implemented)
+- `archive/2026-03-datasette-setup/` - Datasette setup reports and integration summaries
 - `archive/daily-logs-2025/` - Historical daily logs
 
 ---
@@ -128,7 +133,7 @@ Historical documentation moved to `docs/archive/`:
 
 - **Active Documentation**: ~30 files
 - **Archived Documentation**: ~25 files
-- **Last Full Audit**: December 2025
+- **Last Full Audit**: March 2026
 
 ---
 
