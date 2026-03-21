@@ -82,7 +82,7 @@ datasette hudson_street_library.db --metadata metadata.json
 ```
 
 **Features**:
-- ⚡ **Instant full-text search** across 1,718 books
+- ⚡ **Instant full-text search** across 1,722 books
 - 🏷️ **Faceted browsing** by author, category, format, year
 - 📊 **SQL queries** for advanced searches
 - 🔗 **REST API** - every view is an API endpoint
@@ -106,7 +106,7 @@ Visit http://localhost:8001 when running the catalog server.
 
 ## 📊 Current Status
 
-- **Total Books**: 1,306 photography books
+- **Total Books**: 1,722 photography books
 - **Book Covers**: 139 verified covers (11% coverage) 
 - **Tagged Books**: 241 books (18.5% have tags)
 - **Unique Tags**: 154 tags identified

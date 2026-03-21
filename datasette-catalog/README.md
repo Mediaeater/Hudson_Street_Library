@@ -8,7 +8,7 @@ A SQLite-backed web interface for browsing and searching the Hudson Street Libra
 
 ## Features
 
-- 🔍 **Full-Text Search**: Search across 1,718 books instantly
+- 🔍 **Full-Text Search**: Search across 1,722 books instantly
 - 🏷️ **Faceted Browsing**: Filter by author, category, format, year
 - 📊 **SQL Queries**: Write custom queries for advanced searches
 - 📤 **Export**: Download results as JSON or CSV
@@ -68,7 +68,7 @@ node scripts/add-book-from-text.js --text "Book 2..." --no-rebuild
 ## Database Details
 
 **Source**: `src/_data/books.csv`
-**Records**: 1,718 books
+**Records**: 1,722 books
 **Columns**: 36 fields including title, author, publisher, tags, description
 
 **Search-Enabled Columns**:
