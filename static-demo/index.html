@@ -921,16 +921,19 @@ class BookSearch {
     }
 
     generateBookPageUrl(book) {
-        const author = (book.author_last || 'unknown')
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/^-+|-+$/g, '');
+        // Match Eleventy's slugify behavior (slugify npm package with strict: true)
+        const slugifyText = (text) => {
+            return (text || '')
+                .toLowerCase()
+                .replace(/&/g, 'and')                    // & → and
+                .replace(/[^\w\s-]/g, '')                // Remove special chars (keep word chars, spaces, hyphens)
+                .replace(/\s+/g, '-')                    // Spaces → hyphens
+                .replace(/-+/g, '-')                     // Multiple hyphens → single hyphen
+                .replace(/^-+|-+$/g, '');                // Trim leading/trailing hyphens
+        };
 
-        const title = (book.title || 'untitled')
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/^-+|-+$/g, '');
-
+        const author = slugifyText(book.author_last || 'unknown');
+        const title = slugifyText(book.title || 'untitled');
         const id = book.id || '';
 
         return `/books/${author}_${title}_${id}/`;
