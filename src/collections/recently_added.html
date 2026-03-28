@@ -34,20 +34,20 @@ currentPage: recently-added
 {% for book in recentBooks %}
 {% if book.publisher != "BUTT Publications" %}
                     <!-- {{ book.author_full_name }} - {{ book.title }} - {{ book.accession_no }} -->
-                    <div class="bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg">
-                        <div class="h-64 overflow-hidden bg-neutral-100">
+                    <div class="book-card bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg flex flex-col">
+                        <div class="h-64 overflow-hidden bg-neutral-100 flex-shrink-0">
                             <img src="{{ book | generateCoverPath }}"
                                  alt="Cover of {{ book.title }}"
                                  onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg';"
                                  class="w-full h-full object-contain">
                         </div>
-                        <div class="p-6">
+                        <div class="p-6 flex flex-col flex-1">
                             <div class="mb-4">
                                 {% if book.lcc %}<p class="text-xs text-neutral-500 mb-1">{{ book.lcc }}</p>{% endif %}
-                                <h3 class="text-xl font-bold text-primary-700 mb-1">{{ book.title }}</h3>
-                                <p class="italic text-neutral-700">{{ book.author_full_name }}</p>
+                                <h3 class="text-xl font-bold text-primary-700 mb-1 leading-tight">{{ book.title }}</h3>
+                                <p class="italic text-neutral-700 text-sm">{{ book.author_full_name }}</p>
                             </div>
-                            <div class="space-y-2 text-sm text-neutral-600">
+                            <div class="book-metadata space-y-2 text-sm text-neutral-600">
                                 {% if book.publisher or book.publication_year %}
                                 <p><span class="font-semibold">Imprint:</span>
                                 {% if book.publisher_url %}<a href="{{ book.publisher_url }}" target="_blank" class="text-primary-700 hover:underline" title="{{ book.publisher_url | replace("https://", "") | replace("http://", "") | replace("www.", "") | removeTrailingSlash }}">{{ book.publisher }}</a>{% else %}{{ book.publisher }}{% endif %}{% if book.publication_year %}, {{ book.publication_year }}{% endif %}.
@@ -58,21 +58,19 @@ currentPage: recently-added
                                 {% if book.page_count %}{{ book.page_count }} pages{% endif %}{% if book.height_cm or book.width_cm %}; {% if book.height_cm %}{{ book.height_cm }}{% endif %}{% if book.width_cm %} x {{ book.width_cm }}{% endif %} cm{% endif %}
                                 </p>
                                 {% endif %}
-                                {% if book.isbn_asin %}<p><span class="font-semibold">ISBN:</span> {{ book.isbn_asin }}</p>{% endif %}
-                                {% if book.editor %}<p><span class="font-semibold">Editor:</span> {{ book.editor }}</p>{% endif %}
                                 {% if book.contributors %}<p><span class="font-semibold">Contributors:</span> {{ book.contributors }}</p>{% endif %}
-                                {% if book.designer %}<p><span class="font-semibold">Designer:</span> {{ book.designer }}</p>{% endif %}
                                 {% if book.binding %}<p><span class="font-semibold">Binding:</span> {{ book.binding }}</p>{% endif %}
-                                {% if book.edition_printrun %}<p><span class="font-semibold">Edition:</span> {{ book.edition_printrun }}</p>{% endif %}
                                 {% if book.language %}<p><span class="font-semibold">Language:</span> {{ book.language }}</p>{% endif %}
-                                {% if book.is_signed_inscribed === 'true' or book.is_signed_inscribed === true %}<p><span class="font-semibold">Signed:</span> Yes</p>{% endif %}
-                                {% if book.artist_url %}<p><span class="font-semibold">Artist Website:</span> <a href="{{ book.artist_url }}" target="_blank" class="text-primary-700 no-underline hover:underline">{{ book.artist_url | replace("https://", "") | replace("http://", "") | replace("www.", "") | removeTrailingSlash }}</a></p>{% endif %}
                                 {% if book.accession_no %}<p><span class="font-semibold">Accession Date:</span> {{ book.accession_no | formatAccessionDate }}</p>{% endif %}
-                                {% if book.description %}<p class="mt-2 text-xs">{{ book.description }}</p>{% endif %}
+                                {% if book.description %}
+                                <div class="book-description text-xs leading-relaxed text-neutral-600">
+                                    {{ book.description | formatDescription(280) | safe }}
+                                </div>
+                                {% endif %}
                             </div>
-                            <div class="mt-4 pt-4 border-t border-neutral-200">
-                                {% if book.tags %}<p class="text-xs text-neutral-500">Keywords: {{ book.tags }}</p>{% endif %}
-                                <a href="{% if book.custom_page_url %}{{ book.custom_page_url }}{% else %}/books/{{ book.author_last | slugify }}_{{ book.title | slugify }}_{{ book.id }}/{% endif %}" class="inline-block mt-2 text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
+                            <div class="mt-auto pt-4 border-t border-neutral-200">
+                                {% if book.tags %}<p class="text-xs text-neutral-500 mb-2">Keywords: {{ book.tags }}</p>{% endif %}
+                                <a href="{% if book.custom_page_url %}{{ book.custom_page_url }}{% else %}/books/{{ book.author_last | slugify }}_{{ book.title | slugify }}_{{ book.id }}/{% endif %}" class="inline-block text-primary-700 hover:text-primary-700 text-sm font-medium">View Details →</a>
                             </div>
                         </div>
                     </div>
