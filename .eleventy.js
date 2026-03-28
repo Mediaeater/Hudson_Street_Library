@@ -411,7 +411,58 @@ module.exports = function(eleventyConfig) {
       .replace(/^_|_$/g, '')
       .substring(0, 100);
 
-    return `/assets/images/books/${sanitized}.jpg`;
+      return `/assets/images/books/${sanitized}.jpg`;
+  });
+
+  // --- Format and truncate descriptions with paragraph support ---
+  eleventyConfig.addFilter("formatDescription", function(description, maxLength = 300) {
+    if (!description) return '';
+
+    // Strip any existing HTML tags and decode entities
+    let cleaned = description
+      .replace(/<[^>]+>/g, '')
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .trim();
+
+    // Truncate if too long
+    let content = cleaned;
+    let wasTruncated = false;
+
+    if (content.length > maxLength) {
+      // Find last complete sentence or word boundary before maxLength
+      content = content.substring(0, maxLength);
+      const lastPeriod = content.lastIndexOf('.');
+      const lastSpace = content.lastIndexOf(' ');
+
+      if (lastPeriod > maxLength * 0.7) {
+        content = content.substring(0, lastPeriod + 1);
+      } else if (lastSpace > 0) {
+        content = content.substring(0, lastSpace);
+      }
+
+      wasTruncated = true;
+    }
+
+    // Convert paragraph breaks to HTML
+    // Replace double line breaks with separate paragraphs
+    const paragraphs = content
+      .split(/\n\n+/)
+      .map(para => para.trim())
+      .filter(para => para.length > 0);
+
+    // Add ellipsis if truncated (to last paragraph)
+    if (wasTruncated && paragraphs.length > 0) {
+      paragraphs[paragraphs.length - 1] += '...';
+    }
+
+    // Wrap each paragraph
+    return paragraphs
+      .map(para => `<p>${para}</p>`)
+      .join('');
   });
 
   // --- Image Processing Function ---
