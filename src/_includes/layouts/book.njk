@@ -633,34 +633,7 @@
     </div>
     {% endif %}
 
-    <!-- Related Books (by tags, collection, classification) -->
-    {% set relatedBooks = books | relatedBooks(book, 12) %}
-
-    {% if relatedBooks.length > 0 %}
-    <hr class="separator">
-
-    <div class="related-books">
-        <h2 class="section-heading">Related Books</h2>
-        <div class="books-scroll">
-            {% for relBook in relatedBooks %}
-            <a href="{% if relBook.custom_page_url %}{{ relBook.custom_page_url }}{% else %}/books/{{ relBook.author_last | slugify }}_{{ relBook.title | slugify }}_{{ relBook.id }}/{% endif %}" class="related-book">
-                {% set relCoverPath = relBook | generateCoverPath %}
-                <img src="{{ relCoverPath }}"
-                     alt="{{ relBook.title }}"
-                     class="related-book-cover"
-                     loading="lazy"
-                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
-                <span class="related-book-title">{{ relBook.title }}</span>
-                {% if relBook.publication_year %}
-                <span class="related-book-year">{{ relBook.publication_year }}</span>
-                {% endif %}
-            </a>
-            {% endfor %}
-        </div>
-    </div>
-    {% endif %}
-
-    <!-- Other Books by Same Author (secondary section) -->
+    <!-- Other Books by Same Author -->
     {% set authorBooks = books | otherBooksByAuthor(book.author_last, book.id) %}
     {% set totalByAuthor = books | countByAuthor(book.author_last, book.id) %}
 
