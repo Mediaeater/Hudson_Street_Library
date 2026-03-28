@@ -12,7 +12,7 @@ permalink: /news.html
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Crimson+Pro:wght@300;400;600&family=Archivo+Narrow:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Crimson+Pro:wght@300;400;600;700&family=Archivo+Narrow:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --color-ink: #0A0A0A;
@@ -20,6 +20,7 @@ permalink: /news.html
             --color-vellum: #EEEDE8;
             --color-brown: #8B7355;
             --color-border: rgba(10, 10, 10, 0.12);
+            --color-accent: #D4A574;
         }
 
         * {
@@ -33,6 +34,21 @@ permalink: /news.html
             color: var(--color-ink);
             font-family: 'Crimson Pro', serif;
             line-height: 1.6;
+            position: relative;
+        }
+
+        /* Subtle paper texture */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1;
         }
 
         /* Header */
@@ -40,10 +56,12 @@ permalink: /news.html
             background: var(--color-paper);
             padding: 6rem 2rem 3rem;
             border-bottom: 1px solid var(--color-border);
+            position: relative;
+            z-index: 2;
         }
 
         .header-inner {
-            max-width: 1200px;
+            max-width: 1600px;
             margin: 0 auto;
         }
 
@@ -53,12 +71,12 @@ permalink: /news.html
             font-weight: 700;
             letter-spacing: 0.2em;
             text-transform: uppercase;
-            color: var(--brown);
+            color: var(--color-brown);
             margin-bottom: 1rem;
         }
 
         .header-title {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Libre Baskerville', serif;
             font-size: clamp(3rem, 8vw, 5rem);
             font-weight: 700;
             line-height: 0.95;
@@ -75,302 +93,366 @@ permalink: /news.html
             color: var(--color-brown);
         }
 
-        /* Timeline Container */
-        .timeline-section {
-            max-width: 1200px;
+        /* Main Content Grid */
+        .news-grid {
+            max-width: 1600px;
             margin: 0 auto;
             padding: 4rem 2rem;
-        }
-
-        .timeline {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 5rem;
+            align-items: start;
             position: relative;
+            z-index: 2;
         }
 
-        /* Vertical timeline line */
-        .timeline::before {
+        /* Vertical divider between columns */
+        .news-grid::before {
             content: '';
             position: absolute;
-            left: 140px;
+            right: 470px;
             top: 0;
             bottom: 0;
             width: 1px;
             background: var(--color-border);
         }
 
-        /* News Article */
-        .news-article {
-            display: grid;
-            grid-template-columns: 140px 1fr;
-            gap: 3rem;
-            margin-bottom: 4rem;
-            position: relative;
-            animation: slideInArticle 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+        /* ============================================
+           FEATURED CONTENT AREA
+           ============================================ */
+
+        .featured-content {
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
 
-        .news-article:nth-child(1) { animation-delay: 0s; }
-        .news-article:nth-child(2) { animation-delay: 0.1s; }
-        .news-article:nth-child(3) { animation-delay: 0.2s; }
-        .news-article:nth-child(4) { animation-delay: 0.3s; }
-        .news-article:nth-child(5) { animation-delay: 0.4s; }
+        .feature-category {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--color-accent);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
 
-        /* Timeline dot */
-        .news-article::before {
+        .feature-category::after {
             content: '';
+            height: 1px;
+            width: 60px;
+            background: var(--color-accent);
+        }
+
+        .feature-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+            color: var(--color-ink);
+        }
+
+        .feature-subtitle {
+            font-family: 'Crimson Pro', serif;
+            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+            line-height: 1.4;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--color-brown);
+            margin-bottom: 2rem;
+            max-width: 45ch;
+        }
+
+        .feature-meta {
+            display: flex;
+            gap: 2rem;
+            padding-bottom: 2rem;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--color-border);
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--color-brown);
+        }
+
+        .feature-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-meta i {
+            font-size: 0.75rem;
+            opacity: 0.6;
+        }
+
+        /* Hero Image */
+        .feature-hero {
+            width: 100%;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+            background: var(--color-vellum);
+            border: 1px solid var(--color-border);
+            aspect-ratio: 16/9;
+        }
+
+        .feature-hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.9;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .feature-hero:hover img {
+            transform: scale(1.02);
+        }
+
+        .feature-hero-caption {
+            margin-top: 0.75rem;
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.8125rem;
+            color: var(--color-brown);
+            font-style: italic;
+        }
+
+        /* Article Body */
+        .feature-body {
+            max-width: 680px;
+        }
+
+        .feature-body > p {
+            font-size: 1.1875rem;
+            line-height: 1.8;
+            margin-bottom: 1.75rem;
+            color: var(--color-ink);
+        }
+
+        /* Drop Cap */
+        .feature-body > p:first-of-type::first-letter {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 5.5rem;
+            line-height: 0.85;
+            float: left;
+            margin: 0.1em 0.15em 0 0;
+            font-weight: 700;
+            color: var(--color-brown);
+        }
+
+        /* Pull Quote */
+        .pull-quote {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.75rem;
+            line-height: 1.35;
+            font-weight: 400;
+            font-style: italic;
+            color: var(--color-brown);
+            margin: 3rem 0;
+            padding: 2rem 0;
+            border-top: 2px solid var(--color-ink);
+            border-bottom: 2px solid var(--color-ink);
+            position: relative;
+        }
+
+        .pull-quote::before {
+            content: '"';
+            font-size: 6rem;
             position: absolute;
-            left: 134px;
-            top: 6px;
-            width: 13px;
-            height: 13px;
-            background: var(--color-paper);
-            border: 3px solid var(--color-ink);
-            border-radius: 50%;
-            z-index: 2;
-            transition: all 0.3s ease;
+            left: -0.25em;
+            top: -0.15em;
+            opacity: 0.15;
+            font-family: 'Libre Baskerville', serif;
         }
 
-        .news-article.featured::before {
-            background: var(--color-ink);
-            border-color: var(--color-ink);
-            width: 15px;
-            height: 15px;
-            left: 133px;
+        /* Section Break */
+        .section-ornament {
+            text-align: center;
+            margin: 3rem 0;
+            font-size: 1.5rem;
+            color: var(--color-brown);
+            opacity: 0.4;
+            letter-spacing: 0.5rem;
         }
 
-        .news-article:hover::before {
-            transform: scale(1.3);
+        /* ============================================
+           NEWS SIDEBAR
+           ============================================ */
+
+        .news-sidebar {
+            position: sticky;
+            top: 2rem;
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
         }
 
-        /* Date column */
-        .news-date-wrapper {
-            text-align: right;
-            padding-top: 0.25rem;
+        .sidebar-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--color-ink);
+        }
+
+        .sidebar-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--color-ink);
+        }
+
+        .sidebar-subtitle {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-brown);
+        }
+
+        /* News Items */
+        .news-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .news-item {
+            display: block;
+            text-decoration: none;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--color-border);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .news-item:hover {
+            transform: translateX(4px);
+        }
+
+        .news-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
         }
 
         .news-date {
             font-family: 'Archivo Narrow', sans-serif;
-            font-size: 0.875rem;
+            font-size: 0.6875rem;
             font-weight: 700;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
-            color: var(--color-brown);
+            color: var(--color-accent);
+            margin-bottom: 0.5rem;
             display: block;
+        }
+
+        .news-item-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.125rem;
+            font-weight: 700;
             line-height: 1.3;
+            color: var(--color-ink);
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
         }
 
-        .news-month {
-            font-size: 0.75rem;
-            font-weight: 400;
-            opacity: 0.7;
+        .news-item:hover .news-item-title {
+            color: var(--color-brown);
         }
 
-        /* Content column */
-        .news-content {
-            background: white;
-            padding: 2rem;
-            border: 1px solid var(--color-border);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
+        .news-item-excerpt {
+            font-size: 0.9375rem;
+            line-height: 1.5;
+            color: var(--color-brown);
+            opacity: 0.85;
         }
 
-        .news-article.featured .news-content {
-            border-left: 3px solid var(--color-ink);
-        }
-
-        .news-article:hover .news-content {
-            box-shadow: 0 12px 40px rgba(10, 10, 10, 0.12);
-            transform: translateY(-4px);
-        }
-
-        .featured-badge {
+        .news-category {
             font-family: 'Archivo Narrow', sans-serif;
             font-size: 0.625rem;
             font-weight: 700;
             letter-spacing: 0.15em;
             text-transform: uppercase;
             color: var(--color-brown);
-            margin-bottom: 0.5rem;
-            display: inline-block;
-        }
-
-        .news-title {
-            font-family: 'Libre Baskerville', serif;
-            font-size: clamp(1.5rem, 3vw, 2rem);
-            font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 1rem;
-            color: var(--color-ink);
-            transition: color 0.3s ease;
-        }
-
-        .news-article:hover .news-title {
-            color: var(--color-brown);
-        }
-
-        .news-article.featured .news-title {
-            color: var(--color-brown);
-        }
-
-        .news-text {
-            font-size: 1.0625rem;
-            line-height: 1.7;
-            color: var(--color-ink);
-            margin-bottom: 1.5rem;
-        }
-
-        .news-text p {
-            margin-bottom: 1rem;
-        }
-
-        .news-text p:last-child {
-            margin-bottom: 0;
-        }
-
-        .news-link {
-            font-family: 'Archivo Narrow', sans-serif;
-            font-size: 0.875rem;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            color: var(--color-ink);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            border: 2px solid var(--color-ink);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .news-link:hover {
-            background: var(--color-ink);
-            color: var(--color-paper);
-            transform: translateX(4px);
-        }
-
-        .news-link i {
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .news-link:hover i {
-            transform: translateX(4px);
-        }
-
-        /* Empty state */
-        .no-news {
-            text-align: center;
-            padding: 6rem 2rem;
-        }
-
-        .no-news-title {
-            font-family: 'Libre Baskerville', serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--color-brown);
-        }
-
-        .no-news-text {
-            font-size: 1.125rem;
-            color: var(--color-brown);
+            margin-top: 0.5rem;
+            opacity: 0.6;
         }
 
         /* Animations */
-        @keyframes slideInArticle {
+        @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateX(-30px);
+                transform: translateY(40px);
             }
             to {
                 opacity: 1;
-                transform: translateX(0);
+                transform: translateY(0);
             }
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            .masthead {
-                padding: 2rem 1.5rem 1.5rem;
+        @media (max-width: 1200px) {
+            .news-grid {
+                grid-template-columns: 1fr 360px;
+                gap: 3rem;
             }
 
-            .timeline-section {
-                padding: 2rem 1.5rem;
+            .news-grid::before {
+                right: 390px;
             }
 
-            .timeline::before {
-                left: 20px;
+            .feature-title {
+                font-size: clamp(2.5rem, 5vw, 4rem);
+            }
+        }
+
+        @media (max-width: 968px) {
+            .page-header {
+                padding: 4rem 1.5rem 2rem;
             }
 
-            .news-article {
+            .news-grid {
                 grid-template-columns: 1fr;
-                gap: 1rem;
-                margin-bottom: 3rem;
-                padding-left: 2.5rem;
+                gap: 4rem;
+                padding: 3rem 1.5rem;
             }
 
-            .news-article::before {
-                left: 14px;
+            .news-grid::before {
+                display: none;
             }
 
-            .news-article.featured::before {
-                left: 13px;
+            .feature-body > p {
+                font-size: 1.0625rem;
             }
 
-            .news-date-wrapper {
-                text-align: left;
-                padding-top: 0;
-                margin-bottom: 0.5rem;
+            .feature-body > p:first-of-type::first-letter {
+                font-size: 4.5rem;
             }
 
-            .news-date {
-                display: inline;
-            }
-
-            .news-month {
-                display: inline;
-                margin-left: 0.5rem;
-            }
-
-            .news-content {
-                padding: 1.5rem;
-            }
-
-            .featured-badge {
-                margin-bottom: 0.5rem;
-            }
-
-            .news-title {
+            .pull-quote {
                 font-size: 1.5rem;
+                margin: 2rem 0;
+                padding: 1.5rem 0;
             }
 
-            .news-text {
-                font-size: 1rem;
+            .news-sidebar {
+                position: static;
+            }
+
+            .sidebar-header {
+                margin-top: 2rem;
             }
         }
 
-        /* Print-style decorative elements */
-        .section-break {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 3rem 0;
-            gap: 1rem;
-        }
+        @media (max-width: 640px) {
+            .feature-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
 
-        .section-break::before,
-        .section-break::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--color-border);
-        }
-
-        .section-break span {
-            font-family: 'Archivo Narrow', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--color-brown);
+            .feature-body > p:first-of-type::first-letter {
+                font-size: 3.5rem;
+            }
         }
     </style>
 </head>
@@ -384,50 +466,91 @@ permalink: /news.html
     <header class="page-header">
         <div class="header-inner">
             <div class="header-label">Library Dispatch</div>
-            <h1 class="header-title">News & Updates</h1>
+            <h1 class="header-title">News & Features</h1>
             <p class="header-subtitle">
-                New acquisitions, exhibitions, programming, and developments from Hudson Street Library,
-                plus select industry news and cultural events.
+                In-depth features on artists, publishers, and the culture of the photobook, alongside news of acquisitions, exhibitions, and developments from Hudson Street Library.
             </p>
         </div>
     </header>
 
-    <!-- Timeline -->
-    <section class="timeline-section">
-        {% if news and news.length > 0 %}
-        <div class="timeline">
-            {% for item in news %}
-            <article class="news-article {% if item.featured %}featured{% endif %}">
-                <div class="news-date-wrapper">
-                    <time class="news-date">
-                        {{ item.date }}
-                    </time>
+    <!-- Two-Column Grid -->
+    <div class="news-grid">
+
+        <!-- Featured Content Area -->
+        <article class="featured-content">
+            <div class="feature-category">Featured</div>
+
+            <h2 class="feature-title">Fred Cray: Books, Images and Practice</h2>
+
+            <p class="feature-subtitle">
+                An exploration of one of contemporary photography's most distinctive voices, whose books map a territory between documentary rigor and formal experimentation.
+            </p>
+
+            <div class="feature-meta">
+                <span><i class="far fa-user"></i> Hudson Street Library</span>
+                <span><i class="far fa-calendar"></i> March 2026</span>
+                <span><i class="far fa-clock"></i> 12 min read</span>
+            </div>
+
+            <div class="feature-hero">
+                <!-- FPO image placeholder -->
+                <div style="width: 100%; height: 100%; background: linear-gradient(135deg, var(--color-vellum) 0%, var(--color-paper) 100%); display: flex; align-items: center; justify-content: center; font-family: 'Archivo Narrow', sans-serif; font-size: 0.875rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-brown);">
+                    FPO — Feature Image
                 </div>
-                <div class="news-content">
-                    {% if item.featured %}
-                    <span class="featured-badge">Featured</span>
-                    {% endif %}
-                    <h2 class="news-title">{{ item.title }}</h2>
-                    <div class="news-text">
-                        {{ item.content | safe }}
-                    </div>
-                    {% if item.link %}
-                    <a href="{{ item.link }}" class="news-link" target="_blank" rel="noopener noreferrer">
-                        Read More
-                        <i class="fas fa-arrow-right"></i>
-                    </a>
-                    {% endif %}
+            </div>
+            <div class="feature-hero-caption">
+                Fred Cray in his studio, 2025. Photograph courtesy of the artist.
+            </div>
+
+            <div class="feature-body">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. In contemporary photography's crowded landscape, certain practitioners stand apart through their unwavering commitment to a singular vision. Fred Cray is one such figure—an artist whose decades-long engagement with the medium has produced a body of work that resists easy categorization.</p>
+
+                <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Cray's books are not simply collections of photographs; they are carefully constructed arguments about seeing, about the relationship between form and content, about photography's capacity to reveal and conceal simultaneously. Each publication represents years of work distilled into sequences that reward sustained attention.</p>
+
+                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. His approach to the photobook as medium draws from a deep understanding of both modernist photographic traditions and contemporary publishing practices. The books themselves become objects of study—their materiality, their pacing, their editorial decisions all contributing to how the photographs are experienced and understood.</p>
+
+                <div class="pull-quote">
+                    The photobook is not a container for photographs—it's a machine for producing meaning through sequence, scale, and material presence.
                 </div>
-            </article>
-            {% endfor %}
-        </div>
-        {% else %}
-        <div class="no-news">
-            <h2 class="no-news-title">No News Yet</h2>
-            <p class="no-news-text">Check back soon for updates and announcements.</p>
-        </div>
-        {% endif %}
-    </section>
+
+                <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. What distinguishes Cray's practice is its refusal of photography's dominant modes—neither purely documentary nor purely conceptual, his work occupies a productive middle ground where formal rigor meets real-world subject matter.</p>
+
+                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam. His influence on a younger generation of photobook makers is evident in their shared attention to publication as practice, to the book as primary rather than secondary site of photographic meaning.</p>
+
+                <div class="section-ornament">❖ ❖ ❖</div>
+
+                <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. The arc of Cray's career traces photography's transformation over the past thirty years—from analog to digital, from specialist practice to ubiquitous medium, from the gallery to the feed.</p>
+
+                <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit. Through it all, his commitment to the photobook as form has remained constant, even as the means of production and distribution have shifted dramatically. His books stand as models for how photography can maintain its critical edge in an image-saturated culture.</p>
+
+                <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident. For Hudson Street Library, whose collection emphasizes the photobook as primary form of photographic publishing, Cray's work represents a sustained investigation of the medium's possibilities—work that continues to inform and inspire.</p>
+            </div>
+        </article>
+
+        <!-- News Sidebar -->
+        <aside class="news-sidebar">
+            <div class="sidebar-header">
+                <h3 class="sidebar-title">Recent News</h3>
+                <p class="sidebar-subtitle">Latest Updates</p>
+            </div>
+
+            {% if news and news.length > 0 %}
+            <div class="news-timeline">
+                {% for item in news %}
+                <a href="{% if item.link %}{{ item.link }}{% else %}#{% endif %}" class="news-item">
+                    <time class="news-date">{{ item.date }}</time>
+                    <h4 class="news-item-title">{{ item.title }}</h4>
+                    <p class="news-item-excerpt">{{ item.excerpt }}</p>
+                    <div class="news-category">{{ item.category }}</div>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p style="color: var(--color-brown); font-size: 0.9375rem;">No recent news available.</p>
+            {% endif %}
+        </aside>
+
+    </div>
 </main>
 
 {% include "components/site-footer.njk" %}
