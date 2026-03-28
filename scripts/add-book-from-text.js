@@ -42,6 +42,7 @@ const ACCESSION_LOCATION = 'Hudson Street Library, NYC';
 const args = process.argv.slice(2);
 let inputText = '';
 let inputFile = '';
+let inputJson = '';
 let interactive = false;
 let rebuildDatasette = true;
 
@@ -50,6 +51,8 @@ for (let i = 0; i < args.length; i++) {
     inputText = args[++i];
   } else if (args[i] === '--file') {
     inputFile = args[++i];
+  } else if (args[i] === '--json') {
+    inputJson = args[++i];
   } else if (args[i] === '--interactive') {
     interactive = true;
   } else if (args[i] === '--no-rebuild') {
@@ -61,11 +64,13 @@ Add Book From Text Description
 Usage:
   node scripts/add-book-from-text.js --text "Book description"
   node scripts/add-book-from-text.js --file books-to-add.txt
+  node scripts/add-book-from-text.js --json book_data.json
   node scripts/add-book-from-text.js --interactive
 
 Options:
   --text <description>    Book description text
   --file <path>           File with book descriptions (one per paragraph)
+  --json <path>           JSON file from research-asst skill
   --interactive           Interactive mode with prompts
   --no-rebuild            Skip Datasette catalog rebuild (faster)
   --help                  Show this help
@@ -509,11 +514,155 @@ async function processBook(text) {
 }
 
 /**
+ * Process JSON file from research-asst skill
+ */
+async function processBookFromJSON(jsonPath) {
+  try {
+    console.log('\n📖 Reading research data from JSON...\n');
+
+    const jsonContent = fs.readFileSync(jsonPath, 'utf8');
+    const researchData = JSON.parse(jsonContent);
+
+    console.log('Research Data:', researchData.title);
+    console.log(`Sources: ${researchData.research_log.sources_checked.join(', ')}`);
+    console.log(`Confidence: ${researchData.research_log.confidence_score}\n`);
+
+    // Map JSON to CSV format
+    const bookData = {
+      title: researchData.title,
+      subtitle: researchData.subtitle || '',
+      author_first: researchData.authors[0]?.name.split(' ')[0] || '',
+      author_last: researchData.authors[0]?.name.split(' ').slice(1).join(' ') || '',
+      author_full_name: researchData.authors[0]?.name || '',
+      publisher: researchData.publisher?.name || '',
+      publisher_url: researchData.publisher?.url || '',
+      publication_year: researchData.year?.toString() || '',
+      isbn_asin: researchData.isbn?.isbn13 || researchData.isbn?.isbn10 || '',
+      binding: researchData.format || '',
+      page_count: researchData.pages?.toString() || '',
+      description: researchData.description?.main || '',
+      subjects: researchData.loc_data?.subject_headings?.join('; ') || '',
+      tags: researchData.tags?.join(', ') || '', // CRITICAL: comma-separated
+      language: researchData.language || 'English',
+      dimensions: researchData.dimensions || '',
+      image_url: researchData.cover_image?.local_path || ''
+    };
+
+    // Get next ID
+    const { nextId } = readCSV();
+
+    // Download cover image if URL provided
+    if (researchData.cover_image?.url && !researchData.cover_image?.local_path) {
+      const coverFilename = generateCoverFilename(
+        bookData.author_last,
+        bookData.author_first,
+        bookData.title,
+        bookData.isbn_asin
+      );
+
+      const coverPath = path.join(COVERS_DIR, coverFilename);
+
+      console.log('📸 Downloading cover image...');
+      const { BookResearchClient } = require('./utils/book-research-client');
+      const client = new BookResearchClient();
+
+      const downloadResult = await client.downloadImage(
+        researchData.cover_image.url,
+        coverPath
+      );
+
+      if (downloadResult.success) {
+        bookData.image_url = `/assets/images/books/${coverFilename}`;
+      }
+    }
+
+    console.log('\n📋 Book Details:');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log(`ID:              ${nextId}`);
+    console.log(`Title:           ${bookData.title}`);
+    console.log(`Author:          ${bookData.author_full_name}`);
+    console.log(`Publisher:       ${bookData.publisher || '(not found)'}`);
+    console.log(`Year:            ${bookData.publication_year || '(not found)'}`);
+    console.log(`ISBN:            ${bookData.isbn_asin || '(not found)'}`);
+    console.log(`Pages:           ${bookData.page_count || '(not specified)'}`);
+    console.log(`Binding:         ${bookData.binding || '(not specified)'}`);
+    console.log(`Tags:            ${bookData.tags}`);
+    console.log(`Accession Date:  ${new Date().toISOString().split('T')[0]}`);
+    console.log(`Location:        ${ACCESSION_LOCATION}`);
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
+    // Ask for confirmation
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout
+    });
+
+    rl.question('Add this book to books.csv? (y/n): ', (answer) => {
+      if (answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes') {
+        // Add to CSV
+        const record = addBookToCSV(bookData, nextId);
+
+        console.log('\n✅ Book added successfully!\n');
+
+        // Validate CSV structure
+        console.log('🔍 Validating CSV structure...');
+        try {
+          const validateScript = path.join(__dirname, 'validate-csv-structure.js');
+          if (fs.existsSync(validateScript)) {
+            execSync(`node "${validateScript}"`, {
+              stdio: 'inherit',
+              cwd: path.join(__dirname, '..')
+            });
+            console.log('✅ CSV validation passed!\n');
+          }
+        } catch (error) {
+          console.error('❌ CSV VALIDATION FAILED!');
+          console.error('   Please run: node scripts/validate-csv-structure.js\n');
+          process.exit(1);
+        }
+
+        // Rebuild Datasette catalog
+        if (rebuildDatasette) {
+          console.log('🔄 Updating Datasette catalog...');
+          try {
+            const updateScript = path.join(__dirname, 'update-datasette-catalog.sh');
+            if (fs.existsSync(updateScript)) {
+              execSync(updateScript, {
+                stdio: 'inherit',
+                cwd: path.join(__dirname, '..')
+              });
+              console.log('✅ Datasette catalog updated!\n');
+            }
+          } catch (error) {
+            console.error('⚠️  Failed to update Datasette catalog:', error.message);
+          }
+        }
+
+        console.log('🔨 Next Steps:');
+        console.log('  1. Review book details in books.csv');
+        console.log('  2. Run: npm test');
+        console.log('  3. Run: npm run build');
+        console.log('  4. Commit changes\n');
+      } else {
+        console.log('\n❌ Cancelled - no changes made\n');
+      }
+      rl.close();
+    });
+  } catch (error) {
+    console.error('Error:', error.message);
+    console.error(error.stack);
+    process.exit(1);
+  }
+}
+
+/**
  * Main execution
  */
 async function main() {
   if (interactive) {
     await interactiveMode();
+  } else if (inputJson) {
+    await processBookFromJSON(inputJson);
   } else if (inputFile) {
     // Process file with multiple books
     const fileContent = fs.readFileSync(inputFile, 'utf8');
