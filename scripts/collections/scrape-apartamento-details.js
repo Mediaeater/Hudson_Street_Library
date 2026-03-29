@@ -1,7 +1,6 @@
 const https = require('https');
 const fs = require('fs');
-const csv = require('csv-parser');
-const { stringify } = require('csv-stringify/sync');
+const CSVHandler = require('../utils/csv-handler');
 
 // Function to fetch URL content
 function fetchURL(url) {
@@ -54,17 +53,10 @@ function extractIssueDetails(html, issueNumber) {
 async function main() {
     console.log('Scraping Apartamento issue details...\n');
 
-    // Read existing CSV
+    // Read existing CSV using CSVHandler
     const csvPath = './src/_data/books.csv';
-    const books = [];
-
-    await new Promise((resolve, reject) => {
-        fs.createReadStream(csvPath)
-            .pipe(csv())
-            .on('data', (row) => books.push(row))
-            .on('end', resolve)
-            .on('error', reject);
-    });
+    const csvResult = CSVHandler.readBooksSync(csvPath);
+    const books = csvResult.data;
 
     // Process Apartamento issues
     for (let i = 3; i <= 36; i++) {
@@ -120,11 +112,8 @@ async function main() {
         }
     }
 
-    // Write back to CSV
-    const headers = Object.keys(books[0]);
-    const csvData = stringify(books, { header: true, columns: headers });
-
-    fs.writeFileSync(csvPath, csvData);
+    // Write back to CSV using CSVHandler
+    CSVHandler.writeBooksSync(csvPath, books);
     console.log(`\n✓ Updated ${csvPath}`);
 }
 
