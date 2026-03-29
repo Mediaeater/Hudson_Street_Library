@@ -7,7 +7,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const csv = require('csv-parser');
+const CSVHandler = require('../utils/csv-handler');
 
 // Paths
 const CSV_PATH = path.join(__dirname, '../../src/_data/books.csv');
@@ -365,17 +365,14 @@ async function main() {
   const template = fs.readFileSync(TEMPLATE_PATH, 'utf-8');
   console.log('Template loaded successfully.');
 
-  // Read and process CSV
-  const books = [];
+  // Read and process CSV using CSVHandler
+  const csvResult = CSVHandler.readBooksSync(CSV_PATH);
+  const books = csvResult.data;
+
+  console.log(`\nProcessed ${books.length} books from CSV.`);
 
   return new Promise((resolve, reject) => {
-    fs.createReadStream(CSV_PATH)
-      .pipe(csv())
-      .on('data', (row) => {
-        books.push(row);
-      })
-      .on('end', () => {
-        console.log(`\nProcessed ${books.length} books from CSV.`);
+    try {
 
         // Filter books if titles provided
         let booksToGenerate = books;
