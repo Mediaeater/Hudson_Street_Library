@@ -53,6 +53,9 @@ jobs:
             echo "Copied manual book pages to _site/books/"
           fi
 
+      - name: Audit dependencies
+        run: npm audit --audit-level=high
+
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
