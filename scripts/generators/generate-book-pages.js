@@ -371,79 +371,73 @@ async function main() {
 
   console.log(`\nProcessed ${books.length} books from CSV.`);
 
-  return new Promise((resolve, reject) => {
-    try {
-
-        // Filter books if titles provided
-        let booksToGenerate = books;
-        if (filterTitles.length > 0) {
-          booksToGenerate = books.filter(book => {
-            const titleMatch = filterTitles.some(filter =>
-              book.title.toLowerCase().includes(filter.toLowerCase()) ||
-              book.author_last.toLowerCase().includes(filter.toLowerCase()) ||
-              createSlug(book.author_last, book.title).includes(filter.toLowerCase())
-            );
-            return titleMatch;
-          });
-          console.log(`Found ${booksToGenerate.length} matching books to generate.`);
-
-          // List the books that will be generated
-          if (booksToGenerate.length > 0 && booksToGenerate.length <= 10) {
-            console.log('\nBooks to generate:');
-            booksToGenerate.forEach(b => console.log(`  - ${b.title} by ${b.author_full_name}`));
-            console.log('');
-          }
-        }
-
-        let successCount = 0;
-        let errorCount = 0;
-
-        booksToGenerate.forEach((book, index) => {
-          try {
-            // Create slug for directory name
-            const slug = createSlug(book.author_last, book.title);
-            const bookDir = path.join(OUTPUT_DIR, slug);
-
-            // Create directory if it doesn't exist
-            if (!fs.existsSync(bookDir)) {
-              fs.mkdirSync(bookDir, { recursive: true });
-            }
-
-            // Generate HTML with access to all books for related books section
-            const html = generateBookPage(book, template, books);
-
-            // Write file
-            const outputPath = path.join(bookDir, 'index.html');
-            fs.writeFileSync(outputPath, html, 'utf-8');
-
-            successCount++;
-
-            // Log progress every 50 books (or every book if filtering)
-            const logInterval = filterTitles.length > 0 ? 1 : 50;
-            if ((index + 1) % logInterval === 0 || filterTitles.length > 0) {
-              console.log(`Progress: ${index + 1}/${booksToGenerate.length} books processed...`);
-            }
-          } catch (error) {
-            console.error(`Error processing book: ${book.title} by ${book.author_full_name}`);
-            console.error(error.message);
-            errorCount++;
-          }
-        });
-
-        console.log('\n=== Generation Complete ===');
-        console.log(`✓ Successfully generated: ${successCount} pages`);
-        if (errorCount > 0) {
-          console.log(`✗ Errors: ${errorCount}`);
-        }
-        console.log(`\nBook pages created in: ${OUTPUT_DIR}`);
-
-        resolve();
-      })
-      .on('error', (error) => {
-        console.error('Error reading CSV:', error);
-        reject(error);
+  try {
+    // Filter books if titles provided
+    let booksToGenerate = books;
+    if (filterTitles.length > 0) {
+      booksToGenerate = books.filter(book => {
+        const titleMatch = filterTitles.some(filter =>
+          book.title.toLowerCase().includes(filter.toLowerCase()) ||
+          book.author_last.toLowerCase().includes(filter.toLowerCase()) ||
+          createSlug(book.author_last, book.title).includes(filter.toLowerCase())
+        );
+        return titleMatch;
       });
-  });
+      console.log(`Found ${booksToGenerate.length} matching books to generate.`);
+
+      // List the books that will be generated
+      if (booksToGenerate.length > 0 && booksToGenerate.length <= 10) {
+        console.log('\nBooks to generate:');
+        booksToGenerate.forEach(b => console.log(`  - ${b.title} by ${b.author_full_name}`));
+        console.log('');
+      }
+    }
+
+    let successCount = 0;
+    let errorCount = 0;
+
+    booksToGenerate.forEach((book, index) => {
+      try {
+        // Create slug for directory name
+        const slug = createSlug(book.author_last, book.title);
+        const bookDir = path.join(OUTPUT_DIR, slug);
+
+        // Create directory if it doesn't exist
+        if (!fs.existsSync(bookDir)) {
+          fs.mkdirSync(bookDir, { recursive: true });
+        }
+
+        // Generate HTML with access to all books for related books section
+        const html = generateBookPage(book, template, books);
+
+        // Write file
+        const outputPath = path.join(bookDir, 'index.html');
+        fs.writeFileSync(outputPath, html, 'utf-8');
+
+        successCount++;
+
+        // Log progress every 50 books (or every book if filtering)
+        const logInterval = filterTitles.length > 0 ? 1 : 50;
+        if ((index + 1) % logInterval === 0 || filterTitles.length > 0) {
+          console.log(`Progress: ${index + 1}/${booksToGenerate.length} books processed...`);
+        }
+      } catch (error) {
+        console.error(`Error processing book: ${book.title} by ${book.author_full_name}`);
+        console.error(error.message);
+        errorCount++;
+      }
+    });
+
+    console.log('\n=== Generation Complete ===');
+    console.log(`✓ Successfully generated: ${successCount} pages`);
+    if (errorCount > 0) {
+      console.log(`✗ Errors: ${errorCount}`);
+    }
+    console.log(`\nBook pages created in: ${OUTPUT_DIR}`);
+  } catch (error) {
+    console.error('Error generating book pages:', error);
+    throw error;
+  }
 }
 
 // Run if called directly
