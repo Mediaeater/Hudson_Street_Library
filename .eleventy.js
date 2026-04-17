@@ -545,6 +545,9 @@ module.exports = function(eleventyConfig) {
   // Copy .nojekyll to prevent Jekyll processing
   eleventyConfig.addPassthroughCopy(".nojekyll");
 
+  // Copy _headers for Netlify/Cloudflare Pages (RFC 9727 API discovery)
+  eleventyConfig.addPassthroughCopy({"src/_headers": "_headers"});
+
   // --- Ignore admin directory for static builds ---
   eleventyConfig.ignores.add("src/admin/**");
 
