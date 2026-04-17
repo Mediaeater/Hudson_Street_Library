@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation | Hudson Street Library</title>
+    <meta name="description" content="Programmatic access to Hudson Street Library catalog data via standard RFC 9727 API discovery">
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="api-catalog" type="application/linkset+json" href="/.well-known/api-catalog">
+
+</head>
+<body class="min-h-screen bg-neutral-50 text-neutral-900">
+
+
+
+<header class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link ">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Recently Added
+                </a>
+                <a href="/#contact"
+                   class="nav-link ">
+                   Contact
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden focus:outline-none text-teal-800"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <i class="fas fa-bars text-xl" id="mobile-menu-icon"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu"
+         class="hidden md:hidden absolute top-full left-0 right-0 bg-white shadow-lg px-6 py-4 space-y-1 z-40">
+        <a href="/#about" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">About</a>
+        <a href="/collection-explore.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Collections</a>
+        <a href="/static-demo/" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Search</a>
+        <a href="/#publications" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Publications</a>
+        <a href="/news.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">News</a>
+        <a href="/collections/recently_added.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Recently Added</a>
+        <a href="/#contact" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Contact</a>
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const icon = document.getElementById('mobile-menu-icon');
+    const isHidden = menu.classList.contains('hidden');
+
+    if (isHidden) {
+        menu.classList.remove('hidden');
+        menu.classList.add('flex', 'flex-col');
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+    } else {
+        menu.classList.add('hidden');
+        menu.classList.remove('flex', 'flex-col');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+    }
+}
+</script>
+
+
+<div class="max-w-4xl mx-auto px-4 py-12">
+  <h1 class="text-4xl font-bold mb-6">API Documentation</h1>
+
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Discovery</h2>
+    <p class="mb-4">Hudson Street Library implements <a href="https://datatracker.ietf.org/doc/rfc9727/" class="text-blue-600 hover:underline">RFC 9727</a> for API discovery. You can discover available APIs through:</p>
+
+    <h3 class="text-xl font-semibold mb-2">Well-Known URI</h3>
+    <pre class="bg-gray-100 p-4 rounded mb-4 overflow-x-auto"><code>GET https://hudsonstreetlibrary.com/.well-known/api-catalog</code></pre>
+
+    <h3 class="text-xl font-semibold mb-2">Link Relations</h3>
+    <p class="mb-2">All HTML pages include a link relation header:</p>
+    <pre class="bg-gray-100 p-4 rounded mb-4 overflow-x-auto"><code>&lt;link rel="api-catalog" type="application/linkset+json" href="/.well-known/api-catalog"&gt;</code></pre>
+
+    <p class="text-sm text-gray-600 mb-4"><strong>Note:</strong> HTTP Link headers are not available as GitHub Pages does not support custom response headers. The well-known URI and HTML link relations are fully functional.</p>
+  </section>
+
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Available APIs</h2>
+
+    <div class="border-l-4 border-blue-500 pl-4 mb-6">
+      <h3 class="text-xl font-semibold mb-2">Full Catalog JSON</h3>
+      <p class="mb-2"><code class="bg-gray-100 px-2 py-1 rounded">https://hudsonstreetlibrary.com/data/books.json</code></p>
+      <p class="mb-2">Complete library catalog with 1746 book records.</p>
+      <p class="text-sm text-gray-600 mb-2"><strong>Format:</strong> application/json (~1.6MB)</p>
+      <p class="text-sm text-gray-600"><strong>Schema:</strong> <a href="/schemas/book-collection/" class="text-blue-600 hover:underline">/schemas/book-collection/</a></p>
+
+      <h4 class="font-semibold mt-4 mb-2">Example Usage:</h4>
+      <pre class="bg-gray-100 p-4 rounded overflow-x-auto"><code>curl https://hudsonstreetlibrary.com/data/books.json | jq '.[0]'</code></pre>
+    </div>
+
+    <div class="border-l-4 border-green-500 pl-4 mb-6">
+      <h3 class="text-xl font-semibold mb-2">CSV Export</h3>
+      <p class="mb-2"><code class="bg-gray-100 px-2 py-1 rounded">https://hudsonstreetlibrary.com/cms/data/books.csv</code></p>
+      <p class="mb-2">Full catalog export with 36 columns per record.</p>
+      <p class="text-sm text-gray-600 mb-2"><strong>Format:</strong> text/csv</p>
+      <p class="text-sm text-gray-600"><strong>Schema:</strong> <a href="/schemas/book-csv/" class="text-blue-600 hover:underline">/schemas/book-csv/</a></p>
+
+      <h4 class="font-semibold mt-4 mb-2">Example Usage:</h4>
+      <pre class="bg-gray-100 p-4 rounded overflow-x-auto"><code>curl https://hudsonstreetlibrary.com/cms/data/books.csv | head -5</code></pre>
+    </div>
+
+    <div class="border-l-4 border-purple-500 pl-4 mb-6">
+      <h3 class="text-xl font-semibold mb-2">Collections Metadata</h3>
+      <p class="mb-2"><code class="bg-gray-100 px-2 py-1 rounded">https://hudsonstreetlibrary.com/cms/data/libraryCollections.json</code></p>
+      <p class="mb-2">Thematic collection groupings and organization.</p>
+      <p class="text-sm text-gray-600 mb-2"><strong>Format:</strong> application/json</p>
+      <p class="text-sm text-gray-600"><strong>Schema:</strong> <a href="/schemas/collections/" class="text-blue-600 hover:underline">/schemas/collections/</a></p>
+
+      <h4 class="font-semibold mt-4 mb-2">Example Usage:</h4>
+      <pre class="bg-gray-100 p-4 rounded overflow-x-auto"><code>curl https://hudsonstreetlibrary.com/cms/data/libraryCollections.json | jq '.'</code></pre>
+    </div>
+  </section>
+
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Rate Limits & Usage</h2>
+    <p class="mb-4">All APIs are served as static files from GitHub Pages. No rate limits apply beyond GitHub's standard CDN throttling. Data is updated with each deployment when new books are added to the collection.</p>
+
+    <p class="mb-4"><strong>CORS:</strong> All endpoints support cross-origin requests.</p>
+
+    <p class="mb-4"><strong>Caching:</strong> Files are served with standard HTTP caching headers. The catalog typically updates weekly as new acquisitions are added.</p>
+  </section>
+
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Standards Compliance</h2>
+    <ul class="list-disc pl-6 space-y-2">
+      <li><a href="https://datatracker.ietf.org/doc/rfc9727/" class="text-blue-600 hover:underline">RFC 9727</a> - API Catalog Format and Discovery</li>
+      <li><a href="https://datatracker.ietf.org/doc/rfc9264/" class="text-blue-600 hover:underline">RFC 9264</a> - Linkset: Media Types and a Link Relation Type</li>
+      <li><a href="https://www.w3.org/TR/json-ld11/" class="text-blue-600 hover:underline">JSON-LD 1.1</a> - Individual book pages include Schema.org structured data</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 class="text-2xl font-semibold mb-4">Questions?</h2>
+    <p>For questions about API usage or to report issues, please open an issue on the <a href="https://github.com/mudmykola/hudson-street-library" class="text-blue-600 hover:underline">project repository</a>.</p>
+  </section>
+</div>
+
+
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
+        <p>© 2025 Hudson Street Library</p>
+    </div>
+</footer>
+
+</body>
+</html>

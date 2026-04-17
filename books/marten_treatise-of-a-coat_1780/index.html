@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treatise of a Coat by Helen Marten | Hudson Street Library</title>
+    
+<meta name="description" content="&lt;p&gt;This inaugural monograph showcases Helen Marten&#39;s works on paper created between 2019 and 2025, gathering for the first time a comprehensive survey of...">
+    
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="api-catalog" type="application/linkset+json" href="/.well-known/api-catalog">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #faf9f6;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 1.5rem 4rem;
+        }
+
+        /* Cover Image */
+        .cover-section {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .cover-image {
+            max-height: 400px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+        }
+
+        /* Title */
+        .title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 28px;
+            font-weight: 400;
+            color: #1a1a1a;
+            margin-bottom: 0.75rem;
+            text-align: center;
+        }
+
+        /* Author */
+        .author {
+            font-size: 16px;
+            font-weight: 300;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .author .by {
+            color: #a3a3a3;
+        }
+
+        .author a {
+            color: #404040;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .author a:hover {
+            color: #000;
+            text-decoration: underline;
+        }
+
+        /* Vitals */
+        .vitals {
+            font-size: 13px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #737373;
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        /* Description */
+        .description {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 16px;
+            line-height: 1.8;
+            color: #374151;
+            margin-bottom: 2.5rem;
+        }
+
+        /* Separator */
+        .separator {
+            border: 0;
+            border-top: 1px solid rgba(0,0,0,0.06);
+            margin: 2.5rem 0;
+        }
+
+        /* Section Headings */
+        .section-heading {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #737373;
+            margin-bottom: 1.25rem;
+        }
+
+        /* Catalog Data Table */
+        .catalog-data {
+            margin-bottom: 2.5rem;
+        }
+
+        .catalog-row {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 0.65rem;
+            gap: 0.5rem;
+        }
+
+        .catalog-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #a3a3a3;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .catalog-dots {
+            flex-grow: 1;
+            height: 1px;
+            border-bottom: 1px dotted #e5e5e5;
+            margin: 0 0.5rem;
+            align-self: center;
+        }
+
+        .catalog-value {
+            font-size: 14px;
+            color: #404040;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .catalog-value.empty {
+            color: #d4d4d4;
+        }
+
+        .catalog-value a {
+            color: #404040;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .catalog-value a:hover {
+            color: #000;
+            text-decoration: underline;
+        }
+
+        /* Notes */
+        .notes-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .notes-content {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #404040;
+            white-space: pre-line;
+        }
+
+        .notes-content a {
+            color: #0d9488;
+            text-decoration: none;
+            border-bottom: 1px solid #0d948844;
+        }
+
+        .notes-content a:hover {
+            color: #115e59;
+            border-bottom-color: #115e59;
+        }
+
+        /* Contributors */
+        .contributors {
+            margin-bottom: 2.5rem;
+        }
+
+        .contributor-item {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 0.65rem;
+            gap: 0.5rem;
+        }
+
+        .contributor-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #a3a3a3;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .contributor-dots {
+            flex-grow: 1;
+            height: 1px;
+            border-bottom: 1px dotted #e5e5e5;
+            margin: 0 0.5rem;
+            align-self: center;
+        }
+
+        .contributor-value {
+            font-size: 14px;
+            color: #404040;
+            text-align: right;
+        }
+
+        /* Tags */
+        .tags-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            background: #f5f5f5;
+            color: #525252;
+            font-size: 12px;
+            font-weight: 400;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .tag:hover {
+            background: #e5e5e5;
+            color: #000;
+        }
+
+        .classification {
+            font-size: 11px;
+            color: #a3a3a3;
+            letter-spacing: 0.02em;
+        }
+
+        /* Related Books */
+        .related-books {
+            margin-top: 3rem;
+        }
+
+        .books-scroll {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+            scrollbar-width: thin;
+            scrollbar-color: #d4d4d4 transparent;
+        }
+
+        .books-scroll::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .books-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .books-scroll::-webkit-scrollbar-thumb {
+            background: #d4d4d4;
+            border-radius: 3px;
+        }
+
+        .books-scroll::-webkit-scrollbar-thumb:hover {
+            background: #a3a3a3;
+        }
+
+        .related-book {
+            flex: 0 0 auto;
+            width: 140px;
+            text-decoration: none;
+        }
+
+        .related-book-cover {
+            width: 100%;
+            aspect-ratio: 3/4;
+            background: #e5e5e5;
+            border-radius: 2px;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.2s ease;
+            object-fit: cover;
+        }
+
+        .related-book:hover .related-book-cover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+        }
+
+        .related-book-title {
+            font-size: 12px;
+            color: #404040;
+            line-height: 1.4;
+            display: block;
+        }
+
+        .related-book-year {
+            font-size: 11px;
+            color: #a3a3a3;
+        }
+
+        .view-all-link {
+            display: inline-block;
+            margin-top: 1.5rem;
+            font-size: 13px;
+            color: #404040;
+            text-decoration: none;
+            border-bottom: 1px solid #d4d4d4;
+            transition: all 0.2s ease;
+        }
+
+        .view-all-link:hover {
+            color: #000;
+            border-bottom-color: #737373;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 640px) {
+            .container {
+                padding: 0 1rem 3rem;
+            }
+
+            .cover-image {
+                max-height: 300px;
+            }
+
+            .title {
+                font-size: 24px;
+            }
+
+            .author {
+                font-size: 15px;
+            }
+
+            .vitals {
+                font-size: 12px;
+            }
+
+            .description {
+                font-size: 15px;
+                line-height: 1.75;
+            }
+
+            .catalog-label,
+            .contributor-label {
+                font-size: 10px;
+            }
+
+            .catalog-value,
+            .contributor-value {
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .cover-image {
+                max-height: 250px;
+            }
+
+            .title {
+                font-size: 22px;
+            }
+
+            .related-book {
+                width: 120px;
+            }
+        }
+    </style>
+    <script>
+        // Auto-linkify URLs in notes section
+        document.addEventListener('DOMContentLoaded', function() {
+            const notesSection = document.querySelector('.notes-content');
+            if (notesSection) {
+                const urlRegex = /(https?:\/\/[^\s]+)/g;
+                notesSection.innerHTML = notesSection.innerHTML.replace(urlRegex, function(url) {
+                    return '<a href="' + url + '" target="_blank" rel="noopener noreferrer">' + url + '</a>';
+                });
+            }
+        });
+    </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Hudson Street Library",
+  "url": "https://hudsonstreetlibrary.com",
+  "logo": "https://hudsonstreetlibrary.com/assets/images/logo.png",
+  "description": "A curated collection of photography, art, and design books"
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Book",
+  "name": "Treatise of a Coat",
+  "author": {
+    "@type": "Person",
+    "name": "Helen Marten"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Verlag der Buchhandlung Walther König"
+  },
+  "isbn": "9783753309132",
+  "datePublished": "2025",
+  "image": "https://hudsonstreetlibrary.com/assets/images/books/marten_helen_treatise_of_a_coat_9783753309132.jpg",
+  "description": "&lt;p&gt;This inaugural monograph showcases Helen Marten&#39;s works on paper created between 2019 and 2025, gathering for the first time a comprehensive survey of the English artist&#39;s drawing and painting practice. The publication features works executed in colored pencil, watercolor, ink, airbrush, acrylic, and graphite—alongside more unusual media like sand, silicone, and olive oil—presenting a sumptuous visual document of Marten&#39;s material investigations on paper.&lt;/p&gt;  &lt;p class=&quot;mt-6&quot;&gt;Designed as an...",
+  "numberOfPages": 392,
+  "bookFormat": "https://schema.org/Hardcover"
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://hudsonstreetlibrary.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Books",
+      "item": "https://hudsonstreetlibrary.com/static-demo/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Treatise of a Coat",
+      "item": "https://hudsonstreetlibrary.com/books/marten_treatise-of-a-coat_1780/"
+    }
+  ]
+}
+</script>
+
+</head>
+<body class="min-h-screen bg-neutral-50">
+
+
+
+<header class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link ">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Recently Added
+                </a>
+                <a href="/#contact"
+                   class="nav-link ">
+                   Contact
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden focus:outline-none text-teal-800"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <i class="fas fa-bars text-xl" id="mobile-menu-icon"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu"
+         class="hidden md:hidden absolute top-full left-0 right-0 bg-white shadow-lg px-6 py-4 space-y-1 z-40">
+        <a href="/#about" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">About</a>
+        <a href="/collection-explore.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Collections</a>
+        <a href="/static-demo/" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Search</a>
+        <a href="/#publications" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Publications</a>
+        <a href="/news.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">News</a>
+        <a href="/collections/recently_added.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Recently Added</a>
+        <a href="/#contact" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Contact</a>
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const icon = document.getElementById('mobile-menu-icon');
+    const isHidden = menu.classList.contains('hidden');
+
+    if (isHidden) {
+        menu.classList.remove('hidden');
+        menu.classList.add('flex', 'flex-col');
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+    } else {
+        menu.classList.add('hidden');
+        menu.classList.remove('flex', 'flex-col');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+    }
+}
+</script>
+
+
+<main class="container">
+    <!-- Cover Image -->
+    <div class="cover-section">
+        
+        <img src="/assets/images/books/marten_helen_treatise_of_a_coat_9783753309132.jpg"
+             alt="Treatise of a Coat by Helen Marten"
+             class="cover-image"
+             onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+    </div>
+
+    <!-- Title -->
+    <h1 class="title">Treatise of a Coat</h1>
+
+    <!-- Author -->
+    <div class="author">
+        <span class="by">by</span>
+        
+            <a href="https://helenmarten.net/" target="_blank" rel="noopener">Helen Marten</a>
+        
+    </div>
+
+    <!-- Vitals -->
+    <div class="vitals">
+        
+            
+                <a href="https://greenenaftaligallery.com/shop/helen-marten-treatise-of-a-coat" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;">Verlag der Buchhandlung Walther König</a>
+            
+        
+         · 2025
+         · Hardcover
+    </div>
+
+    <!-- Description -->
+    
+    <div class="description">
+        <p>This inaugural monograph showcases Helen Marten's works on paper created between 2019 and 2025, gathering for the first time a comprehensive survey of the English artist's drawing and painting practice. The publication features works executed in colored pencil, watercolor, ink, airbrush, acrylic, and graphite—alongside more unusual media like sand, silicone, and olive oil—presenting a sumptuous visual document of Marten's material investigations on paper.</p>
+
+<p class="mt-6">Designed as an "unruly artist's book," Treatise of a Coat has multiple physical and linguistic folds. The title offers an oblique reference to Honoré de Balzac's Treatise on Modern Stimulants, embracing the desire for essayistic but paradoxical world building. The publication emphasizes the physicality of making a work on paper, with the word "coat" functioning both as literal garment and as verb signifying layers of visual material. As Marten herself notes, this "treatise" is no such thing—neither formal nor systematic with its subjects.</p>
+
+<p class="mt-6">Helen Marten (b. 1985, Macclesfield, UK) is the youngest recipient of Britain's Turner Prize, which she won in 2016 alongside the inaugural Hepworth Prize for Sculpture. She studied at the Ruskin School of Drawing and Fine Art, University of Oxford, graduating in 2008. Her practice spans sculpture, painting, video, and writing, creating work that questions the stability of the material world and our place within it. Marten is also the author of the novel The Boiled in Between (2020) and is currently working on a second novel and a book of essays on containers.</p>
+
+<p class="mt-6">The book includes essays by Elfriede Jelinek, Eve Esfandiari-Denney, Claire Gilman, and Felix Bernstein. Published in conjunction with Marten's 2025 exhibition at Sadie Coles HQ in London, this volume represents a major statement on her works on paper. Her work is held in collections including The Museum of Modern Art New York, Hirshhorn Museum and Sculpture Garden, Moderna Museet Stockholm, Julia Stoschek Collection Düsseldorf, and Astrup Fearnley Museet Oslo. She was included in the 2013 and 2015 Venice Biennales and is represented by Greene Naftali in New York and Sadie Coles HQ in London.</p>
+    </div>
+    
+
+    <hr class="separator">
+
+    <!-- Catalog Data -->
+    <div class="catalog-data">
+        <h2 class="section-heading">Details</h2>
+
+        <div class="catalog-row">
+            <span class="catalog-label">Publisher</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value">
+                
+                    
+                        <a href="https://greenenaftaligallery.com/shop/helen-marten-treatise-of-a-coat" target="_blank" rel="noopener">Verlag der Buchhandlung Walther König</a>
+                    
+                
+            </span>
+        </div>
+
+        <div class="catalog-row">
+            <span class="catalog-label">Year</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value">2025</span>
+        </div>
+
+        <div class="catalog-row">
+            <span class="catalog-label">ISBN</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value">9783753309132</span>
+        </div>
+
+        <div class="catalog-row">
+            <span class="catalog-label">Format</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value">Hardcover</span>
+        </div>
+
+        <div class="catalog-row">
+            <span class="catalog-label">Pages</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value">392</span>
+        </div>
+
+        <div class="catalog-row">
+            <span class="catalog-label">Dimensions</span>
+            <span class="catalog-dots"></span>
+            <span class="catalog-value">
+                
+                    28cm × 22cm
+                
+            </span>
+        </div>
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+    </div>
+
+    
+    <hr class="separator">
+
+    <!-- Notes -->
+    <div class="notes-section">
+        <h2 class="section-heading">Notes</h2>
+        <div class="notes-content">First monograph of works on paper spanning 2019-2025. Published in conjunction with exhibition at Sadie Coles HQ, London (October-November 2025). Winner of Turner Prize 2016 (youngest recipient) and inaugural Hepworth Prize for Sculpture 2016.</div>
+    </div>
+    
+
+    
+    <hr class="separator">
+
+    <!-- Contributors -->
+    <div class="contributors">
+        <h2 class="section-heading">Contributors</h2>
+
+        
+        <div class="contributor-item">
+            <span class="contributor-label">Editor</span>
+            <span class="contributor-dots"></span>
+            <span class="contributor-value">Helen Marten, Matthew Stuart</span>
+        </div>
+        
+
+        
+        <div class="contributor-item">
+            <span class="contributor-label">Contributors</span>
+            <span class="contributor-dots"></span>
+            <span class="contributor-value">Essays by Elfriede Jelinek, Eve Esfandiari-Denney, Claire Gilman, Felix Bernstein</span>
+        </div>
+        
+
+        
+    </div>
+    
+
+    
+    <hr class="separator">
+
+    <!-- Tags -->
+    <div class="tags-section">
+        <h2 class="section-heading">Tags</h2>
+        
+        <div class="tags">
+            
+            
+            
+            
+            <a href="/aggregate-view/?filter=tag&value=Art" class="tag">Art</a>
+            
+            
+            
+            
+            <a href="/aggregate-view/?filter=tag&value=Drawing" class="tag">Drawing</a>
+            
+            
+            
+            
+            <a href="/aggregate-view/?filter=tag&value=Contemporary%20Art" class="tag">Contemporary Art</a>
+            
+            
+            
+            
+            <a href="/aggregate-view/?filter=tag&value=Works%20on%20Paper" class="tag">Works on Paper</a>
+            
+            
+        </div>
+        
+        
+    </div>
+    
+
+    <!-- Other Books by Same Author -->
+    
+    
+
+    
+    <hr class="separator">
+
+    <div class="related-books">
+        <h2 class="section-heading">More by Helen Marten</h2>
+        <div class="books-scroll">
+            
+            <a href="/books/marten_therefore-an-ogre_697/" class="related-book">
+                
+                <img src="/assets/images/books/marten_helen_therefore_an_ogre.jpg"
+                     alt="Therefore, An Ogre"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Therefore, An Ogre</span>
+                
+                <span class="related-book-year">2021</span>
+                
+            </a>
+            
+            <a href="/books/marten_sparrows-on-the-stone-sadie-coles-exhibition-booklet_698/" class="related-book">
+                
+                <img src="/assets/images/books/Marten_Sparrows_On_the_Stone_Sadie_Coles_exhibition_booklet_NULL.jpg"
+                     alt="Sparrows On the Stone (Sadie Coles exhibition booklet)"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Sparrows On the Stone (Sadie Coles exhibition booklet)</span>
+                
+                <span class="related-book-year">2021</span>
+                
+            </a>
+            
+            <a href="/books/marten_parrot-problems_699/" class="related-book">
+                
+                <img src="/assets/images/books/marten_helen_parrot_problems_9783863358761.jpg"
+                     alt="Parrot Problems"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Parrot Problems</span>
+                
+                <span class="related-book-year">2016</span>
+                
+            </a>
+            
+            <a href="/books/marten_drunk-brown-house_700/" class="related-book">
+                
+                <img src="/assets/images/books/Marten_Drunk_Brown_House_9783960980056.jpg"
+                     alt="Drunk Brown House"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Drunk Brown House</span>
+                
+                <span class="related-book-year">2017</span>
+                
+            </a>
+            
+            <a href="/books/marten_helen-marten_701/" class="related-book">
+                
+                <img src="/assets/images/books/Marten_Helen_Marten_9783037643464.jpg"
+                     alt="Helen Marten"
+                     class="related-book-cover"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+                <span class="related-book-title">Helen Marten</span>
+                
+                <span class="related-book-year">2013</span>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+    
+</main>
+
+</body>
+</html>
