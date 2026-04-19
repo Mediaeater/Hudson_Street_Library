@@ -1,0 +1,382 @@
+---
+permalink: /news/finding-fred/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finding Fred: The Hidden Art of Fred Cray · Hudson Street Library</title>
+    <meta name="description" content="Have you ever found a genuine, one-of-a-kind work of art hidden inside a library book? Brooklyn artist Fred Cray's photographs turn up in the wild, not by invitation.">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Crimson+Pro:wght@300;400;600;700&family=Archivo+Narrow:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-ink: #0A0A0A;
+            --color-paper: #F8F7F4;
+            --color-vellum: #EEEDE8;
+            --color-brown: #8B7355;
+            --color-border: rgba(10, 10, 10, 0.12);
+            --color-accent: #D4A574;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--color-paper);
+            color: var(--color-ink);
+            font-family: 'Crimson Pro', serif;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .article-container {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 6rem 2rem 4rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .back-link {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-brown);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 3rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover { color: var(--color-ink); }
+
+        .featured-content { animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+        .feature-category {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--color-accent);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .feature-category::after {
+            content: '';
+            height: 1px;
+            width: 60px;
+            background: var(--color-accent);
+        }
+
+        .feature-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+            color: var(--color-ink);
+        }
+
+        .feature-subtitle {
+            font-family: 'Crimson Pro', serif;
+            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+            line-height: 1.4;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--color-brown);
+            margin-bottom: 2rem;
+            max-width: 45ch;
+        }
+
+        .feature-meta {
+            display: flex;
+            gap: 2rem;
+            padding-bottom: 2rem;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--color-border);
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--color-brown);
+            flex-wrap: wrap;
+        }
+
+        .feature-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-meta i { font-size: 0.75rem; opacity: 0.6; }
+
+        .feature-hero {
+            width: 100%;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+            background: var(--color-vellum);
+            border: 1px solid var(--color-border);
+            aspect-ratio: 16/9;
+        }
+
+        .feature-hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.9;
+        }
+
+        .feature-hero-caption {
+            margin-top: 0.75rem;
+            margin-bottom: 3rem;
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.8125rem;
+            color: var(--color-brown);
+            font-style: italic;
+        }
+
+        .feature-body { max-width: 680px; margin: 0 auto; }
+
+        .feature-body > p {
+            font-size: 1.1875rem;
+            line-height: 1.8;
+            margin-bottom: 1.75rem;
+            color: var(--color-ink);
+        }
+
+        .feature-body > p:first-of-type::first-letter {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 5.5rem;
+            line-height: 0.85;
+            float: left;
+            margin: 0.1em 0.15em 0 0;
+            font-weight: 700;
+            color: var(--color-brown);
+        }
+
+        .pull-quote {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.75rem;
+            line-height: 1.35;
+            font-weight: 400;
+            font-style: italic;
+            color: var(--color-brown);
+            margin: 3rem 0;
+            padding: 2rem 0;
+            border-top: 2px solid var(--color-ink);
+            border-bottom: 2px solid var(--color-ink);
+            position: relative;
+        }
+
+        .pull-quote::before {
+            content: '"';
+            font-size: 6rem;
+            position: absolute;
+            left: -0.25em;
+            top: -0.15em;
+            opacity: 0.15;
+            font-family: 'Libre Baskerville', serif;
+        }
+
+        .section-ornament {
+            text-align: center;
+            margin: 3rem 0;
+            font-size: 1.5rem;
+            color: var(--color-brown);
+            opacity: 0.4;
+            letter-spacing: 0.5rem;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 4rem 1.25rem 3rem; }
+            .feature-meta { gap: 1rem; font-size: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+{% set currentPage = 'news' %}
+{% include "components/site-header.njk" %}
+
+<main>
+    <div class="article-container">
+        <a href="/news.html" class="back-link"><i class="fas fa-arrow-left"></i> News &amp; Features</a>
+
+        <article class="featured-content">
+            <div class="feature-category">Featured</div>
+
+            <h1 class="feature-title">Finding Fred: The Hidden Art of Fred Cray</h1>
+
+            <p class="feature-subtitle">
+                Have you ever found a genuine, one-of-a-kind work of art hidden inside a library book? Brooklyn artist Fred Cray's photographs turn up in the wild, not by invitation.
+            </p>
+
+            <div class="feature-meta">
+                <span><i class="far fa-user"></i> Hudson Street Library</span>
+                <span><i class="far fa-calendar"></i> March 2026</span>
+                <span><i class="far fa-clock"></i> 8 min read</span>
+            </div>
+
+            <div class="feature-hero">
+                <img src="/assets/images/news/fred-cray-found-imgs-f.jpg" alt="Fred Cray unique photograph - ethereal self-portrait">
+            </div>
+            <div class="feature-hero-caption">
+                A Fred Cray unique photograph discovered at The Strand. Each piece is hand-stamped and numbered, one of nearly 50,000 placed globally.
+            </div>
+
+            <div class="feature-body">
+                <p>Have you ever found a genuine, one-of-a-kind work of art hidden inside a library book? If you frequent the city's bookstores, galleries, or public libraries, you may have crossed paths with the work of Brooklyn-based artist Fred Cray without realizing it — his photographs turn up in the wild, not by invitation.</p>
+
+                <h3 style="font-family: 'Libre Baskerville', serif; font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-brown);">The Unique Photographs Project</h3>
+
+                <p>For over a decade, Cray has pursued a quiet but remarkable urban art intervention. Rejecting reproducibility, he creates individual 4×6 inch photographs — lush, ethereal self-portraits and abstracted scenes — stamps and numbers each one by hand, and releases them into the world. Nearly 50,000 have been placed globally: inserted into bookstore and gallery shelves, tucked into IKEA picture frames on display, and most frequently, nestled inside the pages of books.</p>
+
+                <figure style="margin: 3rem 0; text-align: center;">
+                    <img src="/assets/images/news/fred-cray-found-imgs-a.jpg" alt="Fred Cray unique photograph" style="max-width: 100%; height: auto; border: 1px solid var(--color-border);">
+                    <figcaption style="margin-top: 0.75rem; font-family: 'Archivo Narrow', sans-serif; font-size: 0.8125rem; color: var(--color-brown); font-style: italic;">
+                        Example of a unique photograph from the series — each one hand-stamped and numbered.
+                    </figcaption>
+                </figure>
+
+                <h3 style="font-family: 'Libre Baskerville', serif; font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-brown);">A Theory of Curated Placement</h3>
+
+                <p>What distinguishes Cray's practice from simple art-dropping is intentionality. My own collection has grown to over a dozen pieces found across the city, and a pivotal moment reshaped how I understood the project. One afternoon, I found a photo inside a book at The Strand — and not ten minutes later, discovered another hidden on a display shelf at a Chelsea gallery. Finding two in a single day forced a reconsideration. Cray isn't placing his work randomly. He is matching visual poetry with written word, creating a fleeting, site-specific installation for an audience of one.</p>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 3rem 0;">
+                    <figure>
+                        <img src="/assets/images/news/fred-cray-found-imgs-b.jpg" alt="Fred Cray photograph" style="width: 100%; height: auto; border: 1px solid var(--color-border);">
+                    </figure>
+                    <figure>
+                        <img src="/assets/images/news/fred-cray-found-imgs-c.jpg" alt="Fred Cray photograph" style="width: 100%; height: auto; border: 1px solid var(--color-border);">
+                    </figure>
+                </div>
+
+                <h3 style="font-family: 'Libre Baskerville', serif; font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-brown);">Fred Cray Books in Our Collection</h3>
+
+                <p>The Hudson Street Library holds several rare, self-published volumes from Cray's imprint, 64 Books — limited-edition artist books designed as vessels for his original work, each copy made distinct by the photographs laid within.</p>
+
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin: 3rem 0;">
+                    <figure>
+                        <img src="/assets/images/news/fred-cray-book-unique-photographs.jpg" alt="Unique Photographs book cover" style="width: 100%; height: auto; border: 1px solid var(--color-border);">
+                        <figcaption style="margin-top: 0.75rem; font-family: 'Archivo Narrow', sans-serif; font-size: 0.75rem; color: var(--color-brown);">
+                            Unique Photographs (2013)
+                        </figcaption>
+                    </figure>
+                    <figure>
+                        <img src="/assets/images/news/fred-cray-book-changing-of-the-guard.jpg" alt="Changing of the Guard book cover" style="width: 100%; height: auto; border: 1px solid var(--color-border);">
+                        <figcaption style="margin-top: 0.75rem; font-family: 'Archivo Narrow', sans-serif; font-size: 0.75rem; color: var(--color-brown);">
+                            Changing of the Guard (2014)
+                        </figcaption>
+                    </figure>
+                    <figure>
+                        <img src="/assets/images/news/fred-cray-book-hashtag.jpg" alt="# book cover" style="width: 100%; height: auto; border: 1px solid var(--color-border);">
+                        <figcaption style="margin-top: 0.75rem; font-family: 'Archivo Narrow', sans-serif; font-size: 0.75rem; color: var(--color-brown);">
+                            # (2016)
+                        </figcaption>
+                    </figure>
+                    <figure>
+                        <img src="/assets/images/news/fred-cray-book-silhouettes.jpg" alt="Silhouettes book cover" style="width: 100%; height: auto; border: 1px solid var(--color-border);">
+                        <figcaption style="margin-top: 0.75rem; font-family: 'Archivo Narrow', sans-serif; font-size: 0.75rem; color: var(--color-brown);">
+                            Silhouettes (2016)
+                        </figcaption>
+                    </figure>
+                </div>
+
+                <p><strong><em>Unique Photographs</em> (2013) — ISBN: 9781617042010</strong><br>
+                One of only 200 copies. The seminal edition of the project, each copy containing four original Unique Photos tipped in, ensuring no two volumes are identical.</p>
+
+                <p><strong><em>Changing of the Guard: Unique Photographs Volume 2</em> (2014) — ISBN: 9781617042027</strong><br>
+                A hardcover edition of 200, continuing the series with characteristic "spirit" self-portraits and layered, graffiti-inflected imagery.</p>
+
+                <p><strong><em>#</em> (2016) — ISBN: 9781617042041</strong><br>
+                A rarer run of 150 hardcover copies. Deeply atmospheric, pairing haunting manipulated portraiture with poetic text.</p>
+
+                <p><strong><em>Silhouettes</em> (2016)</strong><br>
+                Signed. 58 pages. One of 120 numbered copies — the first and only edition. Cray's most formally rigorous entry in the Unique Photographs project: each image superimposes a silhouette with a second photographically-sourced image, producing what he calls a "double-printed photograph" — one of a kind by definition. Three loose 4×6 unique postcards laid in. No text.</p>
+
+                <div class="pull-quote">
+                    Cray isn't placing his work randomly. He is matching visual poetry with written word, creating a fleeting, site-specific installation for an audience of one.
+                </div>
+
+                <figure style="margin: 3rem 0; text-align: center;">
+                    <img src="/assets/images/news/fred-cray-found-imgs-e.jpg" alt="Fred Cray archive" style="max-width: 100%; height: auto; border: 1px solid var(--color-border);">
+                    <figcaption style="margin-top: 0.75rem; font-family: 'Archivo Narrow', sans-serif; font-size: 0.8125rem; color: var(--color-brown); font-style: italic;">
+                        The growing archive of Fred Cray photographs at Hudson Street Library.
+                    </figcaption>
+                </figure>
+
+                <h3 style="font-family: 'Libre Baskerville', serif; font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-brown);">The Archive</h3>
+
+                <p>Beyond these volumes, the Library maintains a growing archive of individual photographs discovered in the field — pieces recovered from The Strand, Chelsea galleries, and locations across the city. Each is hand-stamped and numbered by Cray, a physical record of its journey from studio to the secret corners of New York City.</p>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 3rem 0;">
+                    <figure>
+                        <img src="/assets/images/news/fred-cray-found-imgs-g.jpg" alt="Fred Cray photograph detail" style="width: 100%; height: auto; border: 1px solid var(--color-border);">
+                    </figure>
+                    <figure>
+                        <img src="/assets/images/news/fred-cray-found-imgs-h.jpg" alt="Fred Cray photograph detail" style="width: 100%; height: auto; border: 1px solid var(--color-border);">
+                    </figure>
+                </div>
+
+                <h3 style="font-family: 'Libre Baskerville', serif; font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-brown);">How to Identify a Fred Cray</h3>
+
+                <p>Flip it over. On the verso: a hand-applied ink stamp reading <em>Fred Cray</em>, a handwritten number denoting its place in the nearly 50,000-strong series, and — increasingly — embossed tactile elements. If you find one, you've found something genuinely singular.</p>
+
+                <figure style="margin: 3rem 0; text-align: center;">
+                    <img src="/assets/images/news/fred-cray-found-imgs-i.jpg" alt="Fred Cray stamp and numbering" style="max-width: 100%; height: auto; border: 1px solid var(--color-border);">
+                    <figcaption style="margin-top: 0.75rem; font-family: 'Archivo Narrow', sans-serif; font-size: 0.8125rem; color: var(--color-brown); font-style: italic;">
+                        The verso of a Fred Cray unique photograph showing hand-stamped signature and numbering.
+                    </figcaption>
+                </figure>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 3rem 0;">
+                    <figure>
+                        <img src="/assets/images/news/fred-cray-found-imgs-k.jpg" alt="Fred Cray unique photograph" style="width: 100%; height: auto; border: 1px solid var(--color-border);">
+                    </figure>
+                    <figure>
+                        <img src="/assets/images/news/fred-cray-found-imgs-l.jpg" alt="Fred Cray unique photograph" style="width: 100%; height: auto; border: 1px solid var(--color-border);">
+                    </figure>
+                </div>
+
+                <div class="section-ornament">❖ ❖ ❖</div>
+
+                <p style="text-align: center; font-style: italic; color: var(--color-brown);">Visit <a href="https://fredcray.com" target="_blank" rel="noopener noreferrer" style="color: var(--color-brown); text-decoration: underline;">fredcray.com</a> — we are barely scraping the surface of his work and practice. The depth of it is quietly radical.</p>
+            </div>
+        </article>
+    </div>
+</main>
+
+{% include "components/site-footer.njk" %}
+
+</body>
+</html>
