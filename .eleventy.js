@@ -288,6 +288,54 @@ module.exports = function(eleventyConfig) {
     return diverseResults;
   });
 
+  // --- Load collection-matcher helpers ---
+  const { matchesCollection, assignSection } = require('./scripts/utils/collection-matcher');
+
+  // --- Filter: books that belong to a collection (by config) ---
+  eleventyConfig.addFilter("booksInCollection", function(books, collectionConfig) {
+    if (!books || !collectionConfig) return [];
+    return books.filter(b => matchesCollection(b, collectionConfig));
+  });
+
+  // --- Filter: group books into sections per config ---
+  eleventyConfig.addFilter("groupBySections", function(books, collectionConfig) {
+    if (!books) return [];
+    const sections = (collectionConfig.sections || []).map(s => ({ ...s, books: [] }));
+    const otherSection = { label: 'Other', books: [] };
+
+    books.forEach(b => {
+      const label = assignSection(b, collectionConfig);
+      if (!label) {
+        otherSection.books.push(b);
+        return;
+      }
+      const target = sections.find(s => s.label === label) || otherSection;
+      target.books.push(b);
+    });
+
+    const result = sections.filter(s => s.books.length > 0);
+    if (otherSection.books.length > 0 && !collectionConfig.sections) {
+      return [otherSection];
+    }
+    if (otherSection.books.length > 0) result.push(otherSection);
+    return result;
+  });
+
+  // --- Filter: sort books per collection config ---
+  eleventyConfig.addFilter("sortBooks", function(books, sortBy) {
+    if (!books) return [];
+    const list = [...books];
+    const issueNum = b => {
+      const m = (b.title || '').match(/Issue #?(\d+)/i);
+      return m ? parseInt(m[1], 10) : 0;
+    };
+    if (sortBy === 'issueNumberDesc') return list.sort((a,b) => issueNum(b) - issueNum(a));
+    if (sortBy === 'issueNumberAsc') return list.sort((a,b) => issueNum(a) - issueNum(b));
+    if (sortBy === 'publicationYearDesc') return list.sort((a,b) => (parseInt(b.publication_year,10)||0) - (parseInt(a.publication_year,10)||0));
+    if (sortBy === 'titleAsc') return list.sort((a,b) => (a.title||'').localeCompare(b.title||''));
+    return list;
+  });
+
   // --- Count books by author ---
   eleventyConfig.addFilter("countByAuthor", function(books, authorLast, currentId) {
     if (!books || !authorLast) return 0;
