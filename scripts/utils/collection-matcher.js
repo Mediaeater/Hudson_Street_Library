@@ -9,6 +9,9 @@ function matchesCollection(book, config) {
   if (rule.titleContains) {
     return (book.title || '').toLowerCase().includes(rule.titleContains.toLowerCase());
   }
+  if (rule.titleRegex) {
+    return new RegExp(rule.titleRegex, 'i').test(book.title || '');
+  }
   if (rule.keywords) {
     const hay = [book.title, book.tags, book.classification, book.description, book.collection_grouping]
       .map(s => (s || '').toLowerCase()).join(' ');
