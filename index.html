@@ -54,6 +54,38 @@
             opacity: 0.15;
         }
 
+        /* Editorial "pull back" reveal: open intimate, settle on the wide room */
+        .hero-image-intro,
+        .hero-image-final {
+            opacity: 0;
+        }
+
+        .hero-image-intro {
+            animation: heroIntroFade 2.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .hero-image-final {
+            animation: heroRevealFade 3.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes heroIntroFade {
+            0%   { opacity: 0; }
+            20%  { opacity: 0.22; }
+            55%  { opacity: 0.22; }
+            100% { opacity: 0; }
+        }
+
+        @keyframes heroRevealFade {
+            0%   { opacity: 0; }
+            45%  { opacity: 0; }
+            100% { opacity: 0.15; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .hero-image-intro { opacity: 0; animation: none; }
+            .hero-image-final { opacity: 0.15; animation: none; }
+        }
+
         .hero-content {
             position: relative;
             z-index: 2;
@@ -434,7 +466,8 @@ function toggleMobileMenu() {
 
 <!-- Hero Section -->
 <section class="hero">
-    <img src="/assets/images/site/IMG1788.jpeg" alt="Bookshelves at Hudson Street Library" class="hero-image">
+    <img src="/assets/images/site/IMG1788.jpeg" alt="" aria-hidden="true" class="hero-image hero-image-intro">
+    <img src="/assets/images/site/home-library-wall-bookshelves.jpg" alt="Hudson Street Library bookshelf wall" class="hero-image hero-image-final">
     <div class="hero-content">
         <div class="hero-label">Private Research Library</div>
         <h1 class="hero-title">Hudson Street<br>Library</h1>
