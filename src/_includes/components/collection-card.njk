@@ -1,0 +1,16 @@
+{# Expects: book #}
+<a href="/books/{{ book.author_last | slugify }}_{{ book.title | slugify }}_{{ book.id }}/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        {% if book.image_url %}
+            <img src="{{ book.image_url }}" alt="{{ book.title }}" class="w-full h-full object-cover" loading="lazy">
+        {% else %}
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        {% endif %}
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">{{ book.title }}</p>
+        {% if book.publication_year %}
+            <p class="text-xs text-gray-500">{{ book.publication_year }}</p>
+        {% endif %}
+    </div>
+</a>
