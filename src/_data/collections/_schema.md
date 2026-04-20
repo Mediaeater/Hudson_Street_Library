@@ -7,7 +7,7 @@ Each collection has a JSON file at `src/_data/collections/<slug>.json`.
 - `slug` — URL slug (must match filename)
 - `title` — display name
 - `description` — intro paragraph shown above grid
-- `matchBy` — object with ONE of: `{ "collection_grouping": "Purple Magazine" }` or `{ "authorLast": "Prince" }` or `{ "titleContains": "Apartamento" }` or `{ "keywords": ["wombat","portfolio"] }`
+- `matchBy` — object with ONE of: `{ "collection_grouping": "Purple Magazine" }`, `{ "authorLast": "Prince" }`, `{ "titleContains": "Apartamento" }`, `{ "titleRegex": "^Purple (Fashion|Magazine)" }` (case-insensitive), or `{ "keywords": ["wombat","portfolio"] }`
 
 ## Optional fields
 
