@@ -1,0 +1,762 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> | Hudson Street Library</title>
+    
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="api-catalog" type="application/linkset+json" href="/.well-known/api-catalog">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Hudson Street Library",
+  "url": "https://hudsonstreetlibrary.com",
+  "logo": "https://hudsonstreetlibrary.com/assets/images/logo.png",
+  "description": "A curated collection of photography, art, and design books"
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "",
+  "url": "https://hudsonstreetlibrary.comcollections/{{ collectionConfig.slug }}/index.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Hudson Street Library",
+    "url": "https://hudsonstreetlibrary.com"
+  }
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://hudsonstreetlibrary.com/"
+    }
+  ]
+}
+</script>
+
+</head>
+<body class="min-h-screen bg-neutral-50 text-neutral-900">
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    .site-header {
+        font-family: 'Crimson Pro', 'Libre Baskerville', Georgia, serif;
+    }
+    .site-header .site-logo {
+        font-family: 'Crimson Pro', 'Libre Baskerville', Georgia, serif;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+    }
+    .site-header .nav-link {
+        font-family: 'Crimson Pro', 'Libre Baskerville', Georgia, serif;
+        font-size: 1.0625rem;
+        font-weight: 400;
+        letter-spacing: 0.005em;
+    }
+    .site-header .nav-link[aria-current="page"],
+    .site-header .nav-link-active {
+        font-weight: 600;
+    }
+    .site-header #mobile-nav-menu a {
+        font-family: 'Crimson Pro', 'Libre Baskerville', Georgia, serif;
+        font-size: 1.0625rem;
+    }
+</style>
+
+<header class="site-header sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="site-logo text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link ">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Recently Added
+                </a>
+                <a href="/#contact"
+                   class="nav-link ">
+                   Contact
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden focus:outline-none text-teal-800"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <i class="fas fa-bars text-xl" id="mobile-menu-icon"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu"
+         class="hidden md:hidden absolute top-full left-0 right-0 bg-white shadow-lg px-6 py-4 space-y-1 z-40">
+        <a href="/#about" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">About</a>
+        <a href="/collection-explore.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Collections</a>
+        <a href="/static-demo/" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Search</a>
+        <a href="/#publications" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Publications</a>
+        <a href="/news.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">News</a>
+        <a href="/collections/recently_added.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Recently Added</a>
+        <a href="/#contact" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Contact</a>
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const icon = document.getElementById('mobile-menu-icon');
+    const isHidden = menu.classList.contains('hidden');
+
+    if (isHidden) {
+        menu.classList.remove('hidden');
+        menu.classList.add('flex', 'flex-col');
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+    } else {
+        menu.classList.add('hidden');
+        menu.classList.remove('flex', 'flex-col');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+    }
+}
+</script>
+
+
+<main>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
+            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Matsuda Fashion Catalogues</h1>
+            <div class="line-divider inline-block"></div>
+            <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">A collection of rare and influential fashion catalogues from Japanese designer Mitsuhiro Matsuda (published between 1984–1993)</p>
+            
+        </div>
+
+        
+        
+
+        
+            
+                
+                
+<section class="mb-16">
+    <div class="volume-header pl-4 mb-8">
+        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
+        
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        
+            
+<a href="/books/matsuda_nicole-times-vol_1379/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol_1382/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol_1383/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol_1384/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol_1386/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol_1388/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol_1392/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-01_1357/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 01</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-02_1358/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 02.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-03_1359/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 03.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-04_1360/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 04.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-05_1361/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 05.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-06_1362/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 06.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-07_1363/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 07</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-08_1364/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 08.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-09_1365/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 09.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-10_1366/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 10.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-11_1367/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 11.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-12_1368/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 12.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-13_1369/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 13.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-14_1370/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 14.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-15_1371/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 15.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-16_1372/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 16.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-17_1373/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 17.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-18_1375/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 18</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-18_1374/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 18.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-19_1376/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 19.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-20_1378/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 20</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-21_1377/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 21.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-24_1380/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 24.</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-26_1381/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 26</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-31_1385/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 31</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-32_1387/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 32</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-33_1390/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 33</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-35_1391/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 35</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-36_1389/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 36</p>
+        
+    </div>
+</a>
+
+        
+    </div>
+</section>
+
+            
+        
+    </div>
+</main>
+
+
+
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
+        <p>© 2025 Hudson Street Library</p>
+    </div>
+</footer>
+
+<script>
+    // Mobile Menu Toggle Logic
+    const mobileMenuButton = document.querySelector('button.md\\:hidden');
+    const mobileNavMenu = document.getElementById('mobile-nav-menu');
+
+    if (mobileMenuButton && mobileNavMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+            mobileNavMenu.classList.toggle('hidden');
+            mobileNavMenu.classList.toggle('flex');
+            const icon = mobileMenuButton.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            }
+        });
+    }
+
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            if (this.hash) {
+               const targetElement = document.querySelector(this.hash);
+               if (targetElement) {
+                    e.preventDefault();
+                    const headerOffset = document.querySelector('header')?.offsetHeight || 70;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                    if (mobileMenuButton && mobileMenuButton.getAttribute('aria-expanded') === 'true') {
+                         mobileMenuButton.click();
+                    }
+               }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

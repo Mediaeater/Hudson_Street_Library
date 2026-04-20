@@ -1,0 +1,860 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> | Hudson Street Library</title>
+    
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="api-catalog" type="application/linkset+json" href="/.well-known/api-catalog">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Hudson Street Library",
+  "url": "https://hudsonstreetlibrary.com",
+  "logo": "https://hudsonstreetlibrary.com/assets/images/logo.png",
+  "description": "A curated collection of photography, art, and design books"
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "",
+  "url": "https://hudsonstreetlibrary.comcollections/{{ collectionConfig.slug }}/index.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Hudson Street Library",
+    "url": "https://hudsonstreetlibrary.com"
+  }
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://hudsonstreetlibrary.com/"
+    }
+  ]
+}
+</script>
+
+</head>
+<body class="min-h-screen bg-neutral-50 text-neutral-900">
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    .site-header {
+        font-family: 'Crimson Pro', 'Libre Baskerville', Georgia, serif;
+    }
+    .site-header .site-logo {
+        font-family: 'Crimson Pro', 'Libre Baskerville', Georgia, serif;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+    }
+    .site-header .nav-link {
+        font-family: 'Crimson Pro', 'Libre Baskerville', Georgia, serif;
+        font-size: 1.0625rem;
+        font-weight: 400;
+        letter-spacing: 0.005em;
+    }
+    .site-header .nav-link[aria-current="page"],
+    .site-header .nav-link-active {
+        font-weight: 600;
+    }
+    .site-header #mobile-nav-menu a {
+        font-family: 'Crimson Pro', 'Libre Baskerville', Georgia, serif;
+        font-size: 1.0625rem;
+    }
+</style>
+
+<header class="site-header sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="site-logo text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link ">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Recently Added
+                </a>
+                <a href="/#contact"
+                   class="nav-link ">
+                   Contact
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden focus:outline-none text-teal-800"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <i class="fas fa-bars text-xl" id="mobile-menu-icon"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu"
+         class="hidden md:hidden absolute top-full left-0 right-0 bg-white shadow-lg px-6 py-4 space-y-1 z-40">
+        <a href="/#about" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">About</a>
+        <a href="/collection-explore.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Collections</a>
+        <a href="/static-demo/" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Search</a>
+        <a href="/#publications" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Publications</a>
+        <a href="/news.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">News</a>
+        <a href="/collections/recently_added.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Recently Added</a>
+        <a href="/#contact" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Contact</a>
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const icon = document.getElementById('mobile-menu-icon');
+    const isHidden = menu.classList.contains('hidden');
+
+    if (isHidden) {
+        menu.classList.remove('hidden');
+        menu.classList.add('flex', 'flex-col');
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+    } else {
+        menu.classList.add('hidden');
+        menu.classList.remove('flex', 'flex-col');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+    }
+}
+</script>
+
+
+<main>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
+            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Ephemera</h1>
+            <div class="line-divider inline-block"></div>
+            <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">A collection of transient documents and printed matter – flyers, tickets, pamphlets, postcards, and found photographs – offering glimpses into everyday visual culture.</p>
+            
+        </div>
+
+        
+        
+
+        
+            
+                
+                
+<section class="mb-16">
+    <div class="volume-header pl-4 mb-8">
+        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
+        
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        
+            
+<a href="/books/antonsson_i-am-woman_43/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/covers/9789188031402.jpg" alt="I Am Woman" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">I Am Woman</p>
+        
+            <p class="text-xs text-gray-500">2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/azuma_encyclopedia-of-flowers-part-2-makoto-azuma-shunsuke-shiinoki_73/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Encyclopedia Of Flowers Part 2 - Makoto Azuma  Shunsuke Shiinoki</p>
+        
+            <p class="text-xs text-gray-500">2015</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/bacon_late-paintings_77/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/books/Bacon_Late_Paintings_9780847847754.jpg" alt="Late Paintings" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Late Paintings</p>
+        
+            <p class="text-xs text-gray-500">2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/basquiat_the-notebooks_107/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/books/Basquiat_The_Notebooks_9780691167893.jpg" alt="The Notebooks" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Notebooks</p>
+        
+            <p class="text-xs text-gray-500">2015</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/cartier-bresson-rene-burriraymond_magnum-analog-recovery_207/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Magnum Analog Recovery</p>
+        
+            <p class="text-xs text-gray-500">2017</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/colen_a-real-bronx-cheer_236/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">A Real Bronx Cheer</p>
+        
+            <p class="text-xs text-gray-500">2012</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/golfer_a-house-without-a-roof_445/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/books/Golfer_A_House_Without_A_Roof.jpg" alt="A House Without A Roof" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">A House Without A Roof</p>
+        
+            <p class="text-xs text-gray-500">2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/lichtenstein_lichtenstein-posters_627/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Lichtenstein Posters</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_high-times_896/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_High_Times.jpg" alt="High Times" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">High Times</p>
+        
+            <p class="text-xs text-gray-500">2018</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_kaliflower_902/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Kaliflower.jpg" alt="Kaliflower" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Kaliflower</p>
+        
+            <p class="text-xs text-gray-500">2014</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_second-house_913/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Second_House.jpg" alt="Second House" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Second House</p>
+        
+            <p class="text-xs text-gray-500">2005</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_untitled-band-20132014_919/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Untitled_Band_2013_2014.jpg" alt="untitled (band) 2013/2014" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">untitled (band) 2013/2014</p>
+        
+            <p class="text-xs text-gray-500">2014</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_yea-yea-yea_923/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Yea_Yea_Yea_Sutcliffe.jpg" alt="Yea Yea Yea" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Yea Yea Yea</p>
+        
+            <p class="text-xs text-gray-500">2013</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_bibliotheque-dun-amateur_926/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Bibliotheque_d_un_Amateur.jpg" alt="Bibliothèque d’un Amateur" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Bibliothèque d’un Amateur</p>
+        
+            <p class="text-xs text-gray-500">2022</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/silano_i-wish-i-never-saw-the-sunshine_1066/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">I Wish I Never Saw the Sunshine.</p>
+        
+            <p class="text-xs text-gray-500">2021</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/simon_the-color-of-a-fleas-eye-the-picture-collection_1074/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Color of a Flea’s Eye: The Picture Collection</p>
+        
+            <p class="text-xs text-gray-500">2020</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/thek_stay-away-from-nothing_1309/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/queer/thek-hujar-stay-away-from-nothing.jpg" alt="Stay away from nothing" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Stay away from nothing</p>
+        
+            <p class="text-xs text-gray-500">2025</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/macindoe_all-the-young-punks_1393/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">All The Young Punks</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/robertson_factory-records-the-complete-graphic-album-by-matthew-robertson_1406/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Factory Records: The Complete Graphic Album by Matthew Robertson</p>
+        
+            <p class="text-xs text-gray-500">2006</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/turcotte_fucked-up-photocopied-instant-art-of-the-punk-rock-movement_1407/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Fucked Up + Photocopied: instant art of the punk rock movement</p>
+        
+            <p class="text-xs text-gray-500">1999</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/turcotte_fucked-up-photocopied-instant-art-of-the-punk-rock-movement_1408/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Fucked Up + Photocopied: instant art of the punk rock movement</p>
+        
+            <p class="text-xs text-gray-500">2000</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/cummins_joy-division-by-kevin-cummins-bernard-sumner-three-copies-one-inscribed-one-signed-one-new_1411/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Joy Division by Kevin Cummins, Bernard Sumner   (Three Copies, one inscribed, one signed, one new)</p>
+        
+            <p class="text-xs text-gray-500">2010</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/cummins_new-order-by-kevin-cummins-signed_1413/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">New Order by Kevin Cummins    (signed)</p>
+        
+            <p class="text-xs text-gray-500">2015</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/mott_oh-so-pretty-punk-in-print-1976-19801980_1415/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Oh So Pretty: Punk in Print 1976-19801980</p>
+        
+            <p class="text-xs text-gray-500">2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/mott_showboat-punksexbodies_1424/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Showboat: Punk/Sex/Bodies</p>
+        
+            <p class="text-xs text-gray-500">2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/record-culture_record-culture-issue-9_1501/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record Culture Issue 9</p>
+        
+            <p class="text-xs text-gray-500">2021</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/jones_white-stripes-print-set_1511/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/ephemera/IMG_9301.JPG" alt="White Stripes Print Set" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">White Stripes Print Set</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_family-tweets_1523/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Family_Tweets.jpg" alt="Family Tweets" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Family Tweets</p>
+        
+            <p class="text-xs text-gray-500">2021</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_1234-instagram-recordings-volume-12_1553/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/books/RichardPrince-instagram-volume12.jpg" alt="1234 Instagram recordings, volume 12" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">1234 Instagram recordings, volume 12</p>
+        
+            <p class="text-xs text-gray-500">2019</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_1234-instagram-recordings-volume-9_1554/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/books/Richardprince-instagram-volume-8.jpg" alt="1234 Instagram recordings, volume 9" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">1234 Instagram recordings, volume 9</p>
+        
+            <p class="text-xs text-gray-500">2019</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_same-man-lp_1568/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Same_Man.png" alt="Same man lp" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Same man lp</p>
+        
+            <p class="text-xs text-gray-500">2023</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_super-group_1570/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Super_Group.jpg" alt="Super group" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Super group</p>
+        
+            <p class="text-xs text-gray-500">2018</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/weiner_of-and-about-posters-the-lawrence-weiner-poster-archive-1965-2021_1577/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/books/Lawrence_Weiner_Of_About_Posters_9783777443706.jpg" alt="Of &amp; About Posters: The Lawrence Weiner Poster Archive (1965-2021)" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Of &amp; About Posters: The Lawrence Weiner Poster Archive (1965-2021)</p>
+        
+            <p class="text-xs text-gray-500">2021</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/slanted_slanted-magazine-45sex_1589/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/slanted/slanted-45-sex.jpg" alt="Slanted Magazine #45—Sex" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Slanted Magazine #45—Sex</p>
+        
+            <p class="text-xs text-gray-500">2024</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/grigely_otherhow-essays-and-documents-on-art-and-disability-1985-2024_1690/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/books/Grigely_Otherhow/cover.jpg" alt="Otherhow: Essays and Documents on Art and Disability 1985-2024" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Otherhow: Essays and Documents on Art and Disability 1985-2024</p>
+        
+            <p class="text-xs text-gray-500">2026</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/fischer_who-shares-the-restroom-code-with-ice-agents_1738/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/books/fischer_marc_who_shares_the_restroom_code_with_ice_agents.jpg" alt="Who Shares the Restroom Code with ICE Agents?" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Who Shares the Restroom Code with ICE Agents?</p>
+        
+            <p class="text-xs text-gray-500">2026</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/morgan_static-magic-first-edition-second-printing-current-editions-no-10_1739/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/books/morgan_paul_static_magic_current_editions_no_10.jpg" alt="Static Magic [First Edition / Second Printing]: Current Editions No. 10" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Static Magic [First Edition / Second Printing]: Current Editions No. 10</p>
+        
+            <p class="text-xs text-gray-500">2025</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/fierce-pussy_fierce-pussy_1779/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/books/fierce_pussy_fierce_pussy_9798991036795.jpg" alt="fierce pussy" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">fierce pussy</p>
+        
+            <p class="text-xs text-gray-500">2026</p>
+        
+    </div>
+</a>
+
+        
+    </div>
+</section>
+
+            
+        
+    </div>
+</main>
+
+
+
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
+        <p>© 2025 Hudson Street Library</p>
+    </div>
+</footer>
+
+<script>
+    // Mobile Menu Toggle Logic
+    const mobileMenuButton = document.querySelector('button.md\\:hidden');
+    const mobileNavMenu = document.getElementById('mobile-nav-menu');
+
+    if (mobileMenuButton && mobileNavMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+            mobileNavMenu.classList.toggle('hidden');
+            mobileNavMenu.classList.toggle('flex');
+            const icon = mobileMenuButton.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            }
+        });
+    }
+
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            if (this.hash) {
+               const targetElement = document.querySelector(this.hash);
+               if (targetElement) {
+                    e.preventDefault();
+                    const headerOffset = document.querySelector('header')?.offsetHeight || 70;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                    if (mobileMenuButton && mobileMenuButton.getAttribute('aria-expanded') === 'true') {
+                         mobileMenuButton.click();
+                    }
+               }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

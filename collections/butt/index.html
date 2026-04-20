@@ -1,0 +1,824 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> | Hudson Street Library</title>
+    
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="api-catalog" type="application/linkset+json" href="/.well-known/api-catalog">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Hudson Street Library",
+  "url": "https://hudsonstreetlibrary.com",
+  "logo": "https://hudsonstreetlibrary.com/assets/images/logo.png",
+  "description": "A curated collection of photography, art, and design books"
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "",
+  "url": "https://hudsonstreetlibrary.comcollections/{{ collectionConfig.slug }}/index.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Hudson Street Library",
+    "url": "https://hudsonstreetlibrary.com"
+  }
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://hudsonstreetlibrary.com/"
+    }
+  ]
+}
+</script>
+
+</head>
+<body class="min-h-screen bg-neutral-50 text-neutral-900">
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    .site-header {
+        font-family: 'Crimson Pro', 'Libre Baskerville', Georgia, serif;
+    }
+    .site-header .site-logo {
+        font-family: 'Crimson Pro', 'Libre Baskerville', Georgia, serif;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+    }
+    .site-header .nav-link {
+        font-family: 'Crimson Pro', 'Libre Baskerville', Georgia, serif;
+        font-size: 1.0625rem;
+        font-weight: 400;
+        letter-spacing: 0.005em;
+    }
+    .site-header .nav-link[aria-current="page"],
+    .site-header .nav-link-active {
+        font-weight: 600;
+    }
+    .site-header #mobile-nav-menu a {
+        font-family: 'Crimson Pro', 'Libre Baskerville', Georgia, serif;
+        font-size: 1.0625rem;
+    }
+</style>
+
+<header class="site-header sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="site-logo text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link ">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Recently Added
+                </a>
+                <a href="/#contact"
+                   class="nav-link ">
+                   Contact
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden focus:outline-none text-teal-800"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <i class="fas fa-bars text-xl" id="mobile-menu-icon"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu"
+         class="hidden md:hidden absolute top-full left-0 right-0 bg-white shadow-lg px-6 py-4 space-y-1 z-40">
+        <a href="/#about" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">About</a>
+        <a href="/collection-explore.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Collections</a>
+        <a href="/static-demo/" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Search</a>
+        <a href="/#publications" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Publications</a>
+        <a href="/news.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">News</a>
+        <a href="/collections/recently_added.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Recently Added</a>
+        <a href="/#contact" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Contact</a>
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const icon = document.getElementById('mobile-menu-icon');
+    const isHidden = menu.classList.contains('hidden');
+
+    if (isHidden) {
+        menu.classList.remove('hidden');
+        menu.classList.add('flex', 'flex-col');
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+    } else {
+        menu.classList.add('hidden');
+        menu.classList.remove('flex', 'flex-col');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+    }
+}
+</script>
+
+
+<main>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
+            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">BUTT Magazine</h1>
+            <div class="line-divider inline-block"></div>
+            <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Legendary independent gay culture and lifestyle magazine known for its distinctive photography, intimate interviews, and honest storytelling. Published from 2001 to 2011, relaunched in 2023.</p>
+            
+                <div class="mt-6 flex justify-center gap-4">
+                    <a href="https://buttmagazine.com/" target="_blank" class="text-sm text-primary-700 hover:underline">
+                        <i class="fas fa-external-link-alt mr-1"></i> buttmagazine.com
+                    </a>
+                </div>
+            
+        </div>
+
+        
+        
+
+        
+            
+                
+                
+<section class="mb-16">
+    <div class="volume-header pl-4 mb-8">
+        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
+        
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        
+            
+<a href="/books/butt_butt-magazine-3_1693/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-3.jpg" alt="BUTT Magazine #3" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #3</p>
+        
+            <p class="text-xs text-gray-500">2002</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-4_1694/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-4.jpg" alt="BUTT Magazine #4" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #4</p>
+        
+            <p class="text-xs text-gray-500">2002</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-5_1695/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-5.jpg" alt="BUTT Magazine #5" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #5</p>
+        
+            <p class="text-xs text-gray-500">2003</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-6_1696/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-6.jpg" alt="BUTT Magazine #6" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #6</p>
+        
+            <p class="text-xs text-gray-500">2003</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-7_1697/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-7.jpg" alt="BUTT Magazine #7" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #7</p>
+        
+            <p class="text-xs text-gray-500">2004</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-8_1698/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-8.jpg" alt="BUTT Magazine #8" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #8</p>
+        
+            <p class="text-xs text-gray-500">2004</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-9_1699/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-9.jpg" alt="BUTT Magazine #9" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #9</p>
+        
+            <p class="text-xs text-gray-500">2005</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-10_1700/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-10.jpg" alt="BUTT Magazine #10" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #10</p>
+        
+            <p class="text-xs text-gray-500">2005</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-11_1701/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-11.jpg" alt="BUTT Magazine #11" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #11</p>
+        
+            <p class="text-xs text-gray-500">2006</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-12_1702/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-12.jpg" alt="BUTT Magazine #12" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #12</p>
+        
+            <p class="text-xs text-gray-500">2006</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-13_1703/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-13.jpg" alt="BUTT Magazine #13" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #13</p>
+        
+            <p class="text-xs text-gray-500">2007</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-14_1704/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-14.jpg" alt="BUTT Magazine #14" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #14</p>
+        
+            <p class="text-xs text-gray-500">2007</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-15_1705/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-15.jpg" alt="BUTT Magazine #15" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #15</p>
+        
+            <p class="text-xs text-gray-500">2008</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-16_1706/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-16.jpg" alt="BUTT Magazine #16" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #16</p>
+        
+            <p class="text-xs text-gray-500">2008</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-17_1707/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-17.jpg" alt="BUTT Magazine #17" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #17</p>
+        
+            <p class="text-xs text-gray-500">2009</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-18_1708/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-18.jpg" alt="BUTT Magazine #18" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #18</p>
+        
+            <p class="text-xs text-gray-500">2009</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-19_1709/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-19.jpg" alt="BUTT Magazine #19" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #19</p>
+        
+            <p class="text-xs text-gray-500">2010</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-20_1710/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-20.jpg" alt="BUTT Magazine #20" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #20</p>
+        
+            <p class="text-xs text-gray-500">2010</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-21_1711/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-21.jpg" alt="BUTT Magazine #21" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #21</p>
+        
+            <p class="text-xs text-gray-500">2011</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-22_1712/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-22.jpg" alt="BUTT Magazine #22" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #22</p>
+        
+            <p class="text-xs text-gray-500">2011</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-23_1713/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-23.jpg" alt="BUTT Magazine #23" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #23</p>
+        
+            <p class="text-xs text-gray-500">2012</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-24_1714/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-24.jpg" alt="BUTT Magazine #24" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #24</p>
+        
+            <p class="text-xs text-gray-500">2012</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-25_1715/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-25.jpg" alt="BUTT Magazine #25" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #25</p>
+        
+            <p class="text-xs text-gray-500">2013</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-26_1716/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-26.jpg" alt="BUTT Magazine #26" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #26</p>
+        
+            <p class="text-xs text-gray-500">2013</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-27_1717/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-27.jpg" alt="BUTT Magazine #27" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #27</p>
+        
+            <p class="text-xs text-gray-500">2014</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-28_1718/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-28.jpg" alt="BUTT Magazine #28" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #28</p>
+        
+            <p class="text-xs text-gray-500">2014</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-29_1719/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-29.jpg" alt="BUTT Magazine #29" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #29</p>
+        
+            <p class="text-xs text-gray-500">2015</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-30_1720/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-30.jpg" alt="BUTT Magazine #30" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #30</p>
+        
+            <p class="text-xs text-gray-500">2015</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-31_1721/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-31.jpg" alt="BUTT Magazine #31" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #31</p>
+        
+            <p class="text-xs text-gray-500">2023</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-32_1722/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-32.jpg" alt="BUTT Magazine #32" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #32</p>
+        
+            <p class="text-xs text-gray-500">2023</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-33_1723/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-33.jpg" alt="BUTT Magazine #33" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #33</p>
+        
+            <p class="text-xs text-gray-500">2023</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-34_1724/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-34.jpg" alt="BUTT Magazine #34" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #34</p>
+        
+            <p class="text-xs text-gray-500">2024</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-35_1725/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-35.jpg" alt="BUTT Magazine #35" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #35</p>
+        
+            <p class="text-xs text-gray-500">2024</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-36_1726/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-36.jpg" alt="BUTT Magazine #36" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #36</p>
+        
+            <p class="text-xs text-gray-500">2025</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/butt_butt-magazine-37_1727/" class="item-card bg-white rounded-lg overflow-hidden shadow-sm">
+    <div class="aspect-[3/4] bg-gray-100">
+        
+            <img src="/assets/images/magazines/butt/butt-37.jpg" alt="BUTT Magazine #37" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #37</p>
+        
+            <p class="text-xs text-gray-500">2025</p>
+        
+    </div>
+</a>
+
+        
+    </div>
+</section>
+
+            
+        
+    </div>
+</main>
+
+
+
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
+        <p>© 2025 Hudson Street Library</p>
+    </div>
+</footer>
+
+<script>
+    // Mobile Menu Toggle Logic
+    const mobileMenuButton = document.querySelector('button.md\\:hidden');
+    const mobileNavMenu = document.getElementById('mobile-nav-menu');
+
+    if (mobileMenuButton && mobileNavMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+            mobileNavMenu.classList.toggle('hidden');
+            mobileNavMenu.classList.toggle('flex');
+            const icon = mobileMenuButton.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            }
+        });
+    }
+
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            if (this.hash) {
+               const targetElement = document.querySelector(this.hash);
+               if (targetElement) {
+                    e.preventDefault();
+                    const headerOffset = document.querySelector('header')?.offsetHeight || 70;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                    if (mobileMenuButton && mobileMenuButton.getAttribute('aria-expanded') === 'true') {
+                         mobileMenuButton.click();
+                    }
+               }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
