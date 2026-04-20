@@ -26,6 +26,18 @@ describe('collection-matcher', () => {
       const config = { matchBy: { titleContains: 'apartamento' } };
       expect(matchesCollection(book, config)).to.be.true;
     });
+
+    it('matches by titleRegex', () => {
+      const book = { title: 'Purple Fashion Magazine Issue 17 (Volume III)' };
+      const config = { matchBy: { titleRegex: '^Purple (Fashion Magazine|Magazine Issue)' } };
+      expect(matchesCollection(book, config)).to.be.true;
+    });
+
+    it('rejects titleRegex non-match', () => {
+      const book = { title: 'Apartamento Issue 36' };
+      const config = { matchBy: { titleRegex: '^Purple' } };
+      expect(matchesCollection(book, config)).to.be.false;
+    });
   });
 
   describe('assignSection', () => {
