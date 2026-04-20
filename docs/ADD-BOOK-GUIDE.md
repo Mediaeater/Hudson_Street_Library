@@ -80,6 +80,10 @@ Place cover image at: src/assets/images/books/Ayoung_Kim_Synthetic_Storyteller_9
 cp ~/Downloads/cover.jpg src/assets/images/books/Ayoung_Kim_Synthetic_Storyteller_9783000841156.jpg
 ```
 
+### Collection membership
+
+Books auto-group into collection pages based on CSV fields (`collection_grouping`, `author_last`, `title`, `tags`). The match rules live in `src/_data/collections/<slug>.json`. To make a new book appear on a specific collection page, set its fields to match that config's `matchBy` rule. No manual edits to `src/collections/` are needed — see `docs/COLLECTIONS-GUIDE.md`.
+
 ### Batch Mode
 
 Add multiple books from a text file:
