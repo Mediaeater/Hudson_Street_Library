@@ -60,87 +60,216 @@ permalink: /static-demo/index.html
             color: var(--color-ink);
         }
 
-        /* Search Controls */
+        /* Search Controls — editorial finding-aid */
         .search-controls {
             background: white;
-            border: 1px solid var(--color-border);
-            padding: 2rem;
-            margin: 2rem 0;
+            border-top: 1px solid var(--color-ink);
+            border-bottom: 1px solid var(--color-border);
+            padding: 2.5rem 2.25rem 1.75rem;
+            margin: 2rem 0 2.5rem;
+        }
+
+        .search-row {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 1.75rem;
+            align-items: end;
+            padding-bottom: 1.75rem;
+            border-bottom: 1px solid var(--color-border);
         }
 
         .control-label {
             font-family: 'Archivo Narrow', sans-serif;
-            font-size: 0.75rem;
+            font-size: 0.6875rem;
             font-weight: 700;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.22em;
             text-transform: uppercase;
             color: var(--color-brown);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.55rem;
             display: block;
         }
 
-        .search-input,
-        .search-select {
+        .search-input {
             width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--color-border);
-            background: var(--color-paper);
-            font-family: 'Crimson Pro', serif;
-            font-size: 1rem;
+            padding: 0.35rem 2.25rem 0.75rem 0;
+            border: none;
+            border-bottom: 1px solid var(--color-ink);
+            background: transparent;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.625rem;
+            font-weight: 400;
             color: var(--color-ink);
-            transition: all 0.3s ease;
+            transition: border-color 0.3s ease;
         }
 
-        .search-input:focus,
-        .search-select:focus {
+        .search-input-wrap {
+            position: relative;
+        }
+
+        .search-input-wrap::after {
+            content: '';
+            position: absolute;
+            right: 0.25rem;
+            bottom: 0.85rem;
+            width: 14px;
+            height: 14px;
+            border: 1.5px solid var(--color-ink);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .search-input-wrap::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            bottom: 0.7rem;
+            width: 6px;
+            height: 1.5px;
+            background: var(--color-ink);
+            transform: rotate(45deg);
+            transform-origin: right center;
+            pointer-events: none;
+        }
+
+        .search-input:focus {
             outline: none;
-            border-color: var(--color-brown);
-            background: white;
+            border-bottom-color: var(--color-brown);
         }
 
         .search-input::placeholder {
-            color: rgba(10, 10, 10, 0.4);
+            color: rgba(10, 10, 10, 0.35);
             font-style: italic;
         }
 
-        .checkbox-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.875rem;
+        .search-select {
+            width: 100%;
+            padding: 0.55rem 2rem 0.55rem 0.9rem;
+            border: 1px solid var(--color-border);
+            background: var(--color-paper);
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' fill='none' stroke='%230A0A0A' stroke-width='1.2' stroke-linecap='square'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 0.85rem center;
+            font-family: 'Crimson Pro', serif;
+            font-size: 0.9375rem;
+            color: var(--color-ink);
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
         }
 
-        .checkbox-wrapper input[type="checkbox"] {
-            width: 1.125rem;
-            height: 1.125rem;
-            border: 1px solid var(--color-border);
-            accent-color: var(--color-brown);
+        .search-select:hover {
+            border-color: var(--color-ink);
+        }
+
+        .search-select:focus {
+            outline: none;
+            border-color: var(--color-brown);
+            background-color: white;
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+            padding-top: 1.5rem;
+        }
+
+        @media (max-width: 720px) {
+            .search-row { grid-template-columns: 1fr; }
+            .filter-row { grid-template-columns: 1fr; }
+        }
+
+        .controls-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+            padding-top: 1.5rem;
+            margin-top: 1.5rem;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .toggle-switch {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.65rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .toggle-switch input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .toggle-track {
+            position: relative;
+            width: 34px;
+            height: 18px;
+            border: 1px solid var(--color-ink);
+            background: var(--color-paper);
+            transition: background-color 0.25s ease;
+        }
+
+        .toggle-track::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 12px;
+            height: 12px;
+            background: var(--color-ink);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s;
+        }
+
+        .toggle-switch input:checked ~ .toggle-track {
+            background: var(--color-ink);
+        }
+
+        .toggle-switch input:checked ~ .toggle-track::after {
+            transform: translateX(16px);
+            background: var(--color-paper);
+        }
+
+        .toggle-label {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--color-ink);
         }
 
         .clear-filters-btn {
             font-family: 'Archivo Narrow', sans-serif;
-            font-size: 0.75rem;
+            font-size: 0.6875rem;
             font-weight: 700;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.22em;
             text-transform: uppercase;
             color: var(--color-brown);
             background: none;
             border: none;
+            padding: 0;
             cursor: pointer;
-            text-decoration: underline;
-            transition: color 0.3s ease;
+            border-bottom: 1px solid transparent;
+            transition: color 0.3s ease, border-color 0.3s ease;
         }
 
         .clear-filters-btn:hover {
             color: var(--color-ink);
+            border-bottom-color: var(--color-ink);
         }
 
         .results-count {
             font-family: 'Archivo Narrow', sans-serif;
-            font-size: 0.75rem;
-            letter-spacing: 0.1em;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.22em;
             text-transform: uppercase;
             color: var(--color-brown);
+            font-variant-numeric: tabular-nums;
         }
 
         /* Results Grid and Cards */
@@ -376,17 +505,21 @@ permalink: /static-demo/index.html
     <div style="max-width: 1400px; margin: 0 auto; padding: 0 2rem;">
         <!-- Search Controls -->
         <div class="search-controls">
-            <div style="display: grid; grid-template-columns: 1fr auto; gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="search-row">
                 <div>
-                    <label for="search-input" class="control-label">Search</label>
-                    <input type="text"
-                           id="search-input"
-                           placeholder="Title, author, tags..."
-                           class="search-input">
+                    <label for="search-input" class="control-label">Search the Catalogue</label>
+                    <div class="search-input-wrap">
+                        <input type="text"
+                               id="search-input"
+                               placeholder="Title, author, tag, publisher…"
+                               class="search-input"
+                               autocomplete="off">
+                    </div>
                 </div>
-                <div style="min-width: 200px;">
-                    <label for="sort-select" class="control-label">Sort</label>
+                <div>
+                    <label for="sort-select" class="control-label">Order by</label>
                     <select id="sort-select" class="search-select">
+                        <option value="date">Date Added</option>
                         <option value="title">Title</option>
                         <option value="author">Author</option>
                         <option value="year">Publication Year</option>
@@ -395,8 +528,7 @@ permalink: /static-demo/index.html
                 </div>
             </div>
 
-            <!-- Filter Controls -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="filter-row">
                 <div>
                     <label for="publisher-filter" class="control-label">Publisher</label>
                     <select id="publisher-filter" class="search-select">
@@ -417,20 +549,19 @@ permalink: /static-demo/index.html
                 </div>
             </div>
 
-            <!-- Visual Browse Mode -->
-            <div style="margin-bottom: 1.5rem;">
-                <label class="checkbox-wrapper">
-                    <input type="checkbox" id="visual-browse">
-                    <span class="control-label" style="margin: 0;">Visual Browse Mode</span>
-                </label>
-            </div>
-
-            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid var(--color-border);">
-                <button id="clear-filters" class="clear-filters-btn">
-                    Clear all filters
-                </button>
+            <div class="controls-footer">
+                <div style="display: flex; align-items: center; gap: 1.75rem;">
+                    <button id="clear-filters" class="clear-filters-btn" type="button">
+                        Clear all filters
+                    </button>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="visual-browse">
+                        <span class="toggle-track" aria-hidden="true"></span>
+                        <span class="toggle-label">Visual Browse</span>
+                    </label>
+                </div>
                 <div id="results-count" class="results-count">
-                    Loading books...
+                    Loading…
                 </div>
             </div>
         </div>
@@ -471,7 +602,7 @@ class BookSearch {
             cover: ''
         };
         this.visualBrowse = false;
-        this.sortBy = 'title';
+        this.sortBy = 'date';
 
         this.init();
     }
@@ -513,40 +644,30 @@ class BookSearch {
 
     parseCSV(csvText) {
         try {
-            const lines = csvText.split('\n').filter(line => line.trim());
-            if (lines.length < 2) {
+            const rows = this.parseCSVStream(csvText);
+            if (rows.length < 2) {
                 console.error('CSV has insufficient data');
                 return [];
             }
 
-            const headerLine = lines[0];
-            const headers = this.parseCSVRow(headerLine);
-            console.log('CSV Headers:', headers);
-
+            const headers = rows[0];
             const books = [];
 
-            for (let i = 1; i < lines.length; i++) {
-                const line = lines[i].trim();
-                if (!line) continue;
+            for (let i = 1; i < rows.length; i++) {
+                const values = rows[i];
+                if (values.length < 5) continue;
 
-                const values = this.parseCSVRow(line);
+                const book = {};
+                headers.forEach((header, index) => {
+                    book[header] = values[index] !== undefined ? values[index] : '';
+                });
 
-                if (values.length >= 5) {
-                    const book = {};
-                    headers.forEach((header, index) => {
-                        book[header] = values[index] || '';
-                    });
-
-                    if (book.title && book.title !== 'NULL') {
-                        books.push(book);
-                    }
+                if (book.title && book.title !== 'NULL') {
+                    books.push(book);
                 }
             }
 
-            console.log(`Successfully parsed ${books.length} books from CSV`);
-            if (books.length > 0) {
-                console.log('Sample book:', books[0]);
-            }
+            console.log(`Parsed ${books.length} books from CSV`);
             return books;
 
         } catch (error) {
@@ -555,14 +676,16 @@ class BookSearch {
         }
     }
 
-    parseCSVRow(row) {
-        const result = [];
+    // Single-pass CSV parser that respects quoted fields containing newlines.
+    parseCSVStream(csvText) {
+        const rows = [];
+        let row = [];
         let current = '';
         let inQuotes = false;
 
-        for (let i = 0; i < row.length; i++) {
-            const char = row[i];
-            const nextChar = row[i + 1];
+        for (let i = 0; i < csvText.length; i++) {
+            const char = csvText[i];
+            const nextChar = csvText[i + 1];
 
             if (char === '"') {
                 if (inQuotes && nextChar === '"') {
@@ -572,15 +695,25 @@ class BookSearch {
                     inQuotes = !inQuotes;
                 }
             } else if (char === ',' && !inQuotes) {
-                result.push(current.trim());
+                row.push(current);
                 current = '';
+            } else if ((char === '\n' || char === '\r') && !inQuotes) {
+                if (char === '\r' && nextChar === '\n') i++;
+                row.push(current);
+                current = '';
+                if (row.length > 1 || row[0] !== '') rows.push(row);
+                row = [];
             } else {
                 current += char;
             }
         }
 
-        result.push(current.trim());
-        return result;
+        if (current !== '' || row.length > 0) {
+            row.push(current);
+            if (row.length > 1 || row[0] !== '') rows.push(row);
+        }
+
+        return rows;
     }
 
     setupEventListeners() {
@@ -678,7 +811,7 @@ class BookSearch {
 
     clearAllFilters() {
         document.getElementById('search-input').value = '';
-        document.getElementById('sort-select').value = 'title';
+        document.getElementById('sort-select').value = 'date';
         document.getElementById('publisher-filter').value = '';
         document.getElementById('year-filter').value = '';
         document.getElementById('collection-filter').value = '';
@@ -687,7 +820,7 @@ class BookSearch {
         this.searchTerm = '';
         this.filters = { publisher: '', year: '', collection: '' };
         this.visualBrowse = false;
-        this.sortBy = 'title';
+        this.sortBy = 'date';
         this.currentPage = 1;
         this.performSearch();
     }
@@ -732,6 +865,14 @@ class BookSearch {
             let aValue, bValue;
 
             switch (this.sortBy) {
+                case 'date':
+                    // Newest accession first. accession_no is free-form text
+                    // ("2026-04-19", "Summer 2023", "October 2024"), so
+                    // normalize to YYYY-MM-DD before comparing. Tie-break by id.
+                    aValue = this.normalizeAccessionDate(a.accession_no) || '0000-00-00';
+                    bValue = this.normalizeAccessionDate(b.accession_no) || '0000-00-00';
+                    if (aValue !== bValue) return bValue.localeCompare(aValue);
+                    return (parseInt(b.id) || 0) - (parseInt(a.id) || 0);
                 case 'author':
                     aValue = a.author_full_name || '';
                     bValue = b.author_full_name || '';
@@ -892,11 +1033,12 @@ class BookSearch {
                             ${binding ? `<span><strong>Format:</strong> ${this.escapeHtml(binding)}</span> · ` : ''}
                             ${pages ? `<span><strong>Pages:</strong> ${pages}</span>` : ''}
                         </div>
-                        ${book.description && book.description !== 'NULL' ? `
-                            <p class="book-description line-clamp-3">
-                                ${this.escapeHtml(book.description.substring(0, 250))}${book.description.length > 250 ? '...' : ''}
-                            </p>
-                        ` : ''}
+                        ${(() => {
+                            const plain = this.stripHtml(book.description);
+                            if (!plain || plain === 'NULL') return '';
+                            const snippet = plain.length > 240 ? this.escapeHtml(plain.substring(0, 240)) + '…' : this.escapeHtml(plain);
+                            return `<p class="book-description line-clamp-3">${snippet}</p>`;
+                        })()}
                         ${book.tags && book.tags !== 'NULL' ? `
                             <p class="book-tags">
                                 ${this.escapeHtml(book.tags)}
@@ -965,6 +1107,56 @@ class BookSearch {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    // Descriptions in the CSV contain editorial HTML (<p>, <em>, etc.);
+    // strip tags and collapse whitespace before rendering as body copy.
+    stripHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.innerHTML = text;
+        return (div.textContent || div.innerText || '').replace(/\s+/g, ' ').trim();
+    }
+
+    // accession_no in the CSV is inconsistently formatted: some entries are
+    // ISO dates ("2026-04-19"), others use month names ("October 29, 2025"),
+    // month-year ("October 2024"), or seasons ("Summer 2023"). Normalize to
+    // YYYY-MM-DD so string comparison gives correct chronological order.
+    normalizeAccessionDate(v) {
+        if (!v || v === 'NULL') return null;
+        const s = String(v).trim();
+        if (!s) return null;
+
+        const pad = n => String(n).padStart(2, '0');
+        const monthIndex = name => {
+            const months = ['january','february','march','april','may','june',
+                            'july','august','september','october','november','december'];
+            const short = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+            const lc = name.toLowerCase();
+            let i = months.indexOf(lc);
+            if (i < 0) i = short.indexOf(lc);
+            return i >= 0 ? i + 1 : null;
+        };
+        const seasons = { spring: 3, summer: 6, fall: 9, autumn: 9, winter: 12 };
+
+        let m;
+        if ((m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/))) {
+            return `${m[1]}-${pad(m[2])}-${pad(m[3])}`;
+        }
+        if ((m = s.match(/^([A-Za-z]+)\s+(\d{1,2}),?\s+(\d{4})$/))) {
+            const mi = monthIndex(m[1]);
+            if (mi) return `${m[3]}-${pad(mi)}-${pad(m[2])}`;
+        }
+        if ((m = s.match(/^([A-Za-z]+)\s+(\d{4})$/))) {
+            const mi = monthIndex(m[1]);
+            if (mi) return `${m[2]}-${pad(mi)}-01`;
+            const si = seasons[m[1].toLowerCase()];
+            if (si) return `${m[2]}-${pad(si)}-01`;
+        }
+        if ((m = s.match(/^(\d{4})$/))) {
+            return `${m[1]}-01-01`;
+        }
+        return null;
     }
 
     displayError(message) {
