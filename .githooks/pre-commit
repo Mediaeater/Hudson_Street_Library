@@ -1,0 +1,28 @@
+#!/bin/sh
+# Pre-commit hook to validate books.csv before commit
+
+# Check if books.csv is being committed
+if git diff --cached --name-only | grep -q "src/_data/books.csv"; then
+  echo "📋 Validating books.csv structure..."
+
+  # Run the robust validator
+  node scripts/validate-csv-robust.js
+
+  if [ $? -ne 0 ]; then
+    echo ""
+    echo "❌ CSV validation failed!"
+    echo "   The CSV has structural errors that must be fixed before committing."
+    echo ""
+    echo "To fix:"
+    echo "  1. Run: node scripts/fix-csv-formatting.js src/_data/books.csv src/_data/books_fixed.csv"
+    echo "  2. Run: node scripts/validate-csv-robust.js"
+    echo "  3. If valid: cp src/_data/books_fixed.csv src/_data/books.csv"
+    echo "  4. Try committing again"
+    echo ""
+    exit 1
+  fi
+
+  echo "✅ CSV validation passed"
+fi
+
+exit 0

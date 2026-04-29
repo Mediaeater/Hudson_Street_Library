@@ -28,10 +28,9 @@ const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
 const https = require('https');
-const { parse } = require('csv-parse/sync');
-const { stringify } = require('csv-stringify/sync');
 const { execSync } = require('child_process');
 const { BookMetadataAggregator } = require('./utils/book-metadata-aggregator');
+const CSVHandler = require('./utils/csv-handler');
 
 // Configuration
 const CSV_PATH = path.join(__dirname, '../src/_data/books.csv');
@@ -238,14 +237,16 @@ function generateCoverFilename(author_last, author_first, title, isbn) {
 }
 
 /**
- * Read current CSV and get next ID
+ * Read current CSV and get next ID using robust CSVHandler
  */
-function readCSV() {
-  const csvContent = fs.readFileSync(CSV_PATH, 'utf8');
-  const records = parse(csvContent, {
-    columns: true,
-    skip_empty_lines: true
-  });
+async function readCSV() {
+  const result = await CSVHandler.readBooks(CSV_PATH);
+
+  if (result.errors.length > 0 && result.errors.some(e => e.type === 'error')) {
+    console.warn('⚠️  CSV has validation warnings:', result.errors.length);
+  }
+
+  const records = result.data;
 
   // Get max ID
   let maxId = 0;
@@ -264,10 +265,10 @@ function readCSV() {
 }
 
 /**
- * Add book to CSV
+ * Add book to CSV using robust CSVHandler
  */
-function addBookToCSV(bookData, nextId) {
-  const { records, headers } = readCSV();
+async function addBookToCSV(bookData, nextId) {
+  const { records, headers } = await readCSV();
 
   // Create new record with all columns
   const newRecord = {};
@@ -283,24 +284,16 @@ function addBookToCSV(bookData, nextId) {
   // Add to records
   records.push(newRecord);
 
-  // Write back to CSV
-  const csvContent = stringify(records, {
-    header: true,
-    columns: headers
-  });
+  // Write back to CSV using CSVHandler (handles quote escaping properly)
+  const writeResult = await CSVHandler.write(CSV_PATH, records);
 
-  // Create backup first
-  const backupDir = path.join(__dirname, '../src/_data/backups');
-  if (!fs.existsSync(backupDir)) {
-    fs.mkdirSync(backupDir, { recursive: true });
+  if (!writeResult.success) {
+    throw new Error(`Failed to write CSV: ${writeResult.errors.join(', ')}`);
   }
 
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-').split('T')[0];
-  const backupPath = path.join(backupDir, `books_backup_${timestamp}.csv`);
-  fs.copyFileSync(CSV_PATH, backupPath);
-
-  // Write new CSV
-  fs.writeFileSync(CSV_PATH, csvContent);
+  if (writeResult.backup) {
+    console.log(`💾 Backup created: ${writeResult.backup}`);
+  }
 
   return newRecord;
 }
@@ -410,7 +403,7 @@ async function processBook(text) {
     }
 
     // Get next ID
-    const { nextId } = readCSV();
+    const { nextId } = await readCSV();
 
     // Generate cover filename
     const coverFilename = generateCoverFilename(
@@ -442,10 +435,10 @@ async function processBook(text) {
       output: process.stdout
     });
 
-    rl.question('Add this book to books.csv? (y/n): ', (answer) => {
+    rl.question('Add this book to books.csv? (y/n): ', async (answer) => {
       if (answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes') {
         // Add to CSV
-        const record = addBookToCSV(bookData, nextId);
+        const record = await addBookToCSV(bookData, nextId);
 
         console.log('\n✅ Book added successfully!\n');
 
@@ -549,7 +542,7 @@ async function processBookFromJSON(jsonPath) {
     };
 
     // Get next ID
-    const { nextId } = readCSV();
+    const { nextId } = await readCSV();
 
     // Download cover image if URL provided
     if (researchData.cover_image?.url && !researchData.cover_image?.local_path) {
@@ -597,10 +590,10 @@ async function processBookFromJSON(jsonPath) {
       output: process.stdout
     });
 
-    rl.question('Add this book to books.csv? (y/n): ', (answer) => {
+    rl.question('Add this book to books.csv? (y/n): ', async (answer) => {
       if (answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes') {
         // Add to CSV
-        const record = addBookToCSV(bookData, nextId);
+        const record = await addBookToCSV(bookData, nextId);
 
         console.log('\n✅ Book added successfully!\n');
 
