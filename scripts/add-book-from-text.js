@@ -442,10 +442,10 @@ async function processBook(text) {
 
         console.log('\n✅ Book added successfully!\n');
 
-        // Validate CSV structure immediately
+        // Validate CSV structure immediately using robust validator
         console.log('🔍 Validating CSV structure...');
         try {
-          const validateScript = path.join(__dirname, 'validate-csv-structure.js');
+          const validateScript = path.join(__dirname, 'validate-csv-robust.js');
           if (fs.existsSync(validateScript)) {
             execSync(`node "${validateScript}"`, {
               stdio: 'inherit',
@@ -458,7 +458,7 @@ async function processBook(text) {
         } catch (error) {
           console.error('❌ CSV VALIDATION FAILED!');
           console.error('   This means the CSV has structural errors.');
-          console.error('   Please run: node scripts/validate-csv-structure.js');
+          console.error('   Please run: node scripts/validate-csv-robust.js');
           console.error('   Fix any issues before committing.\n');
           process.exit(1);
         }
@@ -597,10 +597,10 @@ async function processBookFromJSON(jsonPath) {
 
         console.log('\n✅ Book added successfully!\n');
 
-        // Validate CSV structure
+        // Validate CSV structure using robust validator
         console.log('🔍 Validating CSV structure...');
         try {
-          const validateScript = path.join(__dirname, 'validate-csv-structure.js');
+          const validateScript = path.join(__dirname, 'validate-csv-robust.js');
           if (fs.existsSync(validateScript)) {
             execSync(`node "${validateScript}"`, {
               stdio: 'inherit',
@@ -610,7 +610,7 @@ async function processBookFromJSON(jsonPath) {
           }
         } catch (error) {
           console.error('❌ CSV VALIDATION FAILED!');
-          console.error('   Please run: node scripts/validate-csv-structure.js\n');
+          console.error('   Please run: node scripts/validate-csv-robust.js\n');
           process.exit(1);
         }
 
