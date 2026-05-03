@@ -23,13 +23,13 @@ describe('CSV-driven rendering', function() {
     const configs = fs.readdirSync('src/_data/collections').filter(f => f.endsWith('.json'));
     configs.forEach(f => {
       const slug = path.basename(f, '.json');
-      expect(fs.existsSync(`_site/collections/${slug}/index.html`),
+      expect(fs.existsSync(`_site/collections/${slug}.html`),
         `Missing page for ${slug}`).to.be.true;
     });
   });
 
   it('Purple Magazine collection includes all Volume V CSV issues', () => {
-    const html = fs.readFileSync('_site/collections/purple-magazine/index.html','utf8');
+    const html = fs.readFileSync('_site/collections/purple-magazine.html','utf8');
     expect(html).to.include('Volume V');
     expect(html).to.include('purple-45-glamour.jpg');
   });
