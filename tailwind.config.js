@@ -5,6 +5,9 @@ module.exports = {
     "./_site/**/*.html",
     "./generate-book-pages.js"
   ],
+  corePlugins: {
+    preflight: false,
+  },
   theme: {
     extend: {
       colors: {
