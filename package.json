@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "./start.sh",
     "stop": "./stop.sh",
-    "start": "eleventy --serve",
-    "build": "eleventy",
+    "start": "concurrently \"npm:watch:css\" \"eleventy --serve\"",
+    "build": "npm run build:css && eleventy",
     "build:books": "node scripts/generators/generate-book-pages.js",
     "build:css": "tailwindcss -i src/assets/css/input.css -o _site/assets/css/tailwind.css --minify",
     "watch:css": "tailwindcss -i src/assets/css/input.css -o _site/assets/css/tailwind.css --watch",
@@ -51,6 +51,7 @@
     "autoprefixer": "^10.4.21",
     "axios": "^1.7.9",
     "chai": "^4.5.0",
+    "concurrently": "^9.2.1",
     "csv-parse": "^5.6.0",
     "csv-stringify": "^6.4.5",
     "dotenv": "^17.2.0",
