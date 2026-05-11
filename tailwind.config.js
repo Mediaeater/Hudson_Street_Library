@@ -2,7 +2,6 @@
 module.exports = {
   content: [
     "./src/**/*.{html,njk,js}",
-    "./_site/**/*.html",
     "./generate-book-pages.js"
   ],
   corePlugins: {
