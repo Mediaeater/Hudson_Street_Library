@@ -9,6 +9,9 @@ module.exports = {
     preflight: false,
   },
   theme: {
+    // Size-only tuples (no line-height) — line-height is owned by
+    // design-system.css's hand-written rules and h/p element defaults.
+    // Scale must stay in sync with design-system.css's .text-* values.
     fontSize: {
       'xs': ['12px'],
       'sm': ['14px'],
@@ -20,6 +23,7 @@ module.exports = {
       '4xl': ['40px'],
       '5xl': ['48px'],
       '6xl': ['60px'],
+      '7xl': ['72px'],
     },
     extend: {
       colors: {
