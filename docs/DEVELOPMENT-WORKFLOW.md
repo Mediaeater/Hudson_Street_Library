@@ -83,11 +83,11 @@ Hudson_Street_Library/
 │   └── *.html, *.njk      # Page templates
 ├── _site/                   # Build output (auto-generated, DON'T EDIT)
 ├── scripts/                 # Utility scripts and automation
-│   ├── database/           # Database operations
 │   ├── image-pipeline/     # Image processing
 │   ├── news-pipeline/      # News generation
-│   └── utils/             # Shared utilities
-├── data/                    # SQLite database files
+│   ├── covers/             # Cover acquisition
+│   ├── generators/         # Page generators
+│   └── utils/              # Shared utilities (csv-handler, image-core, etc.)
 ├── docs/                    # Documentation (YOU ARE HERE)
 ├── .eleventy.js            # Eleventy configuration
 └── package.json            # Project configuration
@@ -892,7 +892,7 @@ function filterByTag(tag) {
 
 ### Task 4: Updating Book Data
 
-#### Via CSV
+#### Via CSV (canonical)
 
 ```bash
 # 1. Open CSV
@@ -902,19 +902,21 @@ nano src/_data/books.csv
 # 2. Make changes
 # - Update existing rows
 # - Add new rows
-# - Ensure proper CSV formatting
+# - Ensure proper CSV formatting (36 columns)
 
-# 3. Save and reload browser
+# 3. Validate and reload
+npm run test:csv
+# Then save and reload the browser (or restart npm start)
 ```
 
-#### Via Database Script
+#### Via the add-book CLI
 
 ```bash
-# Update book via database
-node scripts/database/db-utils.js update --id 1 --field title --value "New Title"
+# Interactive: paste book text and confirm fields
+npm run add
 
-# Sync changes back to CSV
-node scripts/database/db-migration.js sync-to-csv
+# From a file
+npm run add:file -- path/to/book.txt
 ```
 
 ### Task 5: Adding Images
@@ -1761,9 +1763,10 @@ Assets:
   src/assets/images/        - Images
 
 Scripts:
-  scripts/database/         - Database operations
   scripts/image-pipeline/   - Image processing
-  scripts/utils/            - Utilities
+  scripts/covers/           - Cover acquisition
+  scripts/generators/       - Page generators
+  scripts/utils/            - Utilities (csv-handler, image-core, etc.)
 ```
 
 ### Helpful Links

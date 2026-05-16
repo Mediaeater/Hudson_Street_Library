@@ -37,7 +37,7 @@ Hudson Street Library is a **static site** built with Eleventy and deployed to G
 - **No User Authentication**: Currently a public catalog (no login system)
 - **Build-Time Processing**: All data processing happens during build
 - **External API Integration**: Uses Google Books API and Open Library
-- **SQLite Database**: Local database for build-time data management
+- **Plain-Text Data Store**: `src/_data/books.csv` plus a handful of JSON files; no runtime database
 
 ### Security Principles
 
@@ -356,104 +356,19 @@ function validateCSVUpload(file) {
 }
 ```
 
-### Database Security
+### Data Store Security
 
-The project uses SQLite (via better-sqlite3) for local data storage during build.
+The project has no runtime database. Authoritative data is `src/_data/books.csv`
+plus a small set of JSON files; the build reads these and emits static HTML.
 
-#### Database Location
+CSV write paths (`npm run add`, manual edits) go through
+`scripts/utils/csv-handler.js`, which trims, normalizes, and validates fields
+before persisting. Backups are written under `src/_data/books_backup_<timestamp>.csv`
+on every write. See `docs/BACKUP-SYSTEM.md` for the rolling-backup policy.
 
-```
-data/library.db              # Production database
-data/library.db.backup-*     # Automated backups
-data/test_*.db              # Test databases
-```
-
-#### Database Security Controls
-
-**1. SQL Injection Prevention**
-
-All database operations use **prepared statements**:
-
-```javascript
-// scripts/database/database.js
-// ✅ SAFE: Prepared statements
-insertBook(bookData) {
-  const stmt = this.statements.get('insertBook');
-  const result = stmt.run(
-    bookData.author_last || '',
-    bookData.title || '',
-    // ... parameterized values
-  );
-}
-
-// ❌ UNSAFE: String concatenation
-// NEVER DO THIS:
-const query = `INSERT INTO books (title) VALUES ('${userInput}')`;
-```
-
-**2. Input Validation**
-
-```javascript
-// Located in: scripts/database/database.js (lines 225-301)
-insertBook(bookData) {
-  // Validation before database operation
-  if (!bookData.title && !bookData.isbn_asin) {
-    return {
-      success: false,
-      error: 'Either title or ISBN is required'
-    };
-  }
-
-  // Type coercion and validation
-  const params = [
-    bookData.author_last || '',
-    bookData.title || '',
-    bookData.publication_year ? Number(bookData.publication_year) : null,
-    // ... validated parameters
-  ];
-}
-```
-
-**3. Foreign Key Enforcement**
-
-```javascript
-// Database initialization (lines 123-134)
-configurePragmas() {
-  this.db.pragma('foreign_keys = ON'); // Enforce referential integrity
-  this.db.pragma('journal_mode = WAL'); // Write-Ahead Logging
-  this.db.pragma('synchronous = NORMAL');
-}
-```
-
-**4. Transaction Safety**
-
-```javascript
-// Transaction management (lines 754-811)
-transaction(callback) {
-  const txn = this.beginTransaction();
-  try {
-    const result = callback();
-    txn.commit();
-    return result;
-  } catch (error) {
-    txn.rollback();
-    throw error;
-  }
-}
-```
-
-### Backup Security
-
-**Automated Backups:**
-- Backups created before migrations
-- Naming pattern: `library.db.backup-{timestamp}`
-- Located in `/data` directory (gitignored)
-
-**Backup Best Practices:**
-- ✅ Backups are gitignored (not committed to repo)
-- ✅ Timestamp-based naming prevents overwrites
-- ✅ Restore capability tested in migration scripts
-- ⚠️ Consider off-site backup storage for production
+There is no SQL surface area on disk or in production. A local-only Datasette
+catalog (SQLite, derivative from the CSV) is supported for ad-hoc analysis;
+see `docs/DATASETTE-CATALOG-GUIDE.md`. That catalog is not deployed.
 
 ---
 
@@ -481,24 +396,31 @@ static validateAndCleanRecord(record, rowIndex) {
 }
 ```
 
-### Database Validation
+### CSV Write Validation
+
+`scripts/utils/csv-handler.js` validates and normalizes every row appended
+to `src/_data/books.csv` (via `npm run add` or any script that uses the
+handler):
 
 ```javascript
-// scripts/database/database.js
-insertBook(bookData) {
+// scripts/utils/csv-handler.js
+appendBook(bookData) {
   // Basic validation
   if (!bookData.title && !bookData.isbn_asin) {
     return { success: false, error: 'Either title or ISBN is required' };
   }
 
   // Type coercion with null handling
-  const year = bookData.publication_year ? Number(bookData.publication_year) : null;
-  const height = bookData.height_cm ? Number(bookData.height_cm) : null;
+  const year   = bookData.publication_year ? Number(bookData.publication_year) : null;
+  const height = bookData.height_cm        ? Number(bookData.height_cm)        : null;
 
   // Boolean normalization
-  const signed = bookData.is_signed_inscribed ? 1 : 0;
+  const signed = bookData.is_signed_inscribed ? 'true' : 'false';
 }
 ```
+
+`npm run test:csv` (entry: `scripts/validate-csv-robust.js`) runs the full
+validation suite over `books.csv` before each `npm test` invocation and in CI.
 
 ### Data Type Validation
 
@@ -665,86 +587,6 @@ eleventyConfig.addFilter("sanitizeHTML", sanitizeHTML);
 <div class="description">
   {{ book.description | sanitizeHTML | safe }}
 </div>
-```
-
----
-
-## Database Security
-
-### SQLite Security Considerations
-
-SQLite is used during build time only, not runtime. Security considerations:
-
-#### File Permissions
-
-```bash
-# Ensure database files have restricted permissions
-chmod 600 data/library.db
-chmod 700 data/
-
-# Check current permissions
-ls -la data/library.db
-# Should show: -rw------- (owner read/write only)
-```
-
-#### Database Encryption
-
-For sensitive data, consider encrypting the database:
-
-```javascript
-// Option 1: SQLCipher (encrypted SQLite)
-// Requires: npm install better-sqlite3-sqlcipher
-
-const Database = require('better-sqlite3-sqlcipher');
-const db = new Database('data/library.db', {
-  key: process.env.DB_ENCRYPTION_KEY
-});
-```
-
-**Note**: Currently not implemented as book catalog data is public.
-
-#### Backup Security
-
-```javascript
-// Automated backup before migrations
-function createBackup(dbPath) {
-  const timestamp = Date.now();
-  const backupPath = `${dbPath}.backup-${timestamp}`;
-
-  // Copy database file
-  fs.copyFileSync(dbPath, backupPath);
-
-  // Verify backup integrity
-  const originalSize = fs.statSync(dbPath).size;
-  const backupSize = fs.statSync(backupPath).size;
-
-  if (originalSize !== backupSize) {
-    throw new Error('Backup verification failed');
-  }
-
-  // Set restrictive permissions
-  fs.chmodSync(backupPath, 0o600);
-
-  return backupPath;
-}
-```
-
-### Query Safety
-
-All queries use prepared statements to prevent SQL injection:
-
-```javascript
-// ✅ SAFE: Prepared statement
-const stmt = db.prepare('SELECT * FROM books WHERE isbn_asin = ?');
-const book = stmt.get(isbn);
-
-// ✅ SAFE: Named parameters
-const stmt = db.prepare('SELECT * FROM books WHERE title = @title AND author = @author');
-const books = stmt.all({ title: 'Example', author: 'Author' });
-
-// ❌ UNSAFE: String concatenation (NEVER DO THIS)
-const query = `SELECT * FROM books WHERE isbn = '${userInput}'`;
-const books = db.prepare(query).all();
 ```
 
 ---
@@ -1000,7 +842,7 @@ updates:
 ```json
 {
   "dependencies": {
-    "better-sqlite3": "^12.4.1"  // Database - High Security Impact
+    "better-sqlite3": "^12.4.1"  // Test fixtures only - no production use
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.0.0",     // Build tool - Medium Impact
@@ -1642,10 +1484,6 @@ We appreciate security researchers who responsibly disclose vulnerabilities. Con
 **Static Site Security:**
 - GitHub Pages Security: https://docs.github.com/en/pages/getting-started-with-github-pages/securing-your-github-pages-site-with-https
 - Cloudflare Security: https://www.cloudflare.com/learning/security/
-
-**Database Security:**
-- SQLite Security: https://www.sqlite.org/security.html
-- better-sqlite3 Documentation: https://github.com/WiseLibs/better-sqlite3/blob/master/docs/api.md
 
 #### Internal Documentation
 

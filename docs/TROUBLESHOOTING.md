@@ -549,38 +549,30 @@ cp src/_data/books_backup_migration_*.csv src/_data/books.csv
 
 ---
 
-#### 3. Database Out of Sync with CSV
+#### 3. Site Shows Stale Data After Editing CSV
 
 **Symptom:**
-- Website shows old data
-- Database has different book count than CSV
-- Recent changes not reflected
+- Website still shows the old book list after editing `books.csv`
+- Recent additions not reflected
 
 **Cause:**
-- CSV updated but database not migrated
-- Migration script not run
-- Database cached by build process
+- Eleventy dev server not running, or watch missed the change
+- Stale `_site/` from a previous build
+- Browser cache
 
 **Solution:**
 
 ```bash
-# Check record counts
-wc -l src/_data/books.csv  # CSV count
-sqlite3 data/library.db "SELECT COUNT(*) FROM books;"  # DB count
+# Stop and restart the dev server
+./stop.sh 2>/dev/null   # legacy; harmless if missing
+lsof -ti:8080 | xargs kill -9 2>/dev/null
+npm start
 
-# Run migration to sync
-node scripts/database/db-migration.js
-
-# Verify migration
-node scripts/database/db-migration.js --dry-run
-
-# Force rebuild
+# Or do a full clean rebuild
 npm run clean
 npm run build
 
-# Check migration logs
-ls -la data/migration_report_*.json
-cat data/migration_report_migration_*.json | jq '.statistics'
+# Hard reload the page (Cmd+Shift+R / Ctrl+F5)
 ```
 
 ---
@@ -1421,143 +1413,102 @@ ls -lh _site/assets/images/optimized/
 
 ---
 
-## Database Issues
+## CSV Data Issues
 
 ### Category Overview
 
-Problems with SQLite database, migrations, and data synchronization.
+Problems with `src/_data/books.csv` — parsing, validation, or stale entries.
+The CSV is the single source of truth; there is no runtime database.
 
-### Common Database Issues
+### Common CSV Issues
 
-#### 1. Database Connection Error
+#### 1. Validation Failures
 
 **Error Message:**
 ```
-Error: SQLITE_CANTOPEN: unable to open database file
-Error: no such table: books
+✗ Row 145: missing required field 'title'
+✗ Row 287: invalid isbn_asin "97-83869304311"
 ```
 
 **Cause:**
-- Database file doesn't exist
-- Wrong path to database
-- Permission issues
-- Database corrupted
+- Required fields blank (`title` or `author_full_name`)
+- ISBN/ASIN doesn't match expected format
+- Numeric field has non-numeric content
 
 **Solution:**
 
 ```bash
-# Check database exists
-ls -la data/library.db
+# Run the full validator
+npm run test:csv
 
-# If missing, run migration
-node scripts/database/db-migration.js
+# Inspect a specific row
+awk -F',' 'NR==145' src/_data/books.csv
 
-# Check permissions
-chmod 644 data/library.db
-chmod 755 data/  # Directory must be executable
+# Confirm column count is 36
+head -1 src/_data/books.csv | awk -F',' '{print NF}'
 
-# Test database
-sqlite3 data/library.db "SELECT COUNT(*) FROM books;"
-# Should return number, not error
-
-# Check database integrity
-sqlite3 data/library.db "PRAGMA integrity_check;"
-# Should return "ok"
-
-# If corrupted, restore from backup
-cp data/library.db.backup-* data/library.db
+# Restore from a recent backup if needed (most recent first)
+ls -t src/_data/books_backup_*.csv | head
+cp src/_data/books_backup_<timestamp>.csv src/_data/books.csv
 ```
 
 ---
 
-#### 2. Migration Failures
-
-**Error Message:**
-```
-Error: UNIQUE constraint failed: books.isbn_asin
-Migration failed at row 145
-```
-
-**Cause:**
-- Duplicate ISBN in CSV
-- Data type mismatch
-- Missing required fields
-- Schema change not applied
-
-**Solution:**
-
-```bash
-# Dry run migration first
-node scripts/database/db-migration.js --dry-run
-
-# Check for duplicates
-node -e "
-const CSVHandler = require('./scripts/utils/csv-handler');
-CSVHandler.read('src/_data/books.csv').then(result => {
-  const isbns = result.data.map(b => b.isbn_asin).filter(Boolean);
-  const duplicates = isbns.filter((isbn, i) => isbns.indexOf(isbn) !== i);
-  console.log('Duplicate ISBNs:', [...new Set(duplicates)]);
-});
-"
-
-# Fix duplicates in CSV
-# Either: Remove duplicate row
-# Or: Clear ISBN field for one of them
-
-# Check migration logs
-cat data/migration_report_*.json | jq '.errors'
-
-# Force migration (skip duplicates)
-node scripts/database/db-migration.js --force --skip-duplicates
-
-# Restore and retry
-cp data/library.db.backup-* data/library.db
-# Fix CSV issues
-node scripts/database/db-migration.js
-```
-
----
-
-#### 3. Query Performance Issues
+#### 2. Duplicate IDs or ISBNs
 
 **Symptom:**
-- Slow search results
-- Database locks
-- Timeouts
-
-**Cause:**
-- Missing indexes
-- Large result sets
-- No query optimization
-- Database needs vacuum
+- Two books share an `id`, or two rows have the same `isbn_asin`
 
 **Solution:**
 
-```sql
--- Check indexes exist
-sqlite3 data/library.db ".indexes books"
+```bash
+# Find duplicates with the CSV handler
+node -e "
+const { CSVHandler } = require('./scripts/utils/csv-handler');
+CSVHandler.read('src/_data/books.csv').then(result => {
+  const ids = result.data.map(b => b.id);
+  const dups = ids.filter((id, i) => ids.indexOf(id) !== i);
+  console.log('Duplicate IDs:', [...new Set(dups)]);
 
--- Expected indexes:
--- idx_books_title
--- idx_books_author_full_name
--- idx_books_isbn_asin
--- idx_books_search_text
-
--- Create missing indexes
-sqlite3 data/library.db "
-CREATE INDEX IF NOT EXISTS idx_books_title ON books(title);
-CREATE INDEX IF NOT EXISTS idx_books_search_text ON books(search_text);
+  const isbns = result.data.map(b => b.isbn_asin).filter(Boolean);
+  const isbnDups = isbns.filter((isbn, i) => isbns.indexOf(isbn) !== i);
+  console.log('Duplicate ISBNs:', [...new Set(isbnDups)]);
+});
 "
+```
 
--- Analyze database for optimization
-sqlite3 data/library.db "ANALYZE;"
+Resolve in the CSV directly: delete the duplicate row, or null out the
+duplicate ISBN if the rows describe different printings.
 
--- Vacuum to reclaim space and optimize
-sqlite3 data/library.db "VACUUM;"
+---
 
--- Enable query planner
-sqlite3 data/library.db "EXPLAIN QUERY PLAN SELECT * FROM books WHERE title LIKE '%photo%';"
--- Check if index is used
+#### 3. Build is Slow / Large CSV
+
+**Symptom:**
+- `npm run build` takes noticeably longer
+- Eleventy reports a high "Wrote N files" count
+
+**Cause:**
+- New book pages were added (expected — build scales with row count)
+- Large `description` fields blow up template parse time
+
+**Solution:**
+
+```bash
+# Time the build
+time npm run build
+
+# Sort rows by description length to find outliers
+node -e "
+const { CSVHandler } = require('./scripts/utils/csv-handler');
+CSVHandler.read('src/_data/books.csv').then(r => {
+  r.data
+    .map(b => ({ id: b.id, title: b.title, len: (b.description||'').length }))
+    .sort((a,b)=>b.len-a.len)
+    .slice(0,10)
+    .forEach(b => console.log(b.len, b.id, b.title));
+});
+"
 ```
 
 ---
@@ -1601,11 +1552,10 @@ node scripts/image-pipeline/cli.js find --missing --limit 10
 // Google Books: 1000 req/day
 
 // Use caching
-// API responses cached in database
-SELECT COUNT(*) FROM api_cache;
+// Image-API responses are cached on disk at data/image-cache.json
+jq '. | length' data/image-cache.json
 
-// Clear old cache if needed
-sqlite3 data/library.db "DELETE FROM api_cache WHERE created_at < datetime('now', '-7 days');"
+// Clear old cache by editing the file or removing entries with jq
 ```
 
 ---
@@ -2008,20 +1958,14 @@ ls -lh _site/cms/data/
 **Solution:**
 
 ```bash
-# Check API cache
-sqlite3 data/library.db "SELECT COUNT(*) FROM api_cache;"
-
-# Use cache
-sqlite3 data/library.db "SELECT cache_key, created_at FROM api_cache LIMIT 10;"
+# Inspect the on-disk API cache (JSON, not SQLite)
+ls -lh data/image-cache.json
+jq '. | length' data/image-cache.json
 
 # Process in smaller batches
 node scripts/image-pipeline/cli.js find --missing --limit 10
 
-# Add delays
-# Built into book-api-client.js
-
-# Check cache hit rate
-sqlite3 data/library.db "SELECT hit_count, cache_key FROM api_cache ORDER BY hit_count DESC LIMIT 10;"
+# Delays are built into book-api-client.js; tune via its CLI flags.
 ```
 
 ---
@@ -2088,27 +2032,24 @@ awk -F',' 'NR==145' src/_data/books.csv
 head -1 src/_data/books.csv | awk -F',' '{print NF}'
 ```
 
-### Database Debugging
+### Datasette Catalog Debugging (optional local tool)
 
 ```bash
-# Open database
-sqlite3 data/library.db
+# Rebuild the local SQLite catalog from books.csv
+./scripts/update-datasette-catalog.sh
 
-# Useful queries
-.tables                          # List all tables
-.schema books                    # Show table structure
-SELECT COUNT(*) FROM books;      # Count records
-SELECT * FROM books LIMIT 5;     # Sample data
-.mode column                     # Pretty print
-.headers on                      # Show headers
+# Open Datasette in the browser
+datasette hudson_street_library.db --metadata metadata.json
+# Visit http://localhost:8001
 
-# Find issues
-SELECT * FROM books WHERE title IS NULL OR title = '';
-SELECT isbn_asin, COUNT(*) FROM books GROUP BY isbn_asin HAVING COUNT(*) > 1;
-
-# Performance
-EXPLAIN QUERY PLAN SELECT * FROM books WHERE title LIKE '%photo%';
+# Run quick ad-hoc queries
+sqlite3 hudson_street_library.db "SELECT COUNT(*) FROM books;"
+sqlite3 hudson_street_library.db "SELECT * FROM books WHERE title IS NULL OR title = '';"
+sqlite3 hudson_street_library.db "SELECT isbn_asin, COUNT(*) FROM books GROUP BY isbn_asin HAVING COUNT(*) > 1;"
 ```
+
+The Datasette catalog is **derivative**, regenerated from `books.csv`. It is
+not deployed and not authoritative.
 
 ### Git Debugging
 
@@ -2173,7 +2114,7 @@ ping openlibrary.org
    - `/src/_includes/layouts/` - Layout templates
 
 3. **Logs**
-   - `data/migration_report_*.json` - Migration logs
+   - `logs/` - Local dev-server logs (when started via `npm start`)
    - GitHub Actions logs - Build/deploy history
 
 ### External Resources
@@ -2397,14 +2338,14 @@ node scripts/image-pipeline/cli.js find --isbn 9783869304311
 | `Uncaught (in promise)` | Unhandled async error | Add `.catch()` or try/catch |
 | `CORS error` | Cross-origin request blocked | Check API allows requests |
 
-### Database Errors
+### CSV Errors
 
 | Error | Meaning | Quick Fix |
 |-------|---------|-----------|
-| `SQLITE_CANTOPEN` | Can't open database file | Check file exists and permissions |
-| `no such table: books` | Table doesn't exist | Run migration: `node scripts/database/db-migration.js` |
-| `UNIQUE constraint failed` | Duplicate value | Find and fix duplicate in CSV |
-| `database is locked` | Another process using DB | Close other connections |
+| `missing required field 'title'` | Row has no title | Edit the row in `books.csv` or remove it |
+| `invalid isbn_asin` | ISBN/ASIN format check failed | Fix the value or null it out |
+| `unbalanced quote` | Embedded `"` not escaped as `""` | Re-quote the field |
+| `column count mismatch` | Row has ≠ 36 columns | Audit commas inside un-quoted fields |
 
 ### API Errors
 
@@ -2443,9 +2384,7 @@ npm run clean && npm run build
 
 # Test CSV
 node -e "require('./scripts/utils/csv-handler').read('src/_data/books.csv').then(r => console.log(r.stats));"
-
-# Test database
-sqlite3 data/library.db "SELECT COUNT(*) FROM books;"
+npm run test:csv
 
 # Test API
 node scripts/image-pipeline/cli.js status
@@ -2456,7 +2395,6 @@ node scripts/image-pipeline/cli.js status
 ```bash
 # View logs
 git log --oneline -10
-ls -la data/migration_report_*.json
 
 # Check versions
 node --version
@@ -2481,17 +2419,14 @@ git checkout HEAD -- file.csv  # Restore file
 git revert abc123       # Undo commit
 ```
 
-### Database
+### Datasette catalog (optional)
 
 ```bash
-# Open database
-sqlite3 data/library.db
+# Rebuild from CSV
+./scripts/update-datasette-catalog.sh
 
-# Quick queries
-.tables
-.schema books
-SELECT COUNT(*) FROM books;
-SELECT * FROM books LIMIT 5;
+# Open Datasette
+datasette hudson_street_library.db --metadata metadata.json
 ```
 
 ---
