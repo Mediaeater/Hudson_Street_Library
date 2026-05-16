@@ -559,8 +559,8 @@ Content-Security-Policy:
 
 **⚠️ Note**: GitHub Pages does not allow custom HTTP headers. CSP would need to be implemented via:
 - `<meta>` tag in HTML (limited functionality)
-- Custom domain with Cloudflare (recommended for production)
-- Migration to Netlify/Vercel (supports custom headers)
+- Migration to a host that supports custom headers (e.g. Netlify, Vercel,
+  or a self-hosted edge layer)
 
 #### HTML Sanitization
 
@@ -928,7 +928,8 @@ Access-Control-Allow-Origin: *
 **Mitigation:**
 - Don't store sensitive data in static files
 - Use authentication for any admin APIs (external service)
-- Consider Cloudflare for advanced CORS control
+- For advanced CORS / header control, migrate to a host that supports
+  custom HTTP headers
 
 ### Custom Domain Security
 
@@ -975,43 +976,19 @@ x-cache: HIT
 x-cache-hits: 1
 ```
 
-**Missing security headers** (consider Cloudflare for custom domain):
+**Missing security headers** (GitHub Pages does not allow setting custom
+HTTP headers; these would require a different host or an edge proxy):
 - `Content-Security-Policy`
 - `X-Frame-Options`
 - `X-Content-Type-Options`
 - `Referrer-Policy`
 - `Permissions-Policy`
 
-### Cloudflare Integration (Recommended)
-
-For enhanced security with custom domain:
-
-```javascript
-// Cloudflare Workers script for security headers
-addEventListener('fetch', event => {
-  event.respondWith(handleRequest(event.request))
-})
-
-async function handleRequest(request) {
-  const response = await fetch(request)
-  const newHeaders = new Headers(response.headers)
-
-  // Security headers
-  newHeaders.set('X-Frame-Options', 'DENY')
-  newHeaders.set('X-Content-Type-Options', 'nosniff')
-  newHeaders.set('Referrer-Policy', 'strict-origin-when-cross-origin')
-  newHeaders.set('Permissions-Policy', 'geolocation=(), microphone=(), camera=()')
-  newHeaders.set('Content-Security-Policy',
-    "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;"
-  )
-
-  return new Response(response.body, {
-    status: response.status,
-    statusText: response.statusText,
-    headers: newHeaders
-  })
-}
-```
+A `<meta http-equiv="Content-Security-Policy">` tag inside each HTML
+document is the only option available on stock GitHub Pages, and it is
+strictly weaker than a real CSP response header (some directives are
+ignored). If hardened headers become a hard requirement, plan a host
+migration rather than adding an edge layer just for headers.
 
 ---
 
@@ -1483,7 +1460,6 @@ We appreciate security researchers who responsibly disclose vulnerabilities. Con
 
 **Static Site Security:**
 - GitHub Pages Security: https://docs.github.com/en/pages/getting-started-with-github-pages/securing-your-github-pages-site-with-https
-- Cloudflare Security: https://www.cloudflare.com/learning/security/
 
 #### Internal Documentation
 

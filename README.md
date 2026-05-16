@@ -34,19 +34,16 @@ Visit http://localhost:8080 when running the development server.
 
 ## 🚀 Deployment
 
-The site deploys automatically via GitHub Actions when you push to `main`. After deployment completes, purge Cloudflare cache to update the live site:
+The site deploys automatically via GitHub Actions when you push to `main`.
+GitHub Pages serves the built site directly at hudsonstreetlibrary.com (via the
+`CNAME` file). No CDN, no manual cache step.
 
-```bash
-npm run cache:purge
-```
-
-**Documentation**:
-- [DEPLOYMENT.md](docs/DEPLOYMENT.md) - Complete deployment workflows and troubleshooting
+**Documentation**: [DEPLOYMENT.md](docs/DEPLOYMENT.md)
 
 **Key Requirements**:
 - Node.js 22+ (for Eleventy v3)
 - GitHub Actions enabled
-- Cloudflare API token configured in `.env`
+- `gh-pages` branch as the Pages source (or GitHub Pages set to "GitHub Actions")
 
 ## 📚 Adding New Books
 
