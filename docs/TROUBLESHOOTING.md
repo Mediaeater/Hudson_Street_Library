@@ -379,7 +379,7 @@ touch .eleventy.js
 **Cause:**
 - Browser cache
 - CSS file not in passthrough copy
-- Tailwind CDN cached
+- Tailwind not rebuilt after editing utility classes
 - Service worker caching (if enabled)
 
 **Solution:**
@@ -394,12 +394,10 @@ eleventyConfig.addPassthroughCopy("src/assets");
 # 3. Disable cache in DevTools
 # Chrome DevTools -> Network tab -> Check "Disable cache"
 
-# 4. Clear build directory
+# 4. Rebuild Tailwind from scratch
 npm run clean
+npm run build:css
 npm start
-
-# 5. For Tailwind CDN issues, add cache buster
-<script src="https://cdn.tailwindcss.com?v=3.4.1"></script>
 ```
 
 ---
@@ -1055,19 +1053,29 @@ Problems with Tailwind CSS, custom styles, and responsive design.
 - Colors/spacing not working
 
 **Cause:**
-- Tailwind CDN not loaded
+- Compiled `_site/assets/css/tailwind.css` not built or not linked
 - Class name typo
 - CSS specificity issue
-- CDN cached
+- Browser cache holding an old stylesheet
 
 **Solution:**
 
 ```html
-<!-- Verify Tailwind CDN in <head> -->
-<script src="https://cdn.tailwindcss.com"></script>
+<!-- Verify the compiled stylesheet in <head> -->
+<link rel="stylesheet" href="/assets/css/tailwind.css">
+```
 
+```bash
+# Rebuild Tailwind (input.css -> tailwind.css, minified)
+npm run build:css
+
+# Or in dev, run the watcher + Eleventy together
+npm start
+```
+
+```html
 <!-- Check browser DevTools -->
-<!-- 1. Network tab - verify CDN loads (200 status) -->
+<!-- 1. Network tab - verify /assets/css/tailwind.css loads (200) -->
 <!-- 2. Console - check for errors -->
 <!-- 3. Elements tab - verify classes are applied -->
 
@@ -1168,7 +1176,7 @@ eleventyConfig.addPassthroughCopy("src/assets");
 <link rel="stylesheet" href="/assets/css/design-system.css">
 
 # Check specificity (custom CSS should come after Tailwind)
-<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="/assets/css/tailwind.css">
 <link rel="stylesheet" href="/assets/css/design-system.css">
 
 # Force reload without cache

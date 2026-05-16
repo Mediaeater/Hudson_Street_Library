@@ -8,7 +8,7 @@ Hudson Street Library is a specialized photography book collection website built
 
 - **Static Site Generator**: Eleventy (11ty) v3.0
 - **Template Engine**: Nunjucks (.njk files)
-- **Styling**: Tailwind CSS (via CDN)
+- **Styling**: Tailwind CSS (compiled locally via `npm run build:css`)
 - **Image Processing**: @11ty/eleventy-img with WebP optimization
 - **Data Storage**: CSV files + JSON for structured data
 - **Deployment**: GitHub Actions → GitHub Pages

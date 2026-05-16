@@ -42,7 +42,6 @@ npm run cache:purge
 
 **Documentation**:
 - [DEPLOYMENT.md](docs/DEPLOYMENT.md) - Complete deployment workflows and troubleshooting
-- [ELEVENTY-V3-MIGRATION.md](docs/ELEVENTY-V3-MIGRATION.md) - Eleventy v3 compatibility notes
 
 **Key Requirements**:
 - Node.js 22+ (for Eleventy v3)
@@ -318,15 +317,13 @@ npm clean
 
 ### Development
 - [Architecture Overview](docs/architecture/SYSTEM-OVERVIEW.md) - System architecture
-- [Data Structures](docs/DATA-STRUCTURES.md) - Database schema and data formats
+- [Data Structures](docs/DATA-STRUCTURES.md) - Schema and data formats
 - [Security Documentation](docs/SECURITY.md) - Security practices and guidelines
-- [Testing Guide](docs/TESTING-GUIDE.md) - Testing framework and procedures
-- [API Documentation](docs/API_DOCUMENTATION.md) - Book cover APIs and integration
+- [Testing Patterns](docs/TESTING-PATTERNS.md) - Testing strategy and conventions
 - [Aggregate Views](docs/AGGREGATE-VIEWS.md) - Clickable metadata and filtering system
 
 ### User Guides
-- [Book Workflow Guide](docs/BOOK_WORKFLOW_GUIDE.md) - Adding and managing books
-- [Content Manager Guide](docs/CONTENT_MANAGER_GUIDE.md) - Using the CMS
+- [Add-Book Guide](docs/ADD-BOOK-GUIDE.md) - Adding new books via `npm run add`
 - [Quick Start: Search](docs/QUICK-START-SEARCH.md) - How to use search and browse features
 
 ## 🆘 Troubleshooting

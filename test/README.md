@@ -12,9 +12,9 @@ This project uses testing patterns inspired by [datasette-enrichments](https://g
 
 **Total:** 127 tests passing, 1 pending
 
-Legacy test files in `scripts/tests/` can now be safely removed.
+Legacy test files in `scripts/tests/` were removed once the migration completed.
 
-See [MIGRATION_GUIDE.md](./MIGRATION_GUIDE.md) for migration patterns and [MIGRATION_STATUS.md](./MIGRATION_STATUS.md) for detailed status.
+Migration history is archived at `docs/archive/2026-05-migration-artifacts/`.
 
 ## Key Patterns
 
