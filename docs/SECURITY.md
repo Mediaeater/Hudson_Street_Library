@@ -1650,8 +1650,7 @@ We appreciate security researchers who responsibly disclose vulnerabilities. Con
 #### Internal Documentation
 
 - [Development Workflow](DEVELOPMENT-WORKFLOW.md)
-- [Database README](../scripts/database/README.md)
-- [Testing Guide](TESTING-GUIDE.md)
+- [Testing Patterns](TESTING-PATTERNS.md)
 - [Deployment Guide](DEPLOYMENT.md)
 
 ### Security Tools

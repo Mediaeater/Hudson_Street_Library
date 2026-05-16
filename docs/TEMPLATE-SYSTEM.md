@@ -558,7 +558,7 @@ title: "New Page Title"
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ title or "Hudson Street Library" }}</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/assets/css/tailwind.css">
 </head>
 <body>
   {% include "components/site-header.njk" %}

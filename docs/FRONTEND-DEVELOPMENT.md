@@ -4,7 +4,7 @@
 
 **Last Updated:** October 19, 2025
 **Version:** 1.0
-**Related Docs:** [Build System](BUILD-SYSTEM.md), [Testing Guide](TESTING-GUIDE.md), [Deployment Guide](DEPLOYMENT_GUIDE.md)
+**Related Docs:** [Build System](BUILD-SYSTEM.md), [Testing Patterns](TESTING-PATTERNS.md), [Deployment](DEPLOYMENT.md)
 
 ---
 
@@ -31,7 +31,7 @@ Hudson Street Library uses a static site generator approach with Eleventy, combi
 - **Nunjucks** - Template engine
 - **Vanilla JavaScript** - Component-based architecture using ES6 classes
 - **CSS Custom Properties** - Design token system
-- **Tailwind CSS** - Utility-first CSS framework (via CDN)
+- **Tailwind CSS** - Utility-first CSS framework, compiled locally via `npm run build:css` to `_site/assets/css/tailwind.css`
 - **Font Awesome** - Icon library
 
 ### Key Design Principles
@@ -85,7 +85,7 @@ src/
 ├─────────────────────────────────────┤
 │  JavaScript Components (ES6 Classes)│
 ├─────────────────────────────────────┤
-│  CSS (Custom Props + Tailwind CDN)  │
+│ CSS (Custom Props + compiled Tailwind)│
 ├─────────────────────────────────────┤
 │  Eleventy Static Site Generator     │
 └─────────────────────────────────────┘
@@ -1131,8 +1131,7 @@ Ansel_Adams_The_Negative_9780821221860.jpg
 #### CSS
 
 - Main design system: Single file, ~40KB uncompressed
-- Admin styles: Separate file, loaded only on admin pages
-- Tailwind: CDN for rapid prototyping (production should use custom build)
+- Tailwind: compiled locally via `npm run build:css` (input `src/assets/css/input.css`, output `_site/assets/css/tailwind.css`, minified). `npm run watch:css` watches in development.
 
 #### JavaScript
 
@@ -1530,7 +1529,7 @@ Include in template:
    Add to layout:
    ```html
    <meta http-equiv="Content-Security-Policy"
-         content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.tailwindcss.com;">
+         content="default-src 'self'; script-src 'self' 'unsafe-inline';">
    ```
 
 3. **HTTPS Only**
@@ -1770,11 +1769,11 @@ console.log('Menu:', menu);
 **Problem:** CSS classes don't work
 
 **Solutions:**
-- Check CSS file is linked in layout
+- Check `/assets/css/tailwind.css` is linked in the layout
 - Verify class name spelling
 - Check CSS specificity (use DevTools)
 - Clear browser cache
-- Check if Tailwind CDN is loaded
+- Rebuild Tailwind: `npm run build:css` (or run `npm start` for watch mode)
 
 #### 4. Form Validation Failing
 
@@ -1821,9 +1820,8 @@ npm run build
 ### Internal Documentation
 
 - [Build System](BUILD-SYSTEM.md) - Build configuration and processes
-- [Testing Guide](TESTING-GUIDE.md) - Testing strategies and tools
-- [Data Structures](DATA-STRUCTURES.md) - Database schema and CSV format
-- [API Documentation](API_DOCUMENTATION.md) - Backend API reference
+- [Testing Patterns](TESTING-PATTERNS.md) - Testing strategies and tools
+- [Data Structures](DATA-STRUCTURES.md) - CSV format and schema
 - [Cover Acquisition](COVER-ACQUISITION.md) - Book cover image guidelines
 
 ### External Resources

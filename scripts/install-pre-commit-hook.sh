@@ -11,7 +11,7 @@ cat > "$HOOK_FILE" <<'HOOK'
 #!/bin/bash
 # Pre-commit guard: block re-introduction of hardcoded collection pages.
 # Collection pages must be driven by src/_data/collections/<slug>.json.
-# See docs/superpowers/plans/2026-04-20-csv-single-source-of-truth.md
+# See docs/archive/2026-05-completed-plans/2026-04-20-csv-single-source-of-truth.md
 
 NEW_HARDCODED=$(git diff --cached --name-only --diff-filter=A | grep -E '^src/collections/[^/]+\.html$' || true)
 

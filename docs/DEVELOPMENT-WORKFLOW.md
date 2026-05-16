@@ -250,7 +250,7 @@ git checkout -b feature/your-feature-name
 ```bash
 # If feature is user-facing, update relevant docs
 # Common docs to update:
-# - docs/CONTENT_MANAGER_GUIDE.md (for CMS features)
+# - docs/ADD-BOOK-GUIDE.md (for book-entry workflow changes)
 # - README.md (for major features)
 # - This file (for developer features)
 ```
@@ -397,7 +397,7 @@ ls -1 src/assets/images/books/*.jpg | wc -l
        <meta charset="UTF-8">
        <meta name="viewport" content="width=device-width, initial-scale=1.0">
        <title>About Us | Hudson Street Library</title>
-       <script src="https://cdn.tailwindcss.com"></script>
+       <link rel="stylesheet" href="/assets/css/tailwind.css">
    </head>
    <body>
        <header>
@@ -734,10 +734,17 @@ src/assets/css/design-system-clrs.css
 
 #### Using Tailwind CSS
 
-Most pages use Tailwind via CDN:
+Tailwind is compiled locally. Layouts include the compiled stylesheet:
 
 ```html
-<!-- Classes are available immediately -->
+<link rel="stylesheet" href="/assets/css/tailwind.css">
+```
+
+The build is `npm run build:css` (one-shot, minified) or `npm run watch:css`
+(watches `src/**/*.{html,njk,js}`). `npm start` runs the watcher and the
+Eleventy dev server concurrently. Use Tailwind utility classes as normal:
+
+```html
 <div class="container mx-auto px-6 py-12">
   <h1 class="text-3xl font-bold mb-4">Title</h1>
   <p class="text-gray-700 leading-relaxed">Content</p>

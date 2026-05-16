@@ -563,6 +563,5 @@ Deployment configuration:
 ## Related Documentation
 
 - [DEVELOPMENT-WORKFLOW.md](./DEVELOPMENT-WORKFLOW.md) - Developer workflow guide
-- [CONTRIBUTING.md](./CONTRIBUTING.md) - Contribution guidelines
-- [API_DOCUMENTATION.md](./API_DOCUMENTATION.md) - API reference
+- [CONTRIBUTING.md](../CONTRIBUTING.md) - Contribution guidelines
 - [IMAGE-SYSTEM-DOCUMENTATION.md](./IMAGE-SYSTEM-DOCUMENTATION.md) - Image processing details

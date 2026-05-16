@@ -567,8 +567,6 @@ Before committing:
 ### Documentation
 
 - `/docs/ADD-BOOK-GUIDE.md` - Script usage guide
-- `/docs/BOOK_WORKFLOW_GUIDE.md` - CMS workflow (future)
-- `/docs/CONTENT_MANAGER_GUIDE.md` - Content management
 - This file - Complete cataloging reference
 
 ### External References

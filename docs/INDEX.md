@@ -23,13 +23,11 @@
 1. **[Project README](../README.md)** - Project overview, technology stack, quick commands
 2. **[DEPLOYMENT](DEPLOYMENT.md)** - How deployment works
 3. **[System Overview](architecture/SYSTEM-OVERVIEW.md)** - Architecture overview
-4. **[AI Coding Guide](AI_CODING_GUIDE.md)** - Best practices with AI assistants
 
 ### For Content Managers
 
 1. **[ADD-BOOK-GUIDE](ADD-BOOK-GUIDE.md)** - Adding new books (interactive CLI)
 2. **[Datasette Catalog Guide](DATASETTE-CATALOG-GUIDE.md)** - Digital catalog reference
-3. **[Content Manager Guide](CONTENT_MANAGER_GUIDE.md)** - CMS user guide
 
 ### For DevOps
 
@@ -50,14 +48,13 @@
 ### Data Management
 
 - [CSV Strategy](CSV_STRATEGY.md) - Data source of truth
+- [CSV Workflow Guide](CSV_WORKFLOW_GUIDE.md) - How books move through the build
 - [Data Structures](DATA-STRUCTURES.md) - Schema and formats
-- [Data Quality Report](DATA-QUALITY-REPORT.md) - Quality metrics
 
 ### Build System
 
 - [Build System](BUILD-SYSTEM.md) - How Eleventy builds the site
 - [Template System](TEMPLATE-SYSTEM.md) - Nunjucks templates
-- [Eleventy V3 Migration](ELEVENTY-V3-MIGRATION.md) - V3 compatibility
 
 ### Image & Cover System
 
@@ -83,13 +80,12 @@
 
 ### API & Integration
 
-- [API Documentation](API_DOCUMENTATION.md) - REST API reference
 - [API Coverage Enhancement](API-COVERAGE-ENHANCEMENT.md) - API strategies
 - [Free API Options](FREE-API-OPTIONS.md) - Available APIs
 
 ### Testing & Security
 
-- [Testing Guide](TESTING-GUIDE.md) - Testing procedures
+- [Testing Patterns](TESTING-PATTERNS.md) - Testing strategy and conventions
 - [Security Documentation](SECURITY.md) - Security policies
 - [Troubleshooting](TROUBLESHOOTING.md) - Common problems
 
@@ -105,12 +101,10 @@
 
 ### Pipeline Documentation
 
-- [Image Pipeline Summary](../scripts/image-pipeline/MODULE_COMPLETION_SUMMARY.md)
 - [Scripts Library](../scripts/lib/README.md) - Shared utilities
 
-### Test Documentation
+### Scripts Documentation
 
-- [Tests README](../scripts/tests/README.md) - Test suite docs
 - [Quick Start](../scripts/docs/QUICK-START.md) - Getting started
 - [API Reference](../scripts/docs/API-REFERENCE.md) - Internal APIs
 
@@ -126,6 +120,10 @@ Historical documentation moved to `docs/archive/`:
 - `archive/unrealized-cms-plan/` - PostgreSQL CMS plans and web admin panel (not implemented)
 - `archive/2026-03-datasette-setup/` - Datasette setup reports and integration summaries
 - `archive/daily-logs-2025/` - Historical daily logs
+- `archive/2026-05-cms-removal/` - Docs for the deleted Express+PostgreSQL CMS
+- `archive/2026-05-completed-plans/` - Shipped plans and one-time completion reports
+- `archive/2026-05-obsolete-test-docs/` - Docs for a custom test runner that doesn't exist
+- `archive/2026-05-migration-artifacts/` - Migration summaries for finished module reorganizations
 
 ---
 
