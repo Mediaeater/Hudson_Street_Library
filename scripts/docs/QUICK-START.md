@@ -1,23 +1,18 @@
-# Hudson Street Library - Quick Start Guide
+# Scripts Quick Start
 
-## Installation
+These utilities live in `scripts/utils/` and are used by the build and CLI
+scripts in the repo. Hudson Street Library is **not** published as an npm
+package; require the modules by their relative paths from inside this
+repository.
 
-### Prerequisites
-- Node.js (v16+ recommended)
-- npm or yarn
+## Prerequisites
+- Node.js 22+ (required by Eleventy v3)
+- `npm install` at the repo root (one time)
 
-### Install Dependencies
-```bash
-npm install hudson-street-library
-# or
-yarn add hudson-street-library
-```
+## Image Processing
 
-## Basic Usage
-
-### Image Processing
 ```javascript
-const { processImage } = require('hudson-street-library/image-core');
+const { processImage } = require('./scripts/utils/image-core');
 
 async function optimizeBookCover(imagePath) {
   const processedImage = await processImage(imagePath, {
@@ -30,9 +25,10 @@ async function optimizeBookCover(imagePath) {
 }
 ```
 
-### Book Details Retrieval
+## Book Details Retrieval
+
 ```javascript
-const { fetchBookDetails } = require('hudson-street-library/book-api-client');
+const { fetchBookDetails } = require('./scripts/utils/book-api-client');
 
 async function displayBookInfo(isbn) {
   try {
@@ -45,37 +41,45 @@ async function displayBookInfo(isbn) {
 }
 ```
 
-## Troubleshooting
+## Logging
 
-### Common Issues
-1. **Image Processing Errors**
-   - Ensure image file exists
-   - Check file permissions
-   - Validate image format support
+Enable verbose logging during a script:
 
-2. **API Connection Problems**
-   - Verify network connectivity
-   - Check API endpoint configuration
-   - Ensure proper authentication
-
-### Logging
-Enable verbose logging for diagnostics:
 ```javascript
-const logger = require('hudson-street-library/logger');
+const logger = require('./scripts/utils/logger');
 logger.setLevel('debug');
 ```
 
-## Advanced Configuration
+## Advanced Image Optimization
 
-### Custom Image Optimization
 ```javascript
-const { processImage } = require('hudson-street-library/image-core');
+const { processImage } = require('./scripts/utils/image-core');
 
 const customOptimization = {
-  resize: { width: 600, height: null }, // Maintain aspect ratio
+  resize: { width: 600, height: null },  // Maintain aspect ratio
   format: 'jpeg',
   quality: 90
 };
 
 processImage(imagePath, customOptimization);
 ```
+
+## Troubleshooting
+
+1. **Image Processing Errors**
+   - Ensure the image file exists and is readable
+   - Validate format (sharp supports jpeg, png, webp, avif, gif, tiff)
+
+2. **API Connection Problems**
+   - Verify network connectivity
+   - Check rate limits (Open Library: 100 req/5 min, Google Books: ~1000/day)
+
+3. **Module Not Found**
+   - Run `npm install` at the repo root
+   - Use relative paths starting from the repo root (e.g.,
+     `./scripts/utils/image-core`), not bare package names.
+
+See also:
+- `scripts/docs/API-REFERENCE.md` — full module API surface
+- `scripts/utils/README-logging.md` — logger details
+- `scripts/utils/README-image-cache.md` — image cache layout

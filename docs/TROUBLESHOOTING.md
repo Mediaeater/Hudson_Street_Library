@@ -62,7 +62,7 @@ Complete troubleshooting reference for the Hudson Street Library project coverin
 # Check project health
 npm run build                    # Test build process
 npm start                        # Test dev server
-node --version                   # Check Node.js version (should be 18+)
+node --version                   # Check Node.js version (should be 22+)
 npm list --depth=0              # Check installed packages
 
 # Check file integrity
@@ -273,7 +273,7 @@ npm ci  # Clean install from lock file
 rm -rf node_modules package-lock.json
 npm install
 
-# Verify Node.js version (should be 18+)
+# Verify Node.js version (should be 22+, required by Eleventy v3)
 node --version
 nvm use 18  # If using nvm
 

@@ -26,7 +26,7 @@
 
 ### Prerequisites
 
-- **Node.js**: Version 18 or higher
+- **Node.js**: Version 22 or higher (required by Eleventy v3)
 - **npm**: Comes with Node.js
 - **Git**: For version control
 - **Code Editor**: VS Code recommended
