@@ -183,13 +183,10 @@ Assets that are copied directly without processing:
 // Copy entire assets directory
 eleventyConfig.addPassthroughCopy("src/assets");
 
-// Copy CSV data for client-side search
+// Publish CSV / JSON as static data endpoints
 eleventyConfig.addPassthroughCopy({
   "src/_data/books.csv": "cms/data/books.csv"
 });
-
-// Copy database files
-eleventyConfig.addPassthroughCopy({"data": "data"});
 
 // GitHub Pages configuration
 eleventyConfig.addPassthroughCopy("CNAME");
@@ -514,13 +511,6 @@ eleventyConfig.addShortcode("button", function(text, url) {
 ```
 
 ## Integration Points
-
-### Database Integration
-
-The build system works alongside a SQLite database:
-- CSV serves as the source of truth for builds
-- Database provides runtime features (search, filtering)
-- Both are kept in sync via migration scripts
 
 ### GitHub Actions
 
