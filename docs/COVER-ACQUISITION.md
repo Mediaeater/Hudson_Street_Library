@@ -17,25 +17,25 @@ The Hudson Street Library uses automated tools to acquire book cover images from
 
 ## Tools
 
-### 1. Cover Acquisition Script (`acquire-covers.js`)
+### 1. Cover Acquisition Script (`scripts/covers/acquire-covers.js`)
 
 The main tool for downloading book covers. It supports multiple modes and options:
 
 ```bash
 # Basic usage
-./acquire-covers.js --limit 50
+node scripts/covers/acquire-covers.js --limit 50
 
 # Artist-specific acquisition
-./acquire-covers.js --artist "Tillmans" --limit 20
+node scripts/covers/acquire-covers.js --artist "Tillmans" --limit 20
 
 # Strict mode (high confidence matching)
-./acquire-covers.js --strict --limit 100
+node scripts/covers/acquire-covers.js --strict --limit 100
 
 # Batch processing
-./acquire-covers.js --batch 25 --limit 100
+node scripts/covers/acquire-covers.js --batch 25 --limit 100
 
 # Dry run (preview without downloading)
-./acquire-covers.js --dry-run --limit 10
+node scripts/covers/acquire-covers.js --dry-run --limit 10
 ```
 
 **Options:**
@@ -47,25 +47,25 @@ The main tool for downloading book covers. It supports multiple modes and option
 - `--dry-run`: Preview what would be downloaded
 - `--help`: Show help message
 
-### 2. Cover Utilities (`cover-utils.js`)
+### 2. Cover Utilities (`scripts/covers/cover-utils.js`)
 
 Comprehensive tool for managing and analyzing covers:
 
 ```bash
 # Analyze cover status
-./cover-utils.js analyze
+node scripts/covers/cover-utils.js analyze
 
 # Verify cover integrity
-./cover-utils.js verify
+node scripts/covers/cover-utils.js verify
 
 # Check specific artist
-./cover-utils.js check --artist "Kruger"
+node scripts/covers/cover-utils.js check --artist "Kruger"
 
 # Fix filenames
-./cover-utils.js fix-names --dry-run
+node scripts/covers/cover-utils.js fix-names --dry-run
 
 # Generate mapping
-./cover-utils.js map
+node scripts/covers/cover-utils.js map
 ```
 
 **Commands:**

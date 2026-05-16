@@ -220,11 +220,11 @@ const newsCategories = {
 
 ### With Existing Systems
 
-1. **CSV Database** (`_data/books.csv`)
+1. **CSV Source** (`src/_data/books.csv`)
    - Primary source of book metadata
    - Automatic news generation on new entries
 
-2. **Collection Pages** (`collections/*.html`)
+2. **Collection Pages** (`src/collections/*.html`)
    - News items reference collection pages
    - Automatic linking and cross-references
 
@@ -239,12 +239,12 @@ const newsCategories = {
 ### File Dependencies
 
 ```
-_data/news.json              # Primary news data store
-_data/books.csv              # Book metadata source
-scripts/news-pipeline/       # Core pipeline modules
-pages/news.njk              # News page template
-_includes/layouts/news.njk   # Individual news item layout
-collection-explore.html      # Collection index integration
+src/_data/news.json              # Primary news data store
+src/_data/books.csv              # Book metadata source
+scripts/news-pipeline/           # Core pipeline modules
+src/news.html                    # News page template
+src/_includes/layouts/news.njk   # Individual news item layout
+src/collection-explore.html      # Collection index integration
 ```
 
 ## API and Data Access
@@ -252,8 +252,8 @@ collection-explore.html      # Collection index integration
 ### Reading News Data
 
 ```javascript
-// Load all news items
-const newsData = require('../_data/news.json');
+// Load all news items (in scripts at repo root)
+const newsData = require('./src/_data/news.json');
 
 // Filter by category
 const acquisitions = newsData.filter(item => item.category === 'acquisitions');

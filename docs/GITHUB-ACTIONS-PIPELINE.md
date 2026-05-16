@@ -10,7 +10,7 @@ The Hudson Street Library website uses GitHub Actions for automated deployment. 
 graph TD
     A[Developer Push to main] --> B[GitHub Actions Trigger]
     B --> C[Checkout Code]
-    C --> D[Setup Node.js 18]
+    C --> D[Setup Node.js 22]
     D --> E[Install Dependencies]
     E --> F[Build with Eleventy]
     F --> G[Upload Build Artifact]
@@ -44,7 +44,7 @@ graph TD
 
 ### Environment
 - **OS:** `ubuntu-latest`
-- **Node.js:** Version 18 with npm caching
+- **Node.js:** Version 22 with npm caching (required by Eleventy v3)
 
 ### Steps
 
@@ -59,7 +59,7 @@ graph TD
    - name: Setup Node.js
      uses: actions/setup-node@v4
      with:
-       node-version: '18'
+       node-version: '22'
        cache: 'npm'
    ```
 
