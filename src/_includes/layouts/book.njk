@@ -671,7 +671,8 @@
             {% endfor %}
         </div>
         {% if totalByAuthor > 12 %}
-        <a href="/static-demo/?author={{ book.author_last | urlencode }}" class="view-all-link">
+        {% set curatedAuthorPage = authorCollectionPages[book.author_last] %}
+        <a href="{% if curatedAuthorPage %}{{ curatedAuthorPage }}{% else %}/static-demo/?author={{ book.author_last | urlencode }}{% endif %}" class="view-all-link">
             View all {{ totalByAuthor }} books by {{ book.author_full_name }} →
         </a>
         {% endif %}
