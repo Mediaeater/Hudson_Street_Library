@@ -185,6 +185,6 @@ console.log(`Backup saved: ${BACKUP_PATH}`);
 console.log(`\nUpdated books.csv successfully!\n`);
 
 // Write update log
-const logPath = path.join(__dirname, '../prince-research-update-log.json');
+const logPath = path.join(__dirname, '../archive/prince-research/prince-research-update-log.json');
 fs.writeFileSync(logPath, JSON.stringify(updateLog, null, 2));
 console.log(`Update log: ${logPath}`);

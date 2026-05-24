@@ -87,8 +87,8 @@ const priorityList = analysis
   }));
 
 fs.writeFileSync(
-  path.join(__dirname, '../research-priority-prince.json'),
+  path.join(__dirname, '../archive/prince-research/research-priority-prince.json'),
   JSON.stringify(priorityList, null, 2)
 );
 
-console.log(`\nPriority list written to research-priority-prince.json`);
+console.log(`\nPriority list written to archive/prince-research/research-priority-prince.json`);
