@@ -92,12 +92,19 @@
             </nav>
 
             <!-- Mobile Menu Button -->
-            <button class="md:hidden focus:outline-none text-teal-800"
+            <!-- Icons are inline SVGs (not Font Awesome) so the menu works on
+                 every page, including those that do not load an icon font. -->
+            <button class="md:hidden focus:outline-none text-teal-800 p-1 -mr-1"
                     aria-label="Toggle menu"
                     aria-controls="mobile-nav-menu"
                     aria-expanded="false"
                     onclick="toggleMobileMenu()">
-                <i class="fas fa-bars text-xl" id="mobile-menu-icon"></i>
+                <svg id="mobile-menu-icon-open" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg id="mobile-menu-icon-close" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
             </button>
         </div>
     </div>
@@ -119,20 +126,17 @@
 <script>
 function toggleMobileMenu() {
     const menu = document.getElementById('mobile-nav-menu');
-    const icon = document.getElementById('mobile-menu-icon');
-    const isHidden = menu.classList.contains('hidden');
+    const button = document.querySelector('button[aria-controls="mobile-nav-menu"]');
+    const openIcon = document.getElementById('mobile-menu-icon-open');
+    const closeIcon = document.getElementById('mobile-menu-icon-close');
+    const willOpen = menu.classList.contains('hidden');
 
-    if (isHidden) {
-        menu.classList.remove('hidden');
-        menu.classList.add('flex', 'flex-col');
-        icon.classList.remove('fa-bars');
-        icon.classList.add('fa-times');
-    } else {
-        menu.classList.add('hidden');
-        menu.classList.remove('flex', 'flex-col');
-        icon.classList.remove('fa-times');
-        icon.classList.add('fa-bars');
-    }
+    menu.classList.toggle('hidden', !willOpen);
+    menu.classList.toggle('flex', willOpen);
+    menu.classList.toggle('flex-col', willOpen);
+    if (openIcon) openIcon.classList.toggle('hidden', willOpen);
+    if (closeIcon) closeIcon.classList.toggle('hidden', !willOpen);
+    if (button) button.setAttribute('aria-expanded', String(willOpen));
 }
 </script>
 
