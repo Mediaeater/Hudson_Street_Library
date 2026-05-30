@@ -26,7 +26,7 @@ breadcrumbs:
     </div>
 
     <!-- Collection Categories -->
-    <div class="bg-white p-6 rounded-lg shadow-xs">
+    <div class="bg-white p-6 rounded-lg shadow-sm">
         <h3 class="text-lg font-semibold text-gray-900 mb-4">Collection Categories</h3>
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             <button onclick="filterByCategory('')" class="category-filter active p-3 border rounded-lg text-center hover:border-teal-300 transition-colors" data-category="">
@@ -43,7 +43,7 @@ breadcrumbs:
     </div>
 
     <!-- Search and Filters -->
-    <div class="bg-white p-6 rounded-lg shadow-xs">
+    <div class="bg-white p-6 rounded-lg shadow-sm">
         <div class="flex flex-wrap gap-4 items-center">
             <!-- Search -->
             <div class="flex-1 min-w-64">
@@ -84,7 +84,7 @@ breadcrumbs:
     </div>
 
     <!-- Empty State -->
-    <div id="no-collections" class="bg-white rounded-lg shadow-xs p-12 text-center hidden">
+    <div id="no-collections" class="bg-white rounded-lg shadow-sm p-12 text-center hidden">
         <i class="fas fa-layer-group text-4xl text-gray-300 mb-4"></i>
         <h3 class="text-lg font-medium text-gray-900 mb-2">No collections found</h3>
         <p class="text-gray-500 mb-6">Create your first collection to organize your books.</p>
@@ -107,7 +107,7 @@ breadcrumbs:
 </div>
 
 <!-- Collection Actions Modal -->
-<div id="collection-modal" class="fixed inset-0 bg-gray-600/50 hidden z-50">
+<div id="collection-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
     <div class="flex min-h-screen items-center justify-center p-4">
         <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
             <div class="p-6">
@@ -205,12 +205,12 @@ function createCollectionCard(collection) {
     const color = categoryColors[collection.category] || 'gray';
     
     return `
-        <div class="bg-white rounded-lg shadow-xs overflow-hidden hover:shadow-md transition-shadow">
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <!-- Collection Image -->
             <div class="aspect-w-16 aspect-h-9 bg-gray-200">
                 ${collection.hero_image_url ? 
                     `<img src="${collection.hero_image_url}" alt="${collection.name}" class="w-full h-48 object-cover">` :
-                    `<div class="h-48 bg-linear-to-br from-${color}-400 to-${color}-600 flex items-center justify-center">
+                    `<div class="h-48 bg-gradient-to-br from-${color}-400 to-${color}-600 flex items-center justify-center">
                         <i class="fas fa-layer-group text-4xl text-white opacity-50"></i>
                     </div>`
                 }
@@ -317,7 +317,7 @@ function showDeleteModal(collectionId, collectionName) {
             Are you sure you want to delete the collection "<strong>${collectionName}</strong>"? 
             This action cannot be undone.
         </p>
-        <div class="bg-yellow-50 border border-yellow-200 rounded-sm p-3 mt-3">
+        <div class="bg-yellow-50 border border-yellow-200 rounded p-3 mt-3">
             <div class="flex">
                 <i class="fas fa-exclamation-triangle text-yellow-400 mr-2 mt-0.5"></i>
                 <div class="text-sm text-yellow-700">
@@ -327,7 +327,7 @@ function showDeleteModal(collectionId, collectionName) {
         </div>
     `;
     document.getElementById('modal-action-btn').textContent = 'Delete Collection';
-    document.getElementById('modal-action-btn').className = 'px-4 py-2 bg-red-600 text-white rounded-sm hover:bg-red-700';
+    document.getElementById('modal-action-btn').className = 'px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700';
     document.getElementById('collection-modal').classList.remove('hidden');
 }
 
