@@ -2,7 +2,7 @@
 <form id="book-form" class="space-y-6" data-book-id="{{ book.id if book else '' }}">
     
     <!-- Form Header -->
-    <div class="bg-white p-6 rounded-lg shadow-xs">
+    <div class="bg-white p-6 rounded-lg shadow-sm">
         <h2 class="text-2xl font-bold text-gray-900 mb-4">
             {% if book %}Edit Book: {{ book.title }}{% else %}Add New Book{% endif %}
         </h2>
@@ -23,7 +23,7 @@
     </div>
 
     <!-- Basic Information -->
-    <div class="bg-white p-6 rounded-lg shadow-xs">
+    <div class="bg-white p-6 rounded-lg shadow-sm">
         <h3 class="text-lg font-semibold text-gray-900 mb-4">Basic Information</h3>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -96,7 +96,7 @@
     </div>
 
     <!-- Physical Properties -->
-    <div class="bg-white p-6 rounded-lg shadow-xs">
+    <div class="bg-white p-6 rounded-lg shadow-sm">
         <h3 class="text-lg font-semibold text-gray-900 mb-4">Physical Properties</h3>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -161,7 +161,7 @@
     </div>
 
     <!-- Library Management -->
-    <div class="bg-white p-6 rounded-lg shadow-xs">
+    <div class="bg-white p-6 rounded-lg shadow-sm">
         <h3 class="text-lg font-semibold text-gray-900 mb-4">Library Management</h3>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -227,7 +227,7 @@
     </div>
 
     <!-- Content & Description -->
-    <div class="bg-white p-6 rounded-lg shadow-xs">
+    <div class="bg-white p-6 rounded-lg shadow-sm">
         <h3 class="text-lg font-semibold text-gray-900 mb-4">Content & Description</h3>
         
         <!-- Summary -->
@@ -276,14 +276,14 @@
     </div>
 
     <!-- Collections -->
-    <div class="bg-white p-6 rounded-lg shadow-xs">
+    <div class="bg-white p-6 rounded-lg shadow-sm">
         <h3 class="text-lg font-semibold text-gray-900 mb-4">Collections</h3>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {% for collection in collections %}
             <label class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
                 <input type="checkbox" name="collections" value="{{ collection.id }}" 
-                       class="mr-3 h-4 w-4 text-teal-600 border-gray-300 rounded-sm focus:ring-teal-500"
+                       class="mr-3 h-4 w-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
                        {{ 'checked' if book and collection.id in book.collection_ids else '' }}>
                 <div>
                     <div class="font-medium text-gray-900">{{ collection.name }}</div>
@@ -295,15 +295,15 @@
     </div>
 
     <!-- Cover Image -->
-    <div class="bg-white p-6 rounded-lg shadow-xs">
+    <div class="bg-white p-6 rounded-lg shadow-sm">
         <h3 class="text-lg font-semibold text-gray-900 mb-4">Cover Image</h3>
         
         <div class="flex items-start space-x-6">
             <!-- Current Image -->
             {% if book and book.cover_image_url %}
-            <div class="shrink-0">
+            <div class="flex-shrink-0">
                 <img src="{{ book.cover_image_url }}" alt="Current cover" 
-                     class="w-32 h-40 object-cover rounded-lg shadow-xs">
+                     class="w-32 h-40 object-cover rounded-lg shadow-sm">
             </div>
             {% endif %}
             
@@ -336,13 +336,13 @@
     </div>
 
     <!-- Feature Flags -->
-    <div class="bg-white p-6 rounded-lg shadow-xs">
+    <div class="bg-white p-6 rounded-lg shadow-sm">
         <h3 class="text-lg font-semibold text-gray-900 mb-4">Display Options</h3>
         
         <div class="space-y-4">
             <label class="flex items-center">
                 <input type="checkbox" name="is_featured" value="1" 
-                       class="mr-3 h-4 w-4 text-teal-600 border-gray-300 rounded-sm focus:ring-teal-500"
+                       class="mr-3 h-4 w-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
                        {{ 'checked' if book and book.is_featured else '' }}>
                 <div>
                     <div class="font-medium text-gray-900">Featured Book</div>
@@ -352,7 +352,7 @@
             
             <label class="flex items-center">
                 <input type="checkbox" name="is_staff_pick" value="1" 
-                       class="mr-3 h-4 w-4 text-teal-600 border-gray-300 rounded-sm focus:ring-teal-500"
+                       class="mr-3 h-4 w-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
                        {{ 'checked' if book and book.is_staff_pick else '' }}>
                 <div>
                     <div class="font-medium text-gray-900">Staff Pick</div>
@@ -362,7 +362,7 @@
             
             <label class="flex items-center">
                 <input type="checkbox" name="is_new_acquisition" value="1" 
-                       class="mr-3 h-4 w-4 text-teal-600 border-gray-300 rounded-sm focus:ring-teal-500"
+                       class="mr-3 h-4 w-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
                        {{ 'checked' if book and book.is_new_acquisition else '' }}>
                 <div>
                     <div class="font-medium text-gray-900">New Acquisition</div>
@@ -445,7 +445,7 @@ document.getElementById('cover_image').addEventListener('change', function(e) {
             if (!preview) {
                 preview = document.createElement('img');
                 preview.id = 'image-preview';
-                preview.className = 'w-32 h-40 object-cover rounded-lg shadow-xs mt-4';
+                preview.className = 'w-32 h-40 object-cover rounded-lg shadow-sm mt-4';
                 e.target.parentElement.appendChild(preview);
             }
             preview.src = e.target.result;
