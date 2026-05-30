@@ -488,9 +488,9 @@ class BatchOperations {
 
         if (results.found && results.found.length > 0) {
             preview.innerHTML = results.found.map(book => `
-                <div class="flex items-center space-x-3 p-2 bg-white rounded border">
+                <div class="flex items-center space-x-3 p-2 bg-white rounded-sm border">
                     <img src="${book.cover_image_url || '/assets/images/placeholder-book.svg'}" 
-                         alt="${book.title}" class="w-8 h-10 object-cover rounded">
+                         alt="${book.title}" class="w-8 h-10 object-cover rounded-sm">
                     <div class="flex-1">
                         <div class="font-medium text-sm">${book.title}</div>
                         <div class="text-xs text-gray-500">
