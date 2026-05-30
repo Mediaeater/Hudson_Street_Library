@@ -53,7 +53,7 @@ class BookWorkflow {
         });
 
         // ISBN lookup
-        this.safeAddEventListener('isbn', 'blur', () => this.lookupBookByISBN());
+        this.safeAddEventListener('isbn', 'blur-sm', () => this.lookupBookByISBN());
 
         // Title-based category detection
         this.safeAddEventListener('title', 'input', debounce(() => this.detectCategory(), 500));
@@ -609,7 +609,7 @@ class BookWorkflow {
                         </div>
                     </div>
                     <div class="flex items-center space-x-2">
-                        <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                        <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-sm">
                             ${Math.round(collection.relevance * 100)}% match
                         </span>
                         <div class="collection-checkbox">
@@ -817,7 +817,7 @@ class BookWorkflow {
         }
         
         list.innerHTML = suggestions.map(subject => `
-            <button type="button" class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+            <button type="button" class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-sm hover:bg-gray-200"
                     onclick="bookWorkflow.addSubject('${subject}')">
                 ${subject}
             </button>
@@ -1323,7 +1323,7 @@ class BookWorkflow {
                 
                 <div>
                     <h4 class="text-sm font-medium text-gray-900 mb-2">CSV Format Requirements</h4>
-                    <div class="bg-gray-50 p-3 rounded text-sm">
+                    <div class="bg-gray-50 p-3 rounded-sm text-sm">
                         <div class="font-medium mb-2">Required columns:</div>
                         <div class="text-gray-600">title, status</div>
                         <div class="font-medium mt-3 mb-2">Optional columns:</div>
