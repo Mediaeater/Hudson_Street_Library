@@ -1,0 +1,97 @@
+name: Backup books.csv
+
+# The entire site is generated from src/_data/books.csv, so it is a single
+# point of failure. This workflow keeps durable, GitHub-hosted backups that do
+# not depend on any local machine:
+#   1. A validated, timestamped snapshot is committed to csv-backups/
+#      (permanent, browsable restore points in the repo history).
+#   2. The current books.csv is also uploaded as a workflow artifact with
+#      90-day retention (a fallback if the commit step is ever blocked).
+
+on:
+  # Back up whenever the catalog changes on the deployed branch.
+  push:
+    branches: ["main"]
+    paths:
+      - "src/_data/books.csv"
+  # Daily safety net (only commits if the catalog actually changed).
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+# Allow the workflow to commit the snapshot back to the repo.
+permissions:
+  contents: write
+
+# Never run two backups at once; never cancel an in-progress backup.
+concurrency:
+  group: "books-csv-backup"
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Refuse to back up a corrupt catalog — a bad backup is worse than none.
+      - name: Validate books.csv
+        run: node scripts/validate-csv-robust.js src/_data/books.csv
+
+      # Always upload the current catalog as an artifact (guaranteed backup,
+      # even if the repo commit step is blocked by branch protection).
+      - name: Upload books.csv artifact (90-day retention)
+        uses: actions/upload-artifact@v4
+        with:
+          name: books-csv-backup
+          path: src/_data/books.csv
+          retention-days: 90
+
+      # Create a new committed snapshot only when the catalog has actually
+      # changed since the most recent snapshot, so the daily schedule does
+      # not produce noise commits.
+      - name: Create snapshot if changed
+        id: snapshot
+        run: |
+          mkdir -p csv-backups
+          latest=$(ls -1 csv-backups/books_*.csv 2>/dev/null | sort | tail -1 || true)
+          if [ -n "$latest" ] && cmp -s src/_data/books.csv "$latest"; then
+            echo "books.csv unchanged since $latest — no new snapshot needed."
+            echo "created=false" >> "$GITHUB_OUTPUT"
+          else
+            stamp=$(date -u +'%Y-%m-%d_%H%M%S')
+            cp src/_data/books.csv "csv-backups/books_${stamp}.csv"
+            echo "Created snapshot csv-backups/books_${stamp}.csv"
+            echo "created=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Bound repository growth: keep the 90 most recent snapshots.
+      - name: Prune old snapshots
+        if: steps.snapshot.outputs.created == 'true'
+        run: |
+          ls -1 csv-backups/books_*.csv | sort | head -n -90 | xargs -r rm -v
+
+      - name: Commit snapshot
+        if: steps.snapshot.outputs.created == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add csv-backups/
+          if git diff --cached --quiet; then
+            echo "Nothing to commit."
+          else
+            # [skip ci] prevents this backup-only commit from triggering a
+            # redundant site rebuild/deploy.
+            git commit -m "backup: snapshot books.csv ($(date -u +'%Y-%m-%d')) [skip ci]"
+            git push
+          fi
