@@ -25,7 +25,7 @@ class UIComponents {
             destructive: 'bg-red-600 text-white hover:bg-red-700'
         };
 
-        const baseClasses = 'btn rounded-lg font-medium transition-all duration-120 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500';
+        const baseClasses = 'btn rounded-lg font-medium transition-all duration-120 focus:outline-hidden focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500';
 
         const button = document.createElement('button');
         button.className = `${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${className}`;
@@ -97,7 +97,7 @@ class UIComponents {
 
         const input = document.createElement('input');
         input.type = type;
-        input.className = `w-full px-3 py-2 border border-black/8 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all duration-120 ${className}`;
+        input.className = `w-full px-3 py-2 border border-black/8 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all duration-120 ${className}`;
         input.placeholder = placeholder;
         input.value = value;
         if (id) input.id = id;
@@ -188,7 +188,7 @@ class UIComponents {
         for (let i = 0; i < lines; i++) {
             const line = document.createElement('div');
             const widths = ['w-3/4', 'w-full', 'w-5/6'];
-            line.className = `h-3 ${widths[i % 3]} rounded bg-gradient-to-r from-neutral-100 via-neutral-200 to-neutral-100 animate-pulse`;
+            line.className = `h-3 ${widths[i % 3]} rounded-sm bg-linear-to-r from-neutral-100 via-neutral-200 to-neutral-100 animate-pulse`;
             container.appendChild(line);
         }
 
@@ -204,7 +204,7 @@ class UIComponents {
         isOpen = false
     }) {
         const overlay = document.createElement('div');
-        overlay.className = `${isOpen ? 'flex' : 'hidden'} fixed inset-0 z-50 items-center justify-center p-4 bg-black/20 backdrop-blur-sm transition-opacity duration-200`;
+        overlay.className = `${isOpen ? 'flex' : 'hidden'} fixed inset-0 z-50 items-center justify-center p-4 bg-black/20 backdrop-blur-xs transition-opacity duration-200`;
 
         const modal = document.createElement('div');
         modal.className = 'bg-white rounded-xl border border-black/8 p-6 max-w-md w-full';
