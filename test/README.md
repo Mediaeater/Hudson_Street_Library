@@ -130,64 +130,35 @@ npm run test:coverage:html
 
 ## Pre-Commit Hook
 
-A pre-commit hook is available that automatically runs tests before allowing commits. This helps catch issues early and keeps the codebase stable.
+A pre-commit hook validates `src/_data/books.csv` before each commit, catching structural errors in the collection's source of truth before they land. It lives in `.githooks/pre-commit` and is active automatically via `core.hooksPath` — no install step.
 
-### Installation
+### How It Works
 
-The pre-commit hook is opt-in. To install it:
+The hook only runs when a commit includes `src/_data/books.csv`:
 
-```bash
-npm run setup:hooks
-```
+1. Detects whether `books.csv` is staged
+2. If so, runs `node scripts/validate-csv-robust.js`
+3. Blocks the commit if validation fails, with instructions to repair the CSV
+4. Commits that don't touch `books.csv` pass through untouched
 
-This will:
-- Copy the pre-commit hook to `.git/hooks/`
-- Make it executable
-- Back up any existing pre-commit hook
-
-### Usage
-
-Once installed, tests run automatically on every commit:
+If validation fails, fix the CSV before retrying:
 
 ```bash
-# Normal commit - tests run automatically
-git commit -m "Fix bug in CSV handler"
-
-# If tests pass:
-✓ All tests passed
-✓ Commit allowed
-
-# If tests fail:
-✗ Tests failed
-Fix the failing tests before committing.
+node scripts/fix-csv-formatting.js src/_data/books.csv src/_data/books_fixed.csv
+node scripts/validate-csv-robust.js
+# if valid:
+cp src/_data/books_fixed.csv src/_data/books.csv
 ```
 
 ### Bypassing the Hook
 
-Sometimes you need to commit work-in-progress code that doesn't pass all tests. Use `--no-verify` to skip the hook:
+To commit work-in-progress without validation, use `--no-verify`:
 
 ```bash
 git commit --no-verify -m "WIP: Refactoring in progress"
 ```
 
-Use this sparingly. The hook exists to prevent broken code from entering the repository.
-
-### Uninstalling
-
-To remove the pre-commit hook:
-
-```bash
-rm .git/hooks/pre-commit
-```
-
-### How It Works
-
-The pre-commit hook:
-1. Runs `npm test` before each commit
-2. Blocks the commit if tests fail
-3. Shows clear success/failure messages
-4. Runs fast (under 500ms typically)
-5. Provides instructions for skipping if needed
+Use this sparingly. The hook exists to keep malformed CSV out of the repository.
 
 ## Writing New Tests
 
