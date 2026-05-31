@@ -37,6 +37,79 @@
         font-family: 'Crimson Pro', Georgia, serif;
         font-size: 1.0625rem;
     }
+
+    /*
+      Mobile menu is styled here (unlayered) rather than with Tailwind
+      utilities. design-system.css ships an unlayered `* { padding: 0 }`
+      reset that overrides Tailwind's layered utilities, which silently
+      collapsed the old icon-only button to an invisible sliver. Self-
+      contained styles below are immune to that conflict.
+    */
+    .site-header .menu-toggle { display: none; }
+    .site-header .mobile-nav { display: none; }
+
+    @media (max-width: 767px) {
+        .site-header .menu-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.45rem 0.7rem;
+            border: 1px solid rgba(36, 61, 35, 0.3);
+            border-radius: 0.5rem;
+            background: #ffffff;
+            color: #243d23;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .site-header .menu-toggle:hover { background: #f0f5f0; }
+        .site-header .menu-toggle:focus-visible {
+            outline: 2px solid #243d23;
+            outline-offset: 2px;
+        }
+        .site-header .menu-toggle svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+            flex-shrink: 0;
+        }
+        .site-header .menu-toggle .menu-toggle-label {
+            font-family: 'Crimson Pro', Georgia, serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .site-header .menu-toggle .icon-close { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-open { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-close { display: block; }
+
+        .site-header .mobile-nav.is-open {
+            display: flex;
+            flex-direction: column;
+        }
+        .site-header .mobile-nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            padding: 0.5rem;
+            z-index: 40;
+        }
+        .site-header .mobile-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            color: #404040;
+            text-decoration: none;
+        }
+        .site-header .mobile-nav a:hover {
+            background: #f0f5f0;
+            color: #1b2e1a;
+        }
+    }
 </style>
 
 <header class="site-header sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
@@ -71,47 +144,44 @@
                 </a>
                 <a href="/collections/recently_added.html"
                    class="nav-link {{ 'nav-link-active' if currentPage == 'recently-added' }}">
-                   Recently Added
+                   Recent
                 </a>
                 <a href="/discover.html"
                    class="nav-link {{ 'nav-link-active' if currentPage == 'discover' }}">
                    Discover
                 </a>
-                <a href="/#contact"
-                   class="nav-link {{ 'nav-link-active' if currentPage == 'contact' }}">
-                   Contact
-                </a>
             </nav>
 
             <!-- Mobile Menu Button -->
-            <!-- Icons are inline SVGs (not Font Awesome) so the menu works on
-                 every page, including those that do not load an icon font. -->
-            <button class="md:hidden focus:outline-hidden text-teal-800 p-1 -mr-1"
+            <!-- Icon + visible "Menu" label so the control is obvious on mobile.
+                 Sizing/visibility come from the unlayered styles above, not
+                 Tailwind utilities (see note in the <style> block). Icons are
+                 inline SVGs so the menu works on pages without an icon font. -->
+            <button class="menu-toggle"
                     aria-label="Toggle menu"
                     aria-controls="mobile-nav-menu"
                     aria-expanded="false"
                     onclick="toggleMobileMenu()">
-                <svg id="mobile-menu-icon-open" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <svg class="icon-open" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
-                <svg id="mobile-menu-icon-close" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <svg class="icon-close" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                 </svg>
+                <span class="menu-toggle-label">Menu</span>
             </button>
         </div>
     </div>
 
     <!-- Mobile Navigation Menu -->
-    <nav id="mobile-nav-menu"
-         class="hidden md:hidden absolute top-full left-0 right-0 bg-white shadow-lg px-6 py-4 space-y-1 z-40">
-        <a href="/#about" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">About</a>
-        <a href="/collection-explore.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Collections</a>
-        <a href="/static-demo/" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Search</a>
-        <a href="/#publications" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Publications</a>
-        <a href="/news.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">News</a>
-        <a href="/collections/recently_added.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Recently Added</a>
-        <a href="/discover.html" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Discover</a>
-        <a href="/#contact" class="block py-2 px-3 rounded text-neutral-700 hover:bg-teal-50 hover:text-teal-900">Contact</a>
+    <nav id="mobile-nav-menu" class="mobile-nav" aria-label="Mobile navigation">
+        <a href="/#about">About</a>
+        <a href="/collection-explore.html">Collections</a>
+        <a href="/static-demo/">Search</a>
+        <a href="/#publications">Publications</a>
+        <a href="/news.html">News</a>
+        <a href="/collections/recently_added.html">Recent</a>
+        <a href="/discover.html">Discover</a>
     </nav>
 </header>
 
@@ -119,15 +189,10 @@
 function toggleMobileMenu() {
     const menu = document.getElementById('mobile-nav-menu');
     const button = document.querySelector('button[aria-controls="mobile-nav-menu"]');
-    const openIcon = document.getElementById('mobile-menu-icon-open');
-    const closeIcon = document.getElementById('mobile-menu-icon-close');
-    const willOpen = menu.classList.contains('hidden');
+    const willOpen = !menu.classList.contains('is-open');
 
-    menu.classList.toggle('hidden', !willOpen);
-    menu.classList.toggle('flex', willOpen);
-    menu.classList.toggle('flex-col', willOpen);
-    if (openIcon) openIcon.classList.toggle('hidden', willOpen);
-    if (closeIcon) closeIcon.classList.toggle('hidden', !willOpen);
+    menu.classList.toggle('is-open', willOpen);
+    // Icon swap (hamburger <-> X) is driven by aria-expanded in CSS.
     if (button) button.setAttribute('aria-expanded', String(willOpen));
 }
 </script>
