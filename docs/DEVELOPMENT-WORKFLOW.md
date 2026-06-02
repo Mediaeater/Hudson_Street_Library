@@ -695,8 +695,8 @@ ls src/assets/images/books/Berenice_Abbott_*.jpg
 # Edit main stylesheet
 src/assets/css/design-system.css
 
-# Or CLRS color palette version
-src/assets/css/design-system-clrs.css
+# Tailwind utilities/theme: edit the source, then rebuild
+src/assets/css/input.css
 ```
 
 **Example: Change primary color**

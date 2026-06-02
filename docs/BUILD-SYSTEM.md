@@ -204,9 +204,8 @@ CSS files are copied as-is (no preprocessing):
 
 ```
 src/assets/css/
-├── design-system.css       # CLRS design system
-├── design-system-clrs.css  # Color palette definitions
-└── admin.css               # Admin interface styles
+├── design-system.css       # Hand-written design system + utilities
+└── input.css               # Tailwind v4 source (compiled to tailwind.css)
 ```
 
 ### JavaScript Pipeline
