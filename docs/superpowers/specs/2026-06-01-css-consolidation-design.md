@@ -101,3 +101,19 @@ Acceptance: no visual diff on any archetype at either width; mobile menu works o
 | `.nav-link` (1,818 pages) disappears | Port to `@layer components`. |
 | Adding `tailwind.css` to a hand-authored page activates a previously-inert class and shifts its custom-styled body | Commit 1 is isolated and screenshotted before/after at both widths. |
 | Bespoke component missed in the port | Audit drove the inventory; deterministic class diff + per-archetype screenshots catch gaps. |
+
+## Resolution (2026-06-01)
+
+**Outcome: stopped at the additive half (Commit 1). Path A's cutover was attempted, found high-risk, and reverted.** `design-system.css` is retained, but now loaded consistently on every page.
+
+Commit `3a6df4a0f` (on `main`) ports the tokens/reset/components into the Tailwind build and adds `tailwind.css` to the 12 hand-authored pages, with `design-system.css` still loaded everywhere. This **fixes the original bug** (Tailwind classes no longer silently die on the 12 pages — the design-system demo's alerts/badges/skeletons render correctly) with **zero regression** on the 1,860 Tailwind pages and book/collection pages (verified pixel-identical at 390px + 1,280px).
+
+**Why the cutover (deleting `design-system.css`) was abandoned — the spec's core premise was wrong:**
+
+The spec assumed Tailwind's generated utilities would seamlessly replace ds once it was removed. They don't, because the site relies on ds being **unlayered**:
+
+1. **Unlayered inline resets beat layered utilities.** Nine page templates (incl. `book.njk`, 1,810 book pages) carry their own inline `* { margin:0; padding:0 }` reset. ds's utilities were *unlayered*, so `.px-6`/`.gap-1`/etc. beat the `*` reset by specificity. Tailwind's utilities live in `@layer utilities`, and a layered rule **can never** beat an unlayered inline reset → the shared header's `px-6/py-4/gap-1/mx-auto` all collapse to 0 sitewide. (Confirmed: with ds gone, computed `padding-left` on `header .mx-auto` = `0px`; with the inline reset removed, `24px`.)
+2. **Removing the inline resets exposes name collisions.** Page-inline classes collide with pre-existing Tailwind `@utility` definitions the reset had been suppressing — e.g. `book.njk`'s `.section-heading` (a small label) vs `@utility section-heading` (a bordered title), which then injects a border + 8px padding into every section heading (+32px per book page).
+3. **Bespoke hand-authored pages are deeply ds-dependent** — `newspaper/the-manipulator` diffed **89%** after the cutover; there are dozens of such magazine pages.
+
+Net: cleanly retiring `design-system.css` requires broad, page-by-page cascade surgery and re-fidelity work across ~1,860 + bespoke pages — disproportionate risk for the goal, and counter to the "don't over-engineer / don't visually regress" constraints. If a single-file outcome is wanted later, the low-risk route is to fold `design-system.css` into the Tailwind build **unlayered** (preserving the exact cascade), not to re-layer everything.
