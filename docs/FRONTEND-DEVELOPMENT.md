@@ -53,8 +53,7 @@ src/
 ├── assets/
 │   ├── css/
 │   │   ├── design-system.css         # Main design system (neutral palette)
-│   │   ├── design-system-clrs.css    # CLRS color palette variant
-│   │   └── admin.css                 # Admin-specific styles
+│   │   └── input.css                 # Tailwind v4 source (→ tailwind.css)
 │   ├── js/
 │   │   ├── shared.js                 # Core HudsonStreetLibrary class
 │   │   ├── book-workflow.js          # Book addition workflow
@@ -414,8 +413,7 @@ Hudson Street Library uses a custom design system built on CSS custom properties
 ```
 src/assets/css/
 ├── design-system.css         # Main design system (neutral palette)
-├── design-system-clrs.css    # CLRS color palette variant
-└── admin.css                 # Admin-specific components
+└── input.css                 # Tailwind v4 source (→ tailwind.css)
 ```
 
 ### Design Tokens (CSS Custom Properties)
@@ -450,39 +448,6 @@ All design values are defined as CSS variables in `:root` for consistency and ea
     --success: #22c55e;
     --warning: #f59e0b;
     --error: #ef4444;
-}
-```
-
-**CLRS Palette** (`design-system-clrs.css`):
-
-Based on [clrs.cc](https://clrs.cc/) for a more vibrant aesthetic.
-
-```css
-:root {
-    /* CLRS Base Colors */
-    --clrs-navy: #001f3f;
-    --clrs-blue: #0074D9;
-    --clrs-aqua: #7FDBFF;
-    --clrs-teal: #39CCCC;
-    --clrs-olive: #3D9970;
-    --clrs-green: #2ECC40;
-    --clrs-lime: #01FF70;
-    --clrs-yellow: #FFDC00;
-    --clrs-orange: #FF851B;
-    --clrs-red: #FF4136;
-    --clrs-maroon: #85144b;
-    --clrs-fuchsia: #F012BE;
-    --clrs-purple: #B10DC9;
-    --clrs-black: #111111;
-    --clrs-gray: #AAAAAA;
-    --clrs-silver: #DDDDDD;
-    --clrs-white: #FFFFFF;
-
-    /* Semantic Assignments */
-    --color-primary: var(--clrs-blue);
-    --color-success: var(--clrs-green);
-    --color-warning: var(--clrs-yellow);
-    --color-error: var(--clrs-red);
 }
 ```
 
@@ -669,72 +634,6 @@ select:focus {
     background-color: #fee2e2;
     color: #991b1b;
 }
-```
-
-### Admin-Specific Styles
-
-**File:** `/src/assets/css/admin.css`
-
-Contains Tailwind `@apply` directives and component-specific styles for the admin interface.
-
-#### Workflow Components
-
-```css
-.workflow-step {
-    display: none;
-}
-
-.workflow-step.active {
-    display: block;
-}
-
-.step-indicator {
-    transition: all 0.3s ease;
-}
-
-.step-indicator.active {
-    transform: scale(1.1);
-}
-```
-
-#### Form Inputs
-
-```css
-.form-input {
-    @apply border border-gray-300 rounded-md px-3 py-2 text-sm;
-    @apply focus:ring-2 focus:ring-teal-500 focus:border-teal-500;
-    transition: all 0.2s ease;
-}
-
-.form-input.error {
-    @apply border-red-500;
-}
-```
-
-#### Image Upload
-
-```css
-.upload-area {
-    transition: all 0.3s ease;
-}
-
-.upload-area.dragover {
-    @apply border-teal-400 bg-teal-50;
-    transform: scale(1.02);
-}
-
-.image-preview:hover img {
-    transform: scale(1.05);
-}
-```
-
-#### Status Badges
-
-```css
-.status-available { @apply bg-green-100 text-green-800; }
-.status-checked-out { @apply bg-yellow-100 text-yellow-800; }
-.status-reserved { @apply bg-blue-100 text-blue-800; }
-.status-missing { @apply bg-red-100 text-red-800; }
 ```
 
 ### Responsive Design
@@ -1275,16 +1174,6 @@ Add to `design-system.css`:
 
 /* Layout utilities */
 .stack > * + * { margin-top: var(--space-4); }
-```
-
-#### 3. Component-Specific Styles
-
-For admin components, add to `admin.css`:
-
-```css
-.new-admin-component {
-    @apply bg-white rounded-lg shadow-md p-6;
-}
 ```
 
 ### Adding New JavaScript Features
