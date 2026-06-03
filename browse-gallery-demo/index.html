@@ -1,0 +1,4300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Gallery View · Hudson Street Library</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="stylesheet" href="/assets/css/browse-enhanced.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #F8F7F4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    .site-header {
+        font-family: 'Crimson Pro', Georgia, serif;
+    }
+    .site-header .site-logo {
+        font-family: 'Crimson Pro', Georgia, serif;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+    }
+    .site-header .nav-link {
+        font-family: 'Crimson Pro', Georgia, serif;
+        font-size: 1.0625rem;
+        font-weight: 400;
+        letter-spacing: 0.005em;
+    }
+    .site-header .nav-link[aria-current="page"],
+    .site-header .nav-link-active {
+        font-weight: 600;
+    }
+    .site-header #mobile-nav-menu a {
+        font-family: 'Crimson Pro', Georgia, serif;
+        font-size: 1.0625rem;
+    }
+
+    /*
+      Mobile menu is styled here (unlayered) rather than with Tailwind
+      utilities. design-system.css ships an unlayered `* { padding: 0 }`
+      reset that overrides Tailwind's layered utilities, which silently
+      collapsed the old icon-only button to an invisible sliver. Self-
+      contained styles below are immune to that conflict.
+    */
+    .site-header .menu-toggle { display: none; }
+    .site-header .mobile-nav { display: none; }
+
+    @media (max-width: 767px) {
+        .site-header .menu-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.45rem 0.7rem;
+            border: 1px solid rgba(36, 61, 35, 0.3);
+            border-radius: 0.5rem;
+            background: #ffffff;
+            color: #243d23;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .site-header .menu-toggle:hover { background: #f0f5f0; }
+        .site-header .menu-toggle:focus-visible {
+            outline: 2px solid #243d23;
+            outline-offset: 2px;
+        }
+        .site-header .menu-toggle svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+            flex-shrink: 0;
+        }
+        .site-header .menu-toggle .menu-toggle-label {
+            font-family: 'Crimson Pro', Georgia, serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .site-header .menu-toggle .icon-close { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-open { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-close { display: block; }
+
+        .site-header .mobile-nav.is-open {
+            display: flex;
+            flex-direction: column;
+        }
+        .site-header .mobile-nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            padding: 0.5rem;
+            z-index: 40;
+        }
+        .site-header .mobile-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            color: #404040;
+            text-decoration: none;
+        }
+        .site-header .mobile-nav a:hover {
+            background: #f0f5f0;
+            color: #1b2e1a;
+        }
+    }
+</style>
+
+<header class="site-header sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="site-logo text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link ">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Recent
+                </a>
+                <a href="/discover.html"
+                   class="nav-link ">
+                   Discover
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <!-- Icon + visible "Menu" label so the control is obvious on mobile.
+                 Sizing/visibility come from the unlayered styles above, not
+                 Tailwind utilities (see note in the <style> block). Icons are
+                 inline SVGs so the menu works on pages without an icon font. -->
+            <button class="menu-toggle"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <svg class="icon-open" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg class="icon-close" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+                <span class="menu-toggle-label">Menu</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu" class="mobile-nav" aria-label="Mobile navigation">
+        <a href="/#about">About</a>
+        <a href="/collection-explore.html">Collections</a>
+        <a href="/static-demo/">Search</a>
+        <a href="/#publications">Publications</a>
+        <a href="/news.html">News</a>
+        <a href="/collections/recently_added.html">Recent</a>
+        <a href="/discover.html">Discover</a>
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const button = document.querySelector('button[aria-controls="mobile-nav-menu"]');
+    const willOpen = !menu.classList.contains('is-open');
+
+    menu.classList.toggle('is-open', willOpen);
+    // Icon swap (hamburger <-> X) is driven by aria-expanded in CSS.
+    if (button) button.setAttribute('aria-expanded', String(willOpen));
+}
+</script>
+
+
+<!-- Gallery Section Header -->
+<div class="gallery-section-header" style="margin-top: 4rem;">
+    <div class="container">
+        <div class="gallery-section-label">The Collection</div>
+        <h1 class="gallery-section-title">Browse Books</h1>
+    </div>
+</div>
+
+<div class="container">
+    <!-- View Toggle -->
+    <div style="display: flex; justify-content: center; margin-bottom: 2rem;">
+        <div class="view-toggle">
+            <button class="view-toggle-btn active" onclick="switchView('gallery')">Gallery Grid</button>
+            <button class="view-toggle-btn" onclick="switchView('asymmetric')">Asymmetric</button>
+        </div>
+    </div>
+
+    <!-- Featured Book Hero (Optional) -->
+    <div class="featured-book-hero">
+        <div class="featured-cover-container">
+            <div class="featured-cover">
+                <img src="/assets/images/books/placeholder-cover.jpg"
+                     alt="Featured book cover"
+                     onerror="this.src='/assets/images/placeholder-book.svg'">
+            </div>
+        </div>
+        <div class="featured-book-content">
+            <div class="featured-label">Featured Selection</div>
+            <h2 class="featured-book-title">The Photo Book<br>Collection</h2>
+            <div class="featured-book-author">Various Artists</div>
+            <div class="featured-book-meta">
+                Multiple Publishers · 2010-2025 · Hardcover
+            </div>
+            <p class="featured-book-description">
+                An exceptional gathering of contemporary photobooks spanning art, documentary, and experimental photography. This curated selection represents the evolution of photographic publishing over the past fifteen years.
+            </p>
+            <a href="/static-demo/" class="featured-book-link">Explore Full Collection</a>
+        </div>
+    </div>
+
+    <!-- Enhanced Gallery Grid -->
+    <div id="galleryGrid" class="visual-grid-enhanced">
+        
+        
+        <a href="/books/shibata_one-picture-book-two-vol-52-lone-pine_1743/"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                
+                <img src="/assets/images/books/shibata_toshio_one_picture_book_two_52_lone_pine_9781590056288.jpg"
+                     alt="One Picture Book Two Vol 52: Lone Pine by Toshio Shibata"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">One Picture Book Two Vol 52: Lone Pine</div>
+            <div class="gallery-book-author">Toshio Shibata</div>
+            
+            <div class="gallery-book-year">2025</div>
+            
+        </a>
+        
+        
+        
+        <a href="/books/ikeda_one-picture-book-two-vol-51-desert-daze_1744/"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                
+                <img src="/assets/images/books/ikeda_yoko_one_picture_book_two_51_desert_daze_9781590056271.jpg"
+                     alt="One Picture Book Two Vol 51: Desert Daze by Yoko Ikeda"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">One Picture Book Two Vol 51: Desert Daze</div>
+            <div class="gallery-book-author">Yoko Ikeda</div>
+            
+            <div class="gallery-book-year">2025</div>
+            
+        </a>
+        
+        
+        
+        <a href="/books/fitch_one-picture-book-two-vol-50-plywood-signs_1745/"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                
+                <img src="/assets/images/books/fitch_steve_one_picture_book_two_50_plywood_signs_9781590056264.jpg"
+                     alt="One Picture Book Two Vol 50: Plywood Signs by Steve Fitch"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">One Picture Book Two Vol 50: Plywood Signs</div>
+            <div class="gallery-book-author">Steve Fitch</div>
+            
+            <div class="gallery-book-year">2025</div>
+            
+        </a>
+        
+        
+        
+        <a href="/books/templeton_one-picture-book-two-vol-49-all-hallows-eve_1746/"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                
+                <img src="/assets/images/books/templeton_ed_one_picture_book_two_49_all_hallows_eve_9781590056257.jpg"
+                     alt="One Picture Book Two Vol 49: All Hallows Eve by Ed Templeton"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">One Picture Book Two Vol 49: All Hallows Eve</div>
+            <div class="gallery-book-author">Ed Templeton</div>
+            
+            <div class="gallery-book-year">2025</div>
+            
+        </a>
+        
+        
+        
+        <a href="/books/hosoe_one-picture-book-two-vol-48-kimono_1306/"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                
+                <img src="/assets/images/books/Hosoe_One_Picture_Book_Two_Vol_48_-_Kimono_NULL.jpg"
+                     alt="One Picture Book Two Vol 48 - Kimono by Eikoh Hosoe"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">One Picture Book Two Vol 48 - Kimono</div>
+            <div class="gallery-book-author">Eikoh Hosoe</div>
+            
+            <div class="gallery-book-year">2025</div>
+            
+        </a>
+        
+        
+        
+        <a href="/books/divola_one-picture-book-two-vol-48-italian-cars_1308/"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                
+                <img src="/assets/images/books/Divola_One_Picture_Book_Two_Vol_48_-_Italian_Cars_NULL.jpg"
+                     alt="One Picture Book Two Vol 48 - Italian Cars by John Divola"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">One Picture Book Two Vol 48 - Italian Cars</div>
+            <div class="gallery-book-author">John Divola</div>
+            
+            <div class="gallery-book-year">2025</div>
+            
+        </a>
+        
+        
+        
+        <a href="/books/casagrande_one-picture-book-two-vol-47-paperworks_1307/"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                
+                <img src="/assets/images/books/Casagrande_One_Picture_Book_Two_Vol_47_-_Paperworks_NULL.jpg"
+                     alt="One Picture Book Two Vol 47 - Paperworks by Benedetta Casagrande"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">One Picture Book Two Vol 47 - Paperworks</div>
+            <div class="gallery-book-author">Benedetta Casagrande</div>
+            
+            <div class="gallery-book-year">2025</div>
+            
+        </a>
+        
+        
+        
+        <a href="/books/zadeh_one-picture-book-two-vol-46-susan-zadeh-toer_1305/"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                
+                <img src="/assets/images/books/Zadeh_One_Picture_Book_Two_Vol_46_-_Susan_Zadeh_Toer_NULL.jpg"
+                     alt="One Picture Book Two Vol 46 - Susan Zadeh Toer by Susan Zadeh"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">One Picture Book Two Vol 46 - Susan Zadeh Toer</div>
+            <div class="gallery-book-author">Susan Zadeh</div>
+            
+            <div class="gallery-book-year">2025</div>
+            
+        </a>
+        
+        
+        
+        <a href="/books/sohier_one-picture-book-two-vol-44-to-utah-85_1310/"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                
+                <img src="/assets/images/books/Sohier_One_Picture_Book_Two_Vol_44_-_To_Utah_85_NULL.jpg"
+                     alt="One Picture Book Two Vol 44 - To Utah 85 by Sage Sohier"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">One Picture Book Two Vol 44 - To Utah 85</div>
+            <div class="gallery-book-author">Sage Sohier</div>
+            
+            <div class="gallery-book-year">2025</div>
+            
+        </a>
+        
+        
+        
+        <a href="/books/dunas_one-picture-book-two-vol-43-highway-61-to-honeyboy_1311/"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                
+                <img src="/assets/images/books/Dunas_One_Picture_Book_Two_Vol_43_-_Highway_61_to_Honeyboy_NULL.jpg"
+                     alt="One Picture Book Two Vol 43 - Highway 61 to Honeyboy by Jeff Dunas"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">One Picture Book Two Vol 43 - Highway 61 to Honeyboy</div>
+            <div class="gallery-book-author">Jeff Dunas</div>
+            
+            <div class="gallery-book-year">2025</div>
+            
+        </a>
+        
+        
+        
+        <a href="/books/plumb_one-picture-book-two-vol-42-lookout-on-highway-74_1312/"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                
+                <img src="/assets/images/books/Plumb_One_Picture_Book_Two_Vol_42_-_Lookout_on_Highway_74_NULL.jpg"
+                     alt="One Picture Book Two Vol 42 - Lookout on Highway 74 by Mimi Plumb"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">One Picture Book Two Vol 42 - Lookout on Highway 74</div>
+            <div class="gallery-book-author">Mimi Plumb</div>
+            
+            <div class="gallery-book-year">2025</div>
+            
+        </a>
+        
+        
+        
+        <a href="/books/foglia_one-picture-book-two-vol-41-living-on-lava_1313/"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                
+                <img src="/assets/images/books/Foglia_One_Picture_Book_Two_Vol_41_-_Living_on_Lava_NULL.jpg"
+                     alt="One Picture Book Two Vol 41 - Living on Lava by Lucas Foglia"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">One Picture Book Two Vol 41 - Living on Lava</div>
+            <div class="gallery-book-author">Lucas Foglia</div>
+            
+            <div class="gallery-book-year">2025</div>
+            
+        </a>
+        
+        
+        
+        <a href="/books/weems_one-picture-book-two-vol-40_1314/"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                
+                <img src="/assets/images/books/Weems_One_Picture_Book_Two_Vol_40_9781590055748.jpg"
+                     alt="One Picture Book Two Vol 40 by Carrie Mae Weems"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">One Picture Book Two Vol 40</div>
+            <div class="gallery-book-author">Carrie Mae Weems</div>
+            
+            <div class="gallery-book-year">2025</div>
+            
+        </a>
+        
+        
+        
+        <a href="/books/moriyama_one-picture-book-two-vol-39-daido-dos_1315/"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                
+                <img src="/assets/images/books/Moriyama_One_Picture_Book_Two_Vol_39_-_Daido_Dos_NULL.jpg"
+                     alt="One Picture Book Two Vol 39 - Daido Dos by Daido Moriyama"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">One Picture Book Two Vol 39 - Daido Dos</div>
+            <div class="gallery-book-author">Daido Moriyama</div>
+            
+            <div class="gallery-book-year">2025</div>
+            
+        </a>
+        
+        
+        
+        <a href="/books/moriyama_one-picture-book-two-vol-38-daido-uno_1316/"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                
+                <img src="/assets/images/books/Moriyama_One_Picture_Book_Two_Vol_38_-_Daido_Uno_NULL.jpg"
+                     alt="One Picture Book Two Vol 38 - Daido Uno by Daido Moriyama"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">One Picture Book Two Vol 38 - Daido Uno</div>
+            <div class="gallery-book-author">Daido Moriyama</div>
+            
+            <div class="gallery-book-year">2025</div>
+            
+        </a>
+        
+        
+        
+        <a href="/books/marcuse_one-picture-book-two-vol-37-portent_1317/"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                
+                <img src="/assets/images/books/Marcuse_One_Picture_Book_Two_Vol_37_-_Portent_NULL.jpg"
+                     alt="One Picture Book Two Vol 37 - Portent by Tanya Marcuse"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">One Picture Book Two Vol 37 - Portent</div>
+            <div class="gallery-book-author">Tanya Marcuse</div>
+            
+            <div class="gallery-book-year">2025</div>
+            
+        </a>
+        
+        
+        
+        <a href="/books/lax_one-picture-book-two-vol-36-taken-by-the-tide_1318/"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                
+                <img src="/assets/images/books/Lax_One_Picture_Book_Two_Vol_36_-_Taken_by_the_Tide_NULL.jpg"
+                     alt="One Picture Book Two Vol 36 - Taken by the Tide by Maria Lax"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">One Picture Book Two Vol 36 - Taken by the Tide</div>
+            <div class="gallery-book-author">Maria Lax</div>
+            
+            <div class="gallery-book-year">2025</div>
+            
+        </a>
+        
+        
+        
+        <a href="/books/ehrlich_one-picture-book-two-vol-35-namibia-redux_1319/"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                
+                <img src="/assets/images/books/Ehrlich_One_Picture_Book_Two_Vol_35_-_Namibia_Redux_NULL.jpg"
+                     alt="One Picture Book Two Vol 35 - Namibia Redux by Richard Ehrlich"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">One Picture Book Two Vol 35 - Namibia Redux</div>
+            <div class="gallery-book-author">Richard Ehrlich</div>
+            
+            <div class="gallery-book-year">2025</div>
+            
+        </a>
+        
+        
+        
+        <a href="/books/hido_one-picture-book-two-vol-34-untitled-2319-b-dmf_1320/"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                
+                <img src="/assets/images/books/Hido_One_Picture_Book_Two_Vol_34_-_Untitled_2319-B-DMF_NULL.jpg"
+                     alt="One Picture Book Two Vol 34 - Untitled #2319-B-DMF by Todd Hido"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">One Picture Book Two Vol 34 - Untitled #2319-B-DMF</div>
+            <div class="gallery-book-author">Todd Hido</div>
+            
+            <div class="gallery-book-year">2025</div>
+            
+        </a>
+        
+        
+        
+        <a href="/books/nikolova_one-picture-book-two-vol-33-elemental-forms_1321/"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                
+                <img src="/assets/images/books/Nikolova_One_Picture_Book_Two_Vol_33_-_Elemental_Forms_NULL.jpg"
+                     alt="One Picture Book Two Vol 33 - Elemental Forms by Nadezda Nikolova"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">One Picture Book Two Vol 33 - Elemental Forms</div>
+            <div class="gallery-book-author">Nadezda Nikolova</div>
+            
+            <div class="gallery-book-year">2025</div>
+            
+        </a>
+        
+        
+        
+        <a href="/books/steinmetz_one-picture-book-two-vol-32-bent-tree_1322/"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                
+                <img src="/assets/images/books/Steinmetz_One_Picture_Book_Two_Vol_32_-_Bent_Tree_NULL.jpg"
+                     alt="One Picture Book Two Vol 32 - Bent Tree by Mark Steinmetz"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">One Picture Book Two Vol 32 - Bent Tree</div>
+            <div class="gallery-book-author">Mark Steinmetz</div>
+            
+            <div class="gallery-book-year">2025</div>
+            
+        </a>
+        
+        
+        
+        <a href="/books/choumali_one-picture-book-two-vol-31-a-va-aller_1323/"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                
+                <img src="/assets/images/books/Choumali_One_Picture_Book_Two_Vol_31_-_A_Va_Aller_NULL.jpg"
+                     alt="One Picture Book Two Vol 31 - A Va Aller by Joana Choumali"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">One Picture Book Two Vol 31 - A Va Aller</div>
+            <div class="gallery-book-author">Joana Choumali</div>
+            
+            <div class="gallery-book-year">2025</div>
+            
+        </a>
+        
+        
+        
+        <a href="/books/callis_one-picture-book-two-vol-30-black-sun_1324/"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                
+                <img src="/assets/images/books/Callis_One_Picture_Book_Two_Vol_30_-_Black_Sun_NULL.jpg"
+                     alt="One Picture Book Two Vol 30 - Black Sun by Jo Ann Callis"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">One Picture Book Two Vol 30 - Black Sun</div>
+            <div class="gallery-book-author">Jo Ann Callis</div>
+            
+            <div class="gallery-book-year">2025</div>
+            
+        </a>
+        
+        
+        
+        <a href="/books/monasterio_one-picture-book-two-vol-29-peyote_1325/"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                
+                <img src="/assets/images/books/Monasterio_One_Picture_Book_Two_Vol_29_-_Peyote_NULL.jpg"
+                     alt="One Picture Book Two Vol 29 - Peyote by Pablo Ortiz Monasterio"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">One Picture Book Two Vol 29 - Peyote</div>
+            <div class="gallery-book-author">Pablo Ortiz Monasterio</div>
+            
+            <div class="gallery-book-year">2025</div>
+            
+        </a>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </div>
+
+    <!-- Loading Skeleton Example (hidden by default) -->
+    <div id="loadingSkeleton" style="display: none;">
+        <div class="visual-grid-enhanced">
+            
+            <div class="gallery-card-skeleton"></div>
+            
+            <div class="gallery-card-skeleton"></div>
+            
+            <div class="gallery-card-skeleton"></div>
+            
+            <div class="gallery-card-skeleton"></div>
+            
+            <div class="gallery-card-skeleton"></div>
+            
+            <div class="gallery-card-skeleton"></div>
+            
+            <div class="gallery-card-skeleton"></div>
+            
+            <div class="gallery-card-skeleton"></div>
+            
+            <div class="gallery-card-skeleton"></div>
+            
+            <div class="gallery-card-skeleton"></div>
+            
+            <div class="gallery-card-skeleton"></div>
+            
+            <div class="gallery-card-skeleton"></div>
+            
+        </div>
+    </div>
+</div>
+
+<script>
+// View switcher
+function switchView(view) {
+    const grid = document.getElementById('galleryGrid');
+    const buttons = document.querySelectorAll('.view-toggle-btn');
+
+    // Update active button
+    buttons.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+
+    // Switch grid class
+    if (view === 'asymmetric') {
+        grid.className = 'visual-grid-asymmetric';
+    } else {
+        grid.className = 'visual-grid-enhanced';
+    }
+}
+
+// Lazy loading enhancement
+if ('IntersectionObserver' in window) {
+    const images = document.querySelectorAll('.gallery-cover-frame img[loading="lazy"]');
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.classList.add('fade-in');
+                observer.unobserve(img);
+            }
+        });
+    });
+
+    images.forEach(img => imageObserver.observe(img));
+}
+
+// Smooth scroll for internal links
+document.addEventListener('DOMContentLoaded', function() {
+    const links = document.querySelectorAll('a[href^="#"]');
+    links.forEach(link => {
+        link.addEventListener('click', function(e) {
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+});
+</script>
+
+
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
+        <p>© 2025 Hudson Street Library</p>
+    </div>
+</footer>
+
+</body>
+</html>
