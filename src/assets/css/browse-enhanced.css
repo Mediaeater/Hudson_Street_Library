@@ -1,0 +1,462 @@
+/* Enhanced Book Browse - Museum Gallery Aesthetic
+ * Hudson Street Library
+ * Treats each book cover as an art object with architectural framing
+ */
+
+:root {
+    --gallery-white: #ffffff;
+    --gallery-mat: #F8F7F4;
+    --gallery-shadow: rgba(10, 10, 10, 0.15);
+    --gallery-shadow-hover: rgba(10, 10, 10, 0.25);
+    --accent-brown: #8B7355;
+    --ink: #0A0A0A;
+}
+
+/* ============================================
+   Enhanced Visual Grid - Museum Gallery
+   ============================================ */
+
+.visual-grid-enhanced {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 2.5rem 2rem;
+    padding: 3rem 0;
+}
+
+@media (min-width: 768px) {
+    .visual-grid-enhanced {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 3rem 2.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .visual-grid-enhanced {
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 3.5rem 3rem;
+    }
+}
+
+/* ============================================
+   Book Card - Gallery Frame
+   ============================================ */
+
+.gallery-book-card {
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gallery-book-card:hover {
+    transform: translateY(-8px);
+}
+
+/* Cover Frame - Architectural mat-board effect */
+.gallery-cover-frame {
+    aspect-ratio: 3 / 4;
+    position: relative;
+    background: var(--gallery-white);
+    padding: 8%;
+    box-shadow:
+        0 1px 3px rgba(10, 10, 10, 0.08),
+        0 4px 12px rgba(10, 10, 10, 0.06),
+        0 8px 24px rgba(10, 10, 10, 0.04),
+        inset 0 0 0 1px rgba(10, 10, 10, 0.06);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    margin-bottom: 1rem;
+}
+
+.gallery-book-card:hover .gallery-cover-frame {
+    box-shadow:
+        0 2px 8px rgba(10, 10, 10, 0.1),
+        0 8px 24px rgba(10, 10, 10, 0.08),
+        0 16px 48px rgba(10, 10, 10, 0.06),
+        inset 0 0 0 1px rgba(10, 10, 10, 0.08);
+}
+
+/* Cover Image */
+.gallery-cover-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 8px rgba(10, 10, 10, 0.12));
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gallery-book-card:hover .gallery-cover-frame img {
+    transform: scale(1.02);
+}
+
+/* Book Metadata */
+.gallery-book-title {
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--ink);
+    margin-bottom: 0.375rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.gallery-book-author {
+    font-family: 'Archivo Narrow', sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    color: var(--accent-brown);
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.gallery-book-year {
+    font-family: 'Archivo Narrow', sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(10, 10, 10, 0.5);
+    margin-top: 0.25rem;
+}
+
+/* ============================================
+   Asymmetric Grid Variation
+   ============================================ */
+
+.visual-grid-asymmetric {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 2rem;
+    padding: 3rem 0;
+}
+
+@media (max-width: 768px) {
+    .visual-grid-asymmetric {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 1.5rem;
+    }
+}
+
+/* Asymmetric sizing pattern - creates visual rhythm */
+.gallery-book-card:nth-child(7n+1) {
+    grid-column: span 4;
+}
+
+.gallery-book-card:nth-child(7n+2) {
+    grid-column: span 3;
+}
+
+.gallery-book-card:nth-child(7n+3) {
+    grid-column: span 3;
+}
+
+.gallery-book-card:nth-child(7n+4) {
+    grid-column: span 2;
+}
+
+.gallery-book-card:nth-child(7n+5) {
+    grid-column: span 3;
+}
+
+.gallery-book-card:nth-child(7n+6) {
+    grid-column: span 4;
+}
+
+.gallery-book-card:nth-child(7n+7) {
+    grid-column: span 5;
+}
+
+@media (max-width: 768px) {
+    .gallery-book-card:nth-child(n) {
+        grid-column: span 3 !important;
+    }
+}
+
+/* ============================================
+   Featured/Hero Book Card
+   ============================================ */
+
+.featured-book-hero {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 4rem;
+    align-items: center;
+    background: linear-gradient(135deg, #ffffff 0%, var(--gallery-mat) 100%);
+    border: 1px solid rgba(10, 10, 10, 0.08);
+    padding: 3.5rem;
+    margin-bottom: 4rem;
+    box-shadow:
+        0 4px 16px rgba(10, 10, 10, 0.06),
+        0 12px 40px rgba(10, 10, 10, 0.04);
+}
+
+@media (max-width: 768px) {
+    .featured-book-hero {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        padding: 2rem;
+    }
+}
+
+.featured-cover-container {
+    position: relative;
+}
+
+.featured-cover {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    background: var(--gallery-white);
+    padding: 8%;
+    box-shadow:
+        0 8px 32px rgba(10, 10, 10, 0.12),
+        0 16px 64px rgba(10, 10, 10, 0.08),
+        inset 0 0 0 1px rgba(10, 10, 10, 0.06);
+}
+
+.featured-cover img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 4px 12px rgba(10, 10, 10, 0.15));
+}
+
+.featured-book-content {
+    max-width: 540px;
+}
+
+.featured-label {
+    font-family: 'Archivo Narrow', sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent-brown);
+    margin-bottom: 1.25rem;
+}
+
+.featured-book-title {
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 1rem;
+}
+
+.featured-book-author {
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: var(--accent-brown);
+    margin-bottom: 1.5rem;
+}
+
+.featured-book-meta {
+    font-family: 'Archivo Narrow', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: rgba(10, 10, 10, 0.6);
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+}
+
+.featured-book-description {
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: rgba(10, 10, 10, 0.8);
+    margin-bottom: 2rem;
+}
+
+.featured-book-link {
+    display: inline-block;
+    font-family: 'Archivo Narrow', sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 1rem 2.5rem;
+    border: 2px solid var(--ink);
+    color: var(--ink);
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.featured-book-link:hover {
+    background: var(--ink);
+    color: var(--gallery-white);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(10, 10, 10, 0.15);
+}
+
+/* ============================================
+   Section Headers - Gallery Style
+   ============================================ */
+
+.gallery-section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(10, 10, 10, 0.08);
+}
+
+.gallery-section-label {
+    font-family: 'Archivo Narrow', sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent-brown);
+    margin-bottom: 1rem;
+}
+
+.gallery-section-title {
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+}
+
+/* ============================================
+   Loading States
+   ============================================ */
+
+.gallery-card-skeleton {
+    aspect-ratio: 3 / 4;
+    background: linear-gradient(
+        90deg,
+        #f5f5f5 0%,
+        #eeeeee 50%,
+        #f5f5f5 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+    border: 1px solid rgba(10, 10, 10, 0.06);
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* ============================================
+   View Toggle
+   ============================================ */
+
+.view-toggle {
+    display: flex;
+    gap: 0.5rem;
+    border: 1px solid rgba(10, 10, 10, 0.12);
+    padding: 0.25rem;
+    background: var(--gallery-white);
+}
+
+.view-toggle-btn {
+    font-family: 'Archivo Narrow', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.5rem 1rem;
+    border: none;
+    background: transparent;
+    color: rgba(10, 10, 10, 0.5);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.view-toggle-btn:hover {
+    color: var(--ink);
+}
+
+.view-toggle-btn.active {
+    background: var(--ink);
+    color: var(--gallery-white);
+}
+
+/* ============================================
+   Enhanced Hover States - Micro-interactions
+   ============================================ */
+
+@media (hover: hover) {
+    .gallery-book-card {
+        position: relative;
+    }
+
+    .gallery-book-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s ease;
+    }
+
+    .gallery-book-card:hover::after {
+        opacity: 1;
+    }
+
+    /* Subtle scale on title hover */
+    .gallery-book-title {
+        transition: color 0.3s ease;
+    }
+
+    .gallery-book-card:hover .gallery-book-title {
+        color: var(--accent-brown);
+    }
+}
+
+/* ============================================
+   Print Styles
+   ============================================ */
+
+@media print {
+    .visual-grid-enhanced,
+    .visual-grid-asymmetric {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 1rem !important;
+    }
+
+    .gallery-cover-frame {
+        box-shadow: none !important;
+        border: 1px solid #ccc;
+    }
+
+    .gallery-book-card {
+        page-break-inside: avoid;
+    }
+}
+
+/* ============================================
+   Accessibility - Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .gallery-book-card,
+    .gallery-cover-frame,
+    .gallery-cover-frame img,
+    .featured-book-link {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+
+    .gallery-book-card:hover {
+        transform: none !important;
+    }
+
+    .gallery-card-skeleton {
+        animation: none;
+        background: #f5f5f5;
+    }
+}
