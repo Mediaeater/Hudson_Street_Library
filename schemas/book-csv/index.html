@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book CSV Schema | Hudson Street Library</title>
     <meta name="description" content="Schema documentation for the Hudson Street Library CSV export format">
+    <link rel="stylesheet" href="/assets/css/tailwind.css">
     <link rel="stylesheet" href="/assets/css/design-system.css">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -46,11 +47,12 @@
     }
 
     /*
-      Mobile menu is styled here (unlayered) rather than with Tailwind
-      utilities. design-system.css ships an unlayered `* { padding: 0 }`
-      reset that overrides Tailwind's layered utilities, which silently
-      collapsed the old icon-only button to an invisible sliver. Self-
-      contained styles below are immune to that conflict.
+      Mobile menu uses self-contained, component-scoped CSS rather than
+      Tailwind utilities, so its layout can't be broken by global stylesheet
+      changes. This originally fixed an invisible-sliver bug: design-system.css
+      ships an unlayered `* { padding: 0 }` reset that beats Tailwind's layered
+      utilities and collapsed the old icon-only button. The self-contained
+      styling is kept deliberately.
     */
     .site-header .menu-toggle { display: none; }
     .site-header .mobile-nav { display: none; }

@@ -101,11 +101,12 @@
     }
 
     /*
-      Mobile menu is styled here (unlayered) rather than with Tailwind
-      utilities. design-system.css ships an unlayered `* { padding: 0 }`
-      reset that overrides Tailwind's layered utilities, which silently
-      collapsed the old icon-only button to an invisible sliver. Self-
-      contained styles below are immune to that conflict.
+      Mobile menu uses self-contained, component-scoped CSS rather than
+      Tailwind utilities, so its layout can't be broken by global stylesheet
+      changes. This originally fixed an invisible-sliver bug: design-system.css
+      ships an unlayered `* { padding: 0 }` reset that beats Tailwind's layered
+      utilities and collapsed the old icon-only button. The self-contained
+      styling is kept deliberately.
     */
     .site-header .menu-toggle { display: none; }
     .site-header .mobile-nav { display: none; }

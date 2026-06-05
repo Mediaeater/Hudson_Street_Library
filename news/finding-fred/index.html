@@ -6,6 +6,7 @@
     <title>Finding Fred: The Hidden Art of Fred Cray · Hudson Street Library</title>
     <meta name="description" content="Have you ever found a genuine, one-of-a-kind work of art hidden inside a library book? Brooklyn artist Fred Cray's photographs turn up in the wild, not by invitation.">
     <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    <link rel="stylesheet" href="/assets/css/tailwind.css">
     <link rel="stylesheet" href="/assets/css/design-system.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -254,11 +255,12 @@
     }
 
     /*
-      Mobile menu is styled here (unlayered) rather than with Tailwind
-      utilities. design-system.css ships an unlayered `* { padding: 0 }`
-      reset that overrides Tailwind's layered utilities, which silently
-      collapsed the old icon-only button to an invisible sliver. Self-
-      contained styles below are immune to that conflict.
+      Mobile menu uses self-contained, component-scoped CSS rather than
+      Tailwind utilities, so its layout can't be broken by global stylesheet
+      changes. This originally fixed an invisible-sliver bug: design-system.css
+      ships an unlayered `* { padding: 0 }` reset that beats Tailwind's layered
+      utilities and collapsed the old icon-only button. The self-contained
+      styling is kept deliberately.
     */
     .site-header .menu-toggle { display: none; }
     .site-header .mobile-nav { display: none; }
