@@ -1,0 +1,167 @@
+---
+permalink: /browse-gallery-demo/index.html
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Gallery View · Hudson Street Library</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="stylesheet" href="/assets/css/browse-enhanced.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #F8F7F4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+{% set currentPage = 'browse' %}
+{% include "components/site-header.njk" %}
+
+<!-- Gallery Section Header -->
+<div class="gallery-section-header" style="margin-top: 4rem;">
+    <div class="container">
+        <div class="gallery-section-label">The Collection</div>
+        <h1 class="gallery-section-title">Browse Books</h1>
+    </div>
+</div>
+
+<div class="container">
+    <!-- View Toggle -->
+    <div style="display: flex; justify-content: center; margin-bottom: 2rem;">
+        <div class="view-toggle">
+            <button class="view-toggle-btn active" onclick="switchView('gallery')">Gallery Grid</button>
+            <button class="view-toggle-btn" onclick="switchView('asymmetric')">Asymmetric</button>
+        </div>
+    </div>
+
+    <!-- Featured Book Hero (Optional) -->
+    <div class="featured-book-hero">
+        <div class="featured-cover-container">
+            <div class="featured-cover">
+                <img src="/assets/images/books/placeholder-cover.jpg"
+                     alt="Featured book cover"
+                     onerror="this.src='/assets/images/placeholder-book.svg'">
+            </div>
+        </div>
+        <div class="featured-book-content">
+            <div class="featured-label">Featured Selection</div>
+            <h2 class="featured-book-title">The Photo Book<br>Collection</h2>
+            <div class="featured-book-author">Various Artists</div>
+            <div class="featured-book-meta">
+                Multiple Publishers · 2010-2025 · Hardcover
+            </div>
+            <p class="featured-book-description">
+                An exceptional gathering of contemporary photobooks spanning art, documentary, and experimental photography. This curated selection represents the evolution of photographic publishing over the past fifteen years.
+            </p>
+            <a href="/static-demo/" class="featured-book-link">Explore Full Collection</a>
+        </div>
+    </div>
+
+    <!-- Enhanced Gallery Grid -->
+    <div id="galleryGrid" class="visual-grid-enhanced">
+        {% for book in books %}
+        {% if loop.index <= 24 %}
+        <a href="{% if book.custom_page_url %}{{ book.custom_page_url }}{% else %}/books/{{ book.author_last | slugify }}_{{ book.title | slugify }}_{{ book.id }}/{% endif %}"
+           class="gallery-book-card">
+            <div class="gallery-cover-frame">
+                {% set coverPath = book | generateCoverPath %}
+                <img src="{{ coverPath }}"
+                     alt="{{ book.title }} by {{ book.author_full_name }}"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
+            </div>
+            <div class="gallery-book-title">{{ book.title }}</div>
+            <div class="gallery-book-author">{{ book.author_full_name }}</div>
+            {% if book.publication_year %}
+            <div class="gallery-book-year">{{ book.publication_year }}</div>
+            {% endif %}
+        </a>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    <!-- Loading Skeleton Example (hidden by default) -->
+    <div id="loadingSkeleton" style="display: none;">
+        <div class="visual-grid-enhanced">
+            {% for i in range(12) %}
+            <div class="gallery-card-skeleton"></div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+// View switcher
+function switchView(view) {
+    const grid = document.getElementById('galleryGrid');
+    const buttons = document.querySelectorAll('.view-toggle-btn');
+
+    // Update active button
+    buttons.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+
+    // Switch grid class
+    if (view === 'asymmetric') {
+        grid.className = 'visual-grid-asymmetric';
+    } else {
+        grid.className = 'visual-grid-enhanced';
+    }
+}
+
+// Lazy loading enhancement
+if ('IntersectionObserver' in window) {
+    const images = document.querySelectorAll('.gallery-cover-frame img[loading="lazy"]');
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.classList.add('fade-in');
+                observer.unobserve(img);
+            }
+        });
+    });
+
+    images.forEach(img => imageObserver.observe(img));
+}
+
+// Smooth scroll for internal links
+document.addEventListener('DOMContentLoaded', function() {
+    const links = document.querySelectorAll('a[href^="#"]');
+    links.forEach(link => {
+        link.addEventListener('click', function(e) {
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+});
+</script>
+
+{% include "components/site-footer.njk" %}
+
+</body>
+</html>
