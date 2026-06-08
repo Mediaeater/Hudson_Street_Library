@@ -81,15 +81,25 @@
     margin: 0;
     padding: 0;
   }
-  li {
+  li.entry {
     display: grid;
-    grid-template-columns: 20px 1fr auto;
+    grid-template-columns: 20px 1fr;
     gap: 10px;
     align-items: center;
     padding: 8px 20px;
     border-bottom: 1px solid var(--line);
   }
-  li:hover { background: white; }
+  li.entry:hover { background: white; }
+  li.section {
+    padding: 18px 20px 6px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    border-bottom: 1px solid var(--line);
+  }
+  li.section:first-child { padding-top: 8px; }
   li img.icon {
     width: 16px;
     height: 16px;
@@ -116,14 +126,6 @@
   }
   .entry .url a { color: var(--muted); text-decoration: none; }
   .entry .url a:hover { color: var(--accent); }
-  .badge {
-    background: var(--chip-bg);
-    color: var(--muted);
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 999px;
-    white-space: nowrap;
-  }
   .empty {
     padding: 40px 20px;
     color: var(--muted);
@@ -210,22 +212,28 @@
       list.innerHTML = '<li class="empty">No matches.</li>';
       return;
     }
-    // Build via DOM string concat for speed
-    const parts = new Array(rows.length);
-    for (let k = 0; k < rows.length; k++) {
-      const e = rows[k];
+    // Group by section (folder), mirroring the original bookmarks folder view.
+    rows.sort((a, b) =>
+      (a.subfolder || '').localeCompare(b.subfolder || '') ||
+      a._n.localeCompare(b._n));
+    const parts = [];
+    let section = null;
+    for (const e of rows) {
+      if (e.subfolder !== section) {
+        section = e.subfolder;
+        parts.push(`<li class="section">${esc(section)}</li>`);
+      }
       const icon = e.icon
         ? `<img class="icon" src="${esc(e.icon)}" alt="" loading="lazy">`
         : '<span class="no-icon"></span>';
-      parts[k] =
+      parts.push(
         '<li class="entry">' +
         icon +
         '<div>' +
           `<a class="name" href="${esc(e.url)}" target="_blank" rel="noopener">${highlight(e.name || '(untitled)', term)}</a>` +
           `<span class="url"><a href="${esc(e.url)}" target="_blank" rel="noopener">${highlight(e.url, term)}</a></span>` +
         '</div>' +
-        `<span class="badge">${esc(e.subfolder)}</span>` +
-        '</li>';
+        '</li>');
     }
     list.innerHTML = parts.join('');
   }
