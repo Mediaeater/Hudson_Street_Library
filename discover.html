@@ -55,6 +55,25 @@
     outline: none;
   }
   #q:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+  #tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    margin-top: 10px;
+  }
+  .tag {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    font-size: 12px;
+    color: var(--fg);
+    cursor: pointer;
+  }
+  .tag .n { color: var(--muted); margin-left: 4px; font-variant-numeric: tabular-nums; }
+  .tag:hover { color: var(--accent); }
+  .tag.active { font-weight: 700; color: var(--accent); }
+  .tag.active .n { color: var(--accent); }
   ul {
     list-style: none;
     margin: 0;
@@ -107,6 +126,7 @@
   <a href="/" style="display:inline-block;margin-bottom:6px;color:var(--muted);text-decoration:none;font-size:12px;">← Hudson Street Library</a>
   <h1>Discover <span class="count" id="count">0</span></h1>
   <input type="search" id="q" placeholder="search name, url, section…" autofocus autocomplete="off">
+  <div id="tags"></div>
 </header>
 <main><ul id="list"></ul></main>
 
@@ -117,12 +137,29 @@
   const q = document.getElementById('q');
   const list = document.getElementById('list');
   const count = document.getElementById('count');
+  const tags = document.getElementById('tags');
+  const active = new Set();
 
   // Pre-compute lowercased fields once.
   data.forEach(e => {
     e._n = (e.name || '').toLowerCase();
     e._u = (e.url || '').toLowerCase();
     e._s = (e.subfolder || '').toLowerCase();
+  });
+
+  // Section tags — flat text, click to filter.
+  const sections = {};
+  data.forEach(e => { sections[e.subfolder] = (sections[e.subfolder] || 0) + 1; });
+  Object.keys(sections).sort((a, b) => a.localeCompare(b)).forEach(s => {
+    const b = document.createElement('button');
+    b.className = 'tag';
+    b.innerHTML = `${esc(s)}<span class="n">${sections[s]}</span>`;
+    b.addEventListener('click', () => {
+      if (active.has(s)) { active.delete(s); b.classList.remove('active'); }
+      else { active.add(s); b.classList.add('active'); }
+      render();
+    });
+    tags.appendChild(b);
   });
 
   function esc(s) {
@@ -145,8 +182,10 @@
 
   function render() {
     const term = q.value.trim().toLowerCase();
+    const useSec = active.size > 0;
     const rows = [];
     for (const e of data) {
+      if (useSec && !active.has(e.subfolder)) continue;
       if (term && !(e._n.includes(term) || e._u.includes(term) || e._s.includes(term))) continue;
       rows.push(e);
     }
