@@ -82,10 +82,6 @@
     padding: 0;
   }
   li.entry {
-    display: grid;
-    grid-template-columns: 20px 1fr;
-    gap: 10px;
-    align-items: center;
     padding: 8px 20px;
     border-bottom: 1px solid var(--line);
   }
@@ -100,17 +96,6 @@
     border-bottom: 1px solid var(--line);
   }
   li.section:first-child { padding-top: 8px; }
-  li img.icon {
-    width: 16px;
-    height: 16px;
-    border-radius: 3px;
-  }
-  li .no-icon {
-    width: 16px;
-    height: 16px;
-    background: var(--chip-bg);
-    border-radius: 3px;
-  }
   .entry .name {
     font-weight: 500;
     color: var(--fg);
@@ -223,16 +208,10 @@
         section = e.subfolder;
         parts.push(`<li class="section">${esc(section)}</li>`);
       }
-      const icon = e.icon
-        ? `<img class="icon" src="${esc(e.icon)}" alt="" loading="lazy">`
-        : '<span class="no-icon"></span>';
       parts.push(
         '<li class="entry">' +
-        icon +
-        '<div>' +
           `<a class="name" href="${esc(e.url)}" target="_blank" rel="noopener">${highlight(e.name || '(untitled)', term)}</a>` +
           `<span class="url"><a href="${esc(e.url)}" target="_blank" rel="noopener">${highlight(e.url, term)}</a></span>` +
-        '</div>' +
         '</li>');
     }
     list.innerHTML = parts.join('');
