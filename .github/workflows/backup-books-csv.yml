@@ -33,10 +33,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: "npm"
@@ -51,7 +51,7 @@ jobs:
       # Always upload the current catalog as an artifact (guaranteed backup,
       # even if the repo commit step is blocked by branch protection).
       - name: Upload books.csv artifact (90-day retention)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: books-csv-backup
           path: src/_data/books.csv
