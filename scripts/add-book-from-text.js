@@ -533,7 +533,9 @@ async function processBookFromJSON(jsonPath) {
       isbn_asin: researchData.isbn?.isbn13 || researchData.isbn?.isbn10 || '',
       binding: researchData.format || '',
       page_count: researchData.pages?.toString() || '',
-      description: researchData.description?.main || '',
+      // Ship the rich tier as the page description (leads with framing, weaves in
+      // artist context); fall back to the short summary only if extended is absent.
+      description: researchData.description?.extended || researchData.description?.main || '',
       subjects: researchData.loc_data?.subject_headings?.join('; ') || '',
       tags: researchData.tags?.join(', ') || '', // CRITICAL: comma-separated
       language: researchData.language || 'English',
