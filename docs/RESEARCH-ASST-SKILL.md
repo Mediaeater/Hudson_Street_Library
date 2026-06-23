@@ -54,8 +54,8 @@ Implements GitHub-researched best practices:
 ## Key Files
 
 ### Skill Definition
-- `/Users/m/.claude/skills/research-asst/skill.md` - Skill instructions
-- `/Users/m/.claude/skills/research-asst/README.md` - Full documentation
+- `~/.claude/skills/research-asst/SKILL.md` - Skill instructions
+- `~/.claude/skills/research-asst/README.md` - Full documentation
 
 ### Implementation
 - `scripts/utils/book-research-client.js` - Web scraping client with rate limiting
@@ -91,10 +91,10 @@ Full schema includes:
     "oclc_number": "..."
   },
   "description": {
-    "main": "2-3 sentence summary",
-    "extended": "4-6 sentence detailed description",
-    "artist_bio": "3-4 sentence artist bio",
-    "exhibition_context": "2-3 sentence exhibition context"
+    "main": "2-3 sentence summary (fallback only)",
+    "extended": "PAGE DESCRIPTION: framing/review line -> summary -> artist/other-works context, as <p> paragraphs",
+    "artist_bio": "3-4 sentence artist bio (fold into extended; not a separate CSV column)",
+    "exhibition_context": "2-3 sentence exhibition context (fold into extended)"
   },
   "exhibition": {
     "title": "...",
@@ -139,6 +139,13 @@ Full schema includes:
 - Precise, descriptive language
 - Multiple-source paraphrasing (never copy single source)
 - Focus on content, context, significance
+
+**`extended` is the shipped page description** — author it as `<p>` paragraphs:
+1. Top-line framing/review (stands alone; becomes the Recently-Added snippet)
+2. Summary of the book
+3. Artist + other-works context (when the artist has a body of work)
+
+Target ~800–1300 chars; > 500 chars use `<p class="mt-6">` breaks. add-book ingests `extended` (fallback `main`) and verifies it landed.
 
 ## Integration
 
@@ -273,4 +280,4 @@ node scripts/add-book-from-text.js --json book_data_test.json
 
 **Created**: 2026-03-28
 **Status**: Complete and ready for use
-**Location**: `/Users/m/.claude/skills/research-asst/`
+**Location**: `~/.claude/skills/research-asst/`
