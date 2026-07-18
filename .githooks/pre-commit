@@ -25,4 +25,14 @@ if git diff --cached --name-only | grep -q "src/_data/books.csv"; then
   echo "✅ CSV validation passed"
 fi
 
+# Scan staged changes for secrets
+echo "🔒 Scanning staged changes for secrets..."
+if ! gitleaks git --pre-commit --staged --redact --no-banner; then
+  echo ""
+  echo "❌ Secret scan failed! A potential secret was found in staged changes."
+  echo "   Review the finding above. If it's a false positive, add it to .gitleaksignore."
+  exit 1
+fi
+echo "✅ No secrets detected"
+
 exit 0
