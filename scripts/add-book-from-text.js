@@ -44,6 +44,7 @@ let inputFile = '';
 let inputJson = '';
 let interactive = false;
 let rebuildDatasette = true;
+let assumeYes = false;
 
 for (let i = 0; i < args.length; i++) {
   if (args[i] === '--text') {
@@ -56,6 +57,8 @@ for (let i = 0; i < args.length; i++) {
     interactive = true;
   } else if (args[i] === '--no-rebuild') {
     rebuildDatasette = false;
+  } else if (args[i] === '--yes' || args[i] === '-y') {
+    assumeYes = true;
   } else if (args[i] === '--help') {
     console.log(`
 Add Book From Text Description
@@ -71,6 +74,7 @@ Options:
   --file <path>           File with book descriptions (one per paragraph)
   --json <path>           JSON file from research-asst skill
   --interactive           Interactive mode with prompts
+  --yes, -y               Skip the confirmation prompt (for --json; scriptable)
   --no-rebuild            Skip Datasette catalog rebuild (faster)
   --help                  Show this help
 
@@ -268,7 +272,7 @@ async function readCSV() {
  * Add book to CSV using robust CSVHandler
  */
 async function addBookToCSV(bookData, nextId) {
-  const { records, headers } = await readCSV();
+  const { headers } = await readCSV();
 
   // Create new record with all columns
   const newRecord = {};
@@ -281,18 +285,17 @@ async function addBookToCSV(bookData, nextId) {
   newRecord.accession_no = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
   newRecord.location = ACCESSION_LOCATION;
 
-  // Add to records
-  records.push(newRecord);
+  // Append only the new row. This never rewrites the existing rows, so the
+  // diff is a single added line — no whole-file re-quoting churn, and no
+  // read-time trimming/auto-correction leaking into unrelated records.
+  const appendResult = await CSVHandler.appendBook(CSV_PATH, newRecord);
 
-  // Write back to CSV using CSVHandler (handles quote escaping properly)
-  const writeResult = await CSVHandler.write(CSV_PATH, records);
-
-  if (!writeResult.success) {
-    throw new Error(`Failed to write CSV: ${writeResult.errors.join(', ')}`);
+  if (!appendResult.success) {
+    throw new Error(`Failed to append to CSV: ${appendResult.errors.join(', ')}`);
   }
 
-  if (writeResult.backup) {
-    console.log(`💾 Backup created: ${writeResult.backup}`);
+  if (appendResult.backup) {
+    console.log(`💾 Backup created: ${appendResult.backup}`);
   }
 
   return newRecord;
@@ -586,63 +589,70 @@ async function processBookFromJSON(jsonPath) {
     console.log(`Location:        ${ACCESSION_LOCATION}`);
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
-    // Ask for confirmation
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout
-    });
+    // Perform the add, structure validation, and optional Datasette rebuild.
+    const doAdd = async () => {
+      await addBookToCSV(bookData, nextId);
 
-    rl.question('Add this book to books.csv? (y/n): ', async (answer) => {
-      if (answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes') {
-        // Add to CSV
-        const record = await addBookToCSV(bookData, nextId);
+      console.log('\n✅ Book added successfully!\n');
 
-        console.log('\n✅ Book added successfully!\n');
+      // Validate CSV structure using robust validator
+      console.log('🔍 Validating CSV structure...');
+      try {
+        const validateScript = path.join(__dirname, 'validate-csv-robust.js');
+        if (fs.existsSync(validateScript)) {
+          execSync(`node "${validateScript}"`, {
+            stdio: 'inherit',
+            cwd: path.join(__dirname, '..')
+          });
+          console.log('✅ CSV validation passed!\n');
+        }
+      } catch (error) {
+        console.error('❌ CSV VALIDATION FAILED!');
+        console.error('   Please run: node scripts/validate-csv-robust.js\n');
+        process.exit(1);
+      }
 
-        // Validate CSV structure using robust validator
-        console.log('🔍 Validating CSV structure...');
+      // Rebuild Datasette catalog
+      if (rebuildDatasette) {
+        console.log('🔄 Updating Datasette catalog...');
         try {
-          const validateScript = path.join(__dirname, 'validate-csv-robust.js');
-          if (fs.existsSync(validateScript)) {
-            execSync(`node "${validateScript}"`, {
+          const updateScript = path.join(__dirname, 'update-datasette-catalog.sh');
+          if (fs.existsSync(updateScript)) {
+            execSync(updateScript, {
               stdio: 'inherit',
               cwd: path.join(__dirname, '..')
             });
-            console.log('✅ CSV validation passed!\n');
+            console.log('✅ Datasette catalog updated!\n');
           }
         } catch (error) {
-          console.error('❌ CSV VALIDATION FAILED!');
-          console.error('   Please run: node scripts/validate-csv-robust.js\n');
-          process.exit(1);
+          console.error('⚠️  Failed to update Datasette catalog:', error.message);
         }
-
-        // Rebuild Datasette catalog
-        if (rebuildDatasette) {
-          console.log('🔄 Updating Datasette catalog...');
-          try {
-            const updateScript = path.join(__dirname, 'update-datasette-catalog.sh');
-            if (fs.existsSync(updateScript)) {
-              execSync(updateScript, {
-                stdio: 'inherit',
-                cwd: path.join(__dirname, '..')
-              });
-              console.log('✅ Datasette catalog updated!\n');
-            }
-          } catch (error) {
-            console.error('⚠️  Failed to update Datasette catalog:', error.message);
-          }
-        }
-
-        console.log('🔨 Next Steps:');
-        console.log('  1. Review book details in books.csv');
-        console.log('  2. Run: npm test');
-        console.log('  3. Run: npm run build');
-        console.log('  4. Commit changes\n');
-      } else {
-        console.log('\n❌ Cancelled - no changes made\n');
       }
-      rl.close();
-    });
+
+      console.log('🔨 Next Steps:');
+      console.log('  1. Review book details in books.csv');
+      console.log('  2. Run: npm test');
+      console.log('  3. Run: npm run build');
+      console.log('  4. Commit changes\n');
+    };
+
+    // --yes skips confirmation so the --json path is fully scriptable.
+    if (assumeYes) {
+      await doAdd();
+    } else {
+      const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+      });
+      rl.question('Add this book to books.csv? (y/n): ', async (answer) => {
+        if (answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes') {
+          await doAdd();
+        } else {
+          console.log('\n❌ Cancelled - no changes made\n');
+        }
+        rl.close();
+      });
+    }
   } catch (error) {
     console.error('Error:', error.message);
     console.error(error.stack);
