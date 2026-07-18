@@ -14,7 +14,7 @@ user_invocable: true
 |------|--------|------|
 | 1 | Parse input (title / author / URL / ISBN) | — |
 | 2 | Research → invoke `/research-asst` → `book_data_{slug}.json` + cover | Skill |
-| 3 | Ingest → `node scripts/add-book-from-text.js --json book_data_{slug}.json` | Bash |
+| 3 | Ingest → `node scripts/add-book-from-text.js --json book_data_{slug}.json --yes` | Bash |
 | 4 | CSV validation (runs automatically) | — |
 | 5 | Verify cover + enriched fields landed, then commit | Bash |
 
@@ -112,10 +112,10 @@ Feed the record produced by research-asst into the collection. The `{slug}` is
 with `ls book_data_*.json` in the current directory.
 
 ```bash
-node scripts/add-book-from-text.js --json book_data_{slug}.json
+node scripts/add-book-from-text.js --json book_data_{slug}.json --yes
 ```
 
-This maps the JSON to CSV columns, downloads/links the cover, validates structure, and adds the row with the next sequential ID.
+This maps the JSON to CSV columns, downloads/links the cover, validates structure, and adds the row with the next sequential ID. It **appends only the new row** (via `CSVHandler.appendBook`), so `books.csv` isn't rewritten — the diff is exactly one added line, no whole-file re-quoting churn. `--yes` skips the confirmation prompt so the ingest runs non-interactively; drop it if you want to review the parsed record and confirm by hand.
 
 ### 4. Automatic Validation
 
@@ -139,7 +139,7 @@ cd ~/Projects/Hudson_Street_Library
 ### Primary: ingest a research-asst record (default)
 
 ```bash
-node scripts/add-book-from-text.js --json book_data_{slug}.json
+node scripts/add-book-from-text.js --json book_data_{slug}.json --yes
 ```
 
 This is the documented path — research happens in `research-asst`, ingestion happens here.
@@ -170,7 +170,7 @@ It writes `book_data_{slug}.json` and the cover. Then run the rest from the proj
 cd ~/Projects/Hudson_Street_Library
 
 # 2. Ingest the JSON (CSV validation runs automatically)
-node scripts/add-book-from-text.js --json book_data_{slug}.json
+node scripts/add-book-from-text.js --json book_data_{slug}.json --yes
 
 # 3. Cover: verify it exists; auto-crop product-shot trim if needed
 python3 scripts/auto-crop-covers.py --input src/assets/images/books/[filename].jpg --overwrite
@@ -274,7 +274,7 @@ After adding a book, verify:
 ### Execution Rules (CRITICAL)
 
 **Always execute the script directly**. Never tell the user to run it themselves:
-- **DO:** `cd ~/Projects/Hudson_Street_Library && node scripts/add-book-from-text.js --json book_data_{slug}.json`
+- **DO:** `cd ~/Projects/Hudson_Street_Library && node scripts/add-book-from-text.js --json book_data_{slug}.json --yes`
 - **DON'T:** "You'll need to run this command..." or "Start a new session from..."
 - If current directory is wrong, `cd` to the project directory first
 - Don't ask for permission to use WebFetch, Bash, or Read tools. Just use them.
