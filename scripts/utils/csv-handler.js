@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const { parse } = require('csv-parse');
 const { stringify } = require('csv-stringify');
+const { parse: parseSync } = require('csv-parse/sync');
+const { stringify: stringifySync } = require('csv-stringify/sync');
 
 /**
  * Unified CSV handler for the Hudson Street Library
@@ -168,6 +170,77 @@ class CSVHandler {
             });
         } catch (error) {
             result.errors.push(`Preparation error: ${error.message}`);
+            return result;
+        }
+    }
+
+    /**
+     * Append a single record to an existing CSV without rewriting the file.
+     *
+     * Unlike write(), this never reads back and re-serializes the existing rows,
+     * so it can't churn them: the diff is exactly one added line. It also can't
+     * mutate other rows via read-time trimming/auto-correction, and it preserves
+     * the on-disk format — every non-empty field quoted, empty fields left bare
+     * (no ""). Column order and count come from the file's own header row, which
+     * also drops any stray keys on `record` (guarding against column drift).
+     *
+     * @param {string} filePath - Path to the CSV file
+     * @param {Object} record - Record keyed by column name; missing => empty
+     * @param {Object} options - { allowedDir } to constrain backup location
+     * @returns {Promise<{success: boolean, errors: string[], backup?: string, columns?: number}>}
+     */
+    static async appendBook(filePath, record, options = {}) {
+        const result = { success: false, errors: [] };
+
+        try {
+            if (!fs.existsSync(filePath)) {
+                result.errors.push(`File not found: ${filePath}`);
+                return result;
+            }
+
+            const content = fs.readFileSync(filePath, 'utf8');
+            if (!content.trim()) {
+                result.errors.push('CSV is empty; cannot determine columns');
+                return result;
+            }
+
+            // Canonical column order is the file's header line. Aligning to it
+            // keeps the appended row structurally identical to existing rows.
+            const nl = content.indexOf('\n');
+            const headerLine = (nl === -1 ? content : content.slice(0, nl)).replace(/\r$/, '');
+            const headers = parseSync(headerLine, { columns: false, relax_column_count: true })[0];
+            if (!headers || headers.length === 0) {
+                result.errors.push('Could not parse CSV header row');
+                return result;
+            }
+
+            const row = headers.map((h) => {
+                const v = record[h];
+                return (v === undefined || v === null) ? '' : String(v);
+            });
+
+            // Back up before mutating, matching write()'s safety policy.
+            const backupOpts = options.allowedDir ? { allowedDir: options.allowedDir } : {};
+            result.backup = this.createBackup(filePath, backupOpts);
+
+            // Serialize only the new row. quoted + quoted_empty:false reproduces
+            // the existing format (quoted non-empty, bare empties) so no other
+            // row is touched.
+            const line = stringifySync([row], {
+                header: false,
+                quoted: true,
+                quoted_empty: false,
+                escape: '"'
+            });
+
+            const prefix = content.endsWith('\n') ? '' : '\n';
+            fs.appendFileSync(filePath, prefix + line);
+
+            result.success = true;
+            result.columns = headers.length;
+            return result;
+        } catch (error) {
+            result.errors.push(`Append error: ${error.message}`);
             return result;
         }
     }
