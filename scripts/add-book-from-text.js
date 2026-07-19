@@ -523,6 +523,20 @@ async function processBookFromJSON(jsonPath) {
     console.log(`Sources: ${researchData.research_log.sources_checked.join(', ')}`);
     console.log(`Confidence: ${researchData.research_log.confidence_score}\n`);
 
+    // Split contributors into designer / editor / everyone else so each lands
+    // in its own column (research-asst lists them with a `role`). An explicit
+    // top-level `designer`/`editor` wins over role-matching.
+    const contributors = Array.isArray(researchData.contributors) ? researchData.contributors : [];
+    const byRole = (re) => contributors.find((c) => re.test(c.role || ''))?.name || '';
+    const designer = researchData.designer || byRole(/design/i);
+    const editor = researchData.editor || byRole(/editor/i);
+    const otherContributors = contributors
+      .filter((c) => !/design|editor/i.test(c.role || ''))
+      .map((c) => (c.role ? `${c.name} (${c.role})` : c.name))
+      .join('; ');
+    const signed = researchData.signed;
+    const str = (v) => (v === null || v === undefined ? '' : String(v));
+
     // Map JSON to CSV format
     const bookData = {
       title: researchData.title,
@@ -543,7 +557,23 @@ async function processBookFromJSON(jsonPath) {
       tags: researchData.tags?.join(', ') || '', // CRITICAL: comma-separated
       language: researchData.language || 'English',
       dimensions: researchData.dimensions || '',
-      image_url: researchData.cover_image?.local_path || ''
+      image_url: researchData.cover_image?.local_path || '',
+      // Rich-record fields (research-asst supplies these explicitly). Dimension
+      // order is publisher-specific, so height/width/depth are taken verbatim —
+      // never parsed from the `dimensions` string — to avoid transposing them.
+      height_cm: str(researchData.height_cm),
+      width_cm: str(researchData.width_cm),
+      depth_cm: str(researchData.depth_cm),
+      weight_g: str(researchData.weight_g),
+      edition_printrun: researchData.edition || '',
+      editor,
+      designer,
+      contributors: otherContributors,
+      is_signed_inscribed: signed === true ? 'true' : signed === false ? 'false' : '',
+      collection_grouping: researchData.collection_grouping || '',
+      classification: researchData.classification || '',
+      notes: researchData.notes || '',
+      artist_url: researchData.authors?.[0]?.url || researchData.artist_links?.[0]?.url || ''
     };
 
     // Get next ID
