@@ -190,31 +190,30 @@ git push
 
 ## What Gets Auto-Filled
 
-**From research-asst's JSON:**
-- ISBN (from any source)
-- Publisher (prioritizing publisher website)
-- Publication year
-- Page count
-- Binding type
-- Description (merged from multiple sources)
-- Subjects/classifications (from Library of Congress)
-- Cover image URL (when available)
-- LCCN identifier
+**From research-asst's JSON (mapped by `--json` ingest — put it all in the JSON):**
+- ISBN, publisher + publisher_url, publication year, page count, binding/format
+- Description (research-asst's `description.extended`, falling back to `main`)
+- Tags (JSON array → comma-separated), language
+- `height_cm` / `width_cm` / `depth_cm`, `weight_g` — supply cm **explicitly**; the ingest never parses the `dimensions` string, because publishers list H×W and W×H inconsistently
+- `edition` → edition_printrun, `signed` (bool) → is_signed_inscribed
+- `designer` / `editor` (or a `contributors[]` entry whose `role` matches design/editor), remaining `contributors[]` → contributors column
+- `collection_grouping`, `classification`, `notes`
+- `artist_url` (from `authors[0].url`, else `artist_links[0].url`), cover image
 
 **Always auto-generated:**
 - ID (next sequential number)
-- Accession date (today as YYYY-MM-DD format)
-- Location ("Hudson Street Library")
+- Accession date (today as YYYY-MM-DD)
+- Location ("Hudson Street Library, NYC")
 - Cover filename (following convention)
 
-**Manual entry from user input:**
-- Tags (comma-separated: "Art, Photography, Zines")
-- Physical dimensions (height, width, depth in cm)
-- Editor, contributors, designer
-- Collection grouping (for series/sets)
-- Detailed notes
-- Related URLs (exhibitions, reviews, related works)
-- OCLC numbers, additional classifications
+**Rich records are one-shot.** Because the fields above all map from the JSON, a complete
+research-asst record — dimensions, designer, edition, signed, weight, grouping, notes and
+all — lands in a single `--json --yes` run. Author the full JSON; don't split it into a
+base add plus manual patching.
+
+**Manual entry (only the few columns the ingest doesn't map):**
+- `bisac`, `lcc`, `num_images`, `featured`, `custom_page_url`
+- Add these with a surgical one-row edit (see the *Enriching unmapped columns* gotcha), never a whole-file `CSVHandler.write`.
 
 **Never auto-filled (policy):**
 - Price (must always be empty)
@@ -241,6 +240,7 @@ The script ensures:
 - **Thin or empty JSON from research-asst.** Don't patch the CSV by hand. Re-run `/research-asst` for that title — it owns the multi-source research and produces a complete record.
 - **Cover looks like a product shot (white border / trim).** research-asst downloads the cover but doesn't always crop it. Run `python3 scripts/auto-crop-covers.py --input <path> --overwrite` after ingest.
 - **Wrong or colliding ID.** The next sequential ID is computed from `books.csv` at ingest time. Don't run two adds in parallel, and don't pre-write an ID into the JSON.
+- **Enriching unmapped columns (`bisac`/`lcc`/`num_images`/`featured`/`custom_page_url`).** After the add, edit the row surgically — never `CSVHandler.write` (it re-quotes every empty field and churns all ~1800 rows). Raw-parse with `csv-parse/sync` (arrays, `relax_column_count:true` only — not `CSVHandler.read`, whose `trim`/auto-correct mutate other rows), change just the target cells, then `csv-stringify/sync` the whole array with `{ header:false, quoted:true, quoted_empty:false }` and match the trailing newline. This round-trips byte-for-byte (verified on the full file, incl. multi-line description fields), so `git diff` shows only the cells you touched. Confirm `git diff --numstat` and `npm run test:csv`.
 
 ## Post-Add Verification Checklist
 
