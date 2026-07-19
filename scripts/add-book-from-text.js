@@ -241,6 +241,49 @@ function generateCoverFilename(author_last, author_first, title, isbn) {
 }
 
 /**
+ * ISBN-13 checksum. Also validates the 977x ISSN/EAN barcodes periodicals use,
+ * since they share the EAN-13 check-digit algorithm. Returns true/false, or
+ * null when the input isn't 13 digits.
+ */
+function isValidIsbn13(digits) {
+  if (!/^\d{13}$/.test(digits)) return null;
+  const sum = digits.slice(0, 12).split('')
+    .reduce((acc, d, i) => acc + Number(d) * (i % 2 ? 3 : 1), 0);
+  return (10 - (sum % 10)) % 10 === Number(digits[12]);
+}
+
+/** ISBN-10 checksum. Returns true/false, or null when not a 10-char ISBN-10. */
+function isValidIsbn10(value) {
+  if (!/^\d{9}[\dX]$/.test(value)) return null;
+  const sum = value.split('')
+    .reduce((acc, c, i) => acc + (c === 'X' ? 10 : Number(c)) * (10 - i), 0);
+  return sum % 11 === 0;
+}
+
+/** Warn (never block) when the page description is a thin stub, not a full page. */
+function warnIfThinDescription(description) {
+  const desc = description || '';
+  if (desc.length < 300 || !/<p[\s>]/i.test(desc)) {
+    console.warn('\n⚠️  Description looks thin — short, or missing a <p> framing paragraph.');
+    console.warn('   The page description should lead with a framing sentence and run ~800–1300 chars.');
+    console.warn('   Consider re-running /research-asst for this title before committing.\n');
+  }
+}
+
+/** Warn (never block) when the ISBN/ASIN fails its checksum — catches typos and
+ *  related-product ISBNs. Unknown formats (ASINs, odd lengths) pass silently. */
+function warnIfSuspiciousIsbn(isbnAsin) {
+  const raw = (isbnAsin || '').replace(/[^0-9Xx]/g, '').toUpperCase();
+  if (!raw) return;
+  const v13 = isValidIsbn13(raw);
+  const v10 = isValidIsbn10(raw);
+  if (v13 === false || (v13 === null && v10 === false)) {
+    console.warn(`\n⚠️  ISBN checksum looks invalid: ${isbnAsin}`);
+    console.warn('   Verify it — a transposed digit or a related-product ISBN may have been captured.\n');
+  }
+}
+
+/**
  * Read current CSV and get next ID using robust CSVHandler
  */
 async function readCSV() {
@@ -536,6 +579,10 @@ async function processBookFromJSON(jsonPath) {
       .join('; ');
     const signed = researchData.signed;
     const str = (v) => (v === null || v === undefined ? '' : String(v));
+    // LOC subject headings have no column of their own; fold them into notes
+    // rather than silently dropping them.
+    const locSubjects = researchData.loc_data?.subject_headings || [];
+    const subjectsNote = locSubjects.length ? `Subjects (LOC): ${locSubjects.join('; ')}.` : '';
 
     // Map JSON to CSV format
     const bookData = {
@@ -553,7 +600,6 @@ async function processBookFromJSON(jsonPath) {
       // Ship the rich tier as the page description (leads with framing, weaves in
       // artist context); fall back to the short summary only if extended is absent.
       description: researchData.description?.extended || researchData.description?.main || '',
-      subjects: researchData.loc_data?.subject_headings?.join('; ') || '',
       tags: researchData.tags?.join(', ') || '', // CRITICAL: comma-separated
       language: researchData.language || 'English',
       dimensions: researchData.dimensions || '',
@@ -572,9 +618,13 @@ async function processBookFromJSON(jsonPath) {
       is_signed_inscribed: signed === true ? 'true' : signed === false ? 'false' : '',
       collection_grouping: researchData.collection_grouping || '',
       classification: researchData.classification || '',
-      notes: researchData.notes || '',
+      notes: [researchData.notes, subjectsNote].filter(Boolean).join(' '),
       artist_url: researchData.authors?.[0]?.url || researchData.artist_links?.[0]?.url || ''
     };
+
+    // Pre-commit sanity nudges (warn only — never block the add).
+    warnIfThinDescription(bookData.description);
+    warnIfSuspiciousIsbn(bookData.isbn_asin);
 
     // Get next ID
     const { nextId } = await readCSV();
