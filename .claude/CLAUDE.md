@@ -99,6 +99,11 @@
 - Just push to main branch immediately
 - This is the established workflow for this project
 
+**Always push with `git pull --rebase && git push`:**
+- The backup workflow commits a `csv-backups/` snapshot to main after every push that touches books.csv, so a plain `git push` during back-to-back adds gets rejected (remote ahead)
+- The rebase is always clean: bot commits only touch `csv-backups/`, book adds touch `books.csv` + images
+- This is expected behavior, not an error — don't troubleshoot it
+
 ### Backup System (CRITICAL)
 
 **Automated backup protects books.csv:**
