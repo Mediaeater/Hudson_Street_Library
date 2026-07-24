@@ -1,6 +1,6 @@
 ---
 name: research-asst
-description: Build comprehensive book records for Hudson Street Library from ISBN, title, or URL. Queries LOC, WorldCat, publisher sites, and art distributors; outputs structured JSON.
+description: Use when cataloging a book for Hudson Street Library from an ISBN, title, or publisher URL — builds the structured JSON record (bib data, description, cover) add-book ingests. Publisher-first.
 user_invocable: true
 ---
 
@@ -11,6 +11,22 @@ skill delegates its research step here: it invokes this skill to produce
 `book_data_{slug}.json`, then ingests that JSON. Keep the multi-source research procedure
 (distributors, artist/exhibition research, schema) here — `add-book` should not duplicate it.
 
+## Quick Reference
+
+| Step | Action | Output |
+|------|--------|--------|
+| 1 | Parse input (ISBN / title / publisher URL) | search key |
+| 2 | **Fast path**: `WebFetch` the publisher page, fill the record, author the description — **stop when core fields + cover are done** | `book_data_{slug}.json` |
+| 3 | **Deep sweep** (only for a gap/conflict): LOC, WorldCat, distributors, artist/museum | filled gaps |
+| 4 | Download + crop cover → `src/assets/images/books/` | cover `.jpg` |
+| 5 | Emit JSON + `research_log`; hand to `add-book` — decline to ingest yourself | outputs |
+
+## When NOT to Use
+
+- **Editing an existing record** — edit the CSV row directly, or re-run for that one title. This skill builds a *new* record.
+- **Ingesting into the collection** — that is `add-book`'s job. Produce the JSON + cover and stop; double-ingesting creates duplicate IDs.
+- **Any project other than Hudson Street Library** — paths, schema, and cover dirs are HSL-specific.
+
 ## Input Formats
 
 Accept any of:
@@ -20,6 +36,25 @@ Accept any of:
 - Author + Year: `"George Condo 2026"`
 
 ## Research Workflow
+
+**Default to the lean, publisher-first path. The multi-source Deep Sweep (Phases 1–5) is opt-in — run it only for a specific missing/conflicting field or a major book needing authoritative LOC subject headings. Do NOT fan out to every source for a routine add.** Fanning out LOC + WorldCat + every distributor + artist/museum sites for a routine title costs ~100K+ tokens and dozens of fetches for facts the publisher page already lists.
+
+### Fast path (default): publisher-first
+
+1. Start from what the user gave you — a publisher URL, ISBN, or title (an Amazon/retailer listing counts). `WebFetch` the **publisher's own product page first**; it almost always carries ISBN, page count, dimensions, format, description, contributors, and a cover image in one place.
+2. If you only have a title, run ONE `WebSearch` to find the publisher product page, then `WebFetch` it.
+3. Fill the JSON from that page and author the description. **Stop as soon as the Required fields + core Expected fields (`isbn`, `pages`, `dimensions`/`height_cm`+`width_cm`, `format`, `description`, cover) are populated.** Emit the JSON — do not open more sources.
+
+**Stop rule / budget.** A routine add should cost roughly one publisher fetch plus a cover fetch (target ≤ ~10 web calls). The moment the core fields + cover are in hand, you are done.
+
+**Escalate to the Deep Sweep only when:**
+- a Required/core field is still missing after the publisher page, or
+- two sources conflict on a fact (ISBN, pages, dimensions, year), or
+- the book is a major/scholarly title where authoritative LOC/LCSH subject headings materially improve the record.
+
+**Example (fast path).** Given `https://www.versobooks.com/products/3477-how-to-see-like-a-machine`: one `WebFetch` returns ISBN 9781836742166, 192 pp, 21 × 14 cm, hardcover, the publisher description, and the cover image — every core field in a single fetch. Author the description, download + crop the cover, emit the JSON. No LOC/WorldCat/distributor calls needed.
+
+### Deep sweep (opt-in — only per the escalation triggers above)
 
 ### Phase 1: Core Bibliographic Data
 
@@ -37,8 +72,9 @@ Query in parallel (respect rate limits):
 ### Phase 2: Publisher & Distributor Research
 
 Search systematically (parallel where possible):
-- **Publisher's official site**: Search via Google `site:publishername.com "book title"`
+- **Publisher's official site**: `WebSearch` `site:publishername.com "book title"`, then `WebFetch` the product page
   - Extract: official description, press release, exhibition dates, cover image URL, purchase link
+  - Some art publishers/distributors (e.g. Printed Matter) return **403 to `WebFetch`** — fall back to `curl` with a browser `User-Agent`, or use the OpenLibrary cover API
 - **DAP / Distributed Art Publishers** (`artbook.com`)
 - **Twelvebooks** (`twelvebooks.com`)
 - **IDEA Books** (`ideabooks.nl`)
@@ -96,131 +132,7 @@ Field tiers:
 - `designer`, `editor` (or tag a `contributors[]` entry with `role: "Design"` / `"Editor"` — the ingest routes by role; remaining contributors land in the `contributors` column)
 - `collection_grouping`, `classification` — curatorial; match sibling records already in `books.csv` (e.g. `"Individual Photographer Monographs"`, `"Magazines"`, grouping `"Art"`)
 
-```json
-{
-  "page_slug": "condo_the-mad-and-the-lonely_1759",
-  "cover_image": {
-    "url": "https://...",
-    "local_path": "/assets/images/books/condo_george_the_mad_and_the_lonely_9786185039455.jpg"
-  },
-  "title": "The Mad and the Lonely",
-  "subtitle": null,
-  "authors": [
-    {
-      "name": "George Condo",
-      "role": "Artist",
-      "url": "https://georgecondo.com",
-      "type": "official_site"
-    }
-  ],
-  "contributors": [
-    {
-      "name": "Curator Name",
-      "role": "Essay",
-      "url": null
-    }
-  ],
-  "publisher": {
-    "name": "DESTE Foundation for Contemporary Art",
-    "url": "https://deste.gr",
-    "location": "Athens, Greece",
-    "type": "foundation"
-  },
-  "year": 2026,
-  "isbn": {
-    "isbn13": "9786185039455",
-    "isbn10": null
-  },
-  "format": "Hardcover",
-  "pages": 116,
-  "dimensions": "10 × 10 in",
-  "images": {
-    "total": 85,
-    "color": 78,
-    "bw": 7
-  },
-  "language": "English",
-  "edition": null,
-  "print_run": null,
-  "loc_data": {
-    "lc_control_number": "...",
-    "lc_classification": "...",
-    "dewey_decimal": "...",
-    "subject_headings": [
-      "Condo, George, 1957- -- Exhibitions",
-      "Painting, American -- 21st century -- Exhibitions"
-    ],
-    "oclc_number": "..."
-  },
-  "description": {
-    "main": "2-3 sentence summary suitable for card/search result",
-    "extended": "4-6 sentences expanding on content, approach, context, physical nature",
-    "artist_bio": "3-4 sentences on significance, major works, representation, recent exhibitions",
-    "exhibition_context": "2-3 sentences on institution, venue significance, career fit"
-  },
-  "exhibition": {
-    "title": "The Mad and the Lonely",
-    "institution": "DESTE Foundation Project Space, Slaughterhouse",
-    "institution_url": "https://deste.gr/project-space/",
-    "location": "Hydra, Greece",
-    "dates": {
-      "start": "2024-06-18",
-      "end": "2024-10-31"
-    },
-    "curators": []
-  },
-  "tags": [
-    "Art",
-    "Contemporary Art",
-    "Painting",
-    "Exhibition Catalog"
-  ],
-  "distributors": [
-    {
-      "name": "DAP / Distributed Art Publishers",
-      "url": "https://www.artbook.com/9786185039455.html",
-      "available": true
-    }
-  ],
-  "artist_links": [
-    {
-      "label": "Official Site",
-      "url": "https://georgecondo.com",
-      "type": "artist_site"
-    },
-    {
-      "label": "Skarstedt Gallery",
-      "url": "https://www.skarstedt.com/artists/george-condo",
-      "type": "gallery"
-    },
-    {
-      "label": "MoMA Collection",
-      "url": "https://www.moma.org/artists/1125",
-      "type": "museum"
-    }
-  ],
-  "related_exhibitions": [
-    {
-      "title": "Retrospective Title",
-      "institution": "Museum Name",
-      "institution_url": "https://...",
-      "dates": "October 2025 – February 2026"
-    }
-  ],
-  "notes": "Any special considerations or conflicts found during research",
-  "research_log": {
-    "sources_checked": [
-      "loc.gov",
-      "worldcat.org",
-      "deste.gr",
-      "artbook.com"
-    ],
-    "confidence_score": "high",  // "high" | "medium" | "low"
-    "unresolved_fields": ["isbn10", "print_run"],
-    "last_researched": "2026-03-28"
-  }
-}
-```
+See **`references/json-schema.md`** for the full annotated JSON example (a complete worked record). Fill every field a source provides; use `null` for the rest.
 
 ## Content Writing Guidelines
 
@@ -243,6 +155,14 @@ Field tiers:
 - **Tags in JSON are an array** — the add-book script converts to comma-separated for CSV export
 - **Verify all URLs** — check that links return 200 before including
 - **Back up books.csv** — before running add-book script
+
+## Gotchas
+
+- **No LOC/WorldCat record for new or small-press art books.** Common — most 2024–2026 titles and nonprofit-press artist books aren't cataloged yet. Symptom: SRU/search returns zero. Fix: leave `loc_data` null and list it in `unresolved_fields`; if you construct subject headings editorially, say so in `notes` — never present invented headings as LOC-sourced.
+- **Subtitle dropped on ingest.** The `add-book` `--json` ingest maps only `title` (there is no subtitle column). If the subtitle belongs in the display title (e.g. *How to See Like a Machine: Images After AI*), put the full colon-joined string in `title`, not only in `subtitle`.
+- **Publisher hero image ≠ front cover.** Publisher pages often lead with an interior spread or a hero crop. `Read` the downloaded image to confirm it is the actual front cover before setting `cover_image`.
+- **Angled product-shot cover.** Amazon/dealer covers are often shot at a 3/4 angle on white. Prefer a flat front cover; after download run `python3 scripts/auto-crop-covers.py --input <path> --overwrite` to trim, then verify by `Read`.
+- **Eating the whole web.** If you are opening LOC + WorldCat + five distributors + museum sites for a routine title, stop — the publisher page had the core fields. Reserve the Deep Sweep for genuine gaps/conflicts.
 
 ## Error Handling
 
@@ -270,4 +190,6 @@ This will:
 
 ## Progress Updates
 
-This is a long-running task — provide a brief status line before each phase and a summary when complete.
+Keep it quiet: one short status line when you start, one summary when the JSON + cover are done — not a line per phase or per source.
+
+**Batch adds (multiple books).** The `add-book` orchestrator may run several research passes as parallel background `Agent`s. Do NOT narrate each agent's completion as it lands — let them all finish, then report once. Per-agent play-by-play is noise.
