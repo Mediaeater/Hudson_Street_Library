@@ -23,6 +23,9 @@ if git diff --cached --name-only | grep -q "src/_data/books.csv"; then
   fi
 
   echo "✅ CSV validation passed"
+
+  # Book count must never decrease (see scripts/check-book-count-monotonic.js)
+  node scripts/check-book-count-monotonic.js || exit 1
 fi
 
 # Scan staged changes for secrets
