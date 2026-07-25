@@ -182,10 +182,11 @@ npm test
 # 5. Build site
 npm run build
 
-# 6. Commit and push
+# 6. Commit, then push. A github-actions backup bot commits after each push,
+#    so a plain push is usually rejected (remote ahead) — rebase and retry.
 git add src/_data/books.csv src/assets/images/books/
 git commit -m "Add: [Book Title]"
-git push
+git pull --rebase origin main && git push
 ```
 
 ## What Gets Auto-Filled
@@ -198,7 +199,7 @@ git push
 - `edition` → edition_printrun, `signed` (bool) → is_signed_inscribed
 - `designer` / `editor` (or a `contributors[]` entry whose `role` matches design/editor), remaining `contributors[]` → contributors column
 - `collection_grouping`, `classification`, `notes`
-- `artist_url` (from `authors[0].url`, else `artist_links[0].url`), cover image
+- `artist_url` (from `authors[0].url` — which research-asst sets to the artist's **official site**, not a gallery/museum — else `artist_links[0].url`), cover image
 
 **Always auto-generated:**
 - ID (next sequential number)
@@ -220,18 +221,7 @@ base add plus manual patching.
 
 ## CSV Error Prevention
 
-**Critical prevention strategies:**
-
-1. **Use the script**. Ensures correct column count automatically.
-2. **Validation runs automatically**. Catches errors immediately.
-3. **Never manually add CSV rows via bash/heredoc**. Error-prone.
-4. **Run `node scripts/validate-csv-structure.js` after manual edits**
-
-The script ensures:
-- Exactly 36 columns per row
-- No column misalignment
-- Proper field escaping
-- Automatic backup creation
+The ingest writes structurally-correct rows (36 columns, proper escaping, auto-backup) and validates immediately. Your only job: never hand-edit the CSV via bash/heredoc — use the surgical Node approach (see the *Enriching unmapped columns* gotcha), and run `node scripts/validate-csv-structure.js` after any manual edit.
 
 ## Gotchas
 
@@ -241,33 +231,33 @@ The script ensures:
 - **Cover looks like a product shot (white border / trim).** research-asst downloads the cover but doesn't always crop it. Run `python3 scripts/auto-crop-covers.py --input <path> --overwrite` after ingest.
 - **Wrong or colliding ID.** The next sequential ID is computed from `books.csv` at ingest time. Don't run two adds in parallel, and don't pre-write an ID into the JSON.
 - **Enriching unmapped columns (`bisac`/`lcc`/`num_images`/`featured`/`custom_page_url`).** After the add, edit the row surgically — never `CSVHandler.write` (it re-quotes every empty field and churns all ~1800 rows). Raw-parse with `csv-parse/sync` (arrays, `relax_column_count:true` only — not `CSVHandler.read`, whose `trim`/auto-correct mutate other rows), change just the target cells, then `csv-stringify/sync` the whole array with `{ header:false, quoted:true, quoted_empty:false }` and match the trailing newline. This round-trips byte-for-byte (verified on the full file, incl. multi-line description fields), so `git diff` shows only the cells you touched. Confirm `git diff --numstat` and `npm run test:csv`.
+- **Ingest keeps only `title` and `authors[0]`.** The `--json` ingest maps a single title and a single primary author: a **subtitle is dropped** (there is no subtitle column), and on a **multi-artist book only `authors[0]` reaches `author_full_name`** — co-authors vanish (they don't even land in `contributors`). Observed: Paglen subtitles lost; a two-artist catalogue kept only the first artist. Fix: put the full colon-joined string in `title` (e.g. *How to See Like a Machine: Images After AI*), and for a multi-artist book patch `author_full_name` after ingest to all artists (surgical row-scoped edit per the *Enriching unmapped columns* gotcha).
 
 ## Post-Add Verification Checklist
 
 After adding a book, verify:
 
-1. **Cover image exists and quality is good**
+1. **Cover image exists and is a valid JPEG**
    ```bash
-   ls -lh src/assets/images/books/[expected_filename].jpg
+   ls -lh src/assets/images/books/[expected_filename].jpg && file src/assets/images/books/[expected_filename].jpg
    ```
-   - Check file size (50KB-500KB typical)
+   - Check file size (50KB-500KB typical); confirm `file` reports `JPEG image data`
    - Verify no trailing spaces in filename
    - Ask user to add if missing
 
-2. **CSV record is complete**
-   - ISBN present (if available)
-   - Tags are comma-separated
-   - No price data included
-   - All user-provided metadata captured
+2. **CSV record is complete** (the ingest silently drops some fields — verify them)
+   - ISBN present (if available); tags comma-separated; no price; all user metadata captured
+   - **`title`** carries the subtitle (colon-joined) and **`author_full_name`** lists **all** artists — the ingest keeps only one of each (see Gotchas)
+   - **`artist_url`** is the artist's **official site**, not a gallery/museum, when one exists (see research-asst Critical Rules)
 
 3. **CSV validation passed**
    - Script runs automatically after adding
    - Check output shows: `CSV validation passed`
 
-4. **Accession date is correct**
-   - Format: `YYYY-MM-DD` for newest books
-   - Example: `2026-03-19` appears before `March 2026`
-   - Controls position on Recently Added page
+4. **Accession date fits the acquisition**
+   - The ingest always stamps **today** (`YYYY-MM-DD`), which puts the book at the top of Recently Added — correct for a genuine new acquisition.
+   - For a **backlist / archiving add** (an older book catalogued now), that's wrong: after ingest, patch `accession_no` to an earlier sort date so it sorts *below* the real new entries, and append a provenance note (e.g. `Summer acquisitions and archiving 2026. Accessioned <today>.`). Surgical row-scoped edit, per the *Enriching unmapped columns* gotcha.
+   - Format: `YYYY-MM-DD`; controls position on the Recently Added page.
 
 ## Notes for Claude
 
@@ -289,14 +279,6 @@ After adding a book, verify:
 1. Pass the URL straight to `/research-asst` — it resolves author/title and researches
 2. Ingest the resulting JSON
 3. Don't ask user for details that can be researched
-
-### Data Handling
-
-The script enforces structure (it validates immediately after adding), and the Critical
-Rules above cover price/tags/metadata. The only manual care beyond those:
-- **Edit the CSV only via the Node script** (`csv-parse`/`stringify`), never a bash heredoc.
-- **Confirm the cover is a valid JPEG** after ingest: `file src/assets/images/books/<filename>`.
-- If the cover is missing, ask: "Cover image needed for: [Book Title]. Add it to the books directory as: [filename]".
 
 ## Book Page Enrichment (Post-Addition)
 
