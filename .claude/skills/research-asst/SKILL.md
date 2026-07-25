@@ -163,6 +163,7 @@ See **`references/json-schema.md`** for the full annotated JSON example (a compl
 - **Publisher hero image ≠ front cover.** Publisher pages often lead with an interior spread or a hero crop. `Read` the downloaded image to confirm it is the actual front cover before setting `cover_image`.
 - **Angled product-shot cover.** Amazon/dealer covers are often shot at a 3/4 angle on white. Prefer a flat front cover; after download run `python3 scripts/auto-crop-covers.py --input <path> --overwrite` to trim, then verify by `Read`.
 - **Eating the whole web.** If you are opening LOC + WorldCat + five distributors + museum sites for a routine title, stop — the publisher page had the core fields. Reserve the Deep Sweep for genuine gaps/conflicts.
+- **Publisher or shop behind Cloudflare (403 to `WebFetch` *and* curl).** Some publishers gate the whole site with a Cloudflare CAPTCHA (e.g. Fondazione Prada's bookshop and main site). Fallbacks: (1) static assets often still load via `curl` — try `/wp-content/uploads/...` PDFs/images directly; (2) get the ISBN + cover from an accessible distributor instead — **ARTBOOK / D.A.P.** (`artbook.com/{isbn13}.html`), **IDEA Books** (`ideabooks.nl`, whose `/media/` CDN serves the cover image directly via `curl`), or the ISBN listing on Amazon. Always `Read` the sourced cover to confirm — a distributor's image can be a variant crop of the publisher's.
 
 ## Error Handling
 
