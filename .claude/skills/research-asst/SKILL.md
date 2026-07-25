@@ -37,7 +37,7 @@ Accept any of:
 
 ## Research Workflow
 
-**Default to the lean, publisher-first path. The multi-source Deep Sweep (Phases 1–5) is opt-in — run it only for a specific missing/conflicting field or a major book needing authoritative LOC subject headings. Do NOT fan out to every source for a routine add.** Fanning out LOC + WorldCat + every distributor + artist/museum sites for a routine title costs ~100K+ tokens and dozens of fetches for facts the publisher page already lists.
+**Default to the lean, publisher-first path below; the multi-source Deep Sweep (Phases 1–5) is opt-in** — run it only per the escalation triggers. Fanning out to LOC + WorldCat + every distributor + artist/museum sites for a routine title burns ~100K+ tokens on facts the publisher page already lists.
 
 ### Fast path (default): publisher-first
 
@@ -67,7 +67,7 @@ Query in parallel (respect rate limits):
    - Extract: OCLC number, contributor roles, alternate ISBNs, holdings count
    - Cross-check pagination and dimensions
 
-**Rate limiting**: 2 requests/second, 3 retries with exponential backoff + jitter
+**Be polite**: space out repeated fetches to the same host; if a site 403s or rate-limits, back off (see the *Publisher behind Cloudflare* gotcha) rather than hammering it.
 
 ### Phase 2: Publisher & Distributor Research
 
@@ -117,7 +117,7 @@ Generate three outputs:
 2. `research_log_{slug}.txt` - One URL per line, format: `[SOURCE] URL` (e.g., `[LOC] https://lx2.loc.gov/...`), in the current directory
 3. Cover image — download to `src/assets/images/books/` named `{last}_{first}_{title_snake}_{isbn13}.jpg`; set `cover_image.local_path` in JSON accordingly
 
-**Slug format**: `{artist_last}_{title-kebab}_{next_id}` where `next_id` is the next sequential book ID — check `books.csv` to find the current highest ID and increment by 1.
+**Slug format**: `{artist_last}_{title-kebab}_{next_id}`. `next_id` is only a placeholder — **add-book assigns the real sequential ID at ingest**; don't rely on it and never pre-write an `id` into the JSON. A rough guess (`books.csv` highest id + 1) is fine.
 
 **JSON Schema** (use `null` for unavailable fields):
 
@@ -143,9 +143,8 @@ See **`references/json-schema.md`** for the full annotated JSON example (a compl
   1. **Top-line framing/review** (the first `<p>`) — a single sentence that frames the work: what it is and why it matters (e.g. "A layered work of appropriation by the New York conceptual artist Eric Doeringer (b. 1974)…"). It must stand alone — it also becomes the Recently-Added snippet (truncated to ~280 chars).
   2. **Summary** (a `<p class="mt-6">`) — what the book documents/contains, the artist's approach, exhibition or publication context, physical materials/design.
   3. **Artist + other-works context** (a `<p class="mt-6">`) — who the artist is and how this fits their body of work, when there is one. Don't bolt it on. Inline `<em>` for titles.
-- `main`: 2–3 sentence summary. Fallback only — used if `extended` is absent.
-- `artist_bio`: Significance, major works/collections, representation, recent shows. Paraphrase from multiple sources. Not persisted as its own column, so make sure its substance is folded into `extended`.
-- `exhibition_context`: Institution significance, venue, how it fits artist's career. Also fold into `extended` if it belongs on the page.
+- `main`: 2–3 sentence summary. Fallback only, used if `extended` is absent.
+- `artist_bio` / `exhibition_context`: raw material for beat 3 — significance, major works, representation, venue, career fit. Neither is a CSV column, so **fold their substance into `extended`** (paraphrase across sources).
 
 **Links**: Map every proper noun with authoritative URL to `artist_links` or `distributors` arrays.
 
@@ -168,27 +167,17 @@ See **`references/json-schema.md`** for the full annotated JSON example (a compl
 
 ## Error Handling
 
-- **No ISBN**: Use title + artist + year as search key. Note in `unresolved_fields`.
-- **Publisher is gallery**: Still check DAP/Twelvebooks. Note if only available direct.
-- **Historical exhibition (pre-2010)**: LOC/WorldCat primary, skip distributor stock checks.
-- **Emerging artist**: Skip museum links unless confirmed. Flag confidence as "medium".
-- **Conflicting data**: Default ranking is LOC → publisher → DAP → WorldCat, but verify case-by-case -- LOC records can be outdated or sparse for small-press art books. Document which source was preferred and why in `notes`.
-- **Non-English**: Note in `language`, write descriptions in English.
+Edge-case handling — no ISBN, gallery publisher, historical (pre-2010), emerging artist, conflicting sources, non-English — lives in **`references/edge-cases.md`**. Consult it when a title hits one of those.
 
-## Integration with Add-Book Script
+## Handoff to Add-Book
 
-After generating JSON, offer to add to library:
+research-asst stops at the JSON + cover. **`add-book` owns ingestion — do NOT run `add-book-from-text.js` yourself.** If both you and add-book ingest, the book lands in `books.csv` twice with two IDs (add-book's *Book added twice* gotcha). When invoked standalone, print the `book_data_{slug}.json` path and let the caller ingest:
 
 ```bash
-node scripts/add-book-from-text.js --json book_data_{slug}.json
+node scripts/add-book-from-text.js --json book_data_{slug}.json --yes
 ```
 
-This will:
-1. Parse JSON and map to CSV columns
-2. Download cover image from URL
-3. Validate CSV structure
-4. Add to books.csv with next sequential ID
-5. Update Datasette catalog
+That maps the JSON to CSV columns, downloads the cover, assigns the next sequential ID, and validates. (It also tries to refresh a local Datasette catalog — a dormant dev tool; the `sqlite-utils not found` warning is expected and harmless.)
 
 ## Progress Updates
 
