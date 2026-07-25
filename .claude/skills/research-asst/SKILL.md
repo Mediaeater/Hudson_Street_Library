@@ -86,8 +86,6 @@ For each distributor:
 - Extract: product description, availability, pricing (DO NOT SAVE), contributor list, product URL
 - Mark as available/unavailable
 
-**Rate limiting**: Check robots.txt for each domain, default to 2-second delay between requests to same domain
-
 ### Phase 3: Artist/Author Research
 
 - Search artist's **official website**
@@ -95,7 +93,7 @@ For each distributor:
 - Search museum collections (MoMA, Tate, Guggenheim, Metropolitan Museum)
 - Extract: 2-3 sentence bio (paraphrased), birth year, nationality, gallery URL, museum collection URLs
 
-**Key**: Build `artist_links` array with official site, gallery, and museum URLs
+**Key**: the artist's official site becomes `authors[0].url` (the page's main artist link — see Critical Rules); put the gallery and museum URLs in `artist_links`.
 
 ### Phase 4: Exhibition Research (if catalog)
 
