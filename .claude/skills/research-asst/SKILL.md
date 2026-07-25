@@ -43,7 +43,7 @@ Accept any of:
 
 1. Start from what the user gave you — a publisher URL, ISBN, or title (an Amazon/retailer listing counts). `WebFetch` the **publisher's own product page first**; it almost always carries ISBN, page count, dimensions, format, description, contributors, and a cover image in one place.
 2. If you only have a title, run ONE `WebSearch` to find the publisher product page, then `WebFetch` it.
-3. Fill the JSON from that page and author the description. **Stop as soon as the Required fields + core Expected fields (`isbn`, `pages`, `dimensions`/`height_cm`+`width_cm`, `format`, `description`, cover) are populated.** Emit the JSON — do not open more sources.
+3. Fill the JSON from that page and author the description. Set `authors[0].url` to the artist's **own official website** if one exists — a quick targeted `WebSearch`/`WebFetch` when the publisher page doesn't link it; a gallery or museum URL does **not** count and goes in `artist_links` instead (see Critical Rules). **Stop as soon as the Required fields + core Expected fields (`isbn`, `pages`, `dimensions`/`height_cm`+`width_cm`, `format`, `description`, cover, plus the artist's official site if one exists) are populated.** Emit the JSON — do not open more sources.
 
 **Stop rule / budget.** A routine add should cost roughly one publisher fetch plus a cover fetch (target ≤ ~10 web calls). The moment the core fields + cover are in hand, you are done.
 
@@ -151,6 +151,7 @@ See **`references/json-schema.md`** for the full annotated JSON example (a compl
 
 ## Critical Rules
 
+- **Artist link = the official site.** `authors[0].url` becomes the page's `artist_url` — the main artist link shown on every book page — so it MUST be the artist's **own official website** whenever one exists (search for it if the publisher page doesn't link it; confirm it returns 200). A gallery or museum URL is NOT a substitute; those go in `artist_links`. Only fall back to a gallery/museum for `authors[0].url` when the artist genuinely has no official site.
 - **NEVER save price data** — pricing policy prohibits storing prices in any form
 - **Tags in JSON are an array** — the add-book script converts to comma-separated for CSV export
 - **Verify all URLs** — check that links return 200 before including
