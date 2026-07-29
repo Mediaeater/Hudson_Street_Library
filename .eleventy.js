@@ -324,6 +324,12 @@ module.exports = function(eleventyConfig) {
     return list;
   });
 
+  // --- Filter: move books without cover images to the end (stable) ---
+  eleventyConfig.addFilter("coversFirst", function(books) {
+    if (!books) return [];
+    return [...books.filter(b => b.image_url), ...books.filter(b => !b.image_url)];
+  });
+
   // --- Count books by author ---
   eleventyConfig.addFilter("countByAuthor", function(books, authorLast, currentId) {
     if (!books || !authorLast) return 0;
