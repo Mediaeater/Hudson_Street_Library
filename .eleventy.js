@@ -321,6 +321,7 @@ module.exports = function(eleventyConfig) {
     if (sortBy === 'issueNumberAsc') return list.sort((a,b) => issueNum(a) - issueNum(b));
     if (sortBy === 'publicationYearDesc') return list.sort((a,b) => (parseInt(b.publication_year,10)||0) - (parseInt(a.publication_year,10)||0));
     if (sortBy === 'titleAsc') return list.sort((a,b) => (a.title||'').localeCompare(b.title||''));
+    if (sortBy === 'authorAsc') return list.sort((a,b) => (a.author_last||'').localeCompare(b.author_last||'') || (a.title||'').localeCompare(b.title||''));
     return list;
   });
 
