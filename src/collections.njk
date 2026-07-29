@@ -22,6 +22,9 @@ permalink: "collections/{{ collectionConfig.slug }}.html"
         </div>
 
         {% set matched = books | booksInCollection(collectionConfig) | sortBooks(collectionConfig.sortBy) %}
+        {% if collectionConfig.coversFirst %}
+            {% set matched = matched | coversFirst %}
+        {% endif %}
         {% set grouped = matched | groupBySections(collectionConfig) %}
 
         {% if grouped.length > 0 %}
