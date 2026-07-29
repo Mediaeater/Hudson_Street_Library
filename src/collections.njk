@@ -7,32 +7,49 @@ pagination:
 permalink: "collections/{{ collectionConfig.slug }}.html"
 ---
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        <div class="{% if collectionConfig.relatedLinks %}max-w-4xl{% else %}max-w-3xl{% endif %} mx-auto text-center mb-12 md:mb-16">
-            {% if collectionConfig.headerImage %}
-                <figure class="mb-8">
-                    <img src="{{ collectionConfig.headerImage.src }}" alt="{{ collectionConfig.headerImage.alt }}" class="mx-auto max-h-96 w-auto rounded-sm shadow-md">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 {% if collectionConfig.headerImage %}py-8 md:py-10{% else %}py-16 md:py-20{% endif %}">
+        {% set relatedAside %}
+            {% if collectionConfig.relatedLinks %}
+                <aside class="border border-gray-200 rounded-lg p-4 self-start">
+                    <h2 class="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-3">Related Pages</h2>
+                    <ul class="list-none space-y-2">
+                        {% for link in collectionConfig.relatedLinks %}
+                            <li>
+                                <a href="{{ link.url }}" target="_blank" rel="noopener" class="text-sm text-primary-700 hover:underline">{{ link.label }}</a>
+                                {% if link.source %}<p class="text-xs text-gray-500 mt-0.5">{{ link.source }}</p>{% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </aside>
+            {% endif %}
+        {% endset %}
+        {% if collectionConfig.headerImage %}
+        <div class="max-w-5xl mx-auto mb-10 md:mb-14">
+            <div class="text-center mb-8 md:mb-10">
+                <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">{{ collectionConfig.title }}</h1>
+                <div class="line-divider inline-block"></div>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-start">
+                <figure>
+                    <img src="{{ collectionConfig.headerImage.src }}" alt="{{ collectionConfig.headerImage.alt }}" class="w-full h-auto rounded-sm shadow-md">
                     {% if collectionConfig.headerImage.caption %}
-                        <figcaption class="text-xs text-gray-500 mt-3">{{ collectionConfig.headerImage.caption }}</figcaption>
+                        <figcaption class="text-xs text-gray-500 mt-2">{{ collectionConfig.headerImage.caption }}</figcaption>
                     {% endif %}
                 </figure>
-            {% endif %}
+                <div class="text-left">
+                    <p class="text-base sm:text-lg text-gray-600 leading-relaxed">{{ collectionConfig.description }}</p>
+                    <div class="mt-8">{{ relatedAside | safe }}</div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="{% if collectionConfig.relatedLinks %}max-w-4xl{% else %}max-w-3xl{% endif %} mx-auto text-center mb-12 md:mb-16">
             <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">{{ collectionConfig.title }}</h1>
             <div class="line-divider inline-block"></div>
             {% if collectionConfig.relatedLinks %}
                 <div class="mt-6 grid md:grid-cols-3 gap-6 md:gap-8 text-left">
                     <p class="md:col-span-2 text-base sm:text-lg text-gray-600 leading-relaxed">{{ collectionConfig.description }}</p>
-                    <aside class="border border-gray-200 rounded-lg p-4 self-start">
-                        <h2 class="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-3">Related Pages</h2>
-                        <ul class="list-none space-y-2">
-                            {% for link in collectionConfig.relatedLinks %}
-                                <li>
-                                    <a href="{{ link.url }}" target="_blank" rel="noopener" class="text-sm text-primary-700 hover:underline">{{ link.label }}</a>
-                                    {% if link.source %}<p class="text-xs text-gray-500 mt-0.5">{{ link.source }}</p>{% endif %}
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </aside>
+                    {{ relatedAside | safe }}
                 </div>
             {% else %}
                 <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">{{ collectionConfig.description }}</p>
@@ -45,6 +62,7 @@ permalink: "collections/{{ collectionConfig.slug }}.html"
                 </div>
             {% endif %}
         </div>
+        {% endif %}
 
         {% set matched = books | booksInCollection(collectionConfig) | sortBooks(collectionConfig.sortBy) %}
         {% if collectionConfig.coversFirst %}
