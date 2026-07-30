@@ -4,12 +4,11 @@ API Tests for Hudson Street Library Datasette Catalog
 Tests based on Datasette test patterns
 """
 
-import pytest
-import pytest_asyncio
-import httpx
 import json
 import sqlite3
 from pathlib import Path
+
+import pytest
 
 
 # Fixtures

@@ -10,7 +10,7 @@ import os
 import sqlite3
 import subprocess
 import sys
-from pathlib import Path
+
 
 # Color output helpers
 class Colors:
@@ -287,7 +287,7 @@ class DatasetteTests:
         """Test: metadata.json exists and is valid"""
         metadata_path = "metadata.json"
         if not os.path.exists(metadata_path):
-            print_error(f"metadata.json not found")
+            print_error("metadata.json not found")
             self.tests_failed += 1
             return False
 
