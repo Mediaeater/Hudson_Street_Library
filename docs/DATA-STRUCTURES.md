@@ -13,7 +13,6 @@ build reads these files and writes static HTML and JSON.
 5. [Validation Rules](#validation-rules)
 6. [Sample Records](#sample-records)
 7. [Published Data URLs](#published-data-urls)
-8. [Local Datasette Catalog (optional)](#local-datasette-catalog-optional)
 
 ---
 
@@ -248,22 +247,6 @@ site exposes a small read-only data API:
 
 The `/cms/` URL prefix is historical; despite the name, no CMS source code
 exists. See `docs/archive/2026-05-cms-removal/` for the history.
-
----
-
-## Local Datasette Catalog (optional)
-
-For local search and analysis, a Datasette catalog can be built from the CSV:
-
-```bash
-./scripts/setup-datasette.sh           # first-time setup
-./scripts/update-datasette-catalog.sh  # rebuild after edits
-datasette hudson_street_library.db --metadata metadata.json
-```
-
-This SQLite database is **derivative**, not authoritative. It is regenerated
-from `books.csv` and is not deployed to production. See
-`docs/DATASETTE-CATALOG-GUIDE.md`.
 
 ---
 

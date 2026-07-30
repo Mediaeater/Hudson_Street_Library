@@ -156,7 +156,6 @@ Works seamlessly with existing workflow:
 3. Downloads cover image if not present
 4. Maps JSON to CSV columns (including comma-separated tags)
 5. Validates CSV structure (36 columns)
-6. Updates Datasette catalog
 
 ## Example Progress Output
 

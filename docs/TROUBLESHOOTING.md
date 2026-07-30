@@ -2032,25 +2032,6 @@ awk -F',' 'NR==145' src/_data/books.csv
 head -1 src/_data/books.csv | awk -F',' '{print NF}'
 ```
 
-### Datasette Catalog Debugging (optional local tool)
-
-```bash
-# Rebuild the local SQLite catalog from books.csv
-./scripts/update-datasette-catalog.sh
-
-# Open Datasette in the browser
-datasette hudson_street_library.db --metadata metadata.json
-# Visit http://localhost:8001
-
-# Run quick ad-hoc queries
-sqlite3 hudson_street_library.db "SELECT COUNT(*) FROM books;"
-sqlite3 hudson_street_library.db "SELECT * FROM books WHERE title IS NULL OR title = '';"
-sqlite3 hudson_street_library.db "SELECT isbn_asin, COUNT(*) FROM books GROUP BY isbn_asin HAVING COUNT(*) > 1;"
-```
-
-The Datasette catalog is **derivative**, regenerated from `books.csv`. It is
-not deployed and not authoritative.
-
 ### Git Debugging
 
 ```bash
@@ -2417,16 +2398,6 @@ git diff                # See changes
 git log --oneline -10   # Recent commits
 git checkout HEAD -- file.csv  # Restore file
 git revert abc123       # Undo commit
-```
-
-### Datasette catalog (optional)
-
-```bash
-# Rebuild from CSV
-./scripts/update-datasette-catalog.sh
-
-# Open Datasette
-datasette hudson_street_library.db --metadata metadata.json
 ```
 
 ---
