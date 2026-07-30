@@ -24,7 +24,7 @@ import json
 import sys
 import urllib.parse
 import urllib.request
-from typing import Dict, List, Optional, Any
+from typing import Any
 from xml.etree import ElementTree as ET
 
 
@@ -35,14 +35,14 @@ class ISBNLookup:
         """Initialize with ISBN, normalizing format."""
         self.isbn = self._normalize_isbn(isbn)
         self.isbn_display = isbn
-        self.metadata: Dict[str, Any] = {}
+        self.metadata: dict[str, Any] = {}
 
     @staticmethod
     def _normalize_isbn(isbn: str) -> str:
         """Remove hyphens and spaces from ISBN."""
         return isbn.replace('-', '').replace(' ', '')
 
-    def fetch_all(self) -> Dict[str, Any]:
+    def fetch_all(self) -> dict[str, Any]:
         """Try all data sources in order until successful."""
         print(f"Looking up ISBN: {self.isbn_display}")
         print("-" * 80)
@@ -92,7 +92,7 @@ class ISBNLookup:
 
         return False
 
-    def _parse_openlibrary(self, data: Dict) -> None:
+    def _parse_openlibrary(self, data: dict) -> None:
         """Parse OpenLibrary JSON response."""
         # Title
         self.metadata['title'] = data.get('title', '')
@@ -128,7 +128,7 @@ class ISBNLookup:
         # Subjects
         self.metadata['subjects'] = data.get('subjects', [])
 
-    def _parse_openlibrary_books_api(self, data: Dict) -> None:
+    def _parse_openlibrary_books_api(self, data: dict) -> None:
         """Parse OpenLibrary Books API response to supplement data."""
         # Fill in missing LCC
         if 'classifications' in data and 'lc_classifications' in data['classifications']:
@@ -144,7 +144,7 @@ class ISBNLookup:
             subjects = [s.get('name', '') for s in data['subjects']]
             self.metadata['subjects'] = subjects
 
-    def _fetch_openlibrary_author(self, author_key: str) -> Optional[str]:
+    def _fetch_openlibrary_author(self, author_key: str) -> str | None:
         """Fetch author name from OpenLibrary author key."""
         try:
             url = f"https://openlibrary.org{author_key}.json"
@@ -276,7 +276,7 @@ class ISBNLookup:
 
         return False
 
-    def _parse_google_books(self, item: Dict) -> None:
+    def _parse_google_books(self, item: dict) -> None:
         """Parse Google Books API response."""
         volume_info = item.get('volumeInfo', {})
 
@@ -290,7 +290,7 @@ class ISBNLookup:
         print("  Note: Google Books does not provide LCC classification or LCCN")
 
     @staticmethod
-    def _fetch_url(url: str, timeout: int = 15) -> Optional[str]:
+    def _fetch_url(url: str, timeout: int = 15) -> str | None:
         """Fetch URL content with error handling."""
         try:
             req = urllib.request.Request(
@@ -356,7 +356,7 @@ class ISBNLookup:
         # Subjects
         subjects = self.metadata.get('subjects', [])
         if subjects:
-            output.append(f"\nSubjects:")
+            output.append("\nSubjects:")
             for subject in subjects[:10]:  # Limit to first 10
                 output.append(f"  - {subject}")
             if len(subjects) > 10:
