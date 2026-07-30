@@ -45,7 +45,6 @@ This skill automates the research process for adding art books and exhibition ca
    - If yes: runs `node scripts/add-book-from-text.js --json book_data_{slug}.json`
    - Downloads cover image to `src/assets/images/books/`
    - Validates CSV structure
-   - Updates Datasette catalog
 
 ## Output Format
 
@@ -339,7 +338,6 @@ node scripts/add-book-from-text.js --json book_data_condo_1759.json
 3. Downloads cover image if not already present
 4. Validates CSV structure (36 columns)
 5. Adds to books.csv with next sequential ID
-6. Updates Datasette catalog
 
 ### CSV Column Mapping
 

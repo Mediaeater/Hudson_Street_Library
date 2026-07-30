@@ -175,7 +175,7 @@ research-asst stops at the JSON + cover. **`add-book` owns ingestion — do NOT 
 node scripts/add-book-from-text.js --json book_data_{slug}.json --yes
 ```
 
-That maps the JSON to CSV columns, downloads the cover, assigns the next sequential ID, and validates. (It also tries to refresh a local Datasette catalog — a dormant dev tool; the `sqlite-utils not found` warning is expected and harmless.)
+That maps the JSON to CSV columns, downloads the cover, assigns the next sequential ID, and validates.
 
 ## Progress Updates
 

@@ -68,38 +68,6 @@ The script will:
 
 See [ADD-BOOK-GUIDE.md](docs/ADD-BOOK-GUIDE.md) for complete instructions.
 
-## 🔍 Datasette Digital Catalog (NEW)
-
-Interactive, searchable catalog of the entire collection powered by Datasette:
-
-```bash
-# Start the catalog
-datasette hudson_street_library.db --metadata metadata.json
-```
-
-**Features**:
-- ⚡ **Instant full-text search** across 1,722 books
-- 🏷️ **Faceted browsing** by author, category, format, year
-- 📊 **SQL queries** for advanced searches
-- 🔗 **REST API** - every view is an API endpoint
-- 🔄 **Auto-sync** - updates automatically when books are added
-
-**Quick Links**:
-- [Quick Start Guide](DATASETTE-QUICKSTART.md) - 5-minute setup
-- [Complete Documentation](docs/DATASETTE-CATALOG-GUIDE.md) - Full reference
-- [Integration Guide](DATASETTE-INTEGRATION.md) - Workflow integration details
-
-**Setup**:
-```bash
-# One-time setup
-./scripts/setup-datasette.sh
-
-# Add book (catalog updates automatically!)
-npm run add
-```
-
-Visit http://localhost:8001 when running the catalog server.
-
 ## 📊 Current Status
 
 - **Total Books**: 1,722 photography books

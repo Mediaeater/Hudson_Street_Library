@@ -366,9 +366,7 @@ CSV write paths (`npm run add`, manual edits) go through
 before persisting. Backups are written under `src/_data/books_backup_<timestamp>.csv`
 on every write. See `docs/BACKUP-SYSTEM.md` for the rolling-backup policy.
 
-There is no SQL surface area on disk or in production. A local-only Datasette
-catalog (SQLite, derivative from the CSV) is supported for ad-hoc analysis;
-see `docs/DATASETTE-CATALOG-GUIDE.md`. That catalog is not deployed.
+There is no SQL surface area on disk or in production.
 
 ---
 

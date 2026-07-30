@@ -120,13 +120,10 @@ cp cover.jpg src/assets/images/books/[filename shown]
 # 4. Run full test suite
 npm test
 
-# 5. Rebuild Datasette catalog (auto-runs with add-book script; manual if needed)
-./scripts/update-datasette-catalog.sh
-
-# 6. Build site
+# 5. Build site
 npm run build
 
-# 7. Commit
+# 6. Commit
 git add src/_data/books.csv src/assets/images/books/
 git commit -m "Add: Ayoung Kim - Synthetic Storyteller"
 git push

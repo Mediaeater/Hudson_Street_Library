@@ -27,7 +27,6 @@
 ### For Content Managers
 
 1. **[ADD-BOOK-GUIDE](ADD-BOOK-GUIDE.md)** - Adding new books (interactive CLI)
-2. **[Datasette Catalog Guide](DATASETTE-CATALOG-GUIDE.md)** - Digital catalog reference
 
 ### For DevOps
 
@@ -68,11 +67,6 @@
 - [Aggregate Views](AGGREGATE-VIEWS.md) - Clickable metadata
 - [Quick Start Search](QUICK-START-SEARCH.md) - Search features
 - [Path Structure](PATH-STRUCTURE.md) - URL routing
-
-### Digital Catalog (Datasette)
-
-- [Datasette Quickstart](../DATASETTE-QUICKSTART.md) - Quick setup and common commands
-- [Datasette Catalog Guide](DATASETTE-CATALOG-GUIDE.md) - Comprehensive reference
 
 ### News & Content
 
