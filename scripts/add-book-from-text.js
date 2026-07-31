@@ -339,6 +339,44 @@ async function addBookToCSV(bookData, nextId) {
 }
 
 /**
+ * Duplicate guard — the ingest is not idempotent (every run appends a new
+ * row), so flag rows already matching on ISBN, or on title + surname when
+ * the ISBN is absent or differs (new editions share a title, not an ISBN).
+ */
+function findExistingMatches(records, bookData) {
+  const norm = (v) => (v || '').trim().toLowerCase();
+  const isbn = norm(bookData.isbn_asin);
+  const title = norm(bookData.title);
+  const last = norm(bookData.author_last);
+  return records.filter((r) =>
+    (isbn && norm(r.isbn_asin) === isbn) ||
+    (title && norm(r.title) === title && norm(r.author_last) === last)
+  );
+}
+
+// Prompts even when --yes was passed: --yes covers the routine confirm, not a
+// duplicate override. With no interactive stdin (a scripted re-run) the prompt
+// gets no answer and resolves false, so the run aborts instead of appending.
+function confirmDuplicateAdd() {
+  return new Promise((resolve) => {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout
+    });
+    let answered = false;
+    rl.question('Add anyway? (y/n): ', (answer) => {
+      answered = true;
+      rl.close();
+      const a = answer.trim().toLowerCase();
+      resolve(a === 'y' || a === 'yes');
+    });
+    rl.on('close', () => {
+      if (!answered) resolve(false);
+    });
+  });
+}
+
+/**
  * Interactive mode
  */
 async function interactiveMode() {
@@ -629,7 +667,22 @@ async function processBookFromJSON(jsonPath) {
     warnIfSuspiciousIsbn(bookData.isbn_asin);
 
     // Get next ID
-    const { nextId } = await readCSV();
+    const { records, nextId } = await readCSV();
+
+    // Duplicate guard: runs before the cover download so an aborted re-run
+    // leaves no orphan cover file behind.
+    const existing = findExistingMatches(records, bookData);
+    if (existing.length > 0) {
+      console.log('⚠️  Possible duplicate — already in books.csv:');
+      existing.forEach((r) => {
+        console.log(`   id ${r.id}: ${r.title} — ${r.author_full_name}${r.isbn_asin ? ` (ISBN ${r.isbn_asin})` : ''}`);
+      });
+      const proceed = await confirmDuplicateAdd();
+      if (!proceed) {
+        console.log('\n❌ Cancelled - no changes made (duplicate)\n');
+        process.exit(1);
+      }
+    }
 
     // Download cover image if URL provided
     if (researchData.cover_image?.url && !researchData.cover_image?.local_path) {
