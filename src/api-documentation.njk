@@ -26,16 +26,16 @@ eleventyExcludeFromCollections: true
 
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Discovery</h2>
-    <p class="mb-4">Hudson Street Library implements <a href="https://datatracker.ietf.org/doc/rfc9727/" class="text-blue-600 hover:underline">RFC 9727</a> for API discovery. You can discover available APIs through:</p>
+    <p class="mb-4">Hudson Street Library implements <a href="https://datatracker.ietf.org/doc/rfc9727/" class="text-blue-600 hover:underline">RFC 9727</a> for API discovery. You can discover the available APIs in two ways:</p>
 
     <h3 class="text-xl font-semibold mb-2">Well-Known URI</h3>
     <pre class="bg-gray-100 p-4 rounded-sm mb-4 overflow-x-auto"><code>GET {{ site.url }}/.well-known/api-catalog</code></pre>
 
     <h3 class="text-xl font-semibold mb-2">Link Relations</h3>
-    <p class="mb-2">All HTML pages include a link relation header:</p>
+    <p class="mb-2">Each HTML page includes this link element:</p>
     <pre class="bg-gray-100 p-4 rounded-sm mb-4 overflow-x-auto"><code>&lt;link rel="api-catalog" type="application/linkset+json" href="/.well-known/api-catalog"&gt;</code></pre>
 
-    <p class="text-sm text-gray-600 mb-4"><strong>Note:</strong> HTTP Link headers are not available as GitHub Pages does not support custom response headers. The well-known URI and HTML link relations are fully functional.</p>
+    <p class="text-sm text-gray-600 mb-4"><strong>Note:</strong> HTTP Link headers are not available because GitHub Pages does not support custom response headers. The well-known URI and the HTML link element work.</p>
   </section>
 
   <section class="mb-12">
@@ -44,44 +44,44 @@ eleventyExcludeFromCollections: true
     <div class="border-l-4 border-blue-500 pl-4 mb-6">
       <h3 class="text-xl font-semibold mb-2">Full Catalog JSON</h3>
       <p class="mb-2"><code class="bg-gray-100 px-2 py-1 rounded-sm">{{ site.url }}/data/books.json</code></p>
-      <p class="mb-2">Complete library catalog with {{ books.length }} book records.</p>
+      <p class="mb-2">This endpoint returns the complete catalog of {{ books.length }} book records.</p>
       <p class="text-sm text-gray-600 mb-2"><strong>Format:</strong> application/json (~1.6MB)</p>
       <p class="text-sm text-gray-600"><strong>Schema:</strong> <a href="/schemas/book-collection/" class="text-blue-600 hover:underline">/schemas/book-collection/</a></p>
 
-      <h4 class="font-semibold mt-4 mb-2">Example Usage:</h4>
+      <h4 class="font-semibold mt-4 mb-2">Example:</h4>
       <pre class="bg-gray-100 p-4 rounded-sm overflow-x-auto"><code>curl {{ site.url }}/data/books.json | jq '.[0]'</code></pre>
     </div>
 
     <div class="border-l-4 border-green-500 pl-4 mb-6">
       <h3 class="text-xl font-semibold mb-2">CSV Export</h3>
       <p class="mb-2"><code class="bg-gray-100 px-2 py-1 rounded-sm">{{ site.url }}/cms/data/books.csv</code></p>
-      <p class="mb-2">Full catalog export with 36 columns per record.</p>
+      <p class="mb-2">This endpoint returns the full catalog as CSV. Each record has 36 columns.</p>
       <p class="text-sm text-gray-600 mb-2"><strong>Format:</strong> text/csv</p>
       <p class="text-sm text-gray-600"><strong>Schema:</strong> <a href="/schemas/book-csv/" class="text-blue-600 hover:underline">/schemas/book-csv/</a></p>
 
-      <h4 class="font-semibold mt-4 mb-2">Example Usage:</h4>
+      <h4 class="font-semibold mt-4 mb-2">Example:</h4>
       <pre class="bg-gray-100 p-4 rounded-sm overflow-x-auto"><code>curl {{ site.url }}/cms/data/books.csv | head -5</code></pre>
     </div>
 
     <div class="border-l-4 border-purple-500 pl-4 mb-6">
       <h3 class="text-xl font-semibold mb-2">Collections Metadata</h3>
       <p class="mb-2"><code class="bg-gray-100 px-2 py-1 rounded-sm">{{ site.url }}/cms/data/libraryCollections.json</code></p>
-      <p class="mb-2">Thematic collection groupings and organization.</p>
+      <p class="mb-2">This endpoint returns the thematic collection groupings.</p>
       <p class="text-sm text-gray-600 mb-2"><strong>Format:</strong> application/json</p>
       <p class="text-sm text-gray-600"><strong>Schema:</strong> <a href="/schemas/collections/" class="text-blue-600 hover:underline">/schemas/collections/</a></p>
 
-      <h4 class="font-semibold mt-4 mb-2">Example Usage:</h4>
+      <h4 class="font-semibold mt-4 mb-2">Example:</h4>
       <pre class="bg-gray-100 p-4 rounded-sm overflow-x-auto"><code>curl {{ site.url }}/cms/data/libraryCollections.json | jq '.'</code></pre>
     </div>
   </section>
 
   <section class="mb-12">
     <h2 class="text-2xl font-semibold mb-4">Rate Limits & Usage</h2>
-    <p class="mb-4">All APIs are served as static files from GitHub Pages. No rate limits apply beyond GitHub's standard CDN throttling. Data is updated with each deployment when new books are added to the collection.</p>
+    <p class="mb-4">GitHub Pages serves all endpoints as static files. No rate limits apply beyond the standard GitHub CDN throttling. When the library adds new books, the next deployment updates the data.</p>
 
     <p class="mb-4"><strong>CORS:</strong> All endpoints support cross-origin requests.</p>
 
-    <p class="mb-4"><strong>Caching:</strong> Files are served with standard HTTP caching headers. The catalog typically updates weekly as new acquisitions are added.</p>
+    <p class="mb-4"><strong>Caching:</strong> GitHub Pages serves the files with standard HTTP cache headers. The catalog usually updates weekly.</p>
   </section>
 
   <section class="mb-12">
@@ -95,7 +95,7 @@ eleventyExcludeFromCollections: true
 
   <section>
     <h2 class="text-2xl font-semibold mb-4">Questions?</h2>
-    <p>For questions about API usage or to report issues, please open an issue on the <a href="https://github.com/mudmykola/hudson-street-library" class="text-blue-600 hover:underline">project repository</a>.</p>
+    <p>To ask a question about the API or to report a problem, open an issue on the <a href="https://github.com/Mediaeater/Hudson_Street_Library" class="text-blue-600 hover:underline">project repository</a>.</p>
   </section>
 </div>
 
