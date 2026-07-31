@@ -29,11 +29,11 @@ permalink: "collections/{{ collectionConfig.slug }}.html"
                 <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">{{ collectionConfig.title }}</h1>
                 <div class="line-divider inline-block"></div>
             </div>
-            <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-start">
-                <figure>
-                    <img src="{{ collectionConfig.headerImage.src }}" alt="{{ collectionConfig.headerImage.alt }}" class="w-full h-auto rounded-sm shadow-md">
+            <div class="grid md:grid-cols-2 gap-8 md:gap-12">
+                <figure class="w-full md:relative">
+                    <img src="{{ collectionConfig.headerImage.src }}" alt="{{ collectionConfig.headerImage.alt }}" class="max-w-full h-auto md:absolute md:inset-y-0 md:right-0 md:w-auto md:h-full md:object-contain md:object-right rounded-sm shadow-md">
                     {% if collectionConfig.headerImage.caption %}
-                        <figcaption class="text-xs text-gray-500 mt-2">{{ collectionConfig.headerImage.caption }}</figcaption>
+                        <figcaption class="text-xs text-gray-500 mt-2 md:absolute md:top-full md:right-0 md:w-max">{{ collectionConfig.headerImage.caption }}</figcaption>
                     {% endif %}
                 </figure>
                 <div class="text-left">
