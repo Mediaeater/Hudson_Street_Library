@@ -556,13 +556,22 @@ async function processBookFromJSON(jsonPath) {
     const locSubjects = researchData.loc_data?.subject_headings || [];
     const subjectsNote = locSubjects.length ? `Subjects (LOC): ${locSubjects.join('; ')}.` : '';
 
+    // No subtitle column exists — fold it into title (colon-joined, the
+    // site-wide convention) or it would be dropped when the row is built
+    // from the CSV headers.
+    const fullTitle = researchData.subtitle && !researchData.title.includes(researchData.subtitle)
+      ? `${researchData.title}: ${researchData.subtitle}`
+      : researchData.title;
+    // author_full_name carries ALL authors (comma-joined); authors[0] alone
+    // supplies the first/last sort keys. Anything else loses co-authors.
+    const authorNames = (researchData.authors || []).map((a) => a?.name).filter(Boolean);
+
     // Map JSON to CSV format
     const bookData = {
-      title: researchData.title,
-      subtitle: researchData.subtitle || '',
+      title: fullTitle,
       author_first: researchData.authors[0]?.name.split(' ')[0] || '',
       author_last: researchData.authors[0]?.name.split(' ').slice(1).join(' ') || '',
-      author_full_name: researchData.authors[0]?.name || '',
+      author_full_name: authorNames.join(', ') || '',
       publisher: researchData.publisher?.name || '',
       publisher_url: researchData.publisher?.url || '',
       publication_year: researchData.year?.toString() || '',
