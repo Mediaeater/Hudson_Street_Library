@@ -2,7 +2,8 @@
 const fs = require("fs");
 const path = require("path");
 const slugify = require("slugify");
-const Image = require("@11ty/eleventy-img");
+// eleventy-img 7 is ESM-only; require() returns the namespace, the callable is .default
+const Image = require("@11ty/eleventy-img").default;
 const CSVHandler = require("./scripts/utils/csv-handler");
 
 const { exec } = require("child_process");
