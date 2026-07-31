@@ -720,18 +720,17 @@ class CSVHandler {
             };
         }
 
-        // Apply updates
+        // Apply updates, restricted to columns the CSV already has. A stray
+        // key becomes a brand-new column on every row at write time — books.csv
+        // must stay exactly 36 columns.
+        const validColumns = new Set(Object.keys(readResult.data[bookIndex]));
+        const skippedKeys = Object.keys(updates).filter(key => !validColumns.has(key));
         const originalBook = { ...readResult.data[bookIndex] };
-        Object.assign(readResult.data[bookIndex], updates);
-
-        // Add update timestamp to all records for consistency
-        const timestamp = new Date().toISOString().split('T')[0];
-        readResult.data.forEach(book => {
-            if (!book.updated_at) {
-                book.updated_at = timestamp;
+        Object.entries(updates).forEach(([key, value]) => {
+            if (validColumns.has(key)) {
+                readResult.data[bookIndex][key] = value;
             }
         });
-        readResult.data[bookIndex].updated_at = timestamp;
 
         // Write back to file
         const writeOpts = options.allowedDir ? { allowedDir: options.allowedDir } : {};
@@ -740,6 +739,7 @@ class CSVHandler {
         return {
             success: writeResult.success,
             errors: writeResult.errors,
+            skippedKeys,
             backup: writeResult.backup,
             originalBook,
             updatedBook: readResult.data[bookIndex]
@@ -775,9 +775,18 @@ class CSVHandler {
                 continue;
             }
 
+            // Same column guard as updateBook: never introduce new columns.
+            const validColumns = new Set(Object.keys(readResult.data[bookIndex]));
+            const skipped = Object.keys(update.updates).filter(key => !validColumns.has(key));
+            if (skipped.length > 0) {
+                results.errors.push(`Skipped unknown columns for ${update.identifier}: ${skipped.join(', ')}`);
+            }
             const originalBook = { ...readResult.data[bookIndex] };
-            Object.assign(readResult.data[bookIndex], update.updates);
-            readResult.data[bookIndex].updated_at = new Date().toISOString().split('T')[0];
+            Object.entries(update.updates).forEach(([key, value]) => {
+                if (validColumns.has(key)) {
+                    readResult.data[bookIndex][key] = value;
+                }
+            });
 
             results.successful++;
             results.updatedBooks.push({
