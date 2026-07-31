@@ -989,6 +989,15 @@ class BookSearch {
         return div.innerHTML;
     }
 
+    // Descriptions can carry HTML (<p class="mt-6">, <em>) — reduce to plain
+    // text before truncating for card excerpts, or the tags print literally.
+    stripHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.innerHTML = text;
+        return (div.textContent || div.innerText || '').replace(/\s+/g, ' ').trim();
+    }
+
     setupEventListeners() {
         document.getElementById('search-input').addEventListener('input', (e) => {
             this.searchTerm = e.target.value.toLowerCase();
@@ -1100,7 +1109,7 @@ class BookSearch {
                     book.title,
                     book.author_full_name,
                     book.publisher,
-                    book.description,
+                    (book.description || '').replace(/<[^>]*>/g, ' '),
                     book.tags
                 ].join(' ').toLowerCase();
 
@@ -1245,11 +1254,12 @@ class BookSearch {
                             ${binding ? `<span><strong>Format:</strong> ${this.escapeHtml(binding)}</span>` : ''}
                             ${pages ? `<span><strong>Pages:</strong> ${pages}</span>` : ''}
                         </div>
-                        ${book.description && book.description !== 'NULL' ? `
-                            <p class="book-description line-clamp-3">
-                                ${this.escapeHtml(book.description.substring(0, 200))}${book.description.length > 200 ? '...' : ''}
-                            </p>
-                        ` : ''}
+                        ${(() => {
+                            const plain = this.stripHtml(book.description);
+                            if (!plain || plain === 'NULL') return '';
+                            const snippet = plain.length > 200 ? this.escapeHtml(plain.substring(0, 200)) + '...' : this.escapeHtml(plain);
+                            return `<p class="book-description line-clamp-3">${snippet}</p>`;
+                        })()}
 
                         ${tags.length > 0 ? `
                             <div class="tag-pills">
