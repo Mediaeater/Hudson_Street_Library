@@ -565,15 +565,36 @@ async function processBookFromJSON(jsonPath) {
     // author_full_name carries ALL authors (comma-joined); authors[0] alone
     // supplies the first/last sort keys. Anything else loses co-authors.
     const authorNames = (researchData.authors || []).map((a) => a?.name).filter(Boolean);
+    // Explicit last/first on authors[0] win — splitting a display name can't
+    // handle middle names, particles ("van der"), or family-name-first order.
+    // Fallback mirrors the text-path heuristic: mononym → last (an empty
+    // author_last breaks the page slug), else last token = last, rest = first.
+    const primaryAuthor = researchData.authors?.[0] || {};
+    let author_first = str(primaryAuthor.first).trim();
+    let author_last = str(primaryAuthor.last).trim();
+    if (!author_first && !author_last) {
+      const nameParts = str(primaryAuthor.name).trim().split(/\s+/).filter(Boolean);
+      if (nameParts.length === 1) {
+        author_last = nameParts[0];
+      } else if (nameParts.length > 1) {
+        author_last = nameParts[nameParts.length - 1];
+        author_first = nameParts.slice(0, -1).join(' ');
+      }
+    }
+    // publisher arrives as {name, url} from research-asst, but accept a plain
+    // string too — a bare "publisher": "Mack" must not drop the field.
+    const publisherData = typeof researchData.publisher === 'string'
+      ? { name: researchData.publisher }
+      : (researchData.publisher || {});
 
     // Map JSON to CSV format
     const bookData = {
       title: fullTitle,
-      author_first: researchData.authors[0]?.name.split(' ')[0] || '',
-      author_last: researchData.authors[0]?.name.split(' ').slice(1).join(' ') || '',
+      author_first,
+      author_last,
       author_full_name: authorNames.join(', ') || '',
-      publisher: researchData.publisher?.name || '',
-      publisher_url: researchData.publisher?.url || '',
+      publisher: publisherData.name || '',
+      publisher_url: publisherData.url || '',
       publication_year: researchData.year?.toString() || '',
       isbn_asin: researchData.isbn?.isbn13 || researchData.isbn?.isbn10 || '',
       binding: researchData.format || '',
@@ -640,6 +661,7 @@ async function processBookFromJSON(jsonPath) {
     console.log(`ID:              ${nextId}`);
     console.log(`Title:           ${bookData.title}`);
     console.log(`Author:          ${bookData.author_full_name}`);
+    console.log(`Author sort:     last="${bookData.author_last}" first="${bookData.author_first}"`);
     console.log(`Publisher:       ${bookData.publisher || '(not found)'}`);
     console.log(`Year:            ${bookData.publication_year || '(not found)'}`);
     console.log(`ISBN:            ${bookData.isbn_asin || '(not found)'}`);

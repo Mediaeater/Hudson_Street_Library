@@ -149,6 +149,7 @@ See **`references/json-schema.md`** for the full annotated JSON example (a compl
 ## Critical Rules
 
 - **Artist link = the official site.** `authors[0].url` becomes the page's `artist_url` — the main artist link shown on every book page — so it MUST be the artist's **own official website** whenever one exists (search for it if the publisher page doesn't link it; confirm it returns 200). A gallery or museum URL is NOT a substitute; those go in `artist_links`. Only fall back to a gallery/museum for `authors[0].url` when the artist genuinely has no official site.
+- **Set explicit `last`/`first` on `authors[0]`.** The ingest uses them verbatim for the CSV sort keys, page slug, and cover filename; without them it falls back to a name-split heuristic that can't detect family-name-first order ("Sun Yanchu") or particles ("van der …"). Always supply both for the primary author (mononym: `last` only).
 - **NEVER save price data** — pricing policy prohibits storing prices in any form
 - **Tags in JSON are an array** — the add-book script converts to comma-separated for CSV export
 - **Verify all URLs** — check that links return 200 before including

@@ -2,6 +2,8 @@
 
 The complete annotated record this skill produces. Field tiers and the CSV-mapped enrichment fields are described in `SKILL.md` (Output Format). Use `null` for unavailable fields.
 
+Give the primary author explicit `last` and `first` — the ingest uses them verbatim for the CSV sort keys, page slug, and cover filename (see SKILL.md Critical Rules); its fallback name-split can't detect family-name-first order or particles ("van der …"). `publisher` should be the `{name, url, …}` object shown here (the ingest tolerates a bare string, but then `publisher_url` is lost).
+
 ```json
 {
   "page_slug": "condo_the-mad-and-the-lonely_1759",
@@ -14,6 +16,8 @@ The complete annotated record this skill produces. Field tiers and the CSV-mappe
   "authors": [
     {
       "name": "George Condo",
+      "last": "Condo",
+      "first": "George",
       "role": "Artist",
       "url": "https://georgecondo.com",
       "type": "official_site"
