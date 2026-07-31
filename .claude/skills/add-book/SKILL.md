@@ -42,7 +42,7 @@ Tags MUST be comma-separated (e.g., `"Art, Photography, Zines"`):
 - Templates use `book.tags.split(',')` to parse tags
 - **Wrong:** `"Art; Photography; Zines"` (semicolons render as single tag)
 - **Correct:** `"Art, Photography, Zines"` (comma-separated)
-- Each tag should be short, descriptive, and properly capitalized
+- Keep each tag short, descriptive, and properly capitalized
 
 ### Preserve All User Metadata
 When user provides book details, capture EVERYTHING valuable:
