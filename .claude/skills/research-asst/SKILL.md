@@ -24,7 +24,7 @@ skill delegates its research step here: it invokes this skill to produce
 ## When NOT to Use
 
 - **Editing an existing record** — edit the CSV row directly, or re-run for that one title. This skill builds a *new* record.
-- **Ingesting into the collection** — that is `add-book`'s job. Produce the JSON + cover and stop; double-ingesting creates duplicate IDs.
+- **Ingesting into the collection** — that is `add-book`'s job. Produce the JSON + cover and stop; a second ingest trips the ingest's duplicate guard (and, if forced past it, creates duplicate IDs).
 - **Any project other than Hudson Street Library** — paths, schema, and cover dirs are HSL-specific.
 
 ## Input Formats
@@ -170,7 +170,7 @@ Edge-case handling — no ISBN, gallery publisher, historical (pre-2010), emergi
 
 ## Handoff to Add-Book
 
-research-asst stops at the JSON + cover. **`add-book` owns ingestion — do NOT run `add-book-from-text.js` yourself.** If both you and add-book ingest, the book lands in `books.csv` twice with two IDs (add-book's *Book added twice* gotcha). When invoked standalone, print the `book_data_{slug}.json` path and let the caller ingest:
+research-asst stops at the JSON + cover. **`add-book` owns ingestion — do NOT run `add-book-from-text.js` yourself.** If both you and add-book ingest, the second run trips the ingest's duplicate guard — a scripted run aborts, and forcing past the prompt lands the book twice with two IDs (add-book's *Book added twice* gotcha). When invoked standalone, print the `book_data_{slug}.json` path and let the caller ingest:
 
 ```bash
 node scripts/add-book-from-text.js --json book_data_{slug}.json --yes
