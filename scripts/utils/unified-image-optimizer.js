@@ -16,7 +16,8 @@
  * - Responsive image generation with HTML output
  */
 
-const Image = require('@11ty/eleventy-img');
+// eleventy-img 7 is ESM-only; require() returns the namespace, the callable is .default
+const Image = require('@11ty/eleventy-img').default;
 const fs = require('fs').promises;
 const path = require('path');
 const { imageConfig } = require('../config/image-config');
