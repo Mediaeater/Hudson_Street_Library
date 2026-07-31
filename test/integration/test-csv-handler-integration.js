@@ -222,6 +222,42 @@ describe('CSV Handler Integration Tests', function() {
       assert.strictEqual(updatedBook.title, 'The Hobbit'); // Unchanged
     });
 
+    it('updateBook must not add columns (regression: phantom updated_at column)', async function() {
+      const columnsBefore = fs.readFileSync(booksPath, 'utf8').split('\n')[0].split(',').length;
+
+      const result = await CSVHandler.updateBook(
+        '1',
+        { publisher: 'New Pub', bogus_column: 'should be skipped' },
+        booksPath,
+        { allowedDir: testDir }
+      );
+
+      assert.strictEqual(result.success, true);
+      assert.deepStrictEqual(result.skippedKeys, ['bogus_column'], 'stray keys are reported, not applied');
+
+      const headerAfter = fs.readFileSync(booksPath, 'utf8').split('\n')[0];
+      assert.strictEqual(headerAfter.split(',').length, columnsBefore, 'column count must not change on update');
+      assert.ok(!headerAfter.includes('updated_at'), 'no updated_at column');
+      assert.ok(!headerAfter.includes('bogus_column'), 'stray update keys must not become columns');
+    });
+
+    it('batchUpdateBooks must not add columns either', async function() {
+      const columnsBefore = fs.readFileSync(booksPath, 'utf8').split('\n')[0].split(',').length;
+
+      const result = await CSVHandler.batchUpdateBooks(
+        [{ identifier: '2', updates: { publisher: 'X', stray_key: 'nope' } }],
+        booksPath,
+        { allowedDir: testDir }
+      );
+
+      assert.ok(result.writeSuccess, 'Write should succeed');
+      assert.ok(result.errors.some(e => e.includes('stray_key')), 'skipped keys are reported');
+
+      const headerAfter = fs.readFileSync(booksPath, 'utf8').split('\n')[0];
+      assert.strictEqual(headerAfter.split(',').length, columnsBefore, 'column count must not change on batch update');
+      assert.ok(!headerAfter.includes('updated_at'), 'no updated_at column');
+    });
+
     it('should update single book by ISBN', async function() {
       // ISBN is cleaned (hyphens removed) during readBooks
       const updates = {
