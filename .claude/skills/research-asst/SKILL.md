@@ -9,7 +9,7 @@ user_invocable: true
 This is the **canonical research stage** for the Hudson Street Library. The `add-book`
 skill delegates its research step here: it invokes this skill to produce
 `book_data_{slug}.json`, then ingests that JSON. Keep the multi-source research procedure
-(distributors, artist/exhibition research, schema) here — `add-book` should not duplicate it.
+(distributors, artist/exhibition research, schema) here — `add-book` must not duplicate it.
 
 ## Quick Reference
 
@@ -45,7 +45,7 @@ Accept any of:
 2. If you only have a title, run ONE `WebSearch` to find the publisher product page, then `WebFetch` it.
 3. Fill the JSON from that page and author the description. Set `authors[0].url` to the artist's **own official website** if one exists — a quick targeted `WebSearch`/`WebFetch` when the publisher page doesn't link it; a gallery or museum URL does **not** count and goes in `artist_links` instead (see Critical Rules). **Stop as soon as the Required fields + core Expected fields (`isbn`, `pages`, `dimensions`/`height_cm`+`width_cm`, `format`, `description`, cover, plus the artist's official site if one exists) are populated.** Emit the JSON — do not open more sources.
 
-**Stop rule / budget.** A routine add should cost roughly one publisher fetch plus a cover fetch (target ≤ ~10 web calls). The moment the core fields + cover are in hand, you are done.
+**Stop rule / budget.** A routine add costs roughly one publisher fetch plus a cover fetch (target ≤ ~10 web calls). The moment the core fields + cover are in hand, you are done.
 
 **Escalate to the Deep Sweep only when:**
 - a Required/core field is still missing after the publisher page, or
@@ -134,7 +134,7 @@ See **`references/json-schema.md`** for the full annotated JSON example (a compl
 
 ## Content Writing Guidelines
 
-**Tone**: Authoritative, curatorial, informative. Write the way a museum wall label reads: neutral, precise, focused on what the work is and does rather than how the reader should feel about it. NO marketing language (avoid "stunning," "groundbreaking," "must-have").
+**Tone**: Authoritative, curatorial, informative. Write the way a museum wall label reads: neutral, precise, focused on what the work is and does, not on the reader's feelings. NO marketing language (avoid "stunning," "groundbreaking," "must-have").
 
 **Descriptions** — `extended` is what ships as the book page's description (add-book maps `extended` into the CSV `description` column, falling back to `main`). Author it with care:
 - `extended`: **The page description, ~800–1300 chars, curatorial voice, matching existing entries.** Author it as `<p>` paragraphs — never a single blob; HSL renders >500-char descriptions with `<p class="mt-6">` breaks — in three beats:
