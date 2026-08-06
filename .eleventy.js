@@ -427,9 +427,11 @@ module.exports = function(eleventyConfig) {
       return null;
     }).filter(b => b !== null);
 
-    // Sort by cataloged date (most recently cataloged first)
+    // Sort by cataloged date (most recently cataloged first). Same-day
+    // batches tie on date, so break ties by id descending — newest records
+    // first, or the latest catalogue work lands at the bottom of the page.
     const sorted = backfillBooks.sort((a, b) => {
-      return b.parsedDate - a.parsedDate;
+      return (b.parsedDate - a.parsedDate) || (parseInt(b.id) - parseInt(a.id));
     });
 
     // Return limited or all
