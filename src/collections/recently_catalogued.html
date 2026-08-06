@@ -1,39 +1,48 @@
 ---
-permalink: /collections/recently_added.html
+permalink: /collections/recently_catalogued.html
 layout: collection.njk
-title: Recently Added
-currentPage: recently-added
+title: Recently Cataloged
+currentPage: recently-catalogued
 ---
 {#
-  AUTO-GENERATED RECENTLY ADDED PAGE
+  RECENTLY CATALOGED PAGE
 
-  This page is automatically generated from books.csv based on the accession_no field.
-  Books are sorted by accession date (most recent first).
+  This page shows library backfill work - books that were acquired in the past
+  but recently cataloged and added to the digital collection.
 
-  Manual version archived as: recently_added.html.backup-manual
+  Shows books where cataloged_date is recent but accession_no is older (>90 days prior).
 
   To add a book to this page:
   1. Add the book to books.csv
-  2. Set the accession_no field to YYYY-MM-DD format
-  3. Rebuild the site
+  2. Set accession_no to the original acquisition date (e.g., "2020-03-15")
+  3. Set cataloged_date to when you catalog it (e.g., "2026-08-06")
+  4. Rebuild the site
 #}
 
-<section id="new-acquisitions" class="py-16 bg-neutral-50">
+<section id="recently-catalogued" class="py-16 bg-neutral-50">
     <div class="container mx-auto px-6">
         <div class="max-w-4xl mx-auto text-center mb-12">
-            <h2 class="text-4xl font-bold mb-6 text-primary-700">Recently Added</h2>
+            <h2 class="text-4xl font-bold mb-6 text-primary-700">Recently Cataloged</h2>
                     <div class="line-divider inline-block"></div>
-                    <p class="text-lg leading-relaxed text-neutral-600 mt-4 md:whitespace-nowrap">
-                        Browse recent additions to the special collection or <a href="/collections/recently_catalogued.html" class="font-bold text-primary-700 hover:underline">browse recent catalog work</a>.
+                    <p class="text-lg leading-relaxed text-neutral-600 mt-4">
+                        Books from the physical library recently digitized and added to the online catalog.
+                        These titles were acquired earlier but are newly cataloged for the collection.
+                    </p>
+                    <p class="text-lg leading-relaxed text-neutral-600 mt-2">
+                        You can also <a href="/collections/recently_added.html" class="font-bold text-primary-700 hover:underline">browse recent additions</a> — new acquisitions to the special collection.
                     </p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
 
-{% set recentBooks = books | recentlyAdded %}
-{% for book in recentBooks %}
-{% if book.publisher != "BUTT Publications" and book.author_last != "Ethridge" and book.id != "1859" %}
-                    <!-- {{ book.author_full_name }} - {{ book.title }} - {{ book.accession_no }} -->
+{% set cataloguedBooks = books | recentlyCatalogued %}
+{% if cataloguedBooks.length == 0 %}
+                    <div class="col-span-full text-center py-12">
+                        <p class="text-neutral-600">No recently cataloged books. Check back as we continue digitizing the collection.</p>
+                    </div>
+{% else %}
+{% for book in cataloguedBooks %}
+                    <!-- {{ book.author_full_name }} - {{ book.title }} - Acquired: {{ book.accession_no }}, Cataloged: {{ book.cataloged_date }} -->
                     <div class="book-card bg-neutral-50 rounded-lg overflow-hidden shadow-md transition-all hover:shadow-lg flex flex-col">
                         <div class="book-cover-tile">
                             <img src="{{ book | generateCoverPath }}"
@@ -60,7 +69,8 @@ currentPage: recently-added
                                 {% if book.contributors %}<p><span class="font-semibold">Contributors:</span> {{ book.contributors }}</p>{% endif %}
                                 {% if book.binding %}<p><span class="font-semibold">Binding:</span> {{ book.binding }}</p>{% endif %}
                                 {% if book.language %}<p><span class="font-semibold">Language:</span> {{ book.language }}</p>{% endif %}
-                                {% if book.accession_no %}<p><span class="font-semibold">Accession Date:</span> {{ book.accession_no | formatAccessionDate }}</p>{% endif %}
+                                {% if book.accession_no %}<p><span class="font-semibold">Acquired:</span> {{ book.accession_no | formatAccessionDate }}</p>{% endif %}
+                                {% if book.cataloged_date %}<p class="text-primary-700"><span class="font-semibold">Cataloged:</span> {{ book.cataloged_date | formatAccessionDate }}</p>{% endif %}
                                 {% if book.description %}
                                 <div class="book-description text-xs leading-relaxed text-neutral-600">
                                     {{ book.description | formatDescription(280) | safe }}
@@ -73,12 +83,13 @@ currentPage: recently-added
                             </div>
                         </div>
                     </div>
-{% endif %}
 {% endfor %}
+{% endif %}
 
                 </div>
 
                 <div class="text-center mt-12">
+                    <a href="/collections/recently_added.html" class="inline-block border border-primary-700 text-primary-700 px-6 py-3 hover:bg-primary-700 hover:text-white transition-all rounded-xs font-medium mr-4">View Recently Added</a>
                     <a href="/collection-explore.html" class="inline-block border border-primary-700 text-primary-700 px-6 py-3 hover:bg-primary-700 hover:text-white transition-all rounded-xs font-medium">Browse Curated Collections</a>
                 </div>
             </div>

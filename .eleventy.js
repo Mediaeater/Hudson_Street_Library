@@ -349,16 +349,38 @@ module.exports = function(eleventyConfig) {
     }).length;
   });
 
-  // --- Filter books by accession date ---
-  // Returns books sorted by accession date (most recent first)
+  // --- Filter books by accession/catalog date ---
+  // Returns NEW acquisitions (not backfill), sorted by when cataloged (most recent first)
   eleventyConfig.addFilter("recentlyAdded", function(books, limit) {
     if (!books) return [];
 
-    // Filter books with valid accession dates and parse them
-    const booksWithDates = books.map(b => ({
-      ...b,
-      parsedDate: parseAccessionDate(b.accession_no)
-    })).filter(b => b.parsedDate !== null);
+    // Filter books with valid dates
+    // Use cataloged_date if available AND recent (within 7 days of accession_no)
+    // Otherwise use accession_no (traditional behavior)
+    const booksWithDates = books.map(b => {
+      const accessionDate = parseAccessionDate(b.accession_no);
+      const catalogedDate = parseAccessionDate(b.cataloged_date);
+
+      // Determine which date to use
+      let displayDate = accessionDate;
+
+      // If both dates exist and cataloged is within 7 days of accession,
+      // this is a "new" book cataloged promptly -> use cataloged date
+      if (accessionDate && catalogedDate) {
+        const daysDiff = Math.abs((catalogedDate - accessionDate) / (1000 * 60 * 60 * 24));
+        if (daysDiff < 7) {
+          displayDate = catalogedDate;
+        } else {
+          // This is backfill (cataloged 7+ days after acquisition) - exclude from "Recently Added"
+          displayDate = null;
+        }
+      }
+
+      return {
+        ...b,
+        parsedDate: displayDate
+      };
+    }).filter(b => b.parsedDate !== null);
 
     // Sort by featured first, then by parsed date (descending - most recent first)
     const sorted = booksWithDates.sort((a, b) => {
@@ -370,6 +392,43 @@ module.exports = function(eleventyConfig) {
       if (!aFeatured && bFeatured) return 1;
 
       // Within same featured status, sort by date
+      return b.parsedDate - a.parsedDate;
+    });
+
+    // Return limited or all
+    return limit ? sorted.slice(0, limit) : sorted;
+  });
+
+  // --- Filter books by cataloged date (backfill work) ---
+  // Returns books cataloged recently but acquired earlier (library digitization work)
+  eleventyConfig.addFilter("recentlyCatalogued", function(books, limit) {
+    if (!books) return [];
+
+    // Filter for backfill: cataloged_date exists AND is at least 7 days after accession_no
+    // (i.e., not cataloged the same day as acquired)
+    const backfillBooks = books.map(b => {
+      const accessionDate = parseAccessionDate(b.accession_no);
+      const catalogedDate = parseAccessionDate(b.cataloged_date);
+
+      if (!accessionDate || !catalogedDate) return null;
+
+      const daysDiff = Math.abs((catalogedDate - accessionDate) / (1000 * 60 * 60 * 24));
+
+      // This is backfill if cataloged at least 7 days after acquisition
+      // (books cataloged within a week are considered "new acquisitions")
+      if (daysDiff >= 7) {
+        return {
+          ...b,
+          parsedDate: catalogedDate,
+          daysSinceAcquisition: Math.floor(daysDiff)
+        };
+      }
+
+      return null;
+    }).filter(b => b !== null);
+
+    // Sort by cataloged date (most recently cataloged first)
+    const sorted = backfillBooks.sort((a, b) => {
       return b.parsedDate - a.parsedDate;
     });
 
