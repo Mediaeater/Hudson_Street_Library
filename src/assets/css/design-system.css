@@ -108,6 +108,12 @@ h6 { font-size: 16px; }
 p {
     line-height: 1.6;
     max-width: 65ch;
+    /* The 65ch cap keeps prose readable, but as a block it hugged the left
+       edge of any wider container, leaving intro text visibly off-center
+       (catalogue/added intros, collection pages). Auto inline margins center
+       the capped block; containers narrower than 65ch are unaffected. */
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .text-sm { font-size: 14px; }
