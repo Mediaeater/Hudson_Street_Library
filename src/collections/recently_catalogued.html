@@ -1,7 +1,7 @@
 ---
 permalink: /collections/recently_catalogued.html
 layout: collection.njk
-title: Recently Cataloged
+title: Recently Catalogued
 currentPage: recently-catalogued
 ---
 {#
@@ -22,11 +22,11 @@ currentPage: recently-catalogued
 <section id="recently-catalogued" class="py-16 bg-neutral-50">
     <div class="container mx-auto px-6">
         <div class="max-w-4xl mx-auto text-center mb-12">
-            <h2 class="text-4xl font-bold mb-6 text-primary-700">Recently Cataloged</h2>
+            <h2 class="text-4xl font-bold mb-6 text-primary-700">Recently Catalogued</h2>
                     <div class="line-divider inline-block"></div>
                     <p class="text-lg leading-relaxed text-neutral-600 mt-4">
-                        Books from the physical library recently digitized and added to the online catalog.
-                        These titles were acquired earlier but are newly cataloged for the collection.
+                        Books from the physical library recently digitized and added to the online catalogue.
+                        These titles were acquired earlier but are newly catalogued for the collection.
                     </p>
                     <p class="text-lg leading-relaxed text-neutral-600 mt-2">
                         You can also <a href="/collections/recently_added.html" class="font-bold text-primary-700 hover:underline">browse recent additions</a> — new acquisitions to the special collection.
@@ -38,7 +38,7 @@ currentPage: recently-catalogued
 {% set cataloguedBooks = books | recentlyCatalogued %}
 {% if cataloguedBooks.length == 0 %}
                     <div class="col-span-full text-center py-12">
-                        <p class="text-neutral-600">No recently cataloged books. Check back as we continue digitizing the collection.</p>
+                        <p class="text-neutral-600">No recently catalogued books. Check back as we continue digitizing the collection.</p>
                     </div>
 {% else %}
 {% for book in cataloguedBooks %}
@@ -70,7 +70,7 @@ currentPage: recently-catalogued
                                 {% if book.binding %}<p><span class="font-semibold">Binding:</span> {{ book.binding }}</p>{% endif %}
                                 {% if book.language %}<p><span class="font-semibold">Language:</span> {{ book.language }}</p>{% endif %}
                                 {% if book.accession_no %}<p><span class="font-semibold">Acquired:</span> {{ book.accession_no | formatAccessionDate }}</p>{% endif %}
-                                {% if book.cataloged_date %}<p class="text-primary-700"><span class="font-semibold">Cataloged:</span> {{ book.cataloged_date | formatAccessionDate }}</p>{% endif %}
+                                {% if book.cataloged_date %}<p class="text-primary-700"><span class="font-semibold">Catalogued:</span> {{ book.cataloged_date | formatAccessionDate }}</p>{% endif %}
                                 {% if book.description %}
                                 <div class="book-description text-xs leading-relaxed text-neutral-600">
                                     {{ book.description | formatDescription(280) | safe }}
