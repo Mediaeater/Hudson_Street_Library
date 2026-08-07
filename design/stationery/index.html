@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Administrative Stationery — Hudson Street Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,300;7..72,400;7..72,600&family=Crimson+Pro:wght@300;400;600&family=Archivo+Narrow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --mm:1.55px;               /* comparison scale — every sheet shares it */
+  --paper:#F8F7F4; --ink:#0A0A0A; --brown:#8B7355; --teal:#0f766e;
+  --rouge:#B4232A; --shu:#C9151E; --slate:#2F4858;
+  --rule:rgba(10,10,10,.14);
+  --serif:'Literata',Georgia,serif;
+  --wordmark:'Crimson Pro',Georgia,serif;
+  --label:'Archivo Narrow',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;padding:0 0 140px;background:#242428;color:#e8e6e1;font-family:var(--label);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1320px;margin:0 auto;padding:0 44px}
+
+.masthead{padding:70px 0 34px;border-bottom:1px solid #3a3a40}
+.kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#7d7a75;margin:0 0 16px}
+.masthead h1{font-family:var(--wordmark);font-weight:300;font-size:42px;letter-spacing:.02em;margin:0 0 14px}
+.masthead p{max-width:66ch;line-height:1.65;color:#a8a5a0;font-size:14.5px;margin:0}
+nav.jump{margin-top:26px;display:flex;gap:22px;font-family:var(--mono);font-size:11px;letter-spacing:.1em}
+nav.jump a{color:var(--brown);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:2px}
+nav.jump a:hover{border-bottom-color:var(--brown)}
+
+.sec-head{display:flex;align-items:baseline;gap:18px;border-bottom:1px solid #3a3a40;padding-bottom:12px;margin:78px 0 34px}
+.sec-head .n{font-family:var(--mono);font-size:11px;color:var(--brown);letter-spacing:.14em}
+.sec-head h2{font-family:var(--wordmark);font-weight:400;font-size:27px;margin:0}
+.sec-head .meta{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:#7d7a75;letter-spacing:.08em}
+.note{max-width:76ch;line-height:1.75;color:#a8a5a0;font-size:14px}
+.note b{color:#e8e6e1;font-weight:600}
+
+/* ---- comparison columns ---- */
+.compare{display:grid;grid-template-columns:repeat(3,1fr);gap:38px;align-items:start}
+.col-head{border-top:2px solid var(--brown);padding-top:12px;margin-bottom:22px}
+.col-head h3{font-family:var(--wordmark);font-weight:400;font-size:21px;margin:0 0 6px}
+.col-head .o{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:#8a8782;text-transform:uppercase;line-height:1.8}
+.stack{display:flex;flex-direction:column;gap:20px;align-items:flex-start}
+.lbl{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;color:#7d7a75;text-transform:uppercase;margin-top:4px}
+.why{font-family:var(--label);font-size:13px;line-height:1.65;color:#a8a5a0;margin-top:18px;border-top:1px solid #37373d;padding-top:14px}
+
+.sheet,.env,.bm{background:var(--paper);color:var(--ink);position:relative;overflow:hidden;
+  box-shadow:0 14px 34px -14px rgba(0,0,0,.7)}
+
+/* ======== A · FOOLSCAP ======== */
+.fool{width:calc(203*var(--mm));height:calc(330*var(--mm));padding:calc(16*var(--mm)) calc(18*var(--mm))}
+.fool .ledger{position:absolute;left:0;right:0;bottom:0;top:calc(46*var(--mm));
+  background:repeating-linear-gradient(to bottom,transparent 0,transparent calc(6*var(--mm) - 1px),rgba(10,10,10,.055) calc(6*var(--mm)))}
+.fool .gutter{position:absolute;top:0;bottom:0;left:calc(18*var(--mm));border-left:1px solid rgba(180,35,42,.22)}
+.fool-head{display:flex;align-items:flex-end;justify-content:space-between;position:relative;
+  border-bottom:calc(.8*var(--mm)) solid var(--ink);padding-bottom:calc(3*var(--mm))}
+.mark{display:flex;align-items:flex-end;gap:calc(1.4*var(--mm))}
+.mark i{display:block;background:var(--ink);width:calc(2.6*var(--mm))}
+.fool .wm{font-family:var(--wordmark);font-size:calc(7.4*var(--mm));line-height:.9;margin-left:calc(3*var(--mm))}
+.fool .wm small{display:block;font-family:var(--label);font-weight:500;font-size:calc(2.2*var(--mm));
+  letter-spacing:.3em;text-transform:uppercase;color:var(--brown);margin-top:calc(1.7*var(--mm))}
+.fool .est{text-align:right;font-family:var(--mono);font-size:calc(2.05*var(--mm));line-height:1.85;color:rgba(10,10,10,.6)}
+.docket{position:absolute;top:calc(52*var(--mm));right:calc(18*var(--mm));width:calc(52*var(--mm));
+  border:1px solid var(--ink);font-family:var(--mono)}
+.docket div{display:flex;border-bottom:1px solid rgba(10,10,10,.28);height:calc(7*var(--mm));align-items:center}
+.docket div:last-child{border-bottom:0}
+.docket span{width:calc(17*var(--mm));padding-left:calc(2*var(--mm));letter-spacing:.1em;text-transform:uppercase;
+  font-size:calc(1.7*var(--mm));color:rgba(10,10,10,.55);border-right:1px solid rgba(10,10,10,.28);
+  height:100%;display:flex;align-items:center}
+.fool-body{position:relative;margin-top:calc(30*var(--mm));width:calc(105*var(--mm));
+  font-family:var(--serif);font-size:calc(2.85*var(--mm));line-height:calc(6*var(--mm));color:rgba(10,10,10,.36)}
+.fool-body .to{font-family:var(--mono);font-size:calc(2.05*var(--mm));letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(10,10,10,.5);margin:0 0 calc(6*var(--mm))}
+.fool-foot{position:absolute;left:calc(18*var(--mm));right:calc(18*var(--mm));bottom:calc(12*var(--mm));
+  display:flex;justify-content:space-between;border-top:1px solid var(--rule);padding-top:calc(3*var(--mm));
+  font-family:var(--mono);font-size:calc(1.9*var(--mm));letter-spacing:.09em;color:rgba(10,10,10,.5)}
+
+/* ======== B · TELLIÈRE ======== */
+.tell{width:calc(220*var(--mm));height:calc(340*var(--mm));padding:calc(22*var(--mm)) calc(24*var(--mm));text-align:center}
+.tell .frame{position:absolute;inset:calc(10*var(--mm));border:1px solid rgba(10,10,10,.9)}
+.tell .frame::after{content:'';position:absolute;inset:calc(1.6*var(--mm));border:calc(.5*var(--mm)) solid rgba(180,35,42,.85)}
+.tell .wm{font-family:var(--wordmark);font-weight:300;font-size:calc(8.6*var(--mm));letter-spacing:.05em;line-height:1;position:relative}
+.tell .sub{font-family:var(--label);font-weight:500;font-size:calc(2.1*var(--mm));letter-spacing:.4em;
+  text-transform:uppercase;color:var(--rouge);margin-top:calc(3.4*var(--mm))}
+.tell .rule2{margin:calc(5*var(--mm)) auto calc(4*var(--mm));width:calc(56*var(--mm));
+  border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);height:calc(1.3*var(--mm))}
+.tell .addr{font-family:var(--mono);font-size:calc(1.95*var(--mm));letter-spacing:.13em;color:rgba(10,10,10,.6);line-height:2}
+.tell .no{position:absolute;top:calc(24*var(--mm));right:calc(26*var(--mm));text-align:right;
+  font-family:var(--mono);font-size:calc(2.1*var(--mm));letter-spacing:.1em;color:var(--rouge)}
+.tell .no b{display:block;font-weight:400;color:rgba(10,10,10,.4);font-size:calc(1.75*var(--mm));
+  letter-spacing:.18em;margin-top:calc(2.4*var(--mm))}
+.tell-body{margin-top:calc(26*var(--mm));text-align:left;font-family:var(--serif);
+  font-size:calc(2.85*var(--mm));line-height:calc(6.4*var(--mm));color:rgba(10,10,10,.34);position:relative}
+.tell-body .obj{font-family:var(--label);font-weight:600;font-size:calc(2.2*var(--mm));letter-spacing:.18em;
+  text-transform:uppercase;color:var(--ink);border-bottom:1px solid var(--rouge);display:inline-block;
+  padding-bottom:calc(1*var(--mm));margin-bottom:calc(6*var(--mm))}
+.tell-foot{position:absolute;left:calc(24*var(--mm));right:calc(24*var(--mm));bottom:calc(17*var(--mm));text-align:center;
+  font-family:var(--mono);font-size:calc(1.85*var(--mm));letter-spacing:.15em;color:rgba(10,10,10,.45)}
+
+/* ======== C · SHIROKU ======== */
+.shi{width:calc(182*var(--mm));height:calc(257*var(--mm));padding:calc(20*var(--mm))}
+.shi .genko{position:absolute;top:calc(58*var(--mm));right:calc(20*var(--mm));width:calc(64*var(--mm));height:calc(128*var(--mm));
+  background:
+    repeating-linear-gradient(to right,transparent 0,transparent calc(8*var(--mm) - 1px),rgba(10,10,10,.075) calc(8*var(--mm))),
+    repeating-linear-gradient(to bottom,transparent 0,transparent calc(8*var(--mm) - 1px),rgba(10,10,10,.075) calc(8*var(--mm)))}
+.shi-head{display:flex;justify-content:space-between;align-items:flex-start;position:relative}
+.shi .wm{font-family:var(--wordmark);font-weight:300;font-size:calc(6.2*var(--mm));line-height:1.15}
+.shi .wm em{font-style:normal;display:block}
+.shi .en{font-family:var(--label);font-weight:500;font-size:calc(1.85*var(--mm));letter-spacing:.38em;
+  text-transform:uppercase;color:var(--brown);margin-top:calc(4*var(--mm))}
+.seal{width:calc(13*var(--mm));height:calc(13*var(--mm));border:calc(.9*var(--mm)) solid var(--shu);
+  display:flex;align-items:center;justify-content:center;flex:none}
+.seal .r{display:flex;gap:calc(.8*var(--mm));align-items:flex-end}
+.seal i{display:block;background:var(--shu);width:calc(1.5*var(--mm))}
+.shi .hair{margin-top:calc(9*var(--mm));border-top:1px solid var(--ink);width:calc(30*var(--mm))}
+.shi-body{margin-top:calc(14*var(--mm));width:calc(72*var(--mm));font-family:var(--serif);
+  font-size:calc(2.65*var(--mm));line-height:calc(6.6*var(--mm));color:rgba(10,10,10,.35);position:relative}
+.shi .vert{position:absolute;top:calc(62*var(--mm));left:calc(7.5*var(--mm));writing-mode:vertical-rl;
+  font-family:var(--serif);font-size:calc(2.2*var(--mm));letter-spacing:.55em;color:rgba(10,10,10,.4)}
+.shi-foot{position:absolute;left:calc(20*var(--mm));right:calc(20*var(--mm));bottom:calc(14*var(--mm));
+  display:flex;justify-content:space-between;font-family:var(--mono);font-size:calc(1.8*var(--mm));
+  letter-spacing:.1em;color:rgba(10,10,10,.42)}
+
+/* ======== envelopes ======== */
+.env .flap{position:absolute;left:0;right:0;top:0;height:40%;
+  background:linear-gradient(#f3f1ed,#eeece7);clip-path:polygon(0 0,100% 0,100% 40%,50% 100%,0 40%)}
+.env-dl{width:calc(220*var(--mm));height:calc(110*var(--mm))}
+.env-c65{width:calc(229*var(--mm));height:calc(114*var(--mm))}
+.env-n4{width:calc(205*var(--mm));height:calc(90*var(--mm))}
+.env .ret{position:absolute;left:calc(13*var(--mm));bottom:calc(13*var(--mm));font-family:var(--mono);
+  font-size:calc(1.95*var(--mm));line-height:1.9;letter-spacing:.07em;color:rgba(10,10,10,.6)}
+.env .ret b{display:block;font-family:var(--wordmark);font-weight:400;font-size:calc(4.3*var(--mm));
+  color:var(--ink);margin-bottom:calc(1.5*var(--mm))}
+.env .stamp{position:absolute;right:calc(13*var(--mm));top:calc(47*var(--mm));width:calc(25*var(--mm));
+  height:calc(29*var(--mm));border:1px dashed rgba(10,10,10,.22)}
+.env .em{position:absolute;left:calc(13*var(--mm));top:calc(48*var(--mm));display:flex;align-items:flex-end;gap:calc(1.2*var(--mm))}
+.env .em i{display:block;background:var(--ink);width:calc(2.1*var(--mm))}
+.env.fr .ret b{color:var(--rouge)}
+.env.jp .sealsm{position:absolute;left:calc(13*var(--mm));top:calc(15*var(--mm));width:calc(8.5*var(--mm));
+  height:calc(8.5*var(--mm));border:calc(.7*var(--mm)) solid var(--shu)}
+
+/* ======== bookmarks — one per idiom ======== */
+.bm{width:calc(55*var(--mm));height:calc(210*var(--mm))}
+.bm-in{position:absolute;inset:0;display:flex;flex-direction:column}
+.name-cell{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
+.name{writing-mode:vertical-rl;transform:rotate(180deg);font-family:var(--wordmark);font-weight:400;
+  font-size:calc(8.2*var(--mm));letter-spacing:.045em;line-height:1}
+
+/* A idiom: ledger + docket foot, colour as a hairline edge */
+.bm-a .ledger{position:absolute;inset:0;
+  background:repeating-linear-gradient(to bottom,transparent 0,transparent calc(6*var(--mm) - 1px),rgba(10,10,10,.05) calc(6*var(--mm)))}
+.bm-a .edge{position:absolute;left:0;right:0;top:0;height:calc(4*var(--mm))}
+.bm-a .bm-in{padding:calc(9*var(--mm)) calc(6*var(--mm)) calc(7*var(--mm))}
+.bm-a .cap{font-family:var(--label);font-weight:500;font-size:calc(1.85*var(--mm));letter-spacing:.16em;
+  text-transform:uppercase;text-align:center;color:rgba(10,10,10,.55);position:relative}
+.bm-a .dk{border:1px solid var(--ink);font-family:var(--mono);font-size:calc(1.6*var(--mm));position:relative;background:var(--paper)}
+.bm-a .dk div{display:flex;height:calc(5.4*var(--mm));align-items:center;border-bottom:1px solid rgba(10,10,10,.28)}
+.bm-a .dk div:last-child{border-bottom:0}
+.bm-a .dk span{width:calc(17*var(--mm));height:100%;display:flex;align-items:center;padding-left:calc(1.6*var(--mm));
+  letter-spacing:.08em;color:rgba(10,10,10,.5);border-right:1px solid rgba(10,10,10,.28);text-transform:uppercase}
+.bm-a .dk em{font-style:normal;padding-left:calc(1.8*var(--mm));color:var(--ink)}
+
+/* B idiom: framed, centred, rouge */
+.bm-b .frame{position:absolute;inset:calc(4*var(--mm));border:1px solid var(--ink)}
+.bm-b .frame::after{content:'';position:absolute;inset:calc(1.3*var(--mm));border:calc(.4*var(--mm)) solid var(--rouge)}
+.bm-b .bm-in{padding:calc(11*var(--mm)) calc(9*var(--mm))}
+.bm-b .cap{font-family:var(--label);font-weight:600;font-size:calc(1.8*var(--mm));letter-spacing:.2em;
+  text-transform:uppercase;text-align:center;color:var(--rouge);position:relative}
+.bm-b .no{font-family:var(--mono);font-size:calc(1.7*var(--mm));letter-spacing:.14em;text-align:center;
+  color:rgba(10,10,10,.5);position:relative;border-top:1px solid var(--ink);padding-top:calc(2.6*var(--mm))}
+
+/* C idiom: seal, hairline, air */
+.bm-c .bm-in{padding:calc(10*var(--mm)) calc(7*var(--mm))}
+.bm-c .sealsm{width:calc(8*var(--mm));height:calc(8*var(--mm));border:calc(.6*var(--mm)) solid var(--shu);margin:0 auto}
+.bm-c .hair{width:calc(14*var(--mm));border-top:1px solid var(--ink);margin:calc(5*var(--mm)) auto 0}
+.bm-c .no{font-family:var(--mono);font-size:calc(1.7*var(--mm));letter-spacing:.18em;text-align:center;color:rgba(10,10,10,.45)}
+
+/* ======== selected: foolscap family ======== */
+.fam{display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start}
+.slip{width:calc(203*var(--mm));height:calc(110*var(--mm));padding:calc(13*var(--mm)) calc(18*var(--mm))}
+.slip .wm{font-family:var(--wordmark);font-size:calc(6*var(--mm));line-height:1}
+.slip .wm small{display:block;font-family:var(--label);font-weight:500;font-size:calc(2*var(--mm));
+  letter-spacing:.28em;text-transform:uppercase;color:var(--brown);margin-top:calc(1.5*var(--mm))}
+.slip .wc{font-family:var(--serif);font-style:italic;font-size:calc(4.4*var(--mm));color:rgba(10,10,10,.5);
+  position:absolute;left:calc(18*var(--mm));bottom:calc(24*var(--mm))}
+.slip .ft{position:absolute;left:calc(18*var(--mm));right:calc(18*var(--mm));bottom:calc(11*var(--mm));
+  border-top:1px solid var(--rule);padding-top:calc(2.6*var(--mm));display:flex;justify-content:space-between;
+  font-family:var(--mono);font-size:calc(1.85*var(--mm));letter-spacing:.09em;color:rgba(10,10,10,.5)}
+.card{width:calc(125*var(--mm));height:calc(75*var(--mm));padding:calc(8*var(--mm)) calc(9*var(--mm))}
+.card .ruled{position:absolute;left:0;right:0;top:calc(16*var(--mm));bottom:0;
+  background:repeating-linear-gradient(to bottom,transparent 0,transparent calc(5.4*var(--mm) - 1px),rgba(10,10,10,.07) calc(5.4*var(--mm)))}
+.card .vr{position:absolute;top:0;bottom:0;left:calc(26*var(--mm));border-left:1px solid rgba(180,35,42,.25)}
+.card .cn{font-family:var(--mono);font-size:calc(2.2*var(--mm));line-height:1.5;color:var(--ink);position:relative}
+.card .entry{position:relative;margin-left:calc(17*var(--mm));font-family:var(--serif);
+  font-size:calc(2.5*var(--mm));line-height:calc(5.4*var(--mm));color:rgba(10,10,10,.55);margin-top:calc(1*var(--mm))}
+.card .hole{position:absolute;bottom:calc(3*var(--mm));left:50%;transform:translateX(-50%);
+  width:calc(5*var(--mm));height:calc(5*var(--mm));border:1px solid rgba(10,10,10,.3);border-radius:50%}
+.lab{width:calc(60*var(--mm));height:calc(30*var(--mm));padding:calc(4.5*var(--mm)) calc(5*var(--mm))}
+.lab .t{font-family:var(--label);font-weight:600;font-size:calc(2*var(--mm));letter-spacing:.16em;
+  text-transform:uppercase;border-bottom:1px solid var(--ink);padding-bottom:calc(1.6*var(--mm))}
+.lab .g{margin-top:calc(2.4*var(--mm));font-family:var(--mono);font-size:calc(1.75*var(--mm));
+  line-height:2;color:rgba(10,10,10,.55)}
+
+/* ======== spec ======== */
+.spec{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin-top:6px}
+.spec th{text-align:left;font-weight:500;color:var(--brown);border-bottom:1px solid #3a3a40;
+  padding:0 16px 10px 0;letter-spacing:.1em;text-transform:uppercase;font-size:10px}
+.spec td{padding:11px 16px 11px 0;border-bottom:1px solid #333338;color:#c9c6c1;vertical-align:top;line-height:1.55}
+.spec td:first-child{color:#f0eee9;white-space:nowrap}
+.spec .n{color:var(--brown)}
+
+@media(max-width:1180px){.compare{grid-template-columns:1fr;gap:60px}}
+@media print{
+  :root{--mm:1mm}
+  body{background:#fff;padding:0}
+  .masthead,.sec-head,.lbl,.why,.note,.spec,nav.jump,.col-head{display:none}
+  .sheet,.env,.bm{box-shadow:none;page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <p class="kicker">Hudson Street Library · New York · Design comps · August 2026</p>
+  <h1>Administrative Stationery</h1>
+  <p>Letterhead, envelope, and a collection bookmark series in three regional office-paper
+  traditions — British, French, and Japanese. Every sheet on this page is drawn at one shared
+  scale, so the size differences you see are real. Section B develops the selected direction
+  into a full family. The page prints at true 1:1.</p>
+  <nav class="jump">
+    <a href="#compare">A · Compare all three</a>
+    <a href="#selected">B · Foolscap, developed</a>
+    <a href="#spec">C · Production spec</a>
+  </nav>
+</header>
+
+<!-- ============ COMPARE ============ -->
+<div class="sec-head" id="compare">
+  <span class="n">A</span><h2>All three, one scale</h2>
+  <span class="meta">letterhead · envelope · bookmark</span>
+</div>
+
+<div class="compare">
+
+  <!-- ---------- A FOOLSCAP ---------- -->
+  <div>
+    <div class="col-head">
+      <h3>Foolscap</h3>
+      <div class="o">British administrative<br>203 × 330 mm · 1 ink</div>
+    </div>
+    <div class="stack">
+      <div class="sheet fool">
+        <div class="ledger"></div><div class="gutter"></div>
+        <div class="fool-head">
+          <div style="display:flex;align-items:flex-end">
+            <div class="mark">
+              <i style="height:calc(7.4*var(--mm))"></i><i style="height:calc(9.6*var(--mm))"></i>
+              <i style="height:calc(8.4*var(--mm))"></i>
+              <i style="height:calc(8.8*var(--mm));transform:rotate(9deg);transform-origin:bottom left"></i>
+            </div>
+            <div class="wm">Hudson Street Library<small>Rare books · Photobooks · Artists' publications</small></div>
+          </div>
+          <div class="est">EST. MMXXIV<br>NEW YORK</div>
+        </div>
+        <div class="docket">
+          <div><span>Ref.</span></div><div><span>Date</span></div>
+          <div><span>Fol.</span></div><div><span>Acc. no.</span></div>
+        </div>
+        <div class="fool-body">
+          <p class="to">To the attention of —</p>
+          <p>The accession described overleaf has been catalogued and shelved under the collection
+          grouping noted in the docket opposite. Condition report and provenance are held on file.</p>
+        </div>
+        <div class="fool-foot"><span>HUDSONSTREETLIBRARY.ORG</span><span>FOLIO 1 OF 1</span></div>
+      </div>
+      <p class="lbl">Letterhead · foolscap folio 203 × 330</p>
+
+      <div class="env env-dl">
+        <div class="flap"></div>
+        <div class="em">
+          <i style="height:calc(6*var(--mm))"></i><i style="height:calc(7.8*var(--mm))"></i>
+          <i style="height:calc(6.8*var(--mm))"></i>
+          <i style="height:calc(7.2*var(--mm));transform:rotate(9deg);transform-origin:bottom left"></i>
+        </div>
+        <div class="ret"><b>Hudson Street Library</b>Hudson Street, New York<br>HUDSONSTREETLIBRARY.ORG</div>
+        <div class="stamp"></div>
+      </div>
+      <p class="lbl">Envelope · DL banker 110 × 220</p>
+
+      <div class="bm bm-a">
+        <div class="ledger"></div>
+        <div class="edge" style="background:var(--teal)"></div>
+        <div class="bm-in">
+          <div class="cap">Hudson St. Library</div>
+          <div class="name-cell"><span class="name">Magazines</span></div>
+          <div class="dk">
+            <div><span>Reg.</span><em>01</em></div>
+            <div><span>Titles</span><em>151</em></div>
+          </div>
+        </div>
+      </div>
+      <p class="lbl">Bookmark · 55 × 210</p>
+    </div>
+    <p class="why">Reads as a working document, not a brochure. The ruling and the docket are
+    functional — they get written on. Strongest fit for a library whose whole subject is
+    the record.</p>
+  </div>
+
+  <!-- ---------- B TELLIÈRE ---------- -->
+  <div>
+    <div class="col-head">
+      <h3>Demi-Tellière</h3>
+      <div class="o">French bureau<br>220 × 340 mm · black + rouge</div>
+    </div>
+    <div class="stack">
+      <div class="sheet tell">
+        <div class="frame"></div>
+        <div class="wm">Hudson Street Library</div>
+        <div class="sub">Bibliothèque · New York</div>
+        <div class="rule2"></div>
+        <div class="addr">HUDSON STREET · NEW YORK<br>SUR RENDEZ-VOUS</div>
+        <div class="no">N°&nbsp;______<b>DOSSIER</b></div>
+        <div class="tell-body">
+          <span class="obj">Objet — Notice d'acquisition</span>
+          <p>La pièce décrite ci-dessous a été portée au registre sous la cote indiquée. Le présent
+          bordereau tient lieu de récépissé et accompagne l'ouvrage jusqu'à son classement.</p>
+        </div>
+        <div class="tell-foot">REGISTRE DES ACQUISITIONS · FOLIO ______ · LE ______</div>
+      </div>
+      <p class="lbl">Letterhead · demi-Tellière 220 × 340</p>
+
+      <div class="env env-c65 fr">
+        <div class="flap"></div>
+        <div class="ret"><b>Hudson Street Library</b>Hudson Street · New York<br>HUDSONSTREETLIBRARY.ORG</div>
+        <div class="stamp"></div>
+      </div>
+      <p class="lbl">Envelope · C6/5 114 × 229</p>
+
+      <div class="bm bm-b">
+        <div class="frame"></div>
+        <div class="bm-in">
+          <div class="cap">Hudson St. Library</div>
+          <div class="name-cell"><span class="name">Magazines</span></div>
+          <div class="no">N° 01 · 151 TITRES</div>
+        </div>
+      </div>
+      <p class="lbl">Bookmark · 55 × 210</p>
+    </div>
+    <p class="why">The most formal of the three, and the most decorative. The double frame is
+    handsome but it fights the artist-book material — it says <i>ministry</i> more than
+    <i>library</i>.</p>
+  </div>
+
+  <!-- ---------- C SHIROKU ---------- -->
+  <div>
+    <div class="col-head">
+      <h3>Shiroku</h3>
+      <div class="o">Japanese · JIS B5<br>182 × 257 mm · black + 朱</div>
+    </div>
+    <div class="stack">
+      <div class="sheet shi">
+        <div class="genko"></div>
+        <div class="shi-head">
+          <div>
+            <div class="wm"><em>Hudson Street</em><em>Library</em></div>
+            <div class="en">New York</div>
+          </div>
+          <div class="seal">
+            <div class="r">
+              <i style="height:calc(4.4*var(--mm))"></i><i style="height:calc(5.8*var(--mm))"></i>
+              <i style="height:calc(5*var(--mm))"></i>
+            </div>
+          </div>
+        </div>
+        <div class="hair"></div>
+        <div class="shi-body">
+          <p>The volume noted opposite has been entered in the register and shelved. Enquiries
+          and appointments by correspondence.</p>
+        </div>
+        <div class="vert">架蔵番号 ── 受入</div>
+        <div class="shi-foot"><span>HUDSONSTREETLIBRARY.ORG</span><span>便箋 B5</span></div>
+      </div>
+      <p class="lbl">Letterhead · JIS B5 182 × 257</p>
+
+      <div class="env env-n4 jp">
+        <div class="flap"></div><div class="sealsm"></div>
+        <div class="ret"><b>Hudson Street Library</b>Hudson Street · New York</div>
+        <div class="stamp"></div>
+      </div>
+      <p class="lbl">Envelope · Naga 4 長形4号 90 × 205</p>
+
+      <div class="bm bm-c">
+        <div class="bm-in">
+          <div class="sealsm"></div>
+          <div class="name-cell"><span class="name">Magazines</span></div>
+          <div><div class="hair"></div><p class="no" style="margin:calc(3*var(--mm)) 0 0">01 · 151</p></div>
+        </div>
+      </div>
+      <p class="lbl">Bookmark · 55 × 210</p>
+    </div>
+    <p class="why">The most beautiful object of the three and the least useful sheet — B5 is
+    small for correspondence, and the restraint leaves nowhere to write. Best held in reserve
+    for a limited run or an exhibition piece.</p>
+  </div>
+</div>
+
+<!-- ============ SELECTED ============ -->
+<div class="sec-head" id="selected">
+  <span class="n">B</span><h2>Selected — Foolscap, developed</h2>
+  <span class="meta">full administrative family · 1 ink + collection accent</span>
+</div>
+<p class="note" style="margin-bottom:34px">The family extends from one sheet. The compliment
+slip is <b>exactly one third of the letterhead</b> (203 × 110), so it gangs 3-up on the same
+stock with zero waste and slides flat into the DL envelope. The catalogue card is the true
+library standard at 125 × 75 mm. Bookmarks stay 55 × 210, 5-up on A4 — the colour hairline at
+the head is the only plate that changes between collections, so the whole series is one press
+run plus five ink swaps.</p>
+
+<div class="fam">
+  <figure style="margin:0">
+    <div class="sheet slip">
+      <div class="wm">Hudson Street Library<small>Rare books · Photobooks · Artists' publications</small></div>
+      <div class="wc">With compliments</div>
+      <div class="ft"><span>HUDSON STREET · NEW YORK</span><span>HUDSONSTREETLIBRARY.ORG</span></div>
+    </div>
+    <p class="lbl">Compliment slip · 203 × 110 — one third of the letterhead</p>
+  </figure>
+
+  <figure style="margin:0">
+    <div class="sheet card">
+      <div class="ruled"></div><div class="vr"></div>
+      <div class="cn">CRA<br>1971</div>
+      <div class="entry">Craven, Ann.<br>Painted Time: (2020–2024) — Farnsworth Art
+      Museum, 2025. 128 p.; 29 cm.<br>1. Painting. 2. Exhibition catalogues.</div>
+      <div class="hole"></div>
+    </div>
+    <p class="lbl">Catalogue card · 125 × 75 (library standard)</p>
+  </figure>
+
+  <figure style="margin:0">
+    <div class="sheet lab">
+      <div class="t">Hudson Street Library</div>
+      <div class="g">ACC. NO. ________________<br>COLL. ___________________</div>
+    </div>
+    <p class="lbl">Accession label · 60 × 30, gang 24-up</p>
+  </figure>
+</div>
+
+<div style="display:flex;gap:calc(5*var(--mm));align-items:flex-end;margin-top:52px;flex-wrap:wrap">
+  <div class="bm bm-a"><div class="ledger"></div><div class="edge" style="background:var(--teal)"></div>
+    <div class="bm-in"><div class="cap">Hudson St. Library</div>
+      <div class="name-cell"><span class="name">Magazines</span></div>
+      <div class="dk"><div><span>Reg.</span><em>01</em></div><div><span>Titles</span><em>151</em></div></div></div></div>
+
+  <div class="bm bm-a"><div class="ledger"></div><div class="edge" style="background:var(--ink)"></div>
+    <div class="bm-in"><div class="cap">Hudson St. Library</div>
+      <div class="name-cell"><span class="name">Photography</span></div>
+      <div class="dk"><div><span>Reg.</span><em>02</em></div><div><span>Titles</span><em>129</em></div></div></div></div>
+
+  <div class="bm bm-a"><div class="ledger"></div><div class="edge" style="background:var(--slate)"></div>
+    <div class="bm-in"><div class="cap">Hudson St. Library</div>
+      <div class="name-cell"><span class="name">Artists' Books</span></div>
+      <div class="dk"><div><span>Reg.</span><em>03</em></div><div><span>Titles</span><em>38</em></div></div></div></div>
+
+  <div class="bm bm-a"><div class="ledger"></div><div class="edge" style="background:var(--brown)"></div>
+    <div class="bm-in"><div class="cap">Hudson St. Library</div>
+      <div class="name-cell"><span class="name">Collage</span></div>
+      <div class="dk"><div><span>Reg.</span><em>04</em></div><div><span>Titles</span><em>75</em></div></div></div></div>
+
+  <div class="bm bm-a"><div class="ledger"></div><div class="edge" style="background:var(--shu)"></div>
+    <div class="bm-in"><div class="cap">Hudson St. Library</div>
+      <div class="name-cell"><span class="name">Queer Culture</span></div>
+      <div class="dk"><div><span>Reg.</span><em>05</em></div><div><span>Titles</span><em>—</em></div></div></div></div>
+</div>
+<p class="lbl" style="margin-top:16px">Collection bookmark series · 55 × 210 · the shelf</p>
+
+<!-- ============ SPEC ============ -->
+<div class="sec-head" id="spec">
+  <span class="n">C</span><h2>Production specification</h2>
+  <span class="meta">Foolscap family · uncoated · no die-cutting</span>
+</div>
+<table class="spec">
+  <thead><tr><th>Item</th><th>Trim</th><th>Stock</th><th>Inks</th><th>Imposition &amp; note</th></tr></thead>
+  <tbody>
+    <tr><td>Letterhead</td><td class="n">203 × 330 mm</td><td>100 gsm uncoated wove, natural white</td>
+      <td>1 — black</td><td>1-up from SRA3. <b>The one premium here</b> — foolscap wastes ~35% of the parent sheet. Falls back to A4 unchanged if you'd rather not pay for the size.</td></tr>
+    <tr><td>Second sheet</td><td class="n">203 × 330 mm</td><td>as above</td><td>1</td>
+      <td>Mark and footer only, no docket.</td></tr>
+    <tr><td>Compliment slip</td><td class="n">203 × 110 mm</td><td>as above, or 120 gsm</td><td>1</td>
+      <td><b>3-up per letterhead sheet, zero waste.</b> Runs on the same forme.</td></tr>
+    <tr><td>Envelope</td><td class="n">110 × 220 mm (DL)</td><td>100 gsm wove, gummed banker</td><td>1</td>
+      <td>Stock envelope overprinted. No conversion, no minimum tooling.</td></tr>
+    <tr><td>Catalogue card</td><td class="n">125 × 75 mm</td><td>180 gsm card, uncoated</td><td>1 + blind rule</td>
+      <td>16-up on SRA3. Punch is optional and adds a step — skip it unless the cards go in a drawer.</td></tr>
+    <tr><td>Accession label</td><td class="n">60 × 30 mm</td><td>80 gsm gummed or self-adhesive</td><td>1</td>
+      <td>24-up on A4 sheet stock, guillotined.</td></tr>
+    <tr><td>Bookmarks</td><td class="n">55 × 210 mm</td><td>300 gsm uncoated board, matte</td><td>2 — black + accent</td>
+      <td><b>5-up on A4, 10-up on SRA3.</b> Straight guillotine cuts, no die, no bleed (art inset 6 mm). Only the head hairline changes per collection.</td></tr>
+  </tbody>
+</table>
+<p class="note" style="margin-top:32px"><b>Why odd sizes stay cheap:</b> the envelope is a stock
+size bought blank and overprinted; the compliment slip and bookmarks gang to whole numbers on
+standard parent sheets with straight cuts. One or two spot inks on uncoated throughout — no
+coatings, no varnish, no die-cutting, nothing needing a bleed. The only true premium is the
+foolscap trim itself.</p>
+
+</div>
+</body>
+</html>
