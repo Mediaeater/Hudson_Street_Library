@@ -142,14 +142,18 @@ describe('CSV Security', function () {
       assert.strictEqual(result, "'=cmd|'/C calc'!A0");
     });
 
-    it('should strip pipe characters in non-prefixed strings', function () {
+    it('should keep pipe characters in non-prefixed strings', function () {
+      // Pipes are only dangerous inside a formula-prefixed cell (DDE); in
+      // ordinary text they are inert and must survive (e.g. title separators).
       const result = CSVHandler.sanitizeCSVField("data|with|pipes");
-      assert.strictEqual(result, 'datawithpipes');
+      assert.strictEqual(result, 'data|with|pipes');
     });
 
-    it('should strip semicolons in non-prefixed strings', function () {
-      const result = CSVHandler.sanitizeCSVField("HYPERLINK(\"http://evil\";\"click\")");
-      assert.strictEqual(result, 'HYPERLINK("http://evil""click")');
+    it('should keep semicolons in non-prefixed strings', function () {
+      // Semicolons in prose (notes, descriptions) are inert without a formula
+      // prefix; stripping them mangled catalogue text.
+      const result = CSVHandler.sanitizeCSVField("Two volumes; folded poster; edition of 50.");
+      assert.strictEqual(result, 'Two volumes; folded poster; edition of 50.');
     });
 
     it('should not modify safe strings', function () {
@@ -225,16 +229,16 @@ describe('CSV Security', function () {
       assert.strictEqual(result.record.title, "'=1+1");
     });
 
-    it('should strip pipes from mid-string fields during validation', function () {
+    it('should keep mid-string pipes and semicolons during validation', function () {
       const record = {
         id: '5',
         title: 'Book Title',
         author_full_name: 'Author',
-        description: 'text|with|pipes'
+        description: 'first point; second point | aside'
       };
 
       const result = CSVHandler.validateAndCleanRecord(record, 5);
-      assert.strictEqual(result.record.description, 'textwithpipes');
+      assert.strictEqual(result.record.description, 'first point; second point | aside');
     });
 
     it('should preserve existing functionality for null-like values', function () {
