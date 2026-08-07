@@ -396,14 +396,11 @@ class CSVHandler {
         const formulaPrefixes = ['=', '+', '-', '@', '\t', '\r', '\n'];
 
         if (formulaPrefixes.some(char => value.startsWith(char))) {
-            // Prefix with single quote to force text interpretation
+            // Prefix with single quote to force text interpretation. This alone
+            // neutralizes DDE/formula payloads like =cmd|'/C calc'!A0 — pipes
+            // and semicolons are only dangerous inside a formula-prefixed cell,
+            // so ordinary prose keeps its punctuation.
             return "'" + value;
-        }
-
-        // Strip pipe and semicolon characters used in DDE/command injection
-        // payloads like =cmd|'/C calc'!A0 or =HYPERLINK("http://evil";...)
-        if (value.includes('|') || value.includes(';')) {
-            return value.replace(/[|;]/g, '');
         }
 
         return value;
