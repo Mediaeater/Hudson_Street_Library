@@ -1,0 +1,446 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> | Hudson Street Library</title>
+    
+    <link rel="stylesheet" href="/assets/css/tailwind.css">
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="api-catalog" type="application/linkset+json" href="/.well-known/api-catalog">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Hudson Street Library",
+  "url": "https://hudsonstreetlibrary.com",
+  "logo": "https://hudsonstreetlibrary.com/assets/images/logo.png",
+  "description": "A curated collection of photography, art, and design books"
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "",
+  "url": "https://hudsonstreetlibrary.comcollections/{{ collectionConfig.slug }}.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Hudson Street Library",
+    "url": "https://hudsonstreetlibrary.com"
+  }
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://hudsonstreetlibrary.com/"
+    }
+  ]
+}
+</script>
+
+</head>
+<body class="min-h-screen bg-neutral-50 text-neutral-900">
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+
+<style>
+    .site-header {
+        font-family: 'Literata', Georgia, serif;
+    }
+    .site-header .site-logo {
+        font-family: 'Crimson Pro', Georgia, serif;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+    }
+    .site-header .nav-link {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+        font-weight: 400;
+        letter-spacing: 0.005em;
+    }
+    .site-header .nav-link[aria-current="page"],
+    .site-header .nav-link-active {
+        font-weight: 600;
+    }
+    .site-header #mobile-nav-menu a {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+    }
+
+    /*
+      Mobile menu uses self-contained, component-scoped CSS rather than
+      Tailwind utilities, so its layout can't be broken by global stylesheet
+      changes. This originally fixed an invisible-sliver bug: design-system.css
+      ships an unlayered `* { padding: 0 }` reset that beats Tailwind's layered
+      utilities and collapsed the old icon-only button. The self-contained
+      styling is kept deliberately.
+    */
+    .site-header .menu-toggle { display: none; }
+    .site-header .mobile-nav { display: none; }
+
+    @media (max-width: 767px) {
+        .site-header .menu-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.45rem 0.7rem;
+            border: 1px solid rgba(36, 61, 35, 0.3);
+            border-radius: 0.5rem;
+            background: #ffffff;
+            color: #243d23;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .site-header .menu-toggle:hover { background: #f0f5f0; }
+        .site-header .menu-toggle:focus-visible {
+            outline: 2px solid #243d23;
+            outline-offset: 2px;
+        }
+        .site-header .menu-toggle svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+            flex-shrink: 0;
+        }
+        .site-header .menu-toggle .menu-toggle-label {
+            font-family: 'Literata', Georgia, serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .site-header .menu-toggle .icon-close { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-open { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-close { display: block; }
+
+        .site-header .mobile-nav.is-open {
+            display: flex;
+            flex-direction: column;
+        }
+        .site-header .mobile-nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            padding: 0.5rem;
+            z-index: 40;
+        }
+        .site-header .mobile-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            color: #404040;
+            text-decoration: none;
+        }
+        .site-header .mobile-nav a:hover {
+            background: #f0f5f0;
+            color: #1b2e1a;
+        }
+    }
+</style>
+
+<header class="site-header sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="site-logo text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link ">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                <a href="/collections/recently_catalogued.html"
+                   class="nav-link ">
+                   Catalogued
+                </a>
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Recent
+                </a>
+                <a href="/discover.html"
+                   class="nav-link ">
+                   Discover
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <!-- Icon + visible "Menu" label so the control is obvious on mobile.
+                 Sizing/visibility come from the unlayered styles above, not
+                 Tailwind utilities (see note in the <style> block). Icons are
+                 inline SVGs so the menu works on pages without an icon font. -->
+            <button class="menu-toggle"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <svg class="icon-open" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg class="icon-close" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+                <span class="menu-toggle-label">Menu</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu" class="mobile-nav" aria-label="Mobile navigation">
+        <a href="/#about">About</a>
+        <a href="/collection-explore.html">Collections</a>
+        <a href="/static-demo/">Search</a>
+        <a href="/#publications">Publications</a>
+        <a href="/news.html">News</a>
+        <a href="/collections/recently_catalogued.html">Recently Catalogued</a>
+        <a href="/collections/recently_added.html">Recently Added</a>
+        <a href="/discover.html">Discover</a>
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const button = document.querySelector('button[aria-controls="mobile-nav-menu"]');
+    const willOpen = !menu.classList.contains('is-open');
+
+    menu.classList.toggle('is-open', willOpen);
+    // Icon swap (hamburger <-> X) is driven by aria-expanded in CSS.
+    if (button) button.setAttribute('aria-expanded', String(willOpen));
+}
+</script>
+
+
+<main>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+        
+        
+        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
+            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">TISSUE Magazine</h1>
+            <div class="line-divider inline-block"></div>
+            
+                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Independent art and media magazine published from 2011 to 2022, devoted — in its own words — to life and death. Across five print issues, TISSUE mixed photography, nightlife, sexuality, and contemporary culture with a restless, collaged design language. The library holds the complete print run, N°1 through N°5.</p>
+            
+            
+                <div class="mt-6 flex justify-center gap-4">
+                    <a href="https://tissuemagazine.com/" target="_blank" class="text-sm text-primary-700 hover:underline">
+                        <i class="fas fa-external-link-alt mr-1"></i> tissuemagazine.com
+                    </a>
+                </div>
+            
+        </div>
+        
+
+        
+        
+        
+
+        
+            
+                
+                
+<section class="mb-16">
+    <div class="volume-header pl-4 mb-8">
+        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
+        
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        
+            
+<a href="/books/tissue_tissue-magazine-n1_1774/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/magazines/tissue/tissue-1.jpg" alt="Tissue Magazine N°1" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tissue Magazine</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tissue Magazine N°1</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2011</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/tissue_tissue-magazine-n2_1775/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/magazines/tissue/tissue-2.jpg" alt="Tissue Magazine N°2" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tissue Magazine</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tissue Magazine N°2</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2012</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/tissue_tissue-magazine-n3_1776/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/magazines/tissue/tissue-3.jpg" alt="Tissue Magazine N°3" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tissue Magazine</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tissue Magazine N°3</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2015</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/tissue_tissue-magazine-n4_1777/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/magazines/tissue/tissue-4.jpg" alt="Tissue Magazine N°4" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tissue Magazine</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tissue Magazine N°4</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2014</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/tissue_tissue-magazine-n5_1778/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/magazines/tissue/tissue-5.jpg" alt="Tissue Magazine N°5" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tissue Magazine</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tissue Magazine N°5</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2014</p>
+        
+    </div>
+</a>
+
+        
+    </div>
+</section>
+
+            
+        
+    </div>
+</main>
+
+
+
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
+        <p>© 2026 Hudson Street Library · <a href="/colophon.html" class="underline hover:text-neutral-900">Colophon</a></p>
+    </div>
+</footer>
+
+<script>
+    // Mobile Menu Toggle Logic
+    const mobileMenuButton = document.querySelector('button.md\\:hidden');
+    const mobileNavMenu = document.getElementById('mobile-nav-menu');
+
+    if (mobileMenuButton && mobileNavMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+            mobileNavMenu.classList.toggle('hidden');
+            mobileNavMenu.classList.toggle('flex');
+            const icon = mobileMenuButton.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            }
+        });
+    }
+
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            if (this.hash) {
+               const targetElement = document.querySelector(this.hash);
+               if (targetElement) {
+                    e.preventDefault();
+                    const headerOffset = document.querySelector('header')?.offsetHeight || 70;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                    if (mobileMenuButton && mobileMenuButton.getAttribute('aria-expanded') === 'true') {
+                         mobileMenuButton.click();
+                    }
+               }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
