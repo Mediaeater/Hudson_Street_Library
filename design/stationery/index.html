@@ -10,8 +10,10 @@
 <style>
 :root{
   --mm:1.55px;
-  --paper:#F8F7F4; --ink:#0A0A0A; --brown:#8B7355; --teal:#0f766e;
-  --rouge:#B4232A; --shu:#C9151E; --slate:#2F4858;
+  --paper:#F8F7F4; --ink:#0A0A0A; --brown:#8B7355;
+  /* the second ink. Teal-900 — the same green the mark is set in on the
+     site (site-header.njk, .site-logo). Print does not get its own colour. */
+  --seal:#134E4A; --slate:#2F4858;
   --rule:rgba(10,10,10,.14);
   --serif:'Literata',Georgia,serif;
   --wordmark:'Crimson Pro',Georgia,serif;
@@ -40,7 +42,7 @@ nav.jump a:hover{border-bottom-color:var(--brown)}
 .lbl{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;color:#7d7a75;text-transform:uppercase;margin-top:10px}
 figure{margin:0}
 
-.sheet,.env,.bm{background:var(--paper);color:var(--ink);position:relative;overflow:hidden;
+.sheet,.env{background:var(--paper);color:var(--ink);position:relative;overflow:hidden;
   box-shadow:0 14px 34px -14px rgba(0,0,0,.7)}
 
 /* ============================================================
@@ -48,10 +50,10 @@ figure{margin:0}
    Every piece of stationery uses this and nothing else.
    ============================================================ */
 .seal{width:calc(var(--s)*var(--mm));height:calc(var(--s)*var(--mm));
-  border:calc(var(--s)*var(--mm)*.058) solid var(--shu);flex:none;
+  border:calc(var(--s)*var(--mm)*.058) solid var(--seal);flex:none;
   display:flex;align-items:center;justify-content:center}
 .seal .r{display:flex;align-items:flex-end;gap:calc(var(--s)*var(--mm)*.05)}
-.seal i{display:block;background:var(--shu);width:calc(var(--s)*var(--mm)*.10)}
+.seal i{display:block;background:var(--seal);width:calc(var(--s)*var(--mm)*.10)}
 .seal i:nth-child(1){height:calc(var(--s)*var(--mm)*.36)}
 .seal i:nth-child(2){height:calc(var(--s)*var(--mm)*.43)}
 .seal i:nth-child(3){height:calc(var(--s)*var(--mm)*.395)}
@@ -68,7 +70,7 @@ figure{margin:0}
 .marks{display:flex;gap:52px;align-items:flex-end;flex-wrap:wrap;
   background:#2b2b30;border:1px solid #37373d;padding:38px 40px}
 .marks .item{text-align:center}
-.marks .item .box{background:var(--paper);padding:20px;display:flex;align-items:center;justify-content:center}
+.marks .item .box{background:var(--paper);color:var(--ink);padding:20px;display:flex;align-items:center;justify-content:center}
 .marks .cap{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:#8a8782;margin-top:12px;line-height:1.7}
 .marks .cap b{display:block;color:#e8e6e1;font-weight:500;letter-spacing:.16em}
 .rules{margin-left:auto;max-width:34ch;font-size:13.5px;line-height:1.7;color:#a8a5a0;border-left:1px solid #3d3d44;padding-left:30px}
@@ -77,137 +79,21 @@ figure{margin:0}
 .rules b{color:#e8e6e1;font-weight:600}
 
 /* ============================================================
-   A · the three directions as considered
-   ============================================================ */
-.compare{display:grid;grid-template-columns:repeat(3,1fr);gap:38px;align-items:start}
-.col-head{border-top:2px solid var(--brown);padding-top:12px;margin-bottom:22px}
-.col-head h3{font-family:var(--wordmark);font-weight:400;font-size:21px;margin:0 0 6px}
-.col-head .o{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:#8a8782;text-transform:uppercase;line-height:1.8}
-.stack{display:flex;flex-direction:column;gap:20px;align-items:flex-start}
-.why{font-size:13px;line-height:1.65;color:#a8a5a0;margin-top:18px;border-top:1px solid #37373d;padding-top:14px}
-
-.fool{width:calc(203*var(--mm));height:calc(330*var(--mm));padding:calc(16*var(--mm)) calc(18*var(--mm))}
-.fool .ledger{position:absolute;left:0;right:0;bottom:0;top:calc(46*var(--mm));
-  background:repeating-linear-gradient(to bottom,transparent 0,transparent calc(6*var(--mm) - 1px),rgba(10,10,10,.055) calc(6*var(--mm)))}
-.fool .gutter{position:absolute;top:0;bottom:0;left:calc(18*var(--mm));border-left:1px solid rgba(180,35,42,.22)}
-.fool-head{display:flex;align-items:flex-end;justify-content:space-between;position:relative;
-  border-bottom:calc(.8*var(--mm)) solid var(--ink);padding-bottom:calc(3*var(--mm))}
-.mark{display:flex;align-items:flex-end;gap:calc(1.4*var(--mm))}
-.mark i{display:block;background:var(--ink);width:calc(2.6*var(--mm))}
-.fool .wm{font-family:var(--wordmark);font-size:calc(7.4*var(--mm));line-height:.9;margin-left:calc(3*var(--mm))}
-.fool .wm small{display:block;font-family:var(--label);font-weight:500;font-size:calc(2.2*var(--mm));
-  letter-spacing:.3em;text-transform:uppercase;color:var(--brown);margin-top:calc(1.7*var(--mm))}
-.fool .est{text-align:right;font-family:var(--mono);font-size:calc(2.05*var(--mm));line-height:1.85;color:rgba(10,10,10,.6)}
-.docket{position:absolute;top:calc(52*var(--mm));right:calc(18*var(--mm));width:calc(52*var(--mm));
-  border:1px solid var(--ink);font-family:var(--mono)}
-.docket div{display:flex;border-bottom:1px solid rgba(10,10,10,.28);height:calc(7*var(--mm));align-items:center}
-.docket div:last-child{border-bottom:0}
-.docket span{width:calc(17*var(--mm));padding-left:calc(2*var(--mm));letter-spacing:.1em;text-transform:uppercase;
-  font-size:calc(1.7*var(--mm));color:rgba(10,10,10,.55);border-right:1px solid rgba(10,10,10,.28);
-  height:100%;display:flex;align-items:center}
-.fool-body{position:relative;margin-top:calc(30*var(--mm));width:calc(105*var(--mm));
-  font-family:var(--serif);font-size:calc(2.85*var(--mm));line-height:calc(6*var(--mm));color:rgba(10,10,10,.36)}
-.fool-body .to{font-family:var(--mono);font-size:calc(2.05*var(--mm));letter-spacing:.1em;text-transform:uppercase;
-  color:rgba(10,10,10,.5);margin:0 0 calc(6*var(--mm))}
-.fool-foot{position:absolute;left:calc(18*var(--mm));right:calc(18*var(--mm));bottom:calc(12*var(--mm));
-  display:flex;justify-content:space-between;border-top:1px solid var(--rule);padding-top:calc(3*var(--mm));
-  font-family:var(--mono);font-size:calc(1.9*var(--mm));letter-spacing:.09em;color:rgba(10,10,10,.5)}
-
-.tell{width:calc(220*var(--mm));height:calc(340*var(--mm));padding:calc(22*var(--mm)) calc(24*var(--mm));text-align:center}
-.tell .frame{position:absolute;inset:calc(10*var(--mm));border:1px solid rgba(10,10,10,.9)}
-.tell .frame::after{content:'';position:absolute;inset:calc(1.6*var(--mm));border:calc(.5*var(--mm)) solid rgba(180,35,42,.85)}
-.tell .wm{font-family:var(--wordmark);font-weight:300;font-size:calc(8.6*var(--mm));letter-spacing:.05em;line-height:1;position:relative}
-.tell .sub{font-family:var(--label);font-weight:500;font-size:calc(2.1*var(--mm));letter-spacing:.4em;
-  text-transform:uppercase;color:var(--rouge);margin-top:calc(3.4*var(--mm))}
-.tell .rule2{margin:calc(5*var(--mm)) auto calc(4*var(--mm));width:calc(56*var(--mm));
-  border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);height:calc(1.3*var(--mm))}
-.tell .addr{font-family:var(--mono);font-size:calc(1.95*var(--mm));letter-spacing:.13em;color:rgba(10,10,10,.6);line-height:2}
-.tell .no{position:absolute;top:calc(24*var(--mm));right:calc(26*var(--mm));text-align:right;
-  font-family:var(--mono);font-size:calc(2.1*var(--mm));letter-spacing:.1em;color:var(--rouge)}
-.tell .no b{display:block;font-weight:400;color:rgba(10,10,10,.4);font-size:calc(1.75*var(--mm));
-  letter-spacing:.18em;margin-top:calc(2.4*var(--mm))}
-.tell-body{margin-top:calc(26*var(--mm));text-align:left;font-family:var(--serif);
-  font-size:calc(2.85*var(--mm));line-height:calc(6.4*var(--mm));color:rgba(10,10,10,.34);position:relative}
-.tell-body .obj{font-family:var(--label);font-weight:600;font-size:calc(2.2*var(--mm));letter-spacing:.18em;
-  text-transform:uppercase;color:var(--ink);border-bottom:1px solid var(--rouge);display:inline-block;
-  padding-bottom:calc(1*var(--mm));margin-bottom:calc(6*var(--mm))}
-.tell-foot{position:absolute;left:calc(24*var(--mm));right:calc(24*var(--mm));bottom:calc(17*var(--mm));text-align:center;
-  font-family:var(--mono);font-size:calc(1.85*var(--mm));letter-spacing:.15em;color:rgba(10,10,10,.45)}
-
-.shi{width:calc(182*var(--mm));height:calc(257*var(--mm));padding:calc(20*var(--mm))}
-.shi .genko{position:absolute;top:calc(58*var(--mm));right:calc(20*var(--mm));width:calc(64*var(--mm));height:calc(128*var(--mm));
-  background:
-    repeating-linear-gradient(to right,transparent 0,transparent calc(8*var(--mm) - 1px),rgba(10,10,10,.075) calc(8*var(--mm))),
-    repeating-linear-gradient(to bottom,transparent 0,transparent calc(8*var(--mm) - 1px),rgba(10,10,10,.075) calc(8*var(--mm)))}
-.shi-head{display:flex;justify-content:space-between;align-items:flex-start;position:relative}
-.shi .wm{font-family:var(--wordmark);font-weight:300;font-size:calc(6.2*var(--mm));line-height:1.15}
-.shi .wm em{font-style:normal;display:block}
-.shi .en{font-family:var(--label);font-weight:500;font-size:calc(1.85*var(--mm));letter-spacing:.38em;
-  text-transform:uppercase;color:var(--brown);margin-top:calc(4*var(--mm))}
-.shi .hair{margin-top:calc(9*var(--mm));border-top:1px solid var(--ink);width:calc(30*var(--mm))}
-.shi-body{margin-top:calc(14*var(--mm));width:calc(72*var(--mm));font-family:var(--serif);
-  font-size:calc(2.65*var(--mm));line-height:calc(6.6*var(--mm));color:rgba(10,10,10,.35);position:relative}
-.shi .vert{position:absolute;top:calc(62*var(--mm));left:calc(7.5*var(--mm));writing-mode:vertical-rl;
-  font-family:var(--serif);font-size:calc(2.2*var(--mm));letter-spacing:.55em;color:rgba(10,10,10,.4)}
-.shi-foot{position:absolute;left:calc(20*var(--mm));right:calc(20*var(--mm));bottom:calc(14*var(--mm));
-  display:flex;justify-content:space-between;font-family:var(--mono);font-size:calc(1.8*var(--mm));
-  letter-spacing:.1em;color:rgba(10,10,10,.42)}
-
-/* ============================================================
    ENVELOPES
    ============================================================ */
 .env .flap{position:absolute;left:0;right:0;top:0;height:40%;
   background:linear-gradient(#f3f1ed,#eeece7);clip-path:polygon(0 0,100% 0,100% 40%,50% 100%,0 40%)}
 .env-dl{width:calc(220*var(--mm));height:calc(110*var(--mm))}
-.env-c65{width:calc(229*var(--mm));height:calc(114*var(--mm))}
-.env-n4{width:calc(205*var(--mm));height:calc(90*var(--mm))}
 .env .ret{position:absolute;left:calc(13*var(--mm));bottom:calc(13*var(--mm));font-family:var(--mono);
   font-size:calc(1.95*var(--mm));line-height:1.9;letter-spacing:.07em;color:rgba(10,10,10,.6)}
 .env .ret b{display:block;font-family:var(--wordmark);font-weight:400;font-size:calc(4.3*var(--mm));
   color:var(--ink);margin-bottom:calc(1.5*var(--mm));line-height:1.15}
 .env .stamp{position:absolute;right:calc(13*var(--mm));top:calc(47*var(--mm));width:calc(25*var(--mm));
   height:calc(29*var(--mm));border:1px dashed rgba(10,10,10,.22)}
-.env .em{position:absolute;left:calc(13*var(--mm));top:calc(48*var(--mm));display:flex;align-items:flex-end;gap:calc(1.2*var(--mm))}
-.env .em i{display:block;background:var(--ink);width:calc(2.1*var(--mm))}
-.env.fr .ret b{color:var(--rouge)}
-.env.jp .jseal{position:absolute;left:calc(13*var(--mm));top:calc(15*var(--mm));width:calc(8.5*var(--mm));
-  height:calc(8.5*var(--mm));border:calc(.7*var(--mm)) solid var(--shu)}
 .env .seal{position:absolute;right:calc(13*var(--mm));bottom:calc(13*var(--mm))}
 
 /* ============================================================
-   BOOKMARKS — direction A/B/C variants (section A only)
-   ============================================================ */
-.bm{width:calc(55*var(--mm));height:calc(210*var(--mm))}
-.bm-in{position:absolute;inset:0;display:flex;flex-direction:column}
-.name-cell{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
-.name{writing-mode:vertical-rl;transform:rotate(180deg);font-family:var(--wordmark);font-weight:400;
-  font-size:calc(8.2*var(--mm));letter-spacing:.045em;line-height:1}
-.bm-a .ledger{position:absolute;inset:0;
-  background:repeating-linear-gradient(to bottom,transparent 0,transparent calc(6*var(--mm) - 1px),rgba(10,10,10,.05) calc(6*var(--mm)))}
-.bm-a .edge{position:absolute;left:0;right:0;top:0;height:calc(4*var(--mm))}
-.bm-a .bm-in{padding:calc(9*var(--mm)) calc(6*var(--mm)) calc(7*var(--mm))}
-.bm-a .cap{font-family:var(--label);font-weight:500;font-size:calc(1.85*var(--mm));letter-spacing:.16em;
-  text-transform:uppercase;text-align:center;color:rgba(10,10,10,.55);position:relative}
-.bm-a .dk{border:1px solid var(--ink);font-family:var(--mono);font-size:calc(1.6*var(--mm));position:relative;background:var(--paper)}
-.bm-a .dk div{display:flex;height:calc(5.4*var(--mm));align-items:center;border-bottom:1px solid rgba(10,10,10,.28)}
-.bm-a .dk div:last-child{border-bottom:0}
-.bm-a .dk span{width:calc(17*var(--mm));height:100%;display:flex;align-items:center;padding-left:calc(1.6*var(--mm));
-  letter-spacing:.08em;color:rgba(10,10,10,.5);border-right:1px solid rgba(10,10,10,.28);text-transform:uppercase}
-.bm-a .dk em{font-style:normal;padding-left:calc(1.8*var(--mm));color:var(--ink)}
-.bm-b .frame{position:absolute;inset:calc(4*var(--mm));border:1px solid var(--ink)}
-.bm-b .frame::after{content:'';position:absolute;inset:calc(1.3*var(--mm));border:calc(.4*var(--mm)) solid var(--rouge)}
-.bm-b .bm-in{padding:calc(11*var(--mm)) calc(9*var(--mm))}
-.bm-b .cap{font-family:var(--label);font-weight:600;font-size:calc(1.8*var(--mm));letter-spacing:.2em;
-  text-transform:uppercase;text-align:center;color:var(--rouge);position:relative}
-.bm-b .no{font-family:var(--mono);font-size:calc(1.7*var(--mm));letter-spacing:.14em;text-align:center;
-  color:rgba(10,10,10,.5);position:relative;border-top:1px solid var(--ink);padding-top:calc(2.6*var(--mm))}
-.bm-c .bm-in{padding:calc(10*var(--mm)) calc(7*var(--mm))}
-.bm-c .jseal{width:calc(8*var(--mm));height:calc(8*var(--mm));border:calc(.6*var(--mm)) solid var(--shu);margin:0 auto}
-.bm-c .hair{width:calc(14*var(--mm));border-top:1px solid var(--ink);margin:calc(5*var(--mm)) auto 0}
-.bm-c .no{font-family:var(--mono);font-size:calc(1.7*var(--mm));letter-spacing:.18em;text-align:center;color:rgba(10,10,10,.45)}
-
-/* ============================================================
-   C · THE FAMILY — Foolscap Mk II. Every piece, one mark system.
+   B · THE FAMILY — Foolscap Mk II. Every piece, one mark system.
    ============================================================ */
 .fam{display:flex;flex-wrap:wrap;gap:46px;align-items:flex-start}
 
@@ -252,7 +138,7 @@ figure{margin:0}
 .card{width:calc(125*var(--mm));height:calc(75*var(--mm));padding:calc(7*var(--mm)) calc(8*var(--mm))}
 .card .ruled{position:absolute;left:0;right:0;top:calc(18*var(--mm));bottom:0;
   background:repeating-linear-gradient(to bottom,transparent 0,transparent calc(5.4*var(--mm) - 1px),rgba(10,10,10,.07) calc(5.4*var(--mm)))}
-.card .vr{position:absolute;top:0;bottom:0;left:calc(25*var(--mm));border-left:1px solid rgba(201,21,30,.22)}
+.card .vr{position:absolute;top:0;bottom:0;left:calc(25*var(--mm));border-left:1px solid rgba(19,78,74,.22)}
 .card .hd{display:flex;justify-content:space-between;align-items:flex-start;position:relative}
 .card .cn{font-family:var(--mono);font-size:calc(2.1*var(--mm));line-height:1.5;color:var(--ink)}
 .card .entry{position:relative;margin-left:calc(17*var(--mm));font-family:var(--serif);
@@ -301,12 +187,12 @@ figure{margin:0}
 .spec td:first-child{color:#f0eee9;white-space:nowrap}
 .spec .n{color:var(--brown)}
 
-@media(max-width:1180px){.compare{grid-template-columns:1fr;gap:60px}.marks{gap:34px}.rules{margin-left:0;border-left:0;padding-left:0}}
+@media(max-width:1180px){.marks{gap:34px}.rules{margin-left:0;border-left:0;padding-left:0}}
 @media print{
   :root{--mm:1mm}
   body{background:#fff;padding:0}
-  .masthead,.sec-head,.lbl,.why,.note,.spec,nav.jump,.col-head,.marks,.rules{display:none}
-  .sheet,.env,.bm{box-shadow:none;page-break-inside:avoid}
+  .masthead,.sec-head,.lbl,.note,.spec,nav.jump,.marks,.rules{display:none}
+  .sheet,.env{box-shadow:none;page-break-inside:avoid}
 }
 </style>
 </head>
@@ -316,109 +202,19 @@ figure{margin:0}
 <header class="masthead">
   <p class="kicker">Hudson Street Library · New York · Design comps · August 2026</p>
   <h1>Administrative Stationery</h1>
-  <p>Foolscap Mk II — the British administrative sheet with Japanese detailing. One mark system
-  applied identically across every piece in the family. Section A keeps the three original
-  directions for the record; everything from B on is the selected system. The page prints at
+  <p>Foolscap Mk II — the British administrative sheet, 203 × 330 mm, with Japanese detailing.
+  One mark system applied identically across every piece in the family. The page prints at
   true 1:1.</p>
   <nav class="jump">
-    <a href="#compare">A · The three directions</a>
-    <a href="#mark">B · The mark system</a>
-    <a href="#family">C · The family</a>
-    <a href="#spec">D · Production spec</a>
+    <a href="#mark">A · The mark system</a>
+    <a href="#family">B · The family</a>
+    <a href="#spec">C · Production spec</a>
   </nav>
 </header>
 
-<!-- ============ A · COMPARE ============ -->
-<div class="sec-head" id="compare">
-  <span class="n">A</span><h2>The three directions, one scale</h2>
-  <span class="meta">as considered · Foolscap selected</span>
-</div>
-
-<div class="compare">
-  <div>
-    <div class="col-head"><h3>Foolscap</h3>
-      <div class="o">British administrative<br>203 × 330 mm · selected</div></div>
-    <div class="stack">
-      <div class="sheet fool">
-        <div class="ledger"></div><div class="gutter"></div>
-        <div class="fool-head">
-          <div style="display:flex;align-items:flex-end">
-            <div class="mark">
-              <i style="height:calc(7.4*var(--mm))"></i><i style="height:calc(9.6*var(--mm))"></i>
-              <i style="height:calc(8.4*var(--mm))"></i>
-              <i style="height:calc(8.8*var(--mm));transform:rotate(9deg);transform-origin:bottom left"></i>
-            </div>
-            <div class="wm">Hudson Street Library<small>Rare books · Photobooks · Artists' publications</small></div>
-          </div>
-          <div class="est">EST. MMXXIV<br>NEW YORK</div>
-        </div>
-        <div class="docket">
-          <div><span>Ref.</span></div><div><span>Date</span></div>
-          <div><span>Fol.</span></div><div><span>Acc. no.</span></div>
-        </div>
-        <div class="fool-body">
-          <p class="to">To the attention of —</p>
-          <p>The accession described overleaf has been catalogued and shelved under the collection
-          grouping noted in the docket opposite.</p>
-        </div>
-        <div class="fool-foot"><span>HUDSONSTREETLIBRARY.COM</span><span>FOLIO 1 OF 1</span></div>
-      </div>
-      <p class="lbl">Letterhead · 203 × 330 · as first comped</p>
-    </div>
-    <p class="why">Reads as a working document. The ruling and docket are functional — they get
-    written on. <b style="color:#e8e6e1">Selected</b>, then refined in section C.</p>
-  </div>
-
-  <div>
-    <div class="col-head"><h3>Demi-Tellière</h3>
-      <div class="o">French bureau<br>220 × 340 mm · black + rouge</div></div>
-    <div class="stack">
-      <div class="sheet tell">
-        <div class="frame"></div>
-        <div class="wm">Hudson Street Library</div>
-        <div class="sub">Bibliothèque · New York</div>
-        <div class="rule2"></div>
-        <div class="addr">HUDSON STREET · NEW YORK<br>SUR RENDEZ-VOUS</div>
-        <div class="no">N°&nbsp;______<b>DOSSIER</b></div>
-        <div class="tell-body">
-          <span class="obj">Objet — Notice d'acquisition</span>
-          <p>La pièce décrite ci-dessous a été portée au registre sous la cote indiquée.</p>
-        </div>
-        <div class="tell-foot">REGISTRE DES ACQUISITIONS · FOLIO ______ · LE ______</div>
-      </div>
-      <p class="lbl">Letterhead · 220 × 340</p>
-    </div>
-    <p class="why">The most formal and the most decorative. The double frame is handsome but it
-    fights the artist-book material — it says <i>ministry</i> more than <i>library</i>.</p>
-  </div>
-
-  <div>
-    <div class="col-head"><h3>Shiroku</h3>
-      <div class="o">Japanese · JIS B5<br>182 × 257 mm · detailing adopted</div></div>
-    <div class="stack">
-      <div class="sheet shi">
-        <div class="genko"></div>
-        <div class="shi-head">
-          <div><div class="wm"><em>Hudson Street</em><em>Library</em></div>
-            <div class="en">New York</div></div>
-          <div class="seal" style="--s:13"><div class="r"><i></i><i></i><i></i><i></i></div></div>
-        </div>
-        <div class="hair"></div>
-        <div class="shi-body"><p>The volume noted opposite has been entered in the register and shelved.</p></div>
-        <div class="vert">架蔵番号 ── 受入</div>
-        <div class="shi-foot"><span>HUDSONSTREETLIBRARY.COM</span><span>便箋 B5</span></div>
-      </div>
-      <p class="lbl">Letterhead · JIS B5 182 × 257</p>
-    </div>
-    <p class="why">The most beautiful object and the least useful sheet — B5 is small for
-    correspondence. Not selected, but its <b style="color:#e8e6e1">seal, stacked wordmark, short
-    hairline, confined field and margin reference all carried into the final system</b>.</p>
-  </div>
-</div>
-
-<!-- ============ B · MARK SYSTEM ============ -->
+<!-- ============ A · MARK SYSTEM ============ -->
 <div class="sec-head" id="mark">
-  <span class="n">B</span><h2>The mark system</h2>
+  <span class="n">A</span><h2>The mark system</h2>
   <span class="meta">one component · three sizes · vermilion</span>
 </div>
 <p class="note" style="margin-bottom:30px">The mark is the spines device ruled into a square and
@@ -459,14 +255,14 @@ alone.</p>
   </div>
 </div>
 
-<!-- ============ C · THE FAMILY ============ -->
+<!-- ============ B · THE FAMILY ============ -->
 <div class="sec-head" id="family">
-  <span class="n">C</span><h2>The family — Foolscap Mk II</h2>
+  <span class="n">B</span><h2>The family — Foolscap Mk II</h2>
   <span class="meta">every piece · one mark · black + 朱</span>
 </div>
 <p class="note" style="margin-bottom:36px">Seven pieces, all carrying the same seal at its
 specified size. The British sheet keeps its foolscap trim, its docket, and its ledger ruling;
-what came across from the Japanese direction is <b>restraint and a stamp</b> — the boxed seal,
+what it takes from Japanese stationery is <b>restraint and a stamp</b> — the boxed seal,
 the stacked wordmark, a 34 mm hairline in place of the full-width rule, a confined writing
 field instead of ruling that bleeds across the page, and the reference set vertically in the
 left margin. None of it is foreign to a records office, which is why the graft holds.</p>
@@ -609,9 +405,9 @@ idiom as everything else in the family: a form you fill in.</p>
   </div>
 </div>
 
-<!-- ============ D · SPEC ============ -->
+<!-- ============ C · SPEC ============ -->
 <div class="sec-head" id="spec">
-  <span class="n">D</span><h2>Production specification</h2>
+  <span class="n">C</span><h2>Production specification</h2>
   <span class="meta">uncoated · no die-cutting</span>
 </div>
 <table class="spec">
