@@ -11,9 +11,12 @@
 :root{
   --mm:1.55px;
   --paper:#F8F7F4; --ink:#0A0A0A; --brown:#8B7355;
-  /* the second ink. Teal-900 — the same green the mark is set in on the
-     site (site-header.njk, .site-logo). Print does not get its own colour. */
-  --seal:#134E4A; --slate:#2F4858;
+  /* the second ink — the green the mark actually renders in on the site.
+     .site-logo carries Tailwind's .text-teal-900, but design-system.css
+     overrides that class to --primary-700 and wins the cascade, so the
+     computed colour is #2D4A2B, not teal-900's #134E4A. Verified against
+     the built site. Print does not get its own colour. */
+  --seal:#2D4A2B; --slate:#2F4858;
   --rule:rgba(10,10,10,.14);
   --serif:'Literata',Georgia,serif;
   --wordmark:'Crimson Pro',Georgia,serif;
@@ -215,10 +218,11 @@ figure{margin:0}
 <!-- ============ A · MARK SYSTEM ============ -->
 <div class="sec-head" id="mark">
   <span class="n">A</span><h2>The mark system</h2>
-  <span class="meta">one component · three sizes · vermilion</span>
+  <span class="meta">one component · three sizes · dark green</span>
 </div>
 <p class="note" style="margin-bottom:30px">The mark is the spines device ruled into a square and
-stamped in vermilion. It is drawn once and used at three fixed sizes — nothing else, and no
+stamped in the library's dark green — <b>#2D4A2B</b>, the ink the mark is already set in at the
+head of every page on the site. It is drawn once and used at three fixed sizes — nothing else, and no
 piece goes without it. Below 10 mm the wordmark drops away and the seal carries the identity
 alone.</p>
 
@@ -247,7 +251,8 @@ alone.</p>
     <b>Rules</b>
     <ul>
       <li>Square, ruled at <b>5.8% of its own width</b>, so the frame scales with the mark.</li>
-      <li>Always vermilion. The black variant exists only for the 1-ink fallback.</li>
+      <li>Always <b>#2D4A2B</b> — the green the mark renders in on the site, never a
+      print-only colour. The black variant exists only for the 1-ink fallback.</li>
       <li>Never smaller than 7 mm — the leaning spine closes up below that.</li>
       <li>Clear space on all sides equal to <b>one spine width</b>.</li>
       <li>The seal never sits inside a rule, box, or panel other than its own.</li>
@@ -258,7 +263,7 @@ alone.</p>
 <!-- ============ B · THE FAMILY ============ -->
 <div class="sec-head" id="family">
   <span class="n">B</span><h2>The family — Foolscap Mk II</h2>
-  <span class="meta">every piece · one mark · black + 朱</span>
+  <span class="meta">every piece · one mark · black + green</span>
 </div>
 <p class="note" style="margin-bottom:36px">Seven pieces, all carrying the same seal at its
 specified size. The British sheet keeps its foolscap trim, its docket, and its ledger ruling;
@@ -414,7 +419,7 @@ idiom as everything else in the family: a form you fill in.</p>
   <thead><tr><th>Item</th><th>Trim</th><th>Seal</th><th>Stock</th><th>Inks</th><th>Imposition &amp; note</th></tr></thead>
   <tbody>
     <tr><td>01 Letterhead</td><td class="n">203 × 330 mm</td><td class="n">15 mm</td>
-      <td>100 gsm uncoated wove, natural white</td><td>2 — black + 朱</td>
+      <td>100 gsm uncoated wove, natural white</td><td>2 — black + green</td>
       <td>1-up from SRA3. <b>The one premium</b> — foolscap wastes ~35% of the parent sheet. Falls back to A4 unchanged.</td></tr>
     <tr><td>02 Continuation</td><td class="n">203 × 330 mm</td><td class="n">15 mm</td><td>as above</td><td>2</td>
       <td>Seal and footer only. Runs on the same forme as 01.</td></tr>
@@ -427,11 +432,11 @@ idiom as everything else in the family: a form you fill in.</p>
     <tr><td>06 Accession label</td><td class="n">60 × 32 mm</td><td class="n">7 mm</td>
       <td>80 gsm gummed or self-adhesive</td><td>2</td><td>21-up on A4 sheet stock, guillotined.</td></tr>
     <tr><td>07 Bookmark</td><td class="n">55 × 210 mm</td><td class="n">10 mm</td>
-      <td>300 gsm uncoated board, matte</td><td>2 — black + 朱, both sides</td>
+      <td>300 gsm uncoated board, matte</td><td>2 — black + green, both sides</td>
       <td><b>One SKU, 5-up on A4, 10-up on SRA3.</b> Collection ticked by hand, so no per-collection plate or ink swap. Straight cuts, no die, no bleed.</td></tr>
   </tbody>
 </table>
-<p class="note" style="margin-top:32px"><b>On the second ink:</b> the seal is the only vermilion
+<p class="note" style="margin-top:32px"><b>On the second ink:</b> the seal is the only green
 on any piece, but it puts every item on a two-colour run. If you want to stay at one ink, the
 seal works in black — the <code style="font-family:var(--mono);font-size:12.5px;background:#33333a;padding:2px 6px">.seal.k</code>
 variant on this page shows it — or blind-embossed on the letterhead only, with black elsewhere.
