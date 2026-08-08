@@ -656,6 +656,13 @@ module.exports = function(eleventyConfig) {
   // --- Ignore admin directory for static builds ---
   eleventyConfig.ignores.add("src/admin/**");
 
+  // --- Keep build artifacts off the public site ---
+  // These were being published as real pages: BOOK-TEMPLATE shipped its
+  // placeholders ([BOOK TITLE], [IMAGE_PATH]) to production, and the READMEs
+  // are developer notes. Nothing links to any of them.
+  eleventyConfig.ignores.add("src/books/templates/**");
+  eleventyConfig.ignores.add("src/**/README.md");
+
   // --- Define Input/Output Directories ---
   return {
     dir: {
