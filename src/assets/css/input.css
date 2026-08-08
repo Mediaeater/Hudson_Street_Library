@@ -25,16 +25,12 @@
   --text-6xl: 60px;
   --text-7xl: 72px;
 
-  --color-forest-400: #a4ac86;
-  --color-forest-500: #7d8471;
-  --color-forest-600: #4a6348;
-  --color-forest-700: #2d4a2b;
-  --color-forest-800: #243d23;
-  --color-forest-900: #1b2e1a;
-
-  --color-teal-700: #2d4a2b;
-  --color-teal-800: #243d23;
-  --color-teal-900: #1b2e1a;
+  --color-forest-400: #81b182;
+  --color-forest-500: #508950;
+  --color-forest-600: #276628;
+  --color-forest-700: #034706;
+  --color-forest-800: #003100;
+  --color-forest-900: #002000;
 
   --font-playfair: Playfair Display, serif;
   --font-montserrat: Montserrat, sans-serif;
@@ -45,11 +41,15 @@
     via its unlayered sheet (no visual change on the cutover).
   */
 
-  /* Primary palette (design-system only; Tailwind had no `primary-*`). */
-  --color-primary-400: #a4ac86;
-  --color-primary-500: #7d8471;
-  --color-primary-600: #4a6348;
-  --color-primary-700: #2d4a2b;
+  /* Primary palette (design-system only; Tailwind had no `primary-*`).
+     Must stay in step with design-system.css :root — that sheet is unlayered
+     and wins for `.text-primary-*` / `.text-teal-*`, but these values back
+     every other utility (hover:, border-, from-), so a drift between the two
+     files splits the palette in half. */
+  --color-primary-400: #81b182;
+  --color-primary-500: #508950;
+  --color-primary-600: #276628;
+  --color-primary-700: #034706;
 
   /* Neutral palette — design-system used warm hex, not Tailwind's oklch grays. */
   --color-neutral-50: #faf9f6;
@@ -65,11 +65,11 @@
 
   /*
     teal-* were aliased to the forest greens by design-system (the site logo
-    uses `text-teal-900`). Keep that mapping so the logo stays #2d4a2b.
+    uses `text-teal-900`). Keep that mapping so the logo stays #034706.
   */
-  --color-teal-700: #2d4a2b;
-  --color-teal-800: #4a6348;
-  --color-teal-900: #2d4a2b;
+  --color-teal-700: #034706;
+  --color-teal-800: #276628;
+  --color-teal-900: #034706;
 
   /* Radius scale — design-system values (rounded-lg = 12px, etc.). */
   --radius-md: 12px;
@@ -92,12 +92,18 @@
 */
 
 @utility nav-item {
+  /* Preflight is off, so an <a> keeps the UA's blue + underline unless an
+     author rule says otherwise. Every .nav-item link on the hand-built pages
+     relied on inheritance and rendered default blue. */
+  color: inherit;
+  text-decoration: none;
+
   &::after {
     content: '';
     display: block;
     width: 0;
     height: 1px;
-    background: #2d4a2b;
+    background: #034706;
     transition: width 0.3s;
   }
 
@@ -129,7 +135,7 @@
   display: inline-block;
   padding: 0.25rem 0.75rem;
   background-color: transparent;
-  color: #2d4a2b;
+  color: #034706;
   border: none;
   border-radius: 0;
   font-size: 0.875rem;
@@ -139,7 +145,7 @@
 
   &:hover {
     background-color: #f3f4f6;
-    color: #243d23;
+    color: #003100;
     text-decoration: none;
   }
 }
@@ -148,12 +154,12 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: #2d4a2b;
+  color: #034706;
   font-weight: 500;
   transition: all 0.2s;
 
   &:hover {
-    color: #243d23;
+    color: #003100;
     transform: translateX(-2px);
   }
 }
@@ -163,13 +169,13 @@
   color: #6b7280;
 
   & a {
-    color: #2d4a2b;
+    color: #034706;
     text-decoration: none;
     transition: color 0.2s;
   }
 
   & a:hover {
-    color: #243d23;
+    color: #003100;
     text-decoration: underline;
   }
 }
@@ -182,13 +188,13 @@
 @utility collection-link {
   display: inline-block;
   margin-top: 0.5rem;
-  color: #2d4a2b;
+  color: #034706;
   font-size: 0.875rem;
   text-decoration: none;
   transition: all 0.2s;
 
   &:hover {
-    color: #243d23;
+    color: #003100;
     text-decoration: underline;
   }
 }
@@ -347,7 +353,7 @@
   }
   .nav-link:hover { background-color: #f5f5f5; }
   .nav-link[aria-current="page"],
-  .nav-link-active { color: #2d4a2b; font-weight: 600; }
+  .nav-link-active { color: #034706; font-weight: 600; }
 
   /* Buttons */
   .btn {
@@ -365,7 +371,7 @@
     min-height: 44px;
     text-decoration: none;
   }
-  .btn:focus { outline: none; box-shadow: 0 0 0 2px rgba(45, 74, 43, 0.15); }
+  .btn:focus { outline: none; box-shadow: 0 0 0 2px rgba(3, 71, 6, 0.15); }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; }
   .btn-primary { background-color: #171717; color: #fff; }
   .btn-primary:hover:not(:disabled) { background-color: #262626; }
@@ -373,8 +379,8 @@
   .btn-secondary:hover:not(:disabled) { background-color: #faf9f6; }
   .btn-ghost { background-color: transparent; color: #404040; }
   .btn-ghost:hover:not(:disabled) { background-color: #f5f5f5; }
-  .btn-accent { background-color: #4a6348; color: #fff; }
-  .btn-accent:hover:not(:disabled) { background-color: #2d4a2b; }
+  .btn-accent { background-color: #276628; color: #fff; }
+  .btn-accent:hover:not(:disabled) { background-color: #034706; }
   .btn-destructive { background-color: #ef4444; color: #fff; }
   .btn-destructive:hover:not(:disabled) { background-color: #dc2626; }
   .btn-sm { padding: 6px 12px; font-size: 14px; min-height: 36px; }
@@ -383,8 +389,8 @@
   /* Focus ring helper */
   .focus-ring:focus {
     outline: none;
-    box-shadow: 0 0 0 2px rgba(45, 74, 43, 0.15);
-    border-color: #7d8471;
+    box-shadow: 0 0 0 2px rgba(3, 71, 6, 0.15);
+    border-color: #508950;
   }
 
   /* Cards */
@@ -436,7 +442,7 @@
     bottom: 0;
     width: 60px;
     height: 1px;
-    background: #2d4a2b;
+    background: #034706;
   }
 
   .book-card { display: flex; flex-direction: column; height: 100%; }
@@ -522,6 +528,18 @@
     padding: 0;
   }
 
+  /*
+    The one piece of Preflight the reset was missing. Without it the UA styles
+    every <a> that lacks an explicit colour as #0000EE + underline, which is
+    how the footer Colophon link, the hand-built page navs and ~50 links on
+    news.html ended up browser-blue. Lives in `base`, so any `text-*` or
+    `underline` utility on the element still wins.
+  */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
@@ -578,8 +596,8 @@
   textarea:focus,
   select:focus {
     outline: none;
-    border-color: #7d8471;
-    box-shadow: 0 0 0 2px rgba(45, 74, 43, 0.15);
+    border-color: #508950;
+    box-shadow: 0 0 0 2px rgba(3, 71, 6, 0.15);
   }
   label {
     display: block;
@@ -598,7 +616,7 @@
 
   /* Keyboard focus ring */
   :focus-visible {
-    outline: 2px solid #4a6348;
+    outline: 2px solid #276628;
     outline-offset: 2px;
   }
 }
