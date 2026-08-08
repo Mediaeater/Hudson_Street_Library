@@ -18,6 +18,7 @@ permalink: /colophon.html
             --color-ink: #0A0A0A;
             --color-paper: #F8F7F4;
             --color-brown: #8B7355;
+            --color-green: #034706;
             --color-border: rgba(10, 10, 10, 0.12);
         }
 
@@ -72,13 +73,23 @@ permalink: /colophon.html
 
         /* Book-spines mark, inlined with explicit fill: the favicon file
            self-inverts in OS dark mode and would vanish on this paper
-           background. */
+           background. Filled in the library green, same as the mark in the
+           header above it. */
         .colophon-mark {
             width: 72px;
             height: auto;
             display: block;
-            fill: var(--color-ink);
+            fill: var(--color-green);
             margin: 2.5rem 0 1.75rem;
+        }
+
+        .swatch {
+            display: inline-block;
+            width: 0.72em;
+            height: 0.72em;
+            background: var(--color-green);
+            margin-right: 0.35em;
+            vertical-align: baseline;
         }
     </style>
 </head>
@@ -96,6 +107,10 @@ permalink: /colophon.html
 
     <p>Dates, labels, and other small matter are set in <a href="https://fonts.google.com/specimen/Archivo+Narrow" target="_blank" rel="noopener noreferrer">Archivo Narrow</a>, from the Argentine foundry <a href="https://omnibus-type.com/" target="_blank" rel="noopener noreferrer">Omnibus-Type</a>. All three faces are free and open source.</p>
 
+    <p>The site runs on two inks. Text sits near-black on a warm paper white, and a single green does everything else: <span class="swatch" aria-hidden="true"></span><span style="font-family:'Archivo Narrow',sans-serif;letter-spacing:0.04em">#034706</span>, dark enough at eleven to one against white to read as ink rather than as decoration. It colours the mark, every link, and the seal stamped on the library's stationery, where it is matched to a spot ink rather than built from process colours. Screen and press use the same value.</p>
+
+    <p>The paler greens on the site are the same green thinned, not different colours. The ramp holds one hue across every step, which is a correction: the version before it wandered from yellow-green at the light end to a colder green at the dark end, and lost so much saturation in the middle that it read as grey.</p>
+
     <svg class="colophon-mark" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
         <rect x="38" y="128" width="72" height="318"/>
         <rect x="138" y="68" width="76" height="378"/>
@@ -103,9 +118,9 @@ permalink: /colophon.html
         <rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)"/>
     </svg>
 
-    <p>The mark is a shelf of four spines, one leaning. It began as the favicon and now stands at the head of every page. The whole drawing is four rectangles.</p>
+    <p>The mark is a shelf of four spines, one leaning. It began as the favicon and now stands at the head of every page, stamped in the green. The whole drawing is four rectangles, the last one turned nine degrees. In print it is never set below seven millimetres, the size at which the leaning spine closes up and the shelf becomes a smudge.</p>
 
-    <p>The site is built with <a href="https://www.11ty.dev/" target="_blank" rel="noopener noreferrer">Eleventy</a> and published as static pages. The catalog behind it is a single CSV file, one row per book, thirty-six columns per row, each entry made by hand. There is no database, which seems right for a library that argues the shelf is the text.</p>
+    <p>The site is built with <a href="https://www.11ty.dev/" target="_blank" rel="noopener noreferrer">Eleventy</a> and published as static pages. The catalog behind it is a single CSV file, one row per book, thirty-seven columns per row, {{ books.length | commafy }} entries, each made by hand. There is no database, which seems right for a library that argues the shelf is the text.</p>
 </main>
 
 {% include "components/site-footer.njk" %}
