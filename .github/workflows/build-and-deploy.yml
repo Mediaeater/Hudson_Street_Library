@@ -53,6 +53,14 @@ jobs:
             echo "Copied manual book pages to _site/books/"
           fi
 
+      # Runs against the final _site, after the manual pages are copied in, so
+      # it validates exactly what ships. Catches the drift that rendered-state
+      # spot checks miss: off-palette greens in :hover / :focus / @media rules,
+      # pages that never load tailwind.css (where @layer base is inert), and
+      # any page that starts hand-rolling the header again.
+      - name: Validate design system
+        run: node scripts/validate-design-system.js
+
       - name: Audit dependencies
         run: npm audit --audit-level=critical
 

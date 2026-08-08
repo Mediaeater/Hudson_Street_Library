@@ -28,6 +28,12 @@ if git diff --cached --name-only | grep -q "src/_data/books.csv"; then
   node scripts/check-book-count-monotonic.js || exit 1
 fi
 
+# Design system invariants — one green, one header. Source-level only, so it
+# needs no build and stays fast. The _site coverage check runs in CI.
+if git diff --cached --name-only | grep -qE '\.(css|njk|html)$'; then
+  node scripts/validate-design-system.js --source || exit 1
+fi
+
 # Scan staged changes for secrets
 echo "🔒 Scanning staged changes for secrets..."
 if ! gitleaks git --pre-commit --staged --redact --no-banner; then
