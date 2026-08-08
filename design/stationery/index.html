@@ -86,16 +86,36 @@ figure{margin:0}
 /* ============================================================
    ENVELOPES
    ============================================================ */
-.env .flap{position:absolute;left:0;right:0;top:0;height:40%;
-  background:linear-gradient(#f3f1ed,#eeece7);clip-path:polygon(0 0,100% 0,100% 40%,50% 100%,0 40%)}
 .env-dl{width:calc(220*var(--mm));height:calc(110*var(--mm))}
-.env .ret{position:absolute;left:calc(13*var(--mm));bottom:calc(13*var(--mm));font-family:var(--mono);
-  font-size:calc(1.95*var(--mm));line-height:1.9;letter-spacing:.07em;color:rgba(10,10,10,.6)}
-.env .ret b{display:block;font-family:var(--wordmark);font-weight:400;font-size:calc(4.3*var(--mm));
-  color:var(--ink);margin-bottom:calc(1.5*var(--mm));line-height:1.15}
-.env .stamp{position:absolute;right:calc(13*var(--mm));top:calc(47*var(--mm));width:calc(25*var(--mm));
-  height:calc(29*var(--mm));border:1px dashed rgba(10,10,10,.22)}
+/* --- FACE: return address top-left, stamp top-right, recipient centre --- */
+.env .ret{position:absolute;left:calc(13*var(--mm));top:calc(12*var(--mm));display:flex;
+  align-items:flex-start;gap:calc(3.4*var(--mm));font-family:var(--mono);
+  font-size:calc(1.8*var(--mm));line-height:1.9;letter-spacing:.07em;color:rgba(10,10,10,.6)}
+.env .ret b{display:block;font-family:var(--wordmark);font-weight:400;font-size:calc(4*var(--mm));
+  color:var(--ink);margin-bottom:calc(1.4*var(--mm));line-height:1.14;letter-spacing:0}
+.env .stamp{position:absolute;right:calc(13*var(--mm));top:calc(11*var(--mm));width:calc(24*var(--mm));
+  height:calc(28*var(--mm));border:1px dashed rgba(10,10,10,.22)}
+.env .stamp span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:calc(1.5*var(--mm));letter-spacing:.14em;color:rgba(10,10,10,.24)}
+.env .to{position:absolute;left:calc(74*var(--mm));right:calc(20*var(--mm));bottom:calc(20*var(--mm))}
+.env .to i{display:block;font-style:normal;font-family:var(--mono);font-size:calc(1.5*var(--mm));
+  letter-spacing:.16em;text-transform:uppercase;color:rgba(10,10,10,.38);margin-bottom:calc(2.4*var(--mm))}
+.env .to u{display:block;text-decoration:none;border-bottom:1px solid rgba(10,10,10,.22);height:calc(7.4*var(--mm))}
+/* --- REVERSE: the banker flap, sealed with the mark --- */
+.env .flapb{position:absolute;left:0;right:0;top:0;height:calc(52*var(--mm));
+  background:linear-gradient(#f4f2ee,#efece6);
+  clip-path:polygon(0 0,100% 0,100% 62%,50% 100%,0 62%);
+  border-bottom:1px solid rgba(10,10,10,.10)}
+.env .seam{position:absolute;left:0;right:0;bottom:0;height:calc(58*var(--mm));
+  border-top:1px solid rgba(10,10,10,.07)}
+.env .seam::before,.env .seam::after{content:'';position:absolute;top:0;width:1px;height:100%;
+  background:rgba(10,10,10,.06)}
+.env .seam::before{left:calc(38*var(--mm));transform:skewX(-9deg)}
+.env .seam::after{right:calc(38*var(--mm));transform:skewX(9deg)}
 .env .seal{position:absolute;right:calc(13*var(--mm));bottom:calc(13*var(--mm))}
+.env.back .seal{left:50%;right:auto;bottom:auto;top:calc(44*var(--mm));transform:translateX(-50%)}
+.env.back .rev{position:absolute;left:0;right:0;bottom:calc(11*var(--mm));text-align:center;
+  font-family:var(--mono);font-size:calc(1.6*var(--mm));letter-spacing:.16em;color:rgba(10,10,10,.4)}
 
 /* ============================================================
    B · THE FAMILY — Foolscap Mk II. Every piece, one mark system.
@@ -179,12 +199,24 @@ figure{margin:0}
 .card .hole{position:absolute;bottom:calc(2.6*var(--mm));left:50%;transform:translateX(-50%);
   width:calc(4.6*var(--mm));height:calc(4.6*var(--mm));border:1px solid rgba(10,10,10,.3);border-radius:50%}
 
-/* accession label 60 × 32 */
-.lab{width:calc(60*var(--mm));height:calc(32*var(--mm));padding:calc(4*var(--mm)) calc(4.5*var(--mm))}
+/* accession label 60 × 32 — REMOVABLE sticker, die-cut on a release liner */
+.liner{position:relative;display:inline-block;background:#e6e2d8;padding:calc(5*var(--mm));
+  box-shadow:0 12px 28px -12px rgba(0,0,0,.6)}
+.liner::after{content:'RELEASE LINER';position:absolute;left:calc(5*var(--mm));bottom:calc(1.3*var(--mm));
+  font-family:var(--mono);font-size:calc(1.4*var(--mm));letter-spacing:.14em;color:rgba(10,10,10,.3)}
+.liner .grid3{display:flex;gap:calc(4*var(--mm))}
+.lab{width:calc(60*var(--mm));height:calc(32*var(--mm));padding:calc(4*var(--mm)) calc(4.5*var(--mm));
+  border-radius:calc(1.6*var(--mm))}
 .lab .hd{display:flex;align-items:center;gap:calc(3*var(--mm))}
 .lab .wmk{font-size:calc(3.1*var(--mm));line-height:1.1}
 .lab .g{margin-top:calc(3*var(--mm));border-top:1px solid var(--ink);padding-top:calc(2.2*var(--mm));
   font-family:var(--mono);font-size:calc(1.65*var(--mm));line-height:2.1;color:rgba(10,10,10,.55)}
+/* one label shown lifting off the liner, to read as removable */
+.lab.peel{transform:rotate(-2.2deg);box-shadow:0 5px 14px -4px rgba(0,0,0,.45)}
+.lab.peel::after{content:'';position:absolute;right:0;bottom:0;
+  width:calc(11*var(--mm));height:calc(11*var(--mm));
+  background:linear-gradient(315deg,#ddd8cc 0 48%,rgba(0,0,0,.14) 49%,transparent 50%);
+  border-bottom-right-radius:calc(1.6*var(--mm))}
 
 /* bookmark Mk II — ONE piece, collection ticked by hand */
 .bm3{width:calc(55*var(--mm));height:calc(210*var(--mm));padding:calc(9*var(--mm)) calc(5.5*var(--mm)) calc(8*var(--mm))}
@@ -375,13 +407,25 @@ the page, and the form reference set vertically in the left margin.</p>
   </figure>
 
   <figure>
-    <div class="env env-dl">
-      <div class="flap"></div>
-      <div class="ret"><b>Hudson Street<br>Library</b>421 Hudson St., New York, NY 10014<br>HUDSONSTREETLIBRARY.COM</div>
-      <div class="seal" style="--s:10"><div class="r"><i></i><i></i><i></i><i></i></div></div>
-      <div class="stamp"></div>
+    <div class="env env-dl face">
+      <div class="ret">
+        <div class="seal" style="--s:10;position:static"><div class="r"><i></i><i></i><i></i><i></i></div></div>
+        <div><b>Hudson Street<br>Library</b>421 Hudson St., New York, NY 10014<br>HUDSONSTREETLIBRARY.COM</div>
+      </div>
+      <div class="stamp"><span>POSTAGE</span></div>
+      <div class="to"><i>To —</i><u></u><u></u><u></u></div>
     </div>
-    <p class="lbl">03 · Envelope DL banker 110 × 220 mm (4⁵⁄₁₆ × 8¹¹⁄₁₆ in) — seal 10 mm (⅜ in)</p>
+    <p class="lbl">03 · Envelope, face · DL banker 110 × 220 mm (4⁵⁄₁₆ × 8¹¹⁄₁₆ in) — seal 10 mm (⅜ in)</p>
+  </figure>
+
+  <figure>
+    <div class="env env-dl back">
+      <div class="seam"></div>
+      <div class="flapb"></div>
+      <div class="seal" style="--s:10"><div class="r"><i></i><i></i><i></i><i></i></div></div>
+      <div class="rev">421 HUDSON ST., NEW YORK, NY 10014</div>
+    </div>
+    <p class="lbl">Envelope, reverse — flap sealed with the mark at the point</p>
   </figure>
 
   <figure>
@@ -399,14 +443,26 @@ the page, and the form reference set vertically in the left margin.</p>
   </figure>
 
   <figure>
-    <div class="sheet lab">
-      <div class="hd">
-        <div class="seal" style="--s:7"><div class="r"><i></i><i></i><i></i><i></i></div></div>
-        <div class="wmk"><em>Hudson Street</em><em>Library</em></div>
+    <div class="liner">
+      <div class="grid3">
+        <div class="sheet lab">
+          <div class="hd">
+            <div class="seal" style="--s:7"><div class="r"><i></i><i></i><i></i><i></i></div></div>
+            <div class="wmk"><em>Hudson Street</em><em>Library</em></div>
+          </div>
+          <div class="g">ACC. NO. ______________<br>COLL. _________________</div>
+        </div>
+        <div class="sheet lab peel">
+          <div class="hd">
+            <div class="seal" style="--s:7"><div class="r"><i></i><i></i><i></i><i></i></div></div>
+            <div class="wmk"><em>Hudson Street</em><em>Library</em></div>
+          </div>
+          <div class="g">ACC. NO. ______________<br>COLL. _________________</div>
+        </div>
       </div>
-      <div class="g">ACC. NO. ______________<br>COLL. _________________</div>
     </div>
-    <p class="lbl">05 · Accession label 60 × 32 mm (2⅜ × 1¼ in) — seal 7 mm (¼ in)</p>
+    <p class="lbl">05 · Accession label 60 × 32 mm (2⅜ × 1¼ in) — seal 7 mm (¼ in)<br>
+    removable low-tack adhesive · die-cut, radius 1.6 mm · 21-up on A4 liner</p>
   </figure>
 </div>
 
@@ -450,15 +506,18 @@ idiom as everything else in the family: a form you fill in.</p>
   </figure>
 
   <div class="rules" style="margin-left:0;border-left:1px solid #3d3d44;padding-left:30px;max-width:32ch">
-    <b>Why this is the cheaper object</b>
+    <b>Printer's notes — bookmark</b>
     <ul>
-      <li>Five SKUs became one. No per-collection plate, no ink swap, no guessing quantities
-      per collection.</li>
-      <li>Still <b>5-up on A4, 10-up on SRA3</b>, straight guillotine cuts.</li>
-      <li>Printing both sides costs a second pass, not a second job — and the verso is the same
-      on every copy, so it never changes.</li>
-      <li>The verso keeps the spine idea: stood in a jar, they still read as a shelf.</li>
-      <li>New collections need a pen, not a reprint. The <i>Other</i> row is the escape hatch.</li>
+      <li><b>One SKU, one static forme.</b> No versioning, no plate change, no wash-up between
+      collections. Single run, single quantity.</li>
+      <li><b>4/4 process-free:</b> 2 spot colours both sides — black + PMS green — same two
+      units, work-and-turn. Identical artwork on every sheet, so no imposition variants.</li>
+      <li><b>Imposition:</b> 5-up on A4 (210 × 297), 10-up on SRA3 (320 × 450). Guillotine only —
+      no die, no kiss-cut.</li>
+      <li><b>No bleed.</b> All artwork inset 6 mm from trim; 3 mm trim allowance is sufficient.</li>
+      <li><b>Grain</b> long, parallel to the 210 mm dimension, so the piece stays flat in a book.</li>
+      <li>Reprints need no new artwork: new collections are written into the <i>Other</i> rule
+      by hand.</li>
     </ul>
   </div>
 </div>
@@ -477,23 +536,50 @@ idiom as everything else in the family: a form you fill in.</p>
     <tr><td>02 Compliment slip</td><td class="n">203 × 110 mm<br>8 × 4⁵⁄₁₆ in</td><td class="n">10 mm<br>⅜ in</td><td>as above, or 120 gsm</td><td>2</td>
       <td><b>3-up per pad sheet, zero waste.</b> Loose, not padded.</td></tr>
     <tr><td>03 Envelope</td><td class="n">110 × 220 mm (DL)<br>4⁵⁄₁₆ × 8¹¹⁄₁₆ in</td><td class="n">10 mm<br>⅜ in</td>
-      <td>100 gsm wove, gummed banker</td><td>2</td><td>Stock envelope overprinted. No conversion, no tooling.</td></tr>
+      <td>100 gsm wove, gummed banker flap</td><td>2 both faces</td>
+      <td>Stock envelope, overprinted — no conversion, no tooling, no die charge. <b>Print face and reverse:</b> face carries return block, postage box and recipient rules; reverse carries the seal centred on the flap point at 44 mm from the head. Hold 5 mm clear of all gummed areas and of the flap fold.</td></tr>
     <tr><td>04 Catalogue card</td><td class="n">125 × 75 mm<br>4¹⁵⁄₁₆ × 2¹⁵⁄₁₆ in</td><td class="n">7 mm<br>¼ in</td>
       <td>180 gsm card, uncoated</td><td>2</td><td>16-up on SRA3. Within a millimetre of the 5 × 3 in standard, so it fits stock card drawers. Punch optional.</td></tr>
     <tr><td>05 Accession label</td><td class="n">60 × 32 mm<br>2⅜ × 1¼ in</td><td class="n">7 mm<br>¼ in</td>
-      <td>80 gsm gummed or self-adhesive</td><td>2</td><td>21-up on A4 sheet stock, guillotined.</td></tr>
+      <td>Uncoated matt litho face stock, 80 gsm, on a <b>removable low-tack acid-free
+      adhesive</b>, glassine or PET release liner</td><td>2</td>
+      <td><b>Removable is a spec, not a preference</b> — permanent adhesive is not acceptable on
+      collection material. Kiss-cut through the face only, liner uncut; die radius 1.6 mm;
+      21-up on A4 liner (3 across × 7 down). Supply on sheets, not rolls.</td></tr>
     <tr><td>06 Bookmark</td><td class="n">55 × 210 mm<br>2³⁄₁₆ × 8¼ in</td><td class="n">10 mm<br>⅜ in</td>
       <td>300 gsm uncoated board, matte</td><td>2 — black + green, both sides</td>
       <td><b>One SKU, 5-up on A4, 10-up on SRA3.</b> Collection ticked by hand, so no per-collection plate or ink swap. Straight cuts, no die, no bleed.</td></tr>
   </tbody>
 </table>
-<p class="note" style="margin-top:32px"><b>On the second ink:</b> the seal is the only green
-on any piece, but it puts every item on a two-colour run. If you want to stay at one ink, the
-seal works in black — the <code style="font-family:var(--mono);font-size:12.5px;background:#33333a;padding:2px 6px">.seal.k</code>
-variant on this page shows it — or blind-embossed on the letterhead only, with black elsewhere.
-<b>Everything else stays cheap:</b> stock envelopes overprinted, slip and bookmarks ganging to
-whole numbers on standard parent sheets, straight guillotine cuts throughout, no coatings, no
-die-cutting, nothing needing a bleed.</p>
+<div class="rules" style="margin:34px 0 0;max-width:none;border-left:0;padding-left:0;
+  border-top:2px solid var(--brown);padding-top:18px">
+  <b>Notes to the printer — whole job</b>
+  <ul style="columns:2;column-gap:44px">
+    <li><b>Colours:</b> 2 spot, no process. Black, plus one green — match to a Pantone chip
+    <i>drawn down on the running stock</i>, not to the on-screen value. Target the site green
+    (#2D4A2B); the artwork is built at #034706 to allow for dot gain and dry-back on uncoated.</li>
+    <li><b>No bleed anywhere.</b> All artwork inset a minimum 6 mm from trim on every item.
+    3 mm trim allowance is sufficient throughout.</li>
+    <li><b>No coatings, no varnish, no lamination, no foil, no emboss.</b> Uncoated must stay
+    writable — these are forms that get filled in with pen and pencil.</li>
+    <li><b>No die-cutting</b> except the kiss-cut labels (item 05). Everything else is straight
+    guillotine.</li>
+    <li><b>Grain long</b> on all items, parallel to the longer dimension. Critical on the pad,
+    or the sheets cockle at the head.</li>
+    <li><b>Pad build (01):</b> 50 sheets, flexible padding compound at the head, 1.5 mm
+    chipboard back, no tape strip. Jog to the head before gluing.</li>
+    <li><b>Overprinting stock envelopes (03):</b> keep 5 mm clear of gummed areas and of the
+    flap fold; reverse prints after the face, with make-ready for flap thickness.</li>
+    <li><b>Registration:</b> the green only ever meets black at rules and the seal frame —
+    ±0.15 mm is adequate. No trapping required.</li>
+    <li><b>1-ink fallback:</b> if the job is quoted black-only, the seal prints black and
+    nothing else changes. Do not substitute a screen or tint for the green.</li>
+    <li><b>Proofs:</b> one wet or press proof on the running stock for the pad and the
+    bookmark; laser is adequate for the rest.</li>
+    <li><b>Delivery:</b> labels on sheets, not rolls. Bookmarks banded in 50s. Pads shrink-wrapped
+    in 5s.</li>
+  </ul>
+</div>
 
 </div>
 </body>
