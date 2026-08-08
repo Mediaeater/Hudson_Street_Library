@@ -118,6 +118,10 @@ const RGBFN = /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/g;
 const toHex = (r, g, b) =>
   '#' + [r, g, b].map((n) => Number(n).toString(16).padStart(2, '0')).join('');
 
+// TODO: also walk identity/ — the stationery's --seal is the same green by
+// decision (#034706, screen and press), but nothing enforces that, so it can
+// drift silently. Adding IDENTITY to the loop below is the whole change; the
+// BRAND allowlist already holds the right values. See plans/open-items/plan.md.
 function checkPalette() {
   const violations = [];
   for (const file of walk(SRC)) {
