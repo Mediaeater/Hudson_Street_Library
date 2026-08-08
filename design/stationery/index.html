@@ -11,11 +11,13 @@
 :root{
   --mm:1.55px;
   --paper:#F8F7F4; --ink:#0A0A0A; --brown:#8B7355;
-  /* the second ink — the green the mark actually renders in on the site.
-     .site-logo carries Tailwind's .text-teal-900, but design-system.css
-     overrides that class to --primary-700 and wins the cascade, so this
-     must track --primary-700 there, not any Tailwind teal. Print does not
-     get its own colour. */
+  /* the second ink. Deliberately deeper than the on-screen mark: the site
+     renders .site-logo at #2D4A2B (it carries Tailwind's .text-teal-900,
+     but design-system.css overrides that class to --primary-700 and wins
+     the unlayered cascade — so the class name says teal and the pixels say
+     green). Uncoated stock dries a spot green back lighter and duller, so
+     the press spec is pulled darker to land near the screen colour. Match
+     to a Pantone chip on the actual stock before the run. */
   --seal:#034706; --slate:#2F4858;
   --rule:rgba(10,10,10,.14);
   --serif:'Literata',Georgia,serif;
@@ -100,31 +102,59 @@ figure{margin:0}
    ============================================================ */
 .fam{display:flex;flex-wrap:wrap;gap:46px;align-items:flex-start}
 
-/* letterhead + second sheet */
-.f2{width:calc(203*var(--mm));height:calc(330*var(--mm));padding:calc(18*var(--mm))}
+/* ---- letterhead PAD. Glued at the head; doubles as the accession record ---- */
+.padwrap{position:relative;display:inline-block}
+.padwrap .pl{position:absolute;background:#efece5;border:1px solid rgba(10,10,10,.08)}
+.padwrap .pl1{top:calc(2*var(--mm));right:calc(-2*var(--mm));bottom:calc(-2*var(--mm));left:calc(2*var(--mm))}
+.padwrap .pl2{top:calc(4*var(--mm));right:calc(-4*var(--mm));bottom:calc(-4*var(--mm));left:calc(4*var(--mm))}
+.padwrap .sheet{position:relative;z-index:2}
+
+.f2{width:calc(203*var(--mm));height:calc(330*var(--mm));padding:calc(21*var(--mm)) calc(16*var(--mm)) calc(16*var(--mm))}
+/* the glued head — this is what makes it a pad, not a loose sheet */
+.f2 .glue{position:absolute;left:0;right:0;top:0;height:calc(11*var(--mm));
+  background:repeating-linear-gradient(90deg,rgba(139,115,85,.22) 0 calc(1.6*var(--mm)),
+    rgba(139,115,85,.08) calc(1.6*var(--mm)) calc(3.4*var(--mm)));
+  border-bottom:1px solid rgba(10,10,10,.18)}
+.f2 .glue span{position:absolute;right:calc(4*var(--mm));top:calc(3.6*var(--mm));font-family:var(--mono);
+  font-size:calc(1.55*var(--mm));letter-spacing:.16em;color:rgba(10,10,10,.42)}
 .f2 .hd{display:flex;justify-content:space-between;align-items:flex-start}
-.f2 .wmk{font-size:calc(7.2*var(--mm))}
-.f2 .wmk small{font-size:calc(1.9*var(--mm));margin-top:calc(4.2*var(--mm))}
-.f2 .hair{margin-top:calc(8.5*var(--mm));border-top:1px solid var(--ink);width:calc(34*var(--mm))}
-.f2 .vform{position:absolute;left:calc(7*var(--mm));top:calc(74*var(--mm));writing-mode:vertical-rl;
-  font-family:var(--mono);font-size:calc(1.75*var(--mm));letter-spacing:.42em;color:rgba(10,10,10,.36)}
-.f2 .intro{margin-top:calc(11*var(--mm));width:calc(102*var(--mm));font-family:var(--serif);
-  font-size:calc(2.75*var(--mm));line-height:calc(5.6*var(--mm));color:rgba(10,10,10,.38)}
-.f2 .intro .to{font-family:var(--mono);font-size:calc(1.95*var(--mm));letter-spacing:.1em;
-  text-transform:uppercase;color:rgba(10,10,10,.48);margin:0 0 calc(4.5*var(--mm))}
-.f2 .field{position:absolute;left:calc(18*var(--mm));top:calc(133*var(--mm));width:calc(104*var(--mm));height:calc(150*var(--mm));
-  background:repeating-linear-gradient(to bottom,transparent 0,transparent calc(7.5*var(--mm) - 1px),rgba(10,10,10,.075) calc(7.5*var(--mm)));
-  border-top:1px solid rgba(10,10,10,.3)}
-.f2 .dk{position:absolute;top:calc(133*var(--mm));right:calc(18*var(--mm));width:calc(49*var(--mm));
-  border-top:1px solid rgba(10,10,10,.3);font-family:var(--mono)}
-.f2 .dk div{display:flex;height:calc(7.5*var(--mm));align-items:center;border-bottom:1px solid rgba(10,10,10,.14)}
-.f2 .dk span{padding-left:calc(1.4*var(--mm));letter-spacing:.1em;text-transform:uppercase;
-  font-size:calc(1.7*var(--mm));color:rgba(10,10,10,.5)}
-.f2 .ft{position:absolute;left:calc(18*var(--mm));right:calc(18*var(--mm));bottom:calc(12*var(--mm));
-  display:flex;justify-content:space-between;font-family:var(--mono);font-size:calc(1.85*var(--mm));
-  letter-spacing:.09em;color:rgba(10,10,10,.45)}
-/* continuation sheet: mark only */
-.f2.cont .field{top:calc(56*var(--mm));height:calc(228*var(--mm));border-top:0}
+.f2 .wmk{font-size:calc(6.4*var(--mm))}
+.f2 .wmk small{font-size:calc(1.7*var(--mm));margin-top:calc(3*var(--mm))}
+.f2 .addr{font-family:var(--mono);font-size:calc(1.75*var(--mm));letter-spacing:.08em;
+  color:rgba(10,10,10,.58);line-height:1.85;margin-top:calc(2.6*var(--mm))}
+.f2 .hair{margin-top:calc(5.5*var(--mm));border-top:1px solid var(--ink);width:calc(34*var(--mm))}
+.f2 .vform{position:absolute;left:calc(6*var(--mm));top:calc(96*var(--mm));writing-mode:vertical-rl;
+  font-family:var(--mono);font-size:calc(1.7*var(--mm));letter-spacing:.4em;color:rgba(10,10,10,.34)}
+/* section rules */
+.f2 .sh{font-family:var(--label);font-weight:600;font-size:calc(1.95*var(--mm));letter-spacing:.22em;
+  text-transform:uppercase;color:var(--ink);border-bottom:1px solid var(--ink);
+  padding-bottom:calc(1.3*var(--mm));margin:calc(6.5*var(--mm)) 0 calc(3.2*var(--mm));
+  display:flex;justify-content:space-between;align-items:baseline}
+.f2 .sh i{font-style:normal;font-family:var(--mono);font-weight:400;font-size:calc(1.5*var(--mm));
+  letter-spacing:.12em;color:rgba(10,10,10,.4)}
+/* accession docket — two columns of fill-in fields */
+.f2 .dk{display:grid;grid-template-columns:1fr 1fr;gap:calc(3.2*var(--mm)) calc(8*var(--mm))}
+.f2 .dk .c i{display:block;font-style:normal;font-family:var(--mono);font-size:calc(1.55*var(--mm));
+  letter-spacing:.13em;text-transform:uppercase;color:rgba(10,10,10,.5);margin-bottom:calc(.8*var(--mm))}
+.f2 .dk .c u{display:block;text-decoration:none;border-bottom:1px solid rgba(10,10,10,.34);height:calc(5.4*var(--mm))}
+/* condition — the antiquarian trade grades, ticked */
+.f2 .cond .r{display:flex;align-items:center;margin-bottom:calc(3.4*var(--mm))}
+.f2 .cond .r > b{font-family:var(--mono);font-weight:400;font-size:calc(1.6*var(--mm));letter-spacing:.12em;
+  text-transform:uppercase;color:rgba(10,10,10,.55);width:calc(22*var(--mm));flex:none}
+.f2 .cond .gs{display:flex;flex:1;justify-content:space-between}
+.f2 .g{display:flex;align-items:center;gap:calc(1.3*var(--mm));font-family:var(--label);font-weight:500;
+  font-size:calc(1.8*var(--mm));letter-spacing:.05em;text-transform:uppercase;color:var(--ink)}
+.f2 .g em{display:block;width:calc(2.9*var(--mm));height:calc(2.9*var(--mm));flex:none;
+  border:calc(.3*var(--mm)) solid rgba(10,10,10,.5);border-radius:50%}
+.f2 .cond .fl{display:flex;align-items:baseline;gap:calc(2.4*var(--mm));margin-top:calc(1.4*var(--mm))}
+.f2 .cond .fl b{font-family:var(--mono);font-weight:400;font-size:calc(1.6*var(--mm));letter-spacing:.12em;
+  text-transform:uppercase;color:rgba(10,10,10,.55);width:calc(22*var(--mm));flex:none}
+.f2 .cond .fl u{flex:1;text-decoration:none;border-bottom:1px solid rgba(10,10,10,.28);height:calc(5*var(--mm))}
+.f2 .field{margin-top:calc(2.4*var(--mm));height:calc(147*var(--mm));
+  background:repeating-linear-gradient(to bottom,transparent 0,transparent calc(7*var(--mm) - 1px),rgba(10,10,10,.075) calc(7*var(--mm)))}
+.f2 .ft{position:absolute;left:calc(16*var(--mm));right:calc(16*var(--mm));bottom:calc(11*var(--mm));
+  display:flex;justify-content:space-between;border-top:1px solid var(--rule);padding-top:calc(2.6*var(--mm));
+  font-family:var(--mono);font-size:calc(1.8*var(--mm));letter-spacing:.09em;color:rgba(10,10,10,.45)}
 
 /* compliment slip 203 × 110 */
 .slip{width:calc(203*var(--mm));height:calc(110*var(--mm));padding:calc(14*var(--mm)) calc(18*var(--mm))}
@@ -163,7 +193,7 @@ figure{margin:0}
 .bm3 .hair{border-top:1px solid var(--ink);margin:calc(5.5*var(--mm)) 0 calc(3.4*var(--mm))}
 .bm3 .cl{font-family:var(--mono);font-size:calc(1.6*var(--mm));letter-spacing:.18em;
   text-transform:uppercase;color:rgba(10,10,10,.45);margin-bottom:calc(2.4*var(--mm))}
-.bm3 .row{display:flex;align-items:center;gap:calc(2.4*var(--mm));height:calc(11.8*var(--mm));
+.bm3 .row{display:flex;align-items:center;gap:calc(2.4*var(--mm));height:calc(10.6*var(--mm));
   border-bottom:1px solid rgba(10,10,10,.13)}
 .bm3 .row .o{width:calc(3.4*var(--mm));height:calc(3.4*var(--mm));border:calc(.34*var(--mm)) solid rgba(10,10,10,.5);
   border-radius:50%;flex:none}
@@ -221,23 +251,24 @@ figure{margin:0}
   <span class="meta">one component · three sizes · dark green</span>
 </div>
 <p class="note" style="margin-bottom:30px">The mark is the spines device ruled into a square and
-stamped in the library's dark green — <b>#034706</b>, the ink the mark is set in at the
-head of every page on the site. It is drawn once and used at three fixed sizes — nothing else, and no
+stamped in the library's dark green — <b>#034706</b> on press, matched to the green the
+wordmark already carries at the head of every page on the site. It is drawn once and used at
+three fixed sizes — nothing else, and no
 piece goes without it. Below 10 mm the wordmark drops away and the seal carries the identity
 alone.</p>
 
 <div class="marks">
   <div class="item">
     <div class="box"><div class="seal" style="--s:15"><div class="r"><i></i><i></i><i></i><i></i></div></div></div>
-    <p class="cap"><b>15 MM</b>letterhead<br>continuation sheet</p>
+    <p class="cap"><b>15 MM · ⅝ IN</b>accession pad</p>
   </div>
   <div class="item">
     <div class="box"><div class="seal" style="--s:10"><div class="r"><i></i><i></i><i></i><i></i></div></div></div>
-    <p class="cap"><b>10 MM</b>compliment slip · envelope<br>bookmark</p>
+    <p class="cap"><b>10 MM · ⅜ IN</b>compliment slip · envelope<br>bookmark</p>
   </div>
   <div class="item">
     <div class="box"><div class="seal" style="--s:7"><div class="r"><i></i><i></i><i></i><i></i></div></div></div>
-    <p class="cap"><b>7 MM</b>catalogue card<br>accession label</p>
+    <p class="cap"><b>7 MM · ¼ IN</b>catalogue card<br>accession label</p>
   </div>
   <div class="item">
     <div class="box" style="align-items:flex-start;gap:calc(5*var(--mm));padding:24px">
@@ -251,8 +282,9 @@ alone.</p>
     <b>Rules</b>
     <ul>
       <li>Square, ruled at <b>5.8% of its own width</b>, so the frame scales with the mark.</li>
-      <li>Always <b>#034706</b> — the green the mark renders in on the site, never a
-      print-only colour. The black variant exists only for the 1-ink fallback.</li>
+      <li>Always <b>#034706</b> — the press green, pulled deeper than the site's on-screen
+      <b>#2D4A2B</b> so it dries close to it on uncoated stock. Never a third colour. The
+      black variant exists only for the 1-ink fallback.</li>
       <li>Never smaller than 7 mm — the leaning spine closes up below that.</li>
       <li>Clear space on all sides equal to <b>one spine width</b>.</li>
       <li>The seal never sits inside a rule, box, or panel other than its own.</li>
@@ -263,50 +295,70 @@ alone.</p>
 <!-- ============ B · THE FAMILY ============ -->
 <div class="sec-head" id="family">
   <span class="n">B</span><h2>The family — Foolscap Mk II</h2>
-  <span class="meta">every piece · one mark · black + green</span>
+  <span class="meta">six pieces · one mark · black + green</span>
 </div>
-<p class="note" style="margin-bottom:36px">Seven pieces, all carrying the same seal at its
-specified size. The British sheet keeps its foolscap trim, its docket, and its ledger ruling;
-what it takes from Japanese stationery is <b>restraint and a stamp</b> — the boxed seal,
-the stacked wordmark, a 34 mm hairline in place of the full-width rule, a confined writing
-field instead of ruling that bleeds across the page, and the reference set vertically in the
-left margin. None of it is foreign to a records office, which is why the graft holds.</p>
+<p class="note" style="margin-bottom:36px">Six pieces, all carrying the same seal at its
+specified size. The head sheet is a <b>pad</b> — glued at the head, 50 sheets on a chipboard
+back — and it is not a plain letterhead: it is the accession record, with a two-column docket
+and a condition block using the antiquarian trade grades. What the design takes from Japanese
+stationery is <b>restraint and a stamp</b>: the boxed seal, the stacked wordmark, a 34 mm
+hairline in place of the full-width rule, confined ruling instead of ruling that bleeds across
+the page, and the form reference set vertically in the left margin.</p>
 
 <div class="fam">
   <figure>
-    <div class="sheet f2">
-      <div class="hd">
-        <div class="wmk"><em>Hudson Street</em><em>Library</em>
-          <small>Rare books · Photobooks · Artists' publications</small></div>
-        <div class="seal" style="--s:15"><div class="r"><i></i><i></i><i></i><i></i></div></div>
-      </div>
-      <div class="hair"></div>
-      <div class="vform">HSL · FORM A/1 · ACCESSION</div>
-      <div class="intro">
-        <p class="to">To the attention of —</p>
-        <p>The accession described below has been catalogued and shelved under the grouping
-        entered in the docket. Condition report and provenance are held on file.</p>
-      </div>
-      <div class="field"></div>
-      <div class="dk">
-        <div><span>Ref.</span></div><div><span>Date</span></div>
-        <div><span>Fol.</span></div><div><span>Acc. no.</span></div>
-      </div>
-      <div class="ft"><span>HUDSONSTREETLIBRARY.COM</span><span>FOLIO 1 OF 1</span></div>
-    </div>
-    <p class="lbl">01 · Letterhead 203 × 330 — seal 15 mm</p>
-  </figure>
+    <div class="padwrap">
+      <span class="pl pl2"></span><span class="pl pl1"></span>
+      <div class="sheet f2">
+        <div class="glue"><span>PAD — 50 SHEETS</span></div>
+        <div class="hd">
+          <div>
+            <div class="wmk"><em>Hudson Street</em><em>Library</em>
+              <small>Rare books · Photobooks · Artists' publications</small></div>
+            <div class="addr">421 HUDSON ST., NEW YORK, NY 10014<br>HUDSONSTREETLIBRARY.COM</div>
+          </div>
+          <div class="seal" style="--s:15"><div class="r"><i></i><i></i><i></i><i></i></div></div>
+        </div>
+        <div class="hair"></div>
+        <div class="vform">HSL · FORM A/1 · ACCESSION &amp; CONDITION</div>
 
-  <figure>
-    <div class="sheet f2 cont">
-      <div class="hd" style="justify-content:flex-end">
-        <div class="seal" style="--s:15"><div class="r"><i></i><i></i><i></i><i></i></div></div>
+        <div class="sh">Accession <i>one sheet per volume</i></div>
+        <div class="dk">
+          <div class="c"><i>Ref.</i><u></u></div>
+          <div class="c"><i>Acc. no.</i><u></u></div>
+          <div class="c"><i>Date received</i><u></u></div>
+          <div class="c"><i>Source / acquired from</i><u></u></div>
+          <div class="c"><i>Collection</i><u></u></div>
+          <div class="c"><i>Est. value</i><u></u></div>
+          <div class="c"><i>Shelf location</i><u></u></div>
+          <div class="c"><i>Documentation held</i><u></u></div>
+        </div>
+
+        <div class="sh">Condition <i>trade grades</i></div>
+        <div class="cond">
+          <div class="r"><b>Volume</b>
+            <div class="gs">
+              <span class="g"><em></em>Fine</span><span class="g"><em></em>Near fine</span>
+              <span class="g"><em></em>Very good</span><span class="g"><em></em>Good</span>
+              <span class="g"><em></em>Fair</span><span class="g"><em></em>Poor</span>
+            </div>
+          </div>
+          <div class="r"><b>Jacket / wrapper</b>
+            <div class="gs">
+              <span class="g"><em></em>Fine</span><span class="g"><em></em>Near fine</span>
+              <span class="g"><em></em>Very good</span><span class="g"><em></em>Good</span>
+              <span class="g"><em></em>Fair</span><span class="g"><em></em>None issued</span>
+            </div>
+          </div>
+          <div class="fl"><b>Faults noted</b><u></u></div>
+        </div>
+
+        <div class="sh">Notes <i>provenance · references · remarks</i></div>
+        <div class="field"></div>
+        <div class="ft"><span>SIGNED ____________________</span><span>FOLIO 1 OF ___</span></div>
       </div>
-      <div class="vform">HSL · FORM A/2 · CONTINUATION</div>
-      <div class="field"></div>
-      <div class="ft"><span>HUDSONSTREETLIBRARY.COM</span><span>FOLIO ___ OF ___</span></div>
     </div>
-    <p class="lbl">02 · Continuation sheet 203 × 330 — seal only</p>
+    <p class="lbl">01 · Accession pad 203 × 330 mm (8 × 13 in) — seal 15 mm (⅝ in) · glued head, 50 sheets</p>
   </figure>
 
   <figure>
@@ -317,19 +369,19 @@ left margin. None of it is foreign to a records office, which is why the graft h
         <div class="seal" style="--s:10"><div class="r"><i></i><i></i><i></i><i></i></div></div>
       </div>
       <div class="wc">With compliments</div>
-      <div class="ft"><span>HUDSON STREET · NEW YORK</span><span>HUDSONSTREETLIBRARY.COM</span></div>
+      <div class="ft"><span>421 HUDSON ST., NEW YORK, NY 10014</span><span>HUDSONSTREETLIBRARY.COM</span></div>
     </div>
-    <p class="lbl">03 · Compliment slip 203 × 110 — seal 10 mm · one third of the letterhead</p>
+    <p class="lbl">02 · Compliment slip 203 × 110 mm (8 × 4⁵⁄₁₆ in) — seal 10 mm (⅜ in) · one third of the pad sheet</p>
   </figure>
 
   <figure>
     <div class="env env-dl">
       <div class="flap"></div>
-      <div class="ret"><b>Hudson Street<br>Library</b>Hudson Street, New York<br>HUDSONSTREETLIBRARY.COM</div>
+      <div class="ret"><b>Hudson Street<br>Library</b>421 Hudson St., New York, NY 10014<br>HUDSONSTREETLIBRARY.COM</div>
       <div class="seal" style="--s:10"><div class="r"><i></i><i></i><i></i><i></i></div></div>
       <div class="stamp"></div>
     </div>
-    <p class="lbl">04 · Envelope DL banker 110 × 220 — seal 10 mm</p>
+    <p class="lbl">03 · Envelope DL banker 110 × 220 mm (4⁵⁄₁₆ × 8¹¹⁄₁₆ in) — seal 10 mm (⅜ in)</p>
   </figure>
 
   <figure>
@@ -343,7 +395,7 @@ left margin. None of it is foreign to a records office, which is why the graft h
       2025. 128 p.; 29 cm.<br>1. Painting. 2. Exhibition catalogues.</div>
       <div class="hole"></div>
     </div>
-    <p class="lbl">05 · Catalogue card 125 × 75 — seal 7 mm</p>
+    <p class="lbl">04 · Catalogue card 125 × 75 mm (4¹⁵⁄₁₆ × 2¹⁵⁄₁₆ in ≈ 5 × 3) — seal 7 mm (¼ in)</p>
   </figure>
 
   <figure>
@@ -354,7 +406,7 @@ left margin. None of it is foreign to a records office, which is why the graft h
       </div>
       <div class="g">ACC. NO. ______________<br>COLL. _________________</div>
     </div>
-    <p class="lbl">06 · Accession label 60 × 32 — seal 7 mm</p>
+    <p class="lbl">05 · Accession label 60 × 32 mm (2⅜ × 1¼ in) — seal 7 mm (¼ in)</p>
   </figure>
 </div>
 
@@ -376,22 +428,23 @@ idiom as everything else in the family: a form you fill in.</p>
       <div class="row"><span class="o"></span><span class="nm">Monographs</span><span class="n">04</span></div>
       <div class="row"><span class="o"></span><span class="nm">Artists' Books</span><span class="n">05</span></div>
       <div class="row"><span class="o"></span><span class="nm">Collage</span><span class="n">06</span></div>
-      <div class="row"><span class="o"></span><span class="nm">Music Photobooks</span><span class="n">07</span></div>
-      <div class="row"><span class="o"></span><span class="nm">Queer Culture</span><span class="n">08</span></div>
-      <div class="row"><span class="o"></span><span class="nm">Exhibition Catalogues</span><span class="n">09</span></div>
-      <div class="row"><span class="o"></span><span class="nm">Zines</span><span class="n">10</span></div>
-      <div class="row"><span class="o"></span><span class="nm">Ephemera</span><span class="n">11</span></div>
+      <div class="row"><span class="o"></span><span class="nm">Fashion</span><span class="n">07</span></div>
+      <div class="row"><span class="o"></span><span class="nm">Music Photobooks</span><span class="n">08</span></div>
+      <div class="row"><span class="o"></span><span class="nm">Queer Culture</span><span class="n">09</span></div>
+      <div class="row"><span class="o"></span><span class="nm">Exhibition Catalogues</span><span class="n">10</span></div>
+      <div class="row"><span class="o"></span><span class="nm">Zines</span><span class="n">11</span></div>
+      <div class="row"><span class="o"></span><span class="nm">Ephemera</span><span class="n">12</span></div>
       <div class="row"><span class="o"></span><span class="nm">Other ____________</span><span class="n">—</span></div>
-      <div class="ft">ACC. NO. ____________<br>HUDSONSTREETLIBRARY.COM</div>
+      <div class="ft">ACC. NO. ____________<br>421 HUDSON ST., NY 10014</div>
     </div>
-    <p class="lbl">07 · Bookmark, recto 55 × 210 — seal 10 mm · one SKU</p>
+    <p class="lbl">06 · Bookmark, recto 55 × 210 mm (2³⁄₁₆ × 8¼ in) — seal 10 mm (⅜ in) · one SKU</p>
   </figure>
 
   <figure>
     <div class="sheet bm3 verso">
       <div class="seal" style="--s:10"><div class="r"><i></i><i></i><i></i><i></i></div></div>
       <div class="name-cell"><span class="name">Hudson Street Library</span></div>
-      <div class="ft" style="text-align:center">EST. MMXXIV · NEW YORK</div>
+      <div class="ft" style="text-align:center">421 HUDSON ST., NEW YORK, NY 10014</div>
     </div>
     <p class="lbl">Bookmark, verso — spine face, identical on every copy</p>
   </figure>
@@ -418,20 +471,18 @@ idiom as everything else in the family: a form you fill in.</p>
 <table class="spec">
   <thead><tr><th>Item</th><th>Trim</th><th>Seal</th><th>Stock</th><th>Inks</th><th>Imposition &amp; note</th></tr></thead>
   <tbody>
-    <tr><td>01 Letterhead</td><td class="n">203 × 330 mm</td><td class="n">15 mm</td>
-      <td>100 gsm uncoated wove, natural white</td><td>2 — black + green</td>
-      <td>1-up from SRA3. <b>The one premium</b> — foolscap wastes ~35% of the parent sheet. Falls back to A4 unchanged.</td></tr>
-    <tr><td>02 Continuation</td><td class="n">203 × 330 mm</td><td class="n">15 mm</td><td>as above</td><td>2</td>
-      <td>Seal and footer only. Runs on the same forme as 01.</td></tr>
-    <tr><td>03 Compliment slip</td><td class="n">203 × 110 mm</td><td class="n">10 mm</td><td>as above, or 120 gsm</td><td>2</td>
-      <td><b>3-up per letterhead sheet, zero waste.</b></td></tr>
-    <tr><td>04 Envelope</td><td class="n">110 × 220 mm (DL)</td><td class="n">10 mm</td>
+    <tr><td>01 Accession pad</td><td class="n">203 × 330 mm<br>8 × 13 in</td><td class="n">15 mm<br>⅝ in</td>
+      <td>100 gsm uncoated wove, natural white; 1.5 mm chipboard back</td><td>2 — black + green</td>
+      <td><b>50 sheets, padded at the head</b> with flexible padding compound. 1-up from SRA3 — foolscap wastes ~35% of the parent sheet, the one premium in the family. Falls back to A4 unchanged.</td></tr>
+    <tr><td>02 Compliment slip</td><td class="n">203 × 110 mm<br>8 × 4⁵⁄₁₆ in</td><td class="n">10 mm<br>⅜ in</td><td>as above, or 120 gsm</td><td>2</td>
+      <td><b>3-up per pad sheet, zero waste.</b> Loose, not padded.</td></tr>
+    <tr><td>03 Envelope</td><td class="n">110 × 220 mm (DL)<br>4⁵⁄₁₆ × 8¹¹⁄₁₆ in</td><td class="n">10 mm<br>⅜ in</td>
       <td>100 gsm wove, gummed banker</td><td>2</td><td>Stock envelope overprinted. No conversion, no tooling.</td></tr>
-    <tr><td>05 Catalogue card</td><td class="n">125 × 75 mm</td><td class="n">7 mm</td>
-      <td>180 gsm card, uncoated</td><td>2</td><td>16-up on SRA3. Punch optional — skip unless the cards go in a drawer.</td></tr>
-    <tr><td>06 Accession label</td><td class="n">60 × 32 mm</td><td class="n">7 mm</td>
+    <tr><td>04 Catalogue card</td><td class="n">125 × 75 mm<br>4¹⁵⁄₁₆ × 2¹⁵⁄₁₆ in</td><td class="n">7 mm<br>¼ in</td>
+      <td>180 gsm card, uncoated</td><td>2</td><td>16-up on SRA3. Within a millimetre of the 5 × 3 in standard, so it fits stock card drawers. Punch optional.</td></tr>
+    <tr><td>05 Accession label</td><td class="n">60 × 32 mm<br>2⅜ × 1¼ in</td><td class="n">7 mm<br>¼ in</td>
       <td>80 gsm gummed or self-adhesive</td><td>2</td><td>21-up on A4 sheet stock, guillotined.</td></tr>
-    <tr><td>07 Bookmark</td><td class="n">55 × 210 mm</td><td class="n">10 mm</td>
+    <tr><td>06 Bookmark</td><td class="n">55 × 210 mm<br>2³⁄₁₆ × 8¼ in</td><td class="n">10 mm<br>⅜ in</td>
       <td>300 gsm uncoated board, matte</td><td>2 — black + green, both sides</td>
       <td><b>One SKU, 5-up on A4, 10-up on SRA3.</b> Collection ticked by hand, so no per-collection plate or ink swap. Straight cuts, no die, no bleed.</td></tr>
   </tbody>
