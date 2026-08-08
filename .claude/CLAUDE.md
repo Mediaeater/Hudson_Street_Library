@@ -15,7 +15,9 @@
 - Pre-commit hook enforces this, but verify manually if bypassed
 - A single structural error breaks the entire Eleventy build
 
-**CSV must always have exactly 36 columns per row:**
+**CSV must always have exactly 37 columns per row:**
+(`id` … `cataloged_date`. Verified 8 Aug 2026 by strict parse — every row has 37
+fields and none of the columns is unused. This said 36 for a long time; it was wrong.)
 - Run `node scripts/validate-csv-structure.js` if you manually edit the CSV
 - Missing or extra columns cause build failures
 
@@ -116,7 +118,7 @@
 
 ## Project Structure
 
-- **Book data:** `src/_data/books.csv` (36 columns, 400+ books)
+- **Book data:** `src/_data/books.csv` (37 columns, ~1,930 books as of Aug 2026)
 - **Cover images:** `src/assets/images/books/`
 - **Templates:** `src/_includes/layouts/book.njk`
 - **Filters:** `.eleventy.js`

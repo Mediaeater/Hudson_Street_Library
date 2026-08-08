@@ -1,336 +1,206 @@
+---
+eleventyExcludeFromCollections: true
+---
+
 # Hudson Street Library Design System
 
-## Core Design Principles
+The working brief for this site. Every value below is the value actually in the
+code — `src/assets/css/design-system.css` and `src/assets/css/input.css` are the
+two files that define them, and `npm run test:design` fails the build if source
+and brief drift apart.
 
-### Visual DNA
-- **Clarity over ornament**: Prioritize hierarchy, whitespace, and typography
-- **Restraint**: 1-2 accent colors max, limited shadows, purposeful rounded corners
-- **Consistency**: Reuse tokens, spacing, and patterns throughout
+Last verified against the code: 8 August 2026.
 
-## Design Tokens
+## Core principles
 
-### Spacing Scale
-```
-4px, 8px, 12px, 16px, 24px, 32px, 48px, 64px
-```
+- **Clarity over ornament.** Hierarchy, whitespace, and typography carry the page.
+- **Restraint.** One accent colour. Borders before shadows. Rounded corners with a reason.
+- **Consistency.** Reuse tokens. A raw hex in a page's `<style>` block is how the palette fractures.
 
-### Typography Scale
-```
-12px, 14px, 16px, 18px, 20px, 24px, 32px, 40px
-Base: 16px
-```
+## Colour
 
-### Font Weights
-```
-400 (regular), 500 (medium), 600 (semibold)
-```
+### The library green
 
-### Border Radius
-```
-radius-sm: 8px
-radius-md: 12px
-radius-lg: 16px
-radius-full: 9999px
-```
+One green, used for the mark, every link, and the seal on the printed
+stationery. Screen and press share the value.
 
-### Color Palette
 ```css
-/* Neutrals */
---neutral-50: #fafafa;
---neutral-100: #f5f5f5;
---neutral-200: #e5e5e5;
---neutral-300: #d4d4d4;
---neutral-400: #a3a3a3;
---neutral-500: #737373;
---neutral-600: #525252;
---neutral-700: #404040;
---neutral-800: #262626;
---neutral-900: #171717;
-
-/* Primary (Teal) */
---primary-400: #2dd4bf;
---primary-500: #14b8a6;
---primary-600: #0d9488;
---primary-700: #0f766e;
-
-/* Semantic */
---success: #22c55e;
---warning: #f59e0b;
---error: #ef4444;
+--primary-400: #81b182;  /* oklch .715 .085 145 */
+--primary-500: #508950;  /* oklch .575 .105 144 */
+--primary-600: #276628;  /* oklch .455 .115 143.5 —  6.96:1 on white */
+--primary-700: #034706;  /* oklch .346 .113 143.1 — 11.01:1 on white  ← the mark */
+--forest-800: #003100;   /* hover / pressed */
+--forest-900: #002000;
 ```
 
-### Shadows
+The hue is locked at ~143° across the whole ramp. This matters: the previous
+ramp drifted from 117° at the light end to 143° at the dark end and its chroma
+collapsed to 0.029 at the 500 step, which is why it read grey rather than green.
+If you add a step, keep the hue and give it a chroma that fits the curve.
+
+`teal-*` class names still exist and map onto this ramp — `.text-teal-700` and
+`.text-teal-900` both resolve to `--primary-700`. The names are historical. The
+colour is green. Do not "correct" a teal class name to an actual teal.
+
+### Semantic colours
+
+Deliberately not brand. Status and feedback only.
+
 ```css
---shadow-none: none;
---shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
---shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+--success: #22c55e;   --warning: #f59e0b;   --error: #ef4444;
+
+/* badges + alerts */
+badge-success  #15803d on #dcfce7        alert-success  #bbf7d0 on #f0fdf4
+status-available #065f46 on #d1fae5
 ```
 
-### Borders
+### Neutrals
+
+Warm, not Tailwind's default greys. `--neutral-50` is the page background.
+
 ```css
---border: 1px solid rgba(0,0,0,0.08);
---border-dark: 1px solid rgba(0,0,0,0.12);
+--neutral-50:  #faf9f6;   --neutral-500: #737373;
+--neutral-100: #f5f5f5;   --neutral-600: #525252;
+--neutral-200: #e5e5e5;   --neutral-700: #404040;
+--neutral-300: #d4d4d4;   --neutral-800: #262626;
+--neutral-400: #a3a3a3;   --neutral-900: #171717;
 ```
 
-## Layout System
+### Where colour is defined
 
-### Grid
-- 12 columns
-- Content max-width: 1200px
-- Gutters: 24px
-- Section padding: 48-64px desktop, 32-48px mobile
+Two files, and they must stay in step:
 
-### Breakpoints
+- `design-system.css` `:root` — unlayered, so it wins for `.text-primary-*` and `.text-teal-*`
+- `input.css` `@theme` — backs every other utility (`hover:`, `border-`, `from-`)
+
+Changing one and not the other splits the palette in half, with the resting
+state correct and the hover state stale. `npm run test:design` catches this.
+
+## Typography
+
+Three faces, all free and open source.
+
+- **Literata** (TypeTogether) — all content. One variable font; the optical-size
+  axis gives a high-contrast display cut at headline sizes and a sturdier cut for
+  running text.
+- **Crimson Pro** — the wordmark only (`.site-logo`). It set the whole site for
+  years and now keeps the door. This is not a leftover; do not "unify" it away.
+- **Archivo Narrow** (Omnibus-Type) — dates, labels, small matter, UI chrome.
+
+### Type scale
+
+```
+12  14  16  18  20  24  32  40  48  60  72 px      base 16px
+```
+
+Weights: 400 regular, 500 medium, 600 semibold, 700 bold (wordmark and titles).
+
+## Space, shape, motion
+
 ```css
-sm: 640px
-md: 768px
-lg: 1024px
-xl: 1280px
-2xl: 1536px
+/* spacing */   4  8  12  16  24  32  48  64 px
+/* radius */    --radius-sm: 8px    --radius-md: 12px
+                --radius-lg: 16px   --radius-full: 9999px
+/* shadows */   --shadow-sm: 0 1px 2px rgba(0,0,0,.06)
+                --shadow-md: 0 4px 12px rgba(0,0,0,.08)
+/* borders */   --border: 1px solid rgba(0,0,0,.08)
+                --border-dark: 1px solid rgba(0,0,0,.12)
+/* motion */    --duration-fast: 80ms   --duration-base: 120ms
+                --duration-slow: 200ms  --ease: cubic-bezier(.4,0,.2,1)
 ```
 
-## Component Specifications
+Align to the 4px grid. Prefer a 1px border to a shadow. Respect
+`prefers-reduced-motion` — the reset already does.
 
-### Buttons
-```css
-/* Base */
-.btn {
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-weight: 500;
-  transition: all 120ms ease-in-out;
-  min-height: 44px;
-}
+## Layout
 
-/* Primary */
-.btn-primary {
-  background: var(--primary-600);
-  color: white;
-}
-.btn-primary:hover {
-  background: var(--primary-700);
-}
+- Content max-width **1200px**, gutters **24px** (`.container`)
+- Prose capped at **65ch**, centred with auto inline margins
+- Section padding 48–64px desktop, 32–48px mobile
+- Breakpoints: `sm 640` `md 768` `lg 1024` `xl 1280` `2xl 1536`
 
-/* Secondary */
-.btn-secondary {
-  border: 1px solid rgba(0,0,0,0.08);
-  background: transparent;
-}
-.btn-secondary:hover {
-  background: rgba(0,0,0,0.02);
-}
+## The mark
 
-/* Sizes */
-.btn-sm { padding: 6px 12px; min-height: 36px; }
-.btn-lg { padding: 12px 24px; min-height: 52px; }
-```
+A shelf of four spines, one leaning. The entire drawing is four rectangles, the
+fourth rotated 9°. It began as the favicon and now stands at the head of every
+page.
 
-### Inputs
-```css
-.input {
-  padding: 8px 12px;
-  border: 1px solid rgba(0,0,0,0.08);
-  border-radius: 8px;
-  transition: all 120ms ease-in-out;
-}
-.input:focus {
-  outline: none;
-  border-color: var(--primary-500);
-  box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.1);
-}
-```
+- Always `#034706`. The black variant exists only for a one-ink print fallback.
+- Never below **7mm** in print — the leaning spine closes up.
+- Clear space on all sides equal to one spine width.
+- **Inline it as SVG with an explicit fill.** The favicon file self-inverts in OS
+  dark mode; used as `<img>` it vanishes against a light background.
 
-### Cards
-```css
-.card {
-  background: white;
-  border: 1px solid rgba(0,0,0,0.08);
-  border-radius: 16px;
-  padding: 24px;
-}
-```
+## Build architecture
 
-### Navigation
-```css
-.nav-link {
-  padding: 8px 12px;
-  border-radius: 8px;
-  transition: all 120ms ease-in-out;
-}
-.nav-link:hover {
-  background: rgba(0,0,0,0.02);
-}
-.nav-link.active {
-  background: rgba(0,0,0,0.06);
-  font-weight: 500;
-}
-```
+Worth understanding before adding CSS, because two of the traps here have each
+cost a day.
 
-## State Design
+- **Tailwind v4**, configured in `input.css` via `@theme`. There is no
+  `tailwind.config.js`.
+- **Preflight is off** (v3 parity). `input.css` `@layer base` carries the only
+  reset. That includes `a { color: inherit; text-decoration: none }` — without
+  it, any link lacking a colour class renders browser-blue `#0000EE`.
+- **`design-system.css` is unlayered and loads second**, so its rules beat
+  anything in a Tailwind layer. This is deliberate and load-bearing: several page
+  templates ship their own inline `*{margin:0;padding:0}` reset, and only
+  unlayered utilities beat it. Do not fold this sheet into a layer.
+- **Seven built pages do not load `tailwind.css`** — four redirect stubs plus
+  `discover.html`, `browse-gallery-demo/`, and this page. Anything added to
+  `@layer base` is inert on them. They are listed in `NO_TAILWIND_OK` in
+  `scripts/validate-design-system.js`.
+- **The header is one component**, `_includes/components/site-header.njk`. Pages
+  that copied its markup froze at an older nav; 49 of them had to be repaired.
 
-### Interactive States
-- **Default**: Base state
-- **Hover**: Subtle background or opacity change (120ms transition)
-- **Focus**: 2px ring with offset, visible without color
-- **Active**: Slightly darker/pressed appearance
-- **Disabled**: Opacity 0.5, cursor not-allowed
+## Accessibility
 
-### Loading States
-- Use skeletons for content loading
-- Spinners only for actions < 400ms
-- Preserve layout to prevent jank
+- WCAG AA contrast: 4.5:1 body, 3:1 large text. The green ramp clears AAA at the
+  600 and 700 steps.
+- Keyboard navigation for every interactive element.
+- Focus visible without relying on colour — 2px outline, 2px offset.
+- Target size minimum 44×44px.
+- Semantic HTML, linked form labels, alt text on every image.
 
-### Empty States
-```html
-<div class="empty-state">
-  <h3>No results found</h3>
-  <p>Try adjusting your filters or search terms</p>
-  <button class="btn-primary">Clear filters</button>
-</div>
-```
+## Enforcement
 
-## Motion Guidelines
+`npm run test:design` — runs in pre-commit (source checks) and in CI against the
+built site. Three invariants:
 
-### Timing
-- Micro-interactions: 80-120ms
-- Standard transitions: 120-200ms
-- Page transitions: 200-300ms
+| check | fails when |
+|---|---|
+| `palette` | a green/teal-hue value outside the ramp appears in any CSS declaration |
+| `coverage` | a built page doesn't load `tailwind.css` and isn't allowlisted |
+| `header` | a page hand-rolls the wordmark instead of including the component |
 
-### Easing
-```css
---ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
-```
+A deliberately non-brand green goes in the `SEMANTIC` allowlist in that script,
+with a reason. That makes "this green is fine" a recorded decision instead of an
+assumption.
 
-### Reduced Motion
-```css
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-```
+## Do and don't
 
-## Accessibility Requirements
+**Do** — use a token, not a hex. Separate with borders and space. One primary
+action per view. Keep body measure at 60–75 characters. Implement every
+interactive state.
 
-### Core Requirements
-- WCAG AA contrast (4.5:1 body, 3:1 large text)
-- Keyboard navigation for all interactive elements
-- Focus indicators visible without color
-- Target sizes minimum 44×44px
-- Form labels properly linked
-- ARIA labels where needed
+**Don't** — write a raw green hex anywhere outside the two token files. Stack
+heavy shadows. Centre long body text. Add a stylesheet when the existing build
+would do. Copy the header markup into a page.
 
-### Screen Reader Support
-- Semantic HTML structure
-- Live regions for async updates
-- Skip links for navigation
-- Alt text for all images
+## Brief for an assistant
 
-## Implementation Examples
+When implementing against this system:
 
-### Clean Page Structure
-```html
-<div class="min-h-screen bg-neutral-50 text-neutral-900">
-  <header class="sticky top-0 z-10 bg-white/80 backdrop-blur border-b">
-    <div class="mx-auto max-w-6xl px-6 py-4">
-      <!-- Header content -->
-    </div>
-  </header>
+1. Semantic HTML with Tailwind utilities.
+2. Spacing from the 4px scale; type from the scale above.
+3. Neutral-first, with the green as the single accent.
+4. Colour by token. Never a raw hex — the palette check will fail the commit.
+5. Borders over shadows.
+6. Every interactive state: hover, focus, active, disabled.
+7. Transitions 80–200ms with the standard ease.
+8. WCAG AA minimum; verify contrast rather than assuming.
+9. Mobile-first, using the breakpoints above.
+10. Include the shared header and footer components. Do not reproduce them.
 
-  <main class="mx-auto max-w-6xl px-6 py-10">
-    <section class="grid gap-8">
-      <!-- Main content -->
-    </section>
-  </main>
-</div>
-```
-
-### Component Example
-```html
-<!-- Clean Card Component -->
-<div class="rounded-2xl border bg-white p-6">
-  <h2 class="text-lg font-medium">Title</h2>
-  <p class="mt-2 text-neutral-600">Description text</p>
-  <button class="mt-4 px-3 py-2 rounded-lg bg-neutral-900 text-white hover:bg-neutral-800">
-    Action
-  </button>
-</div>
-```
-
-## Do's and Don'ts
-
-### ✅ DO
-- Use borders + spacing for separation
-- Use one primary action per view
-- Align to 4px grid
-- Keep line lengths 60-75 chars for body text
-- Use system fonts when possible
-
-### ❌ DON'T
-- Stack multiple heavy shadows
-- Center-align long body text
-- Use gradient backgrounds excessively
-- Add decorative elements without purpose
-- Use more than 2 font families
-
-## Tailwind Configuration
-
-```javascript
-// tailwind.config.js
-module.exports = {
-  theme: {
-    extend: {
-      colors: {
-        primary: {
-          400: '#2dd4bf',
-          500: '#14b8a6',
-          600: '#0d9488',
-          700: '#0f766e',
-        }
-      },
-      fontFamily: {
-        sans: ['system-ui', '-apple-system', 'sans-serif'],
-        display: ['Playfair Display', 'serif'],
-      },
-      spacing: {
-        '4': '4px',
-        '8': '8px',
-        '12': '12px',
-        '16': '16px',
-        '24': '24px',
-        '32': '32px',
-        '48': '48px',
-        '64': '64px',
-      },
-      borderRadius: {
-        sm: '8px',
-        md: '12px',
-        lg: '16px',
-      },
-      transitionDuration: {
-        '80': '80ms',
-        '120': '120ms',
-        '200': '200ms',
-      }
-    }
-  }
-}
-```
-
-## LLM Implementation Prompt
-
-When implementing this design system:
-
-1. **Use semantic HTML** with Tailwind classes
-2. **Follow the spacing scale** (4, 8, 12, 16, 24, 32, 48, 64)
-3. **Apply the type scale** (12, 14, 16, 18, 20, 24, 32, 40)
-4. **Use neutral-first palette** with one primary accent
-5. **Apply minimal shadows** - prefer 1px borders
-6. **Implement all interactive states** (hover, focus, active, disabled)
-7. **Use 120-200ms transitions** with ease-in-out
-8. **Ensure WCAG AA compliance** for contrast
-9. **Mobile-first responsive** with sm/md/lg/xl breakpoints
-10. **No heavy drop shadows**, no gratuitous boxes, no centered paragraphs
-
-Components should feel clean, modern, and purposeful with generous whitespace and clear hierarchy.
+Verify colour work by reading the CSS **rules**, not by screenshotting a page at
+one width. A rendered spot check cannot see `:hover`, `:focus-visible`, or
+anything behind a media query, which is exactly where stale colour survives.

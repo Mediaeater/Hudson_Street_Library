@@ -483,6 +483,13 @@ module.exports = function(eleventyConfig) {
     return url.replace(/\/$/, '');
   });
 
+  // --- Thousands separator, for counts shown in prose ---
+  // A bare "1929" in running text reads as a year.
+  eleventyConfig.addFilter("commafy", function(n) {
+    const num = Number(n);
+    return Number.isFinite(num) ? num.toLocaleString('en-US') : n;
+  });
+
   // --- Generate cover image path from book data ---
   // Matches the naming convention used by acquire-covers.js
   eleventyConfig.addFilter("generateCoverPath", function(book) {
