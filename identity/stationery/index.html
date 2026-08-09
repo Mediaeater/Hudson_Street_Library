@@ -11,13 +11,15 @@
 :root{
   --mm:1.55px;
   --paper:#F8F7F4; --ink:#0A0A0A; --brown:#8B7355;
-  /* the second ink. Deliberately deeper than the on-screen mark: the site
-     renders .site-logo at #2D4A2B (it carries Tailwind's .text-teal-900,
-     but design-system.css overrides that class to --primary-700 and wins
-     the unlayered cascade — so the class name says teal and the pixels say
-     green). Uncoated stock dries a spot green back lighter and duller, so
-     the press spec is pulled darker to land near the screen colour. Match
-     to a Pantone chip on the actual stock before the run. */
+  /* the second ink — the same green the site renders, not a print-only
+     variant. design-system.css sets --primary-700 to this value and the
+     mark carries it on screen (the class reads .text-teal-900, but
+     design-system.css overrides that class and wins the unlayered cascade,
+     so the class name says teal and the pixels say green). An earlier
+     revision specified a deeper press green on dry-back grounds; that split
+     is gone, and reintroducing one means the printed mark and the screen
+     mark stop being the same mark. Match to a Pantone chip drawn down on
+     the running stock before the run. */
   --seal:#034706; --slate:#2F4858;
   --rule:rgba(10,10,10,.14);
   --serif:'Literata',Georgia,serif;
@@ -314,9 +316,9 @@ alone.</p>
     <b>Rules</b>
     <ul>
       <li>Square, ruled at <b>5.8% of its own width</b>, so the frame scales with the mark.</li>
-      <li>Always <b>#034706</b> — the press green, pulled deeper than the site's on-screen
-      <b>#2D4A2B</b> so it dries close to it on uncoated stock. Never a third colour. The
-      black variant exists only for the 1-ink fallback.</li>
+      <li>Always <b>#034706</b> — the same green on press and on screen. There is no
+      print-only variant. Never a third colour. The black variant exists only for the
+      1-ink fallback.</li>
       <li>Never smaller than 7 mm — the leaning spine closes up below that.</li>
       <li>Clear space on all sides equal to <b>one spine width</b>.</li>
       <li>The seal never sits inside a rule, box, or panel other than its own.</li>
@@ -555,9 +557,10 @@ idiom as everything else in the family: a form you fill in.</p>
   border-top:2px solid var(--brown);padding-top:18px">
   <b>Notes to the printer — whole job</b>
   <ul style="columns:2;column-gap:44px">
-    <li><b>Colours:</b> 2 spot, no process. Black, plus one green — match to a Pantone chip
-    <i>drawn down on the running stock</i>, not to the on-screen value. Target the site green
-    (#2D4A2B); the artwork is built at #034706 to allow for dot gain and dry-back on uncoated.</li>
+    <li><b>Colours:</b> 2 spot, no process. Black, plus one green — the artwork is built at
+    <b>#034706</b>, which is also the value the mark carries on screen. Match to a Pantone chip
+    <i>drawn down on the running stock</i> rather than to the on-screen value, and allow for
+    dry-back on uncoated when choosing the chip — but do not re-specify the artwork.</li>
     <li><b>No bleed anywhere.</b> All artwork inset a minimum 6 mm from trim on every item.
     3 mm trim allowance is sufficient throughout.</li>
     <li><b>No coatings, no varnish, no lamination, no foil, no emboss.</b> Uncoated must stay
