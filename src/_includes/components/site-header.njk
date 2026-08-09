@@ -4,7 +4,9 @@
 
   Parameters:
   - currentPage: Used for active navigation highlighting (optional)
-    Values: 'about', 'collections', 'search', 'publications', 'news', 'recently-added', 'contact'
+    Values: 'about', 'collections', 'search', 'publications', 'news', 'discover',
+    'contact', and the three that light the Accessions item: 'recently-added',
+    'recently-catalogued', 'recently-accessioned'
 
   Typography is set explicitly below so the header renders identically
   regardless of the host page's body font.
@@ -164,13 +166,12 @@
                    class="nav-link {{ 'nav-link-active' if currentPage == 'news' }}">
                    News
                 </a>
-                <a href="/collections/recently_catalogued.html"
-                   class="nav-link {{ 'nav-link-active' if currentPage == 'recently-catalogued' }}">
-                   Catalogued
-                </a>
+                {# One item for both halves of the accessions set: it lands on
+                   new acquisitions, which links across to catalogue work in its
+                   intro. Stays highlighted on either page. #}
                 <a href="/collections/recently_added.html"
-                   class="nav-link {{ 'nav-link-active' if currentPage == 'recently-added' }}">
-                   Recent
+                   class="nav-link {{ 'nav-link-active' if currentPage in ['recently-added', 'recently-catalogued', 'recently-accessioned'] }}">
+                   Accessions
                 </a>
                 <a href="/discover.html"
                    class="nav-link {{ 'nav-link-active' if currentPage == 'discover' }}">
@@ -206,8 +207,7 @@
         <a href="/static-demo/">Search</a>
         <a href="/#publications">Publications</a>
         <a href="/news.html">News</a>
-        <a href="/collections/recently_catalogued.html">Recently Catalogued</a>
-        <a href="/collections/recently_added.html">Recently Added</a>
+        <a href="/collections/recently_added.html">Accessions</a>
         <a href="/discover.html">Discover</a>
     </nav>
 </header>
