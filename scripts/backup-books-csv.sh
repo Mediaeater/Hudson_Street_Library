@@ -11,12 +11,28 @@
 # 3. Git commit (if changes detected)
 #
 # Usage:
-#   ./scripts/backup-books-csv.sh
+#   ./scripts/backup-books-csv.sh            # copies + git backup commit
+#   ./scripts/backup-books-csv.sh --no-git   # copies only, no commit
 #
-# Cron example (runs every 6 hours):
-#   0 */6 * * * cd /Users/m/Projects/Hudson_Street_Library && ./scripts/backup-books-csv.sh >> logs/backup.log 2>&1
+# --no-git is what the scheduled LaunchAgent uses. Unattended, the git step
+# would commit whatever mid-edit state books.csv happens to be in, and it uses
+# --no-verify, which skips the pre-commit hook that validates CSV structure.
+# That is the one gate protecting against a structural break, so the scheduled
+# run does not touch git. Git snapshots still happen on every push, via the
+# "Backup books.csv" GitHub Actions workflow.
+#
+# Scheduled by: ~/Library/LaunchAgents/com.hudsonstreetlibrary.backup.plist
+# Log:          logs/backup.log
 
 set -euo pipefail
+
+SKIP_GIT=0
+for arg in "$@"; do
+    case "$arg" in
+        --no-git) SKIP_GIT=1 ;;
+        *) echo "unknown option: $arg" >&2; exit 2 ;;
+    esac
+done
 
 # Configuration
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -128,7 +144,9 @@ fi
 # ============================================
 cd "$PROJECT_DIR"
 
-if git diff --quiet "$CSV_FILE"; then
+if [[ $SKIP_GIT -eq 1 ]]; then
+    log "Git backup skipped (--no-git)"
+elif git diff --quiet "$CSV_FILE"; then
     log "No changes in books.csv since last commit"
 else
     log "Changes detected in books.csv"
