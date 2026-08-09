@@ -624,6 +624,11 @@ async function processBookFromJSON(jsonPath) {
     const publisherData = typeof researchData.publisher === 'string'
       ? { name: researchData.publisher }
       : (researchData.publisher || {});
+    // isbn is documented as {isbn13, isbn10} but a bare "isbn": "978..." string
+    // is the obvious shorthand — take it rather than silently dropping the ISBN.
+    const isbn = typeof researchData.isbn === 'string'
+      ? researchData.isbn.trim()
+      : (researchData.isbn?.isbn13 || researchData.isbn?.isbn10 || '');
 
     // Map JSON to CSV format
     const bookData = {
@@ -632,9 +637,11 @@ async function processBookFromJSON(jsonPath) {
       author_last,
       author_full_name: authorNames.join(', ') || '',
       publisher: publisherData.name || '',
-      publisher_url: publisherData.url || '',
+      // Accept the top-level publisher_url too — research-asst emits it there
+      // when `publisher` is a plain string, and it has its own CSV column.
+      publisher_url: publisherData.url || researchData.publisher_url || '',
       publication_year: researchData.year?.toString() || '',
-      isbn_asin: researchData.isbn?.isbn13 || researchData.isbn?.isbn10 || '',
+      isbn_asin: isbn,
       binding: researchData.format || '',
       page_count: researchData.pages?.toString() || '',
       // Ship the rich tier as the page description (leads with framing, weaves in
@@ -651,6 +658,7 @@ async function processBookFromJSON(jsonPath) {
       width_cm: str(researchData.width_cm),
       depth_cm: str(researchData.depth_cm),
       weight_g: str(researchData.weight_g),
+      num_images: str(researchData.num_images),
       edition_printrun: researchData.edition || '',
       editor,
       designer,
