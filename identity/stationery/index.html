@@ -154,11 +154,34 @@ figure{margin:0}
   display:flex;justify-content:space-between;align-items:baseline}
 .f2 .sh i{font-style:normal;font-family:var(--mono);font-weight:400;font-size:calc(1.5*var(--mm));
   letter-spacing:.12em;color:rgba(10,10,10,.4)}
-/* accession docket — two columns of fill-in fields */
-.f2 .dk{display:grid;grid-template-columns:1fr 1fr;gap:calc(3.2*var(--mm)) calc(8*var(--mm))}
+/* Field grid — 12 columns across the 171 mm measure. Fields are sized to what
+   goes in them (a date is 8 characters, a title is not), so the rule length
+   tells the person filling it in how much is expected. Span with .s2–.s8. */
+.f2 .dk{display:grid;grid-template-columns:repeat(12,1fr);
+  column-gap:calc(6*var(--mm));row-gap:calc(3.2*var(--mm))}
+.f2 .dk .c{grid-column:span 6}
+.f2 .dk .s2{grid-column:span 2}
+.f2 .dk .s3{grid-column:span 3}
+.f2 .dk .s4{grid-column:span 4}
+.f2 .dk .s5{grid-column:span 5}
+.f2 .dk .s7{grid-column:span 7}
 .f2 .dk .c i{display:block;font-style:normal;font-family:var(--mono);font-size:calc(1.55*var(--mm));
   letter-spacing:.13em;text-transform:uppercase;color:rgba(10,10,10,.5);margin-bottom:calc(.8*var(--mm))}
 .f2 .dk .c u{display:block;text-decoration:none;border-bottom:1px solid rgba(10,10,10,.34);height:calc(5.4*var(--mm))}
+/* odd field out — runs the full measure, since what's held is a list, not a value */
+.f2 .dk .c.wide{grid-column:1 / -1}
+/* volume block — the same field system as the docket, set tighter so the
+   bibliographic record fits without swallowing the notes field */
+.f2 .dk.tight{gap:calc(2.5*var(--mm)) calc(8*var(--mm))}
+.f2 .dk.tight .c u{height:calc(4.6*var(--mm))}
+/* issue points — same tick circle as the grades. Two bands, because what you
+   can see in the copy and what you have to look up are not the same claim. */
+.f2 .flags{margin-top:calc(3.2*var(--mm))}
+.f2 .flags .r{display:flex;align-items:flex-start;margin-bottom:calc(2.4*var(--mm))}
+.f2 .flags .r > b{font-family:var(--mono);font-weight:400;font-size:calc(1.55*var(--mm));
+  letter-spacing:.12em;text-transform:uppercase;color:rgba(10,10,10,.55);
+  width:calc(22*var(--mm));flex:none;padding-top:calc(.3*var(--mm))}
+.f2 .flags .gs{display:flex;flex:1;flex-wrap:wrap;gap:calc(2*var(--mm)) calc(5.5*var(--mm))}
 /* condition — the antiquarian trade grades, ticked */
 .f2 .cond .r{display:flex;align-items:center;margin-bottom:calc(3.4*var(--mm))}
 .f2 .cond .r > b{font-family:var(--mono);font-weight:400;font-size:calc(1.6*var(--mm));letter-spacing:.12em;
@@ -172,7 +195,10 @@ figure{margin:0}
 .f2 .cond .fl b{font-family:var(--mono);font-weight:400;font-size:calc(1.6*var(--mm));letter-spacing:.12em;
   text-transform:uppercase;color:rgba(10,10,10,.55);width:calc(22*var(--mm));flex:none}
 .f2 .cond .fl u{flex:1;text-decoration:none;border-bottom:1px solid rgba(10,10,10,.28);height:calc(5*var(--mm))}
-.f2 .field{margin-top:calc(2.4*var(--mm));height:calc(147*var(--mm));
+/* 98 mm = exactly 14 rules at 7 mm, and clears the footer rule by 5.7 mm.
+   Hand-tuned to the blocks above it — if the volume block or docket gains a
+   row, this has to come down with it or the ruling runs into the footer. */
+.f2 .field{margin-top:calc(2.4*var(--mm));height:calc(98*var(--mm));
   background:repeating-linear-gradient(to bottom,transparent 0,transparent calc(7*var(--mm) - 1px),rgba(10,10,10,.075) calc(7*var(--mm)))}
 .f2 .ft{position:absolute;left:calc(16*var(--mm));right:calc(16*var(--mm));bottom:calc(11*var(--mm));
   display:flex;justify-content:space-between;border-top:1px solid var(--rule);padding-top:calc(2.6*var(--mm));
@@ -308,7 +334,7 @@ alone.</p>
     <div class="box" style="align-items:flex-start;gap:calc(5*var(--mm));padding:24px">
       <div class="seal" style="--s:13"><div class="r"><i></i><i></i><i></i><i></i></div></div>
       <div class="wmk" style="font-size:calc(6*var(--mm))"><em>Hudson Street</em><em>Library</em>
-        <small style="font-size:calc(1.7*var(--mm));margin-top:calc(3*var(--mm))">Rare books · Photobooks</small></div>
+        <small style="font-size:calc(1.7*var(--mm));margin-top:calc(3*var(--mm))">Art &amp; photography books · Ephemera</small></div>
     </div>
     <p class="cap"><b>LOCKUP</b>seal + stacked wordmark<br>seal always leads</p>
   </div>
@@ -333,8 +359,12 @@ alone.</p>
 </div>
 <p class="note" style="margin-bottom:36px">Six pieces, all carrying the same seal at its
 specified size. The head sheet is a <b>pad</b> — glued at the head, 50 sheets on a chipboard
-back — and it is not a plain letterhead: it is the accession record, with a two-column docket
-and a condition block using the antiquarian trade grades. What the design takes from Japanese
+back — and it is not a plain letterhead: it is the accession record. It runs in the order the
+work is actually done: <b>volume</b> (the book as it is in hand, with the issue points ticked),
+<b>accession</b> (the transaction), <b>condition</b> on the antiquarian trade grades, then notes.
+Fields are set on a twelve-column grid and sized to their content, so the length of the rule
+tells you what is expected on it — a date is eight characters wide, a title runs the full
+measure. What the design takes from Japanese
 stationery is <b>restraint and a stamp</b>: the boxed seal, the stacked wordmark, a 34 mm
 hairline in place of the full-width rule, confined ruling instead of ruling that bleeds across
 the page, and the form reference set vertically in the left margin.</p>
@@ -348,27 +378,59 @@ the page, and the form reference set vertically in the left margin.</p>
         <div class="hd">
           <div>
             <div class="wmk"><em>Hudson Street</em><em>Library</em>
-              <small>Rare books · Photobooks · Artists' publications</small></div>
+              <small>Art &amp; photography books · Ephemera · Artists' publications</small></div>
             <div class="addr">421 HUDSON ST., NEW YORK, NY 10014<br>HUDSONSTREETLIBRARY.COM</div>
           </div>
           <div class="seal" style="--s:15"><div class="r"><i></i><i></i><i></i><i></i></div></div>
         </div>
         <div class="hair"></div>
-        <div class="vform">HSL · FORM A/1 · ACCESSION &amp; CONDITION</div>
+        <div class="vform">HSL · FORM A/1 · VOLUME · ACCESSION · CONDITION</div>
+
+        <div class="sh">Volume <i>as in hand</i></div>
+        <div class="dk tight">
+          <div class="c wide"><i>Title</i><u></u></div>
+          <div class="c s7"><i>Author / editor</i><u></u></div>
+          <div class="c s5"><i>Publisher</i><u></u></div>
+          <div class="c s3"><i>Place &amp; date</i><u></u></div>
+          <div class="c s4"><i>Edition / printing</i><u></u></div>
+          <div class="c s3"><i>ISBN</i><u></u></div>
+          <div class="c s2"><i>Language</i><u></u></div>
+          <div class="c s4"><i>Collation — pp · plates</i><u></u></div>
+          <div class="c s3"><i>Binding / format</i><u></u></div>
+          <div class="c s3"><i>Measurements h × w × d</i><u></u></div>
+          <div class="c s2"><i>Weight g</i><u></u></div>
+        </div>
+        <div class="flags">
+          <div class="r"><b>Issue</b>
+            <div class="gs">
+              <span class="g"><em></em>First edition</span><span class="g"><em></em>First printing</span>
+              <span class="g"><em></em>Signed</span><span class="g"><em></em>Inscribed</span>
+              <span class="g"><em></em>Limited / numbered</span><span class="g"><em></em>Dust jacket</span>
+              <span class="g"><em></em>Ex-library</span>
+            </div>
+          </div>
+          <div class="r"><b>Trade · looked up</b>
+            <div class="gs">
+              <span class="g"><em></em>Out of print</span><span class="g"><em></em>Rare</span>
+              <span class="g"><em></em>Scarce</span>
+            </div>
+          </div>
+        </div>
 
         <div class="sh">Accession <i>one sheet per volume</i></div>
         <div class="dk">
-          <div class="c"><i>Ref.</i><u></u></div>
-          <div class="c"><i>Acc. no.</i><u></u></div>
-          <div class="c"><i>Date received</i><u></u></div>
-          <div class="c"><i>Source / acquired from</i><u></u></div>
-          <div class="c"><i>Collection</i><u></u></div>
-          <div class="c"><i>Est. value</i><u></u></div>
-          <div class="c"><i>Shelf location</i><u></u></div>
+          <div class="c s3"><i>Date of acquisition</i><u></u></div>
+          <div class="c s3"><i>Date added to database</i><u></u></div>
+          <div class="c s3"><i>Acc. no.</i><u></u></div>
+          <div class="c s3"><i>Shelf location</i><u></u></div>
+          <div class="c s7"><i>Acquired from</i><u></u></div>
+          <div class="c s5"><i>Collection</i><u></u></div>
+          <div class="c s3"><i>Price</i><u></u></div>
+          <div class="c s3"><i>Value</i><u></u></div>
           <div class="c"><i>Documentation held</i><u></u></div>
         </div>
 
-        <div class="sh">Condition <i>trade grades</i></div>
+        <div class="sh">Condition <i>trade grades · graded as a whole</i></div>
         <div class="cond">
           <div class="r"><b>Volume</b>
             <div class="gs">
@@ -377,19 +439,13 @@ the page, and the form reference set vertically in the left margin.</p>
               <span class="g"><em></em>Fair</span><span class="g"><em></em>Poor</span>
             </div>
           </div>
-          <div class="r"><b>Jacket / wrapper</b>
-            <div class="gs">
-              <span class="g"><em></em>Fine</span><span class="g"><em></em>Near fine</span>
-              <span class="g"><em></em>Very good</span><span class="g"><em></em>Good</span>
-              <span class="g"><em></em>Fair</span><span class="g"><em></em>None issued</span>
-            </div>
-          </div>
           <div class="fl"><b>Faults noted</b><u></u></div>
+          <div class="fl"><b></b><u></u></div>
         </div>
 
         <div class="sh">Notes <i>provenance · references · remarks</i></div>
         <div class="field"></div>
-        <div class="ft"><span>SIGNED ____________________</span><span>FOLIO 1 OF ___</span></div>
+        <div class="ft"><span>ENTERED BY ____________________</span></div>
       </div>
     </div>
     <p class="lbl">01 · Accession pad 203 × 330 mm (8 × 13 in) — seal 15 mm (⅝ in) · glued head, 50 sheets</p>
@@ -399,7 +455,7 @@ the page, and the form reference set vertically in the left margin.</p>
     <div class="sheet slip">
       <div class="hd">
         <div class="wmk"><em>Hudson Street</em><em>Library</em>
-          <small>Rare books · Photobooks · Artists' publications</small></div>
+          <small>Art &amp; photography books · Ephemera · Artists' publications</small></div>
         <div class="seal" style="--s:10"><div class="r"><i></i><i></i><i></i><i></i></div></div>
       </div>
       <div class="wc">With compliments</div>
