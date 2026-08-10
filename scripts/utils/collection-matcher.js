@@ -3,6 +3,12 @@ function matchesCollection(book, config) {
   if (rule.collection_grouping) {
     return (book.collection_grouping || '').trim() === rule.collection_grouping;
   }
+  if (rule.tag) {
+    // Exact match against the comma-split tag list. Substring matching here
+    // sweeps in wrong books ("Art" would match "Appropriation Art").
+    const wanted = rule.tag.toLowerCase();
+    return (book.tags || '').split(',').some(t => t.trim().toLowerCase() === wanted);
+  }
   if (rule.authorLast) {
     return (book.author_last || '').trim() === rule.authorLast;
   }

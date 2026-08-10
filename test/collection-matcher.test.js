@@ -15,6 +15,24 @@ describe('collection-matcher', () => {
       expect(matchesCollection(book, config)).to.be.false;
     });
 
+    it('matches by tag (exact, comma-split, case-insensitive)', () => {
+      const book = { tags: 'Art, Photography, Zines' };
+      const config = { matchBy: { tag: 'photography' } };
+      expect(matchesCollection(book, config)).to.be.true;
+    });
+
+    it('rejects tag substring matches', () => {
+      const book = { tags: 'Appropriation Art, Contemporary Art' };
+      const config = { matchBy: { tag: 'Art' } };
+      expect(matchesCollection(book, config)).to.be.false;
+    });
+
+    it('rejects tag match against empty tags', () => {
+      const book = { title: 'Untagged' };
+      const config = { matchBy: { tag: 'Art' } };
+      expect(matchesCollection(book, config)).to.be.false;
+    });
+
     it('matches by authorLast', () => {
       const book = { author_last: 'Prince', title: 'Cowboys' };
       const config = { matchBy: { authorLast: 'Prince' } };
