@@ -1,0 +1,897 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> | Hudson Street Library</title>
+    
+    <link rel="stylesheet" href="/assets/css/tailwind.css">
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="api-catalog" type="application/linkset+json" href="/.well-known/api-catalog">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Hudson Street Library",
+  "url": "https://hudsonstreetlibrary.com",
+  "logo": "https://hudsonstreetlibrary.com/assets/images/logo.png",
+  "description": "A curated collection of photography, art, and design books"
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "",
+  "url": "https://hudsonstreetlibrary.comcollections/{{ collectionConfig.slug }}.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Hudson Street Library",
+    "url": "https://hudsonstreetlibrary.com"
+  }
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://hudsonstreetlibrary.com/"
+    }
+  ]
+}
+</script>
+
+</head>
+<body class="min-h-screen bg-neutral-50 text-neutral-900">
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+
+<style>
+    .site-header {
+        font-family: 'Literata', Georgia, serif;
+    }
+    .site-header .site-logo {
+        font-family: 'Crimson Pro', Georgia, serif;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        white-space: nowrap;
+    }
+    /* Book-spines mark (same drawing as the favicon). Inlined with
+       fill: currentColor rather than <img src=favicon.svg> because the
+       SVG file self-inverts to off-white in OS dark mode and would
+       disappear against the white header. */
+    .site-header .logo-mark {
+        width: 1.3em;
+        height: 1.3em;
+        display: block;
+        flex-shrink: 0;
+        fill: currentColor;
+    }
+    .site-header .nav-link {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+        font-weight: 400;
+        letter-spacing: 0.005em;
+    }
+    .site-header .nav-link[aria-current="page"],
+    .site-header .nav-link-active {
+        font-weight: 600;
+    }
+    .site-header #mobile-nav-menu a {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+    }
+
+    /*
+      Mobile menu uses self-contained, component-scoped CSS rather than
+      Tailwind utilities, so its layout can't be broken by global stylesheet
+      changes. This originally fixed an invisible-sliver bug: design-system.css
+      ships an unlayered `* { padding: 0 }` reset that beats Tailwind's layered
+      utilities and collapsed the old icon-only button. The self-contained
+      styling is kept deliberately.
+    */
+    .site-header .menu-toggle { display: none; }
+    .site-header .mobile-nav { display: none; }
+
+    @media (max-width: 767px) {
+        .site-header .menu-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.45rem 0.7rem;
+            border: 1px solid rgba(0, 49, 0, 0.3);
+            border-radius: 0.5rem;
+            background: #ffffff;
+            color: #003100;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .site-header .menu-toggle:hover { background: #f0f5f0; }
+        .site-header .menu-toggle:focus-visible {
+            outline: 2px solid #003100;
+            outline-offset: 2px;
+        }
+        .site-header .menu-toggle svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+            flex-shrink: 0;
+        }
+        .site-header .menu-toggle .menu-toggle-label {
+            font-family: 'Literata', Georgia, serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .site-header .menu-toggle .icon-close { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-open { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-close { display: block; }
+
+        .site-header .mobile-nav.is-open {
+            display: flex;
+            flex-direction: column;
+        }
+        .site-header .mobile-nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            padding: 0.5rem;
+            z-index: 40;
+        }
+        .site-header .mobile-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            color: #404040;
+            text-decoration: none;
+        }
+        .site-header .mobile-nav a:hover {
+            background: #f0f5f0;
+            color: #002000;
+        }
+    }
+</style>
+
+<header class="site-header sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="site-logo text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                <svg class="logo-mark" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+                    <rect x="38" y="128" width="72" height="318"/>
+                    <rect x="138" y="68" width="76" height="378"/>
+                    <rect x="242" y="100" width="72" height="346"/>
+                    <rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)"/>
+                </svg>
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link ">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Accessions
+                </a>
+                <a href="/discover.html"
+                   class="nav-link ">
+                   Discover
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <!-- Icon + visible "Menu" label so the control is obvious on mobile.
+                 Sizing/visibility come from the unlayered styles above, not
+                 Tailwind utilities (see note in the <style> block). Icons are
+                 inline SVGs so the menu works on pages without an icon font. -->
+            <button class="menu-toggle"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <svg class="icon-open" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg class="icon-close" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+                <span class="menu-toggle-label">Menu</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu" class="mobile-nav" aria-label="Mobile navigation">
+        <a href="/#about">About</a>
+        <a href="/collection-explore.html">Collections</a>
+        <a href="/static-demo/">Search</a>
+        <a href="/#publications">Publications</a>
+        <a href="/news.html">News</a>
+        <a href="/collections/recently_added.html">Accessions</a>
+        <a href="/discover.html">Discover</a>
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const button = document.querySelector('button[aria-controls="mobile-nav-menu"]');
+    const willOpen = !menu.classList.contains('is-open');
+
+    menu.classList.toggle('is-open', willOpen);
+    // Icon swap (hamburger <-> X) is driven by aria-expanded in CSS.
+    if (button) button.setAttribute('aria-expanded', String(willOpen));
+}
+</script>
+
+
+<main>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+        
+        
+        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
+            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Found Photography</h1>
+            <div class="line-divider inline-block"></div>
+            
+                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Found Photography.”</p>
+            
+            
+        </div>
+        
+
+        
+        
+            
+        
+        
+
+        
+            
+                
+                
+<section class="mb-16">
+    <div class="volume-header pl-4 mb-8">
+        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
+        
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        
+            
+<a href="/books/benitah_jamais-je-ne-toublierai_1916/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/benitah_carolle_jamais_je_ne_toublierai_9788887569841.jpg" alt="Jamais je ne t&#39;oublierai" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Carolle Bénitah</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Jamais je ne t&#39;oublierai</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">L&#39;Artiere Edizioni &middot; 2019</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/bogaers_stereosophic-conjunctions_1892/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/bogaers_paul_stereosophic_conjunctions_9789462261860.jpg" alt="Stereosophic Conjunctions" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Paul Bogaers</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Stereosophic Conjunctions</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Timmer Art Books (Lecturis) &middot; 2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/breyer-p-orridge_30-years-of-being-cut-up_1927/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/breyer_p_orridge_genesis_30_years_of_being_cut_up_9781616236106.jpg" alt="30 Years of Being Cut Up" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Genesis Breyer P-Orridge</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">30 Years of Being Cut Up</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Invisible-Exports &middot; 2009</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/champassak_siams-guy_219/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/champassak_tiane-doan-na_siams_guy_9791090306509.jpg" alt="Siam&#39;s Guy" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tiane Doan na Champassak</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Siam&#39;s Guy</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">RVB Books &middot; 2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/coghlan_930-vol-02-concealed-identity-02-transfiguration_1968/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/coghlan_tim_930_vol_02_transfiguration_noisbn.jpg" alt="930 Vol 02: Concealed Identity 02: Transfiguration" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tim Coghlan</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">930 Vol 02: Concealed Identity 02: Transfiguration</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Knowledge Editions &middot; 2025</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/de-blauwer_stills_1917/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/de_blauwer_katrien_stills_9782955795309.jpg" alt="Stills" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Katrien De Blauwer</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Stills</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">IIKKI &middot; 2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/doran_targets_1898/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/doran_anne_targets_2018.jpg" alt="Targets" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Anne Doran</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Targets</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ratstar Press &middot; 2018</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/fabricius_stellungen_1902/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/fabricius_jesper_stellungen_9783941601529.jpg" alt="Stellungen" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jesper Fabricius</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Stellungen</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">J. Fabricius / Lubok Verlag &middot; 2011</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/nagle_sub-rosa_1919/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/nagle_ron_sub_rosa_9783957634580.jpg" alt="Sub Rosa" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ron Nagle</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Sub Rosa</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Revolver Publishing &middot; 2019</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/neves_why-i-hustle-to-feed-my-pimp_1903/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/neves_caco_why_i_hustle_to_feed_my_pimp_2016.jpg" alt="Why I Hustle to Feed My Pimp" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Caco Neves</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Why I Hustle to Feed My Pimp</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Calipso Press &middot; 2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/rimaz_unusual-view-of-unknown-subjects_1928/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/rimaz_simon_unusual_view_of_unknown_subjects_9789462261693.jpg" alt="Unusual View of Unknown Subjects" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Simon Rimaz</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Unusual View of Unknown Subjects</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Lecturis &middot; 2015</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/simpson_collages_1082/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/simpson_lorna_collages_2018.jpg" alt="Collages" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Lorna Simpson</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Collages</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Chronicle Books &middot; 2018</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/spencer_there-is-no-light-at-the-end-of-the-tunnel-because-the-tunnel-is-made-of-light_1804/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Ryan_Spencer_There_Is_No_Light_at_the_End_of_the_Tunnel_Because.jpg" alt="There Is No Light at the End of the Tunnel Because the Tunnel Is Made of Light" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ryan Spencer</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">There Is No Light at the End of the Tunnel Because the Tunnel Is Made of Light</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">TBW Books &middot; 2024</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/stezaker_john-stezaker_1878/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/stezaker_john_monograph_2010_9781905464333.jpg" alt="John Stezaker" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">John Stezaker</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ridinghouse, in association with Whitechapel Gallery, Mudam Luxembourg, and Mildred Lane Kemper Art Museum &middot; 2010</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/stezaker_john-stezaker-at-the-edge-of-pictures_1926/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/stezaker_john_at_the_edge_of_pictures_9783960988915.jpg" alt="John Stezaker: At the Edge of Pictures" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">John Stezaker: At the Edge of Pictures</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Verlag der Buchhandlung Walther König &middot; 2020</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/stezaker_john-stezaker-crossing-over_1874/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/stezaker_john_crossing_over_9781905464890.jpg" alt="John Stezaker: Crossing Over" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">John Stezaker: Crossing Over</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ridinghouse &middot; 2014</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/stezaker_john-stezaker-double-shadow_1875/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/stezaker_john_double_shadow_9783753304021.jpg" alt="John Stezaker: Double Shadow" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">John Stezaker: Double Shadow</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Verlag der Buchhandlung Walther König / Ridinghouse &middot; 2024</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/stezaker_john-stezaker-film-still_1876/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/stezaker_john_film_still_9781905464418.jpg" alt="John Stezaker: Film Still" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">John Stezaker: Film Still</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ridinghouse &middot; 2011</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/stezaker_john-stezaker-fumetti_1906/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/stezaker_john_fumetti_9783865605337.jpg" alt="John Stezaker: Fumetti" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">John Stezaker: Fumetti</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Verlag der Buchhandlung Walther König &middot; 2009</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/stezaker_john-stezaker-lost-world_1877/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/stezaker_john_lost_world_9781909932432.jpg" alt="John Stezaker: Lost World" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">John Stezaker: Lost World</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ridinghouse &middot; 2017</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/stezaker_john-stezaker-tabula-rasa_1907/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/stezaker_john_tabula_rasa_9781905464302.jpg" alt="John Stezaker: Tabula Rasa" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">John Stezaker: Tabula Rasa</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ridinghouse &middot; 2010</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/stezaker_john-stezaker-unassisted-readymade_1923/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/stezaker_john_unassisted_readymade_9783037644492.jpg" alt="John Stezaker: Unassisted Readymade" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">John Stezaker: Unassisted Readymade</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">JRPRingier &middot; 2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/stezaker_nude-and-landscape_1838/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/stezaker_john_nude_and_landscape_9781905464531.jpg" alt="Nude and Landscape" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nude and Landscape</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ridinghouse &middot; 2012</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/stezaker_one-on-one_1841/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/stezaker_john_one_on_one_9781905464715.jpg" alt="One on One" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">One on One</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ridinghouse / Tel Aviv Museum of Art &middot; 2013</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/stezaker_silkscreens_1840/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/stezaker_john_silkscreens_9781905464340.jpg" alt="Silkscreens" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Silkscreens</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ridinghouse &middot; 2010</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/sun_ficciones_1910/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/sun_yanchu_ficciones_2016.jpg" alt="Ficciones" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Sun Yanchu</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Ficciones</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Jiazazhi Press &middot; 2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/van-beek_the-cast_1908/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/vanbeek_ruth_the_cast_9781927354261.jpg" alt="The Cast" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ruth van Beek</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Cast</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">New Documents &middot; 2017</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/walls_ada-a-series-of-collages_1929/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/walls_jack_ada_a_series_of_collages.jpg" alt="Ada: A Series of Collages" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Walls</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Ada: A Series of Collages</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Fuse Gallery &middot; 2008</p>
+        
+    </div>
+</a>
+
+        
+    </div>
+</section>
+
+            
+        
+    </div>
+</main>
+
+
+
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
+        
+        <p>© 2026 Hudson Street Library · <a href="/colophon.html" class="text-neutral-600 underline hover:text-neutral-900">Colophon</a></p>
+    </div>
+</footer>
+
+<script>
+    // Mobile Menu Toggle Logic
+    const mobileMenuButton = document.querySelector('button.md\\:hidden');
+    const mobileNavMenu = document.getElementById('mobile-nav-menu');
+
+    if (mobileMenuButton && mobileNavMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+            mobileNavMenu.classList.toggle('hidden');
+            mobileNavMenu.classList.toggle('flex');
+            const icon = mobileMenuButton.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            }
+        });
+    }
+
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            if (this.hash) {
+               const targetElement = document.querySelector(this.hash);
+               if (targetElement) {
+                    e.preventDefault();
+                    const headerOffset = document.querySelector('header')?.offsetHeight || 70;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                    if (mobileMenuButton && mobileMenuButton.getAttribute('aria-expanded') === 'true') {
+                         mobileMenuButton.click();
+                    }
+               }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,821 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> | Hudson Street Library</title>
+    
+    <link rel="stylesheet" href="/assets/css/tailwind.css">
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="api-catalog" type="application/linkset+json" href="/.well-known/api-catalog">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Hudson Street Library",
+  "url": "https://hudsonstreetlibrary.com",
+  "logo": "https://hudsonstreetlibrary.com/assets/images/logo.png",
+  "description": "A curated collection of photography, art, and design books"
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "",
+  "url": "https://hudsonstreetlibrary.comcollections/{{ collectionConfig.slug }}.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Hudson Street Library",
+    "url": "https://hudsonstreetlibrary.com"
+  }
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://hudsonstreetlibrary.com/"
+    }
+  ]
+}
+</script>
+
+</head>
+<body class="min-h-screen bg-neutral-50 text-neutral-900">
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+
+<style>
+    .site-header {
+        font-family: 'Literata', Georgia, serif;
+    }
+    .site-header .site-logo {
+        font-family: 'Crimson Pro', Georgia, serif;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        white-space: nowrap;
+    }
+    /* Book-spines mark (same drawing as the favicon). Inlined with
+       fill: currentColor rather than <img src=favicon.svg> because the
+       SVG file self-inverts to off-white in OS dark mode and would
+       disappear against the white header. */
+    .site-header .logo-mark {
+        width: 1.3em;
+        height: 1.3em;
+        display: block;
+        flex-shrink: 0;
+        fill: currentColor;
+    }
+    .site-header .nav-link {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+        font-weight: 400;
+        letter-spacing: 0.005em;
+    }
+    .site-header .nav-link[aria-current="page"],
+    .site-header .nav-link-active {
+        font-weight: 600;
+    }
+    .site-header #mobile-nav-menu a {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+    }
+
+    /*
+      Mobile menu uses self-contained, component-scoped CSS rather than
+      Tailwind utilities, so its layout can't be broken by global stylesheet
+      changes. This originally fixed an invisible-sliver bug: design-system.css
+      ships an unlayered `* { padding: 0 }` reset that beats Tailwind's layered
+      utilities and collapsed the old icon-only button. The self-contained
+      styling is kept deliberately.
+    */
+    .site-header .menu-toggle { display: none; }
+    .site-header .mobile-nav { display: none; }
+
+    @media (max-width: 767px) {
+        .site-header .menu-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.45rem 0.7rem;
+            border: 1px solid rgba(0, 49, 0, 0.3);
+            border-radius: 0.5rem;
+            background: #ffffff;
+            color: #003100;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .site-header .menu-toggle:hover { background: #f0f5f0; }
+        .site-header .menu-toggle:focus-visible {
+            outline: 2px solid #003100;
+            outline-offset: 2px;
+        }
+        .site-header .menu-toggle svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+            flex-shrink: 0;
+        }
+        .site-header .menu-toggle .menu-toggle-label {
+            font-family: 'Literata', Georgia, serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .site-header .menu-toggle .icon-close { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-open { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-close { display: block; }
+
+        .site-header .mobile-nav.is-open {
+            display: flex;
+            flex-direction: column;
+        }
+        .site-header .mobile-nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            padding: 0.5rem;
+            z-index: 40;
+        }
+        .site-header .mobile-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            color: #404040;
+            text-decoration: none;
+        }
+        .site-header .mobile-nav a:hover {
+            background: #f0f5f0;
+            color: #002000;
+        }
+    }
+</style>
+
+<header class="site-header sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="site-logo text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                <svg class="logo-mark" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+                    <rect x="38" y="128" width="72" height="318"/>
+                    <rect x="138" y="68" width="76" height="378"/>
+                    <rect x="242" y="100" width="72" height="346"/>
+                    <rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)"/>
+                </svg>
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link ">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Accessions
+                </a>
+                <a href="/discover.html"
+                   class="nav-link ">
+                   Discover
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <!-- Icon + visible "Menu" label so the control is obvious on mobile.
+                 Sizing/visibility come from the unlayered styles above, not
+                 Tailwind utilities (see note in the <style> block). Icons are
+                 inline SVGs so the menu works on pages without an icon font. -->
+            <button class="menu-toggle"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <svg class="icon-open" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg class="icon-close" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+                <span class="menu-toggle-label">Menu</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu" class="mobile-nav" aria-label="Mobile navigation">
+        <a href="/#about">About</a>
+        <a href="/collection-explore.html">Collections</a>
+        <a href="/static-demo/">Search</a>
+        <a href="/#publications">Publications</a>
+        <a href="/news.html">News</a>
+        <a href="/collections/recently_added.html">Accessions</a>
+        <a href="/discover.html">Discover</a>
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const button = document.querySelector('button[aria-controls="mobile-nav-menu"]');
+    const willOpen = !menu.classList.contains('is-open');
+
+    menu.classList.toggle('is-open', willOpen);
+    // Icon swap (hamburger <-> X) is driven by aria-expanded in CSS.
+    if (button) button.setAttribute('aria-expanded', String(willOpen));
+}
+</script>
+
+
+<main>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+        
+        
+        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
+            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Art Book</h1>
+            <div class="line-divider inline-block"></div>
+            
+                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Art Book.”</p>
+            
+            
+        </div>
+        
+
+        
+        
+            
+        
+        
+
+        
+            
+                
+                
+<section class="mb-16">
+    <div class="volume-header pl-4 mb-8">
+        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
+        
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        
+            
+<a href="/books/de-kooning_a-way-of-living-the-art-of-willem-de-kooning_289/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/de_Kooning_A_Way_of_Living_9780714845814.jpg" alt="A Way of Living: The Art of Willem de Kooning" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Willem de Kooning</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">A Way of Living: The Art of Willem de Kooning</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press &middot; 2014</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/gates_theaster-gates-contemporary-artists_424/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Gates_Theaster_Gates_Contemporary_Artists_9780714868806.jpg" alt="Theaster Gates (Contemporary Artists)" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Theaster Gates</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Theaster Gates (Contemporary Artists)</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press &middot; 2015</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/jr_jr-can-art-change-the-world_556/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/JR_JR_Can_Art_Change_the_World_9780714869490.jpg" alt="JR: Can Art Change the World?" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">JR</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">JR: Can Art Change the World?</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press &middot; 2015</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/opie_catherine-opie_823/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/covers/9781838662189.jpg" alt="Catherine Opie" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Catherine Opie</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Catherine Opie</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon &middot; 2021</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/pendleton_adam-pendleton_841/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/pendleton_adam_adam_pendleton_2020.jpg" alt="Adam Pendleton" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Adam Pendleton</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Adam Pendleton</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/pettibon_a-pen-of-all-work_846/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/covers/9780714873695.jpg" alt="A Pen of All Work" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Raymond Pettibon</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">A Pen of All Work</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press &middot; 2017</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/saul_crime-and-punishment_1015/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/covers/9781838660796.jpg" alt="Crime and Punishment" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Saul</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Crime and Punishment</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/simpson_lorna-simpson_1081/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Simpson_Lorna_Simpson_9781838661243.jpg" alt="Lorna Simpson" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Lorna Simpson</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Lorna Simpson</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/tillmans_neue-welt-cologne-taschen-2012_1169/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/tillmans_wolfgang_neue_welt_cologne_taschen_2012_9783836539746.jpg" alt="Neue Welt. Cologne: Taschen, 2012." class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Wolfgang Tillmans</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Neue Welt. Cologne: Taschen, 2012.</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Taschen &middot; 2012</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/tillmans_truth-study-center-cologne-taschen-2005_1154/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/tillmans_wolfgang_truth_study_center_cologne_taschen_2005_9783822846406.jpg" alt="truth study center. Cologne: Taschen, 2005." class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Wolfgang Tillmans</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">truth study center. Cologne: Taschen, 2005.</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Taschen &middot; 2005</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/tillmans_wolfgang-tillmans_1150/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/covers/9780714841927.jpg" alt="Wolfgang Tillmans." class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Wolfgang Tillmans</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Wolfgang Tillmans.</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon &middot; 2002</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/va_artists-who-make-books_1198/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/covers/9780714872643.jpg" alt="Artists Who Make Books" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">NA VA</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Artists Who Make Books</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon &middot; 2017</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/villareal_leo-villareal-coding-light_1355/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Villareal_Leo_Villareal_Coding_Light_9781580936538.jpg" alt="Leo Villareal: Coding Light" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Leo Villareal</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Leo Villareal: Coding Light</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Monacelli Press/Phaidon &middot; 2025</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/warhol_andy-warhol-polaroids_1235/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/covers/9783836569385.jpg" alt="Andy Warhol. Polaroids" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Andy Warhol</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Andy Warhol. Polaroids</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Taschen &middot; 2017</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/lindbergh_a-different-vision-on-fashion-photography_631/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Lindbergh</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">A Different Vision on Fashion Photography</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Taschen</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/mapplethorpe-nigel-shafran-pierre_mapplethorpe-flora_676/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Robert Mapplethorpe, Nigel Shafran, Pierre</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Mapplethorpe Flora</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/marshall_kerry-james-marshall_694/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Kerry James Marshall</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Kerry James Marshall</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/martin_paintings-writings-remembrances_707/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Agnus Martin</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Paintings, Writings, Remembrances</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/mccarthy_paul-mccarthy_722/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Paul McCarthy</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Paul McCarthy</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/mott_oh-so-pretty-punk-in-print-1976-19801980_1415/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Toby Mott</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Oh So Pretty: Punk in Print 1976-19801980</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press &middot; 2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/paglan_trevor-paglan_831/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Trevor Paglan</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Trevor Paglan</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press &middot; 2018</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/pettibon_raymond-pettibon-contemporary-artists_856/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Raymond Pettibon</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Raymond Pettibon (Contemporary Artists)</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press &middot; 2001</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/sze_sarah-sze-paintings_1438/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Sarah Sze</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Sarah Sze: Paintings</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon &middot; 2025</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/tillmans_cologne-taschen-1998_1141/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Wolfgang Tillmans</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cologne: Taschen, 1998</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Taschen &middot; 1998</p>
+        
+    </div>
+</a>
+
+        
+    </div>
+</section>
+
+            
+        
+    </div>
+</main>
+
+
+
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
+        
+        <p>© 2026 Hudson Street Library · <a href="/colophon.html" class="text-neutral-600 underline hover:text-neutral-900">Colophon</a></p>
+    </div>
+</footer>
+
+<script>
+    // Mobile Menu Toggle Logic
+    const mobileMenuButton = document.querySelector('button.md\\:hidden');
+    const mobileNavMenu = document.getElementById('mobile-nav-menu');
+
+    if (mobileMenuButton && mobileNavMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+            mobileNavMenu.classList.toggle('hidden');
+            mobileNavMenu.classList.toggle('flex');
+            const icon = mobileMenuButton.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            }
+        });
+    }
+
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            if (this.hash) {
+               const targetElement = document.querySelector(this.hash);
+               if (targetElement) {
+                    e.preventDefault();
+                    const headerOffset = document.querySelector('header')?.offsetHeight || 70;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                    if (mobileMenuButton && mobileMenuButton.getAttribute('aria-expanded') === 'true') {
+                         mobileMenuButton.click();
+                    }
+               }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

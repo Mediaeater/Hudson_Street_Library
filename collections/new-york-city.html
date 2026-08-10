@@ -1,0 +1,1487 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> | Hudson Street Library</title>
+    
+    <link rel="stylesheet" href="/assets/css/tailwind.css">
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="api-catalog" type="application/linkset+json" href="/.well-known/api-catalog">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Hudson Street Library",
+  "url": "https://hudsonstreetlibrary.com",
+  "logo": "https://hudsonstreetlibrary.com/assets/images/logo.png",
+  "description": "A curated collection of photography, art, and design books"
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "",
+  "url": "https://hudsonstreetlibrary.comcollections/{{ collectionConfig.slug }}.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Hudson Street Library",
+    "url": "https://hudsonstreetlibrary.com"
+  }
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://hudsonstreetlibrary.com/"
+    }
+  ]
+}
+</script>
+
+</head>
+<body class="min-h-screen bg-neutral-50 text-neutral-900">
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+
+<style>
+    .site-header {
+        font-family: 'Literata', Georgia, serif;
+    }
+    .site-header .site-logo {
+        font-family: 'Crimson Pro', Georgia, serif;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        white-space: nowrap;
+    }
+    /* Book-spines mark (same drawing as the favicon). Inlined with
+       fill: currentColor rather than <img src=favicon.svg> because the
+       SVG file self-inverts to off-white in OS dark mode and would
+       disappear against the white header. */
+    .site-header .logo-mark {
+        width: 1.3em;
+        height: 1.3em;
+        display: block;
+        flex-shrink: 0;
+        fill: currentColor;
+    }
+    .site-header .nav-link {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+        font-weight: 400;
+        letter-spacing: 0.005em;
+    }
+    .site-header .nav-link[aria-current="page"],
+    .site-header .nav-link-active {
+        font-weight: 600;
+    }
+    .site-header #mobile-nav-menu a {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+    }
+
+    /*
+      Mobile menu uses self-contained, component-scoped CSS rather than
+      Tailwind utilities, so its layout can't be broken by global stylesheet
+      changes. This originally fixed an invisible-sliver bug: design-system.css
+      ships an unlayered `* { padding: 0 }` reset that beats Tailwind's layered
+      utilities and collapsed the old icon-only button. The self-contained
+      styling is kept deliberately.
+    */
+    .site-header .menu-toggle { display: none; }
+    .site-header .mobile-nav { display: none; }
+
+    @media (max-width: 767px) {
+        .site-header .menu-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.45rem 0.7rem;
+            border: 1px solid rgba(0, 49, 0, 0.3);
+            border-radius: 0.5rem;
+            background: #ffffff;
+            color: #003100;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .site-header .menu-toggle:hover { background: #f0f5f0; }
+        .site-header .menu-toggle:focus-visible {
+            outline: 2px solid #003100;
+            outline-offset: 2px;
+        }
+        .site-header .menu-toggle svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+            flex-shrink: 0;
+        }
+        .site-header .menu-toggle .menu-toggle-label {
+            font-family: 'Literata', Georgia, serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .site-header .menu-toggle .icon-close { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-open { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-close { display: block; }
+
+        .site-header .mobile-nav.is-open {
+            display: flex;
+            flex-direction: column;
+        }
+        .site-header .mobile-nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            padding: 0.5rem;
+            z-index: 40;
+        }
+        .site-header .mobile-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            color: #404040;
+            text-decoration: none;
+        }
+        .site-header .mobile-nav a:hover {
+            background: #f0f5f0;
+            color: #002000;
+        }
+    }
+</style>
+
+<header class="site-header sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="site-logo text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                <svg class="logo-mark" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+                    <rect x="38" y="128" width="72" height="318"/>
+                    <rect x="138" y="68" width="76" height="378"/>
+                    <rect x="242" y="100" width="72" height="346"/>
+                    <rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)"/>
+                </svg>
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link ">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Accessions
+                </a>
+                <a href="/discover.html"
+                   class="nav-link ">
+                   Discover
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <!-- Icon + visible "Menu" label so the control is obvious on mobile.
+                 Sizing/visibility come from the unlayered styles above, not
+                 Tailwind utilities (see note in the <style> block). Icons are
+                 inline SVGs so the menu works on pages without an icon font. -->
+            <button class="menu-toggle"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <svg class="icon-open" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg class="icon-close" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+                <span class="menu-toggle-label">Menu</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu" class="mobile-nav" aria-label="Mobile navigation">
+        <a href="/#about">About</a>
+        <a href="/collection-explore.html">Collections</a>
+        <a href="/static-demo/">Search</a>
+        <a href="/#publications">Publications</a>
+        <a href="/news.html">News</a>
+        <a href="/collections/recently_added.html">Accessions</a>
+        <a href="/discover.html">Discover</a>
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const button = document.querySelector('button[aria-controls="mobile-nav-menu"]');
+    const willOpen = !menu.classList.contains('is-open');
+
+    menu.classList.toggle('is-open', willOpen);
+    // Icon swap (hamburger <-> X) is driven by aria-expanded in CSS.
+    if (button) button.setAttribute('aria-expanded', String(willOpen));
+}
+</script>
+
+
+<main>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+        
+        
+        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
+            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">New York City</h1>
+            <div class="line-divider inline-block"></div>
+            
+                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “New York City.”</p>
+            
+            
+        </div>
+        
+
+        
+        
+            
+        
+        
+
+        
+            
+                
+                
+<section class="mb-16">
+    <div class="volume-header pl-4 mb-8">
+        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
+        
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        
+            
+<a href="/books/abbott_berenice-abbott-changing-new-york_3/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/abbott_berenice_changing_new_york_9781565845565.jpg" alt="Berenice Abbott: Changing New York" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Berenice Abbott</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Berenice Abbott: Changing New York</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">New Press &middot; 1997</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/abbott_paris-portraits_5/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/covers/9783869303147.jpg" alt="Paris Portraits" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Berenice Abbott</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Paris Portraits</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl/Commerce Graphics, New York &middot; 2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/abercrombie_gertrude-abercrombie_8/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/covers/9781949172027.jpg" alt="Gertrude Abercrombie" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Gertrude Abercrombie</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Gertrude Abercrombie</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Karma, New York &middot; 2018</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/alpern_dirty-windows_29/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/covers/9781881616580.jpg" alt="Dirty Windows" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Merry Alpern</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Dirty Windows</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Art Pub Inc First Edition, First Printing &middot; 1995</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/baum_the-naked-eye_108/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Baum_The_Naked_Eye_9782954136943.jpg" alt="The Naked Eye" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Erica Baum</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Naked Eye</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Bureau New York &middot; 2015</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/berlin_polaroids_113/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Berlin_Polaroids_9781909526242.jpg" alt="Polaroids" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Bridget Berlin</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Polaroids</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Reel Art Press &middot; 2015</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/bianchi_63-e-9th-street-nyc-polaroids-1975-1983_1942/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/bianchi_tom_63_e_9th_street_9788862086462.jpg" alt="63 E 9th Street: NYC Polaroids 1975-1983" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tom Bianchi</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">63 E 9th Street: NYC Polaroids 1975-1983</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Damiani &middot; 2019</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/dagata_a-new-york-1989-93_272/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/DAgata_A_New_York_1989_93.jpg" alt="A - New York 1989-93" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Antoine D&#39;Agata</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">A - New York 1989-93</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">André Frère Éditions &middot; 2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/davey_the-shabbiness-of-beauty_1939/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/davey_moyra_the_shabbiness_of_beauty_9781913620202.jpg" alt="The Shabbiness of Beauty" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Moyra Davey, Peter Hujar</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Shabbiness of Beauty</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">MACK &middot; 2021</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/earnest_the-young-and-evil-queer-modernism-in-new-york-1930-1955_1965/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/earnest_jarrett_the_young_and_evil_9781644230268.jpg" alt="The Young and Evil: Queer Modernism in New York, 1930–1955" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jarrett Earnest</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Young and Evil: Queer Modernism in New York, 1930–1955</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">David Zwirner Books &middot; 2020</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/ethridge_roe-ethridge-rockaway-new-york_344/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/ethridge_roe_rockaway_9783865214850.jpg" alt="Roe Ethridge: Rockaway, New York" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Roe Ethridge</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Roe Ethridge: Rockaway, New York</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/grosvenor_16-pictures_458/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/covers/9781942607748.jpg" alt="16 Pictures" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Robert Grosvenor</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">16 Pictures</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Karma, New York &middot; 2017</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/grosvenor_27-pictures_460/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Grosvenor_27_Pictures.jpg" alt="27 Pictures" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Robert Grosvenor</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">27 Pictures</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Karma, New York &middot; 2015</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/grosvenor_32-pictures_459/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Grosvenor_32_Pictures_9781942607519.jpg" alt="32 Pictures" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Robert Grosvenor</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">32 Pictures</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Karma, New York &middot; 2014</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/guyton_1-month-ago_465/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Guyton_1_Month_Ago_9780989398534.jpg" alt="1 Month Ago" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Wade Guyton</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">1 Month Ago</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Karma, New York &middot; 2014</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/hujar_hujarcontact_1797/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Peter_Hujar_HujarContact.jpg" alt="Hujar:Contact" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Hujar</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Hujar:Contact</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">MACK / Morgan Library &amp; Museum &middot; 2026</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/hujar_lost-downtown_1802/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Peter_Hujar_Lost_Downtown.jpg" alt="Lost Downtown" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Hujar</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Lost Downtown</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl / Pace MacGill Gallery &middot; 2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/hujar_love-and-lust_535/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Hujar_Love_Lust_9781881337379.jpg" alt="Love &amp; Lust" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Hujar</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Love &amp; Lust</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Fraenkel Gallery &middot; 2014</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/hujar_peter-hujar-curated-by-elton-john_1799/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Peter_Hujar_Peter_Hujar_Curated_by_Elton_John.jpg" alt="Peter Hujar Curated by Elton John" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Hujar</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Peter Hujar Curated by Elton John</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Fraenkel Gallery &middot; 2022</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/hujar_peter-hujar-a-retrospective_534/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Peter_Hujar_A_Retrospective.jpg" alt="Peter Hujar: A Retrospective" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Hujar</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Peter Hujar: A Retrospective</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Scalo &middot; 1994</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/hujar_portraits-in-life-and-death_1798/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Peter_Hujar_Portraits_in_Life_and_Death.jpg" alt="Portraits in Life and Death" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Hujar</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Portraits in Life and Death</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Liveright Publishing Corporation &middot; 2024</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/hujar_speed-of-life_1800/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Peter_Hujar_Speed_of_Life.jpg" alt="Speed of Life" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Hujar</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Speed of Life</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aperture &middot; 2017</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/lesy_angels-world-the-new-york-photographs-of-angelo-rizzuto_623/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Lesy_Angel_s_World_The_New_York_Photographs_of_Angelo_Rizzuto_9780393061116.jpg" alt="Angel&#39;s World: The New York Photographs of Angelo Rizzuto" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Michael Lesy</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Angel&#39;s World: The New York Photographs of Angelo Rizzuto</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">W. W. Norton &amp; Company &middot; 2005</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/marievic_twentysix-luxury-brands_1803/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/MarieVic_Twentysix_Luxury_Brands.jpg" alt="Twentysix Luxury Brands" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">MarieVic</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Twentysix Luxury Brands</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Blurring Books &middot; 2020</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/meredith_public-spaces-ny_1680/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Meredith_Public_Spaces_NY_978_3_03860_434_1.jpg" alt="Public Spaces NY" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Michael Meredith and Hilary Sample (MOS)</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Public Spaces NY</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Park Books &middot; 2025</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/meredith_vacant-spaces-ny_1197/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Meredith_Vacant_Spaces_NY_978_1_94876_599_2.jpg" alt="Vacant Spaces NY" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Michael Meredith and Hilary Sample (MOS)</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Vacant Spaces NY</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Actar Publishers &middot; 2021</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/pfahler_kembra-pfahler-beautalism_863/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/pfahler_kembra_kembra_pfahler_beautalism_9780981577135.jpg" alt="Kembra Pfahler &quot;Beautalism&quot;" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Kembra Pfahler</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Kembra Pfahler &quot;Beautalism&quot;</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Deitch Projects &middot; 2008</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/rauchenberg_robert-rauschenberg_948/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/covers/9781633450202.jpg" alt="Robert Rauschenberg" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Robert Rauchenberg</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Robert Rauschenberg</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Museum of Modern Art, New York &middot; 2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/scarville_passports_1806/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Keisha_Scarville_Passports.jpg" alt="Passports" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Keisha Scarville</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Passports</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">MACK &middot; 2026</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/schneider_peter-hujar-behind-the-camera-and-in-the-darkroom_1801/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Gary_Schneider_Peter_Hujar_Behind_the_Camera_and_In_the_Darkroom.jpg" alt="Peter Hujar: Behind the Camera and In the Darkroom" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Gary Schneider</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Peter Hujar: Behind the Camera and In the Darkroom</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BookCrave Books &middot; 2024</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/stellar_the-piers_1941/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/stellar_stanley_the_piers_9781736667620.jpg" alt="The Piers" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Stanley Stellar</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Piers</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Szaransky Print Co. and Kapp Kapp &middot; 2023</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/tillmans_freedom-from-the-known-new-york-and-gottingen-ps1steidl-2006_1155/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/tillmans_wolfgang_freedom_from_the_known_new_york_and_gottingen_p_s_1_steidl_2_9783865212638.jpg" alt="Freedom From The Known. New York and Göttingen: P.S.1/Steidl, 2006." class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Wolfgang Tillmans</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Freedom From The Known. New York and Göttingen: P.S.1/Steidl, 2006.</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">[n 3] &middot; 2006</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/tillmans_wolfgang-tillmans-london-and-new-york-phaidon-2013_1170/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/tillmans_wolfgang_wolfgang_tillmans_london_and_new_york_phaidon_2013_9780714867045.jpg" alt="Wolfgang Tillmans. London and New York: Phaidon, 2013." class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Wolfgang Tillmans</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Wolfgang Tillmans. London and New York: Phaidon, 2013.</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2013</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/warhol_andy-warhol-polaroids_1235/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/covers/9783836569385.jpg" alt="Andy Warhol. Polaroids" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Andy Warhol</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Andy Warhol. Polaroids</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Taschen &middot; 2017</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/wojnarowicz_david-wojnarowicz-arthur-rimbaud-in-new-york_1356/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Wojnarowicz_David_Wojnarowicz_Arthur_Rimbaud_in_New_York_9788857254067.jpg" alt="David Wojnarowicz: Arthur Rimbaud in New York" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">David Wojnarowicz</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">David Wojnarowicz: Arthur Rimbaud in New York</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Skira &middot; 2025</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/zownir_nyc-rip_1302/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/covers/9783942547512.jpg" alt="NYC RIP" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Miron Zownir</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">NYC RIP</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Pogo Books &middot; 2015</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/abbott_american-photographer_2/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Berenice Abbott</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">American Photographer</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">McGraw-Hill &middot; 1982</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/ackerman_rita-ackermann-and-andro-wekua-chapter-4_9/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Rita Ackerman</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Rita Ackermann &amp; Andro Wekua: Chapter 4</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Fergus McCaffrey, Case Publishing &middot; 2021</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/ackermann_good-morning-new-york_1528/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Rita Ackermann</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Good Morning New York</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple Books</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/coley_no-wave-post-punk-underground-new-york-1976-1980_1414/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Thurston Moore and Byron Coley</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">No Wave: Post-Punk. Underground. New York. 1976-1980</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Abrams Image &middot; 2008</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/david-armstrong-rene-ricard_night-and-day_282/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">David David Armstrong, Rene Ricard</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Night and Day</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Morel Books &middot; 2012</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/depardon_manhattan-out_295/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Raymond Depardon</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Manhattan Out</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/epstein_new-york-arbor_331/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitch Epstein</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">New York Arbor</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/haring_keith-haring-manhattan-penis-drawings-for-ken-hicks_506/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Keith Haring</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Keith Haring: Manhattan Penis Drawings for Ken Hicks</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/haynes_brooklyn-11211_512/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jesper Haynes</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Brooklyn 11211</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/kanoh_new-york-1969_559/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tenmei Kanoh</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">New York 1969</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/katsu-ari-marcopoulos_katsu-ari-marcopoulos_561/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Unknown</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Katsu Ari Marcopoulos</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">6-23 &#39;13 - N6 Street - Brooklyn</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/kern_bed-bath-and-beyond_573/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Kern</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Bed Bath &amp; Beyond</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/kern_bed-bath-and-beyond_572/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Kern</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Bed Bath and Beyond</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Innenzines</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/kern_half-half_570/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Kern</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Half Half</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">co-published by Catalogue Library and Shizen Brooklyn &middot; 2019</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/kern_medicated_571/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Kern</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Medicated</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">APE (Art Paper Editions) &middot; 2021</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/kroll_the-new-york-years-1971-to-1994-regular-edition-eric-kroll_600/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Eric Kroll</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">THE NEW YORK YEARS 1971 to 1994 (regular edition) – Eric Kroll</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/leutwyler_ballet-photographs-of-the-new-york-city-ballet_624/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Henry Leutwyler</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Ballet: Photographs of the New York City Ballet</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl Druckerei Und Verlag, Gerhard &middot; 2015</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/matsuda_nicole-times-vol-18_1375/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 18</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nicole Times Publisher, New York</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/natali_new-york-subway-1960_788/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Natali</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">New York Subway, 1960</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/schmied_private-views-a-high-rise-panorama-of-manhattan_1034/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Andi Schmied</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Private Views: A High-Rise Panorama of Manhattan</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">VI PER Gallery, Prague. &middot; 2020</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/serra_serra-2013_1048/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Serra</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Serra 2013</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian New York</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/stieglitz_new-york_1101/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Alfred Stieglitz</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">New York</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/williams_michael-williams-things-you-shouldnt-understand_1249/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Michael Williams</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Michael Williams: Things You Shouldn&#39;t Understand</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Karma, New York &middot; 2017</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/ziff_new-york_1301/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Lloyd Ziff</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">New York</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">KMW Studio</p>
+        
+    </div>
+</a>
+
+        
+    </div>
+</section>
+
+            
+        
+    </div>
+</main>
+
+
+
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
+        
+        <p>© 2026 Hudson Street Library · <a href="/colophon.html" class="text-neutral-600 underline hover:text-neutral-900">Colophon</a></p>
+    </div>
+</footer>
+
+<script>
+    // Mobile Menu Toggle Logic
+    const mobileMenuButton = document.querySelector('button.md\\:hidden');
+    const mobileNavMenu = document.getElementById('mobile-nav-menu');
+
+    if (mobileMenuButton && mobileNavMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+            mobileNavMenu.classList.toggle('hidden');
+            mobileNavMenu.classList.toggle('flex');
+            const icon = mobileMenuButton.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            }
+        });
+    }
+
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            if (this.hash) {
+               const targetElement = document.querySelector(this.hash);
+               if (targetElement) {
+                    e.preventDefault();
+                    const headerOffset = document.querySelector('header')?.offsetHeight || 70;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                    if (mobileMenuButton && mobileMenuButton.getAttribute('aria-expanded') === 'true') {
+                         mobileMenuButton.click();
+                    }
+               }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

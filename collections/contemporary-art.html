@@ -1,0 +1,3006 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> | Hudson Street Library</title>
+    
+    <link rel="stylesheet" href="/assets/css/tailwind.css">
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="api-catalog" type="application/linkset+json" href="/.well-known/api-catalog">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Hudson Street Library",
+  "url": "https://hudsonstreetlibrary.com",
+  "logo": "https://hudsonstreetlibrary.com/assets/images/logo.png",
+  "description": "A curated collection of photography, art, and design books"
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "",
+  "url": "https://hudsonstreetlibrary.comcollections/{{ collectionConfig.slug }}.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Hudson Street Library",
+    "url": "https://hudsonstreetlibrary.com"
+  }
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://hudsonstreetlibrary.com/"
+    }
+  ]
+}
+</script>
+
+</head>
+<body class="min-h-screen bg-neutral-50 text-neutral-900">
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+
+<style>
+    .site-header {
+        font-family: 'Literata', Georgia, serif;
+    }
+    .site-header .site-logo {
+        font-family: 'Crimson Pro', Georgia, serif;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        white-space: nowrap;
+    }
+    /* Book-spines mark (same drawing as the favicon). Inlined with
+       fill: currentColor rather than <img src=favicon.svg> because the
+       SVG file self-inverts to off-white in OS dark mode and would
+       disappear against the white header. */
+    .site-header .logo-mark {
+        width: 1.3em;
+        height: 1.3em;
+        display: block;
+        flex-shrink: 0;
+        fill: currentColor;
+    }
+    .site-header .nav-link {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+        font-weight: 400;
+        letter-spacing: 0.005em;
+    }
+    .site-header .nav-link[aria-current="page"],
+    .site-header .nav-link-active {
+        font-weight: 600;
+    }
+    .site-header #mobile-nav-menu a {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+    }
+
+    /*
+      Mobile menu uses self-contained, component-scoped CSS rather than
+      Tailwind utilities, so its layout can't be broken by global stylesheet
+      changes. This originally fixed an invisible-sliver bug: design-system.css
+      ships an unlayered `* { padding: 0 }` reset that beats Tailwind's layered
+      utilities and collapsed the old icon-only button. The self-contained
+      styling is kept deliberately.
+    */
+    .site-header .menu-toggle { display: none; }
+    .site-header .mobile-nav { display: none; }
+
+    @media (max-width: 767px) {
+        .site-header .menu-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.45rem 0.7rem;
+            border: 1px solid rgba(0, 49, 0, 0.3);
+            border-radius: 0.5rem;
+            background: #ffffff;
+            color: #003100;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .site-header .menu-toggle:hover { background: #f0f5f0; }
+        .site-header .menu-toggle:focus-visible {
+            outline: 2px solid #003100;
+            outline-offset: 2px;
+        }
+        .site-header .menu-toggle svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+            flex-shrink: 0;
+        }
+        .site-header .menu-toggle .menu-toggle-label {
+            font-family: 'Literata', Georgia, serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .site-header .menu-toggle .icon-close { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-open { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-close { display: block; }
+
+        .site-header .mobile-nav.is-open {
+            display: flex;
+            flex-direction: column;
+        }
+        .site-header .mobile-nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            padding: 0.5rem;
+            z-index: 40;
+        }
+        .site-header .mobile-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            color: #404040;
+            text-decoration: none;
+        }
+        .site-header .mobile-nav a:hover {
+            background: #f0f5f0;
+            color: #002000;
+        }
+    }
+</style>
+
+<header class="site-header sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="site-logo text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                <svg class="logo-mark" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+                    <rect x="38" y="128" width="72" height="318"/>
+                    <rect x="138" y="68" width="76" height="378"/>
+                    <rect x="242" y="100" width="72" height="346"/>
+                    <rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)"/>
+                </svg>
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link ">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Accessions
+                </a>
+                <a href="/discover.html"
+                   class="nav-link ">
+                   Discover
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <!-- Icon + visible "Menu" label so the control is obvious on mobile.
+                 Sizing/visibility come from the unlayered styles above, not
+                 Tailwind utilities (see note in the <style> block). Icons are
+                 inline SVGs so the menu works on pages without an icon font. -->
+            <button class="menu-toggle"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <svg class="icon-open" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg class="icon-close" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+                <span class="menu-toggle-label">Menu</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu" class="mobile-nav" aria-label="Mobile navigation">
+        <a href="/#about">About</a>
+        <a href="/collection-explore.html">Collections</a>
+        <a href="/static-demo/">Search</a>
+        <a href="/#publications">Publications</a>
+        <a href="/news.html">News</a>
+        <a href="/collections/recently_added.html">Accessions</a>
+        <a href="/discover.html">Discover</a>
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const button = document.querySelector('button[aria-controls="mobile-nav-menu"]');
+    const willOpen = !menu.classList.contains('is-open');
+
+    menu.classList.toggle('is-open', willOpen);
+    // Icon swap (hamburger <-> X) is driven by aria-expanded in CSS.
+    if (button) button.setAttribute('aria-expanded', String(willOpen));
+}
+</script>
+
+
+<main>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+        
+        
+        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
+            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Contemporary Art</h1>
+            <div class="line-divider inline-block"></div>
+            
+                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Contemporary Art.”</p>
+            
+            
+        </div>
+        
+
+        
+        
+            
+        
+        
+
+        
+            
+                
+                
+<section class="mb-16">
+    <div class="volume-header pl-4 mb-8">
+        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
+        
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        
+            
+<a href="/books/baldessari_a-print-retrospective-from-the-collections-of-jordan-d-schnitzer-and-his-family-foundation_84/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Baldessari_A_Print_Retrospective_9781935202103.jpg" alt="A Print Retrospective from the Collections of Jordan D. Schnitzer and his Family Foundation" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Baldessari</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">A Print Retrospective from the Collections of Jordan D. Schnitzer and his Family Foundation</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Fine Arts Museums of San Francisco-Legion of Honor/Jordan Schnitzer Family &middot; 2010</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/borremans_horse-hunting_1821/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Michael_Borremans_Horse_Hunting.jpg" alt="Horse Hunting" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Michaël Borremans</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Horse Hunting</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">David Zwirner &middot; 2006</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/borremans_magnetics_1820/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Michael_Borremans_Magnetics.jpg" alt="Magnetics" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Michaël Borremans</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Magnetics</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Hatje Cantz &middot; 2012</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/boschung_xamax_1894/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/boschung_fabian_xamax_9782940613007.jpg" alt="XAMAX" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Fabian Boschung</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">XAMAX</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">TSAR Éditions &middot; 2017</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/busch_the-age-of-collage-2-contemporary-collage-in-modern-art_1871/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/busch_dennis_the_age_of_collage_2_contemporary_collage_in_modern_art_9783899555837.jpg" alt="The Age of Collage 2: Contemporary Collage in Modern Art" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Dennis Busch</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Age of Collage 2: Contemporary Collage in Modern Art</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gestalten &middot; 2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/busch_the-age-of-collage-3-contemporary-collage-in-modern-art_1872/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/busch_dennis_the_age_of_collage_3_contemporary_collage_in_modern_art_9783899551105.jpg" alt="The Age of Collage 3: Contemporary Collage in Modern Art" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Dennis Busch</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Age of Collage 3: Contemporary Collage in Modern Art</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gestalten &middot; 2020</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/busch_the-age-of-collage-contemporary-collage-in-modern-art_1870/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/busch_dennis_the_age_of_collage_contemporary_collage_in_modern_art_9783899554830.jpg" alt="The Age of Collage: Contemporary Collage in Modern Art" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Dennis Busch</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Age of Collage: Contemporary Collage in Modern Art</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gestalten &middot; 2013</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/condo_the-mad-and-the-lonely_1759/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/condo_george_the_mad_and_the_lonely_9786185039455.jpg" alt="The Mad and the Lonely" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">George Condo</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Mad and the Lonely</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">DESTE Foundation for Contemporary Art &middot; 2026</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/connors_a-bell-is-a-cup_246/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Connors_A_Bell_Is_a_Cup_9780980651645.jpg" alt="A Bell Is a Cup" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Matt Connors</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">A Bell Is a Cup</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Rainoff &middot; 2012</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/craven_painted-time-2020-2024_1971/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/craven_ann_painted_time_2020_2024_9781961883031.jpg" alt="Painted Time: (2020–2024)" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ann Craven</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Painted Time: (2020–2024)</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Farnsworth Art Museum &middot; 2025</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/cruzvillegas_los-dos-amigos_1867/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/cruzvillegas_abraham_los_dos_amigos_9788475067292.jpg" alt="Los dos amigos" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Abraham Cruzvillegas, Dr. Lakra</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Los dos amigos</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">A&amp;R Press / Museo de Arte Contemporáneo de Oaxaca (distributed by Turner Publicaciones) &middot; 2006</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/curry_aaron-curry-boxxes_1905/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/curry_aaron_boxxes_9783863356231.jpg" alt="Aaron Curry: Boxxes" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Aaron Curry</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Aaron Curry: Boxxes</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Koenig Books &middot; 2015</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/da-corte_mr-remember_1834/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/da_corte_alex_mr_remember_9788793659575.jpg" alt="Mr. Remember" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Alex DA Corte</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Mr. Remember</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Louisiana Museum of Modern Art &middot; 2022</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/de-blauwer_when-i-was-a-boy_1879/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/de_blauwer_katrien_when_i_was_a_boy_9789188113160.jpg" alt="When I Was a Boy" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Katrien De Blauwer</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">When I Was a Boy</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Libraryman &middot; 2018</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/de-blauwer_why-i-hate-cars_1880/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/de_blauwer_katrien_why_i_hate_cars_9789188113238.jpg" alt="Why I Hate Cars" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Katrien De Blauwer</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Why I Hate Cars</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Libraryman &middot; 2019</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/de-blauwer_you-could-at-least-pretend-to-like-yellow_1881/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/de_blauwer_katrien_you_could_at_least_pretend_to_like_yellow_9789188113467.jpg" alt="You Could at Least Pretend to Like Yellow" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Katrien De Blauwer</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">You Could at Least Pretend to Like Yellow</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Libraryman &middot; 2020</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/de-kooning_a-way-of-living-the-art-of-willem-de-kooning_289/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/de_Kooning_A_Way_of_Living_9780714845814.jpg" alt="A Way of Living: The Art of Willem de Kooning" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Willem de Kooning</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">A Way of Living: The Art of Willem de Kooning</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press &middot; 2014</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/de-rooij_index_1829/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/de_rooij_willem_index_9783863357238.jpg" alt="Index" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Willem de Rooij</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Index</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Koenig Books &middot; 2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/e-flux_index-8_1814/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/eflux_Index_8.jpg" alt="Index #8" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">e-flux</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Index #8</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">e-flux &middot; 2026</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/eggerer_selected-collages_1851/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/eggerer_thomas_selected_collages_2002_to_2022.jpg" alt="Selected Collages" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Thomas Eggerer</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Selected Collages</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Inpatient Press &middot; 2022</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/extra-extra_extra-extra-issue-1_1764/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/magazines/extra_extra/extra-extra-1.jpg" alt="Extra Extra Issue 1" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Extra Extra Magazine</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Extra Extra Issue 1</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/extra-extra_extra-extra-issue-10_1773/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/magazines/extra_extra/extra-extra-10.jpg" alt="Extra Extra Issue 10" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Extra Extra Magazine</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Extra Extra Issue 10</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2018</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/extra-extra_extra-extra-issue-2_1765/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/magazines/extra_extra/extra-extra-2.jpg" alt="Extra Extra Issue 2" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Extra Extra Magazine</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Extra Extra Issue 2</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/extra-extra_extra-extra-issue-3_1766/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/magazines/extra_extra/extra-extra-3.jpg" alt="Extra Extra Issue 3" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Extra Extra Magazine</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Extra Extra Issue 3</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/extra-extra_extra-extra-issue-4_1767/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/magazines/extra_extra/extra-extra-4.jpg" alt="Extra Extra Issue 4" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Extra Extra Magazine</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Extra Extra Issue 4</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/extra-extra_extra-extra-issue-5_1768/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/magazines/extra_extra/extra-extra-5.jpg" alt="Extra Extra Issue 5" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Extra Extra Magazine</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Extra Extra Issue 5</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/extra-extra_extra-extra-issue-6_1769/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/magazines/extra_extra/extra-extra-6.jpg" alt="Extra Extra Issue 6" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Extra Extra Magazine</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Extra Extra Issue 6</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/extra-extra_extra-extra-issue-7_1770/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/magazines/extra_extra/extra-extra-7.jpg" alt="Extra Extra Issue 7" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Extra Extra Magazine</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Extra Extra Issue 7</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/extra-extra_extra-extra-issue-8_1771/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/magazines/extra_extra/extra-extra-8.jpg" alt="Extra Extra Issue 8" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Extra Extra Magazine</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Extra Extra Issue 8</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2017</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/extra-extra_extra-extra-issue-9_1772/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/magazines/extra_extra/extra-extra-9.jpg" alt="Extra Extra Issue 9" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Extra Extra Magazine</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Extra Extra Issue 9</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2017</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/fischli-david-weiss_800-views-of-airports_385/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Fischli_Weiss_800_Views_of_Airports_9783865609328.jpg" alt="800 Views of Airports" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Fischli David Weiss</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">800 Views of Airports</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Walther König, Köln &middot; 2012</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/fratino_satura_1969/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/fratino_louis_satura_9788867496563.jpg" alt="Satura" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Louis Fratino</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Satura</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Mousse Publishing &middot; 2025</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/gates_afro-mingei_1865/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/gates_theaster_afro_mingei_9784907562496.jpg" alt="Afro-Mingei" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Theaster Gates</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Afro-Mingei</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">torch press &middot; 2024</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/geeting_amusement-park_154/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/geeting_david_brandon_amusement_park_9788792988201.jpg" alt="Amusement Park" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">David Brandon Geeting</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Amusement Park</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Lodret Vandret &middot; 2017</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/gonzalez-torres_felix-gonzalez-torres-always-to-return_1592/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/gonzalez-torres_always-to-return/Felix Gonzalez-Torres-Always to Return.jpg" alt="Felix Gonzalez-Torres: Always to Return" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Felix Gonzalez-Torres</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Felix Gonzalez-Torres: Always to Return</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Radius Books &middot; 2024</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/grigely_otherhow-essays-and-documents-on-art-and-disability-1985-2024_1690/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Grigely_Otherhow/cover.jpg" alt="Otherhow: Essays and Documents on Art and Disability 1985-2024" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Joseph Grigely</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Otherhow: Essays and Documents on Art and Disability 1985-2024</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Primary Information &middot; 2026</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/grosvenor_16-pictures_458/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/covers/9781942607748.jpg" alt="16 Pictures" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Robert Grosvenor</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">16 Pictures</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Karma, New York &middot; 2017</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/grosvenor_32-pictures_459/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Grosvenor_32_Pictures_9781942607519.jpg" alt="32 Pictures" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Robert Grosvenor</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">32 Pictures</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Karma, New York &middot; 2014</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/guyton_1-month-ago_465/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Guyton_1_Month_Ago_9780989398534.jpg" alt="1 Month Ago" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Wade Guyton</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">1 Month Ago</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Karma, New York &middot; 2014</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/guyton_the-new-york-times-paintings-november-december-2015_1856/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/guyton_wade_the_new_york_times_paintings_november_december_2015_9780998838144.jpg" alt="The New York Times Paintings: November – December 2015" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Wade Guyton</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The New York Times Paintings: November – December 2015</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Petzel &middot; 2018</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/haring_31-subway-drawings_502/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/covers/9780691229973.jpg" alt="31 Subway Drawings" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Keith Haring</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">31 Subway Drawings</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Princeton University Press &middot; 2021</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/haser_cosmic-surgery_1882/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/haser_alma_cosmic_surgery_9781526202970.jpg" alt="Cosmic Surgery" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Alma Haser</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cosmic Surgery</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self published &middot; 2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/holstad_dignity_525/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/holstad_christian_dignity_9783936859133.jpg" alt="Dignity" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Christian Holstad</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Dignity</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Snoeck &middot; 2004</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/horn_felix-gonzalez-torres-roni-horn_1688/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/horn_gonzalez-torres/felix-gonzalez-torres-roni-horn.jpg" alt="Felix Gonzalez-Torres Roni Horn" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Roni Horn</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Felix Gonzalez-Torres Roni Horn</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl &middot; 2022</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/jafa_a-series-of-utterly-improbable-yet-extraordinary-renditions_544/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Jafa_A_Series_of_Utterly_Improbable_Yet_Extraordinary_Renditions_9781908617446.jpg" alt="A Series of Utterly Improbable, Yet Extraordinary Renditions" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Arthur Jafa</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">A Series of Utterly Improbable, Yet Extraordinary Renditions</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Serpentine Galleries, the Store X, Julia Stoschek Collection, and Koenig Books &middot; 2017</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/jafa_helter-skelter_1863/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/jafa_arthur_helter_skelter_9788887029963.jpg" alt="Helter Skelter" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Arthur Jafa, Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Helter Skelter</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Fondazione Prada &middot; 2026</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/jafa_helter-skelter-dispensa_1864/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/jafa_arthur_helter_skelter_dispensa.jpg" alt="Helter Skelter (Dispensa)" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Arthur Jafa, Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Helter Skelter (Dispensa)</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Fondazione Prada &middot; 2026</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/jankowski_neue-malerei_1837/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/jankowski_christian_neue_malerei_9783960983453.jpg" alt="Neue Malerei" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Christian Jankowski</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Neue Malerei</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Grisebach &middot; 2018</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/kelley_nonmemory_1761/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/kelley_mike_nonmemory_9783906915845.jpg" alt="NONMEMORY" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mike Kelley</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">NONMEMORY</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Hauser &amp; Wirth Publishers &middot; 2024</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/klanten_cutting-edges-contemporary-collage_1869/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/klanten_robert_cutting_edges_contemporary_collage_9783899553383.jpg" alt="Cutting Edges: Contemporary Collage" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Robert Klanten</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cutting Edges: Contemporary Collage</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gestalten &middot; 2011</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/kotatkova_pictorial-atlas-of-a-girl-who-cut-a-library-into-pieces_1914/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/kotatkova_eva_pictorial_atlas_of_a_girl_who_cut_a_library_into_pieces_9783037643617.jpg" alt="Pictorial Atlas of a Girl Who Cut a Library into Pieces" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Eva Koťátková</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Pictorial Atlas of a Girl Who Cut a Library into Pieces</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">JRPEditions &middot; 2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/krijno_collages-2020-2022_1915/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/krijno_nico_collages_2020_2022_9789464660678.jpg" alt="Collages 2020-2022" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Nico Krijno</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Collages 2020-2022</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Art Paper Editions &middot; 2022</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/langendorff_black-mirrors_1868/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/langendorff_julien_black_mirrors_9782365820011.jpg" alt="Black Mirrors" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Julien Langendorff</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Black Mirrors</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Galerie du Jour – agnès b./Shelter Press &middot; 2012</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/ledare_double-bind_1763/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/ledare_leigh_double_bind_9780923183509.jpg" alt="Double Bind" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Leigh Ledare</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Double Bind</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">A.R.T. Press &middot; 2015</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/ligon_woman-with-the-good-meat-removed_1891/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/ligon_zoe_woman_with_the_good_meat_removed_9781944005108.jpg" alt="Woman with the Good Meat Removed" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Zoë Ligon</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Woman with the Good Meat Removed</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aint-Bad Editions &middot; 2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/marshall_rythm-mastr-this-is-how-it-begins_1304/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Marshall_Rythm_Mastr_This_Is_How_It_Begins_9780847835614.jpg" alt="Rythm Mastr: This Is How It Begins" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Kerry James Marshall</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Rythm Mastr: This Is How It Begins</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Rizzoli Electa &middot; 2025</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/marten_treatise-of-a-coat_1780/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/marten_helen_treatise_of_a_coat_9783753309132.jpg" alt="Treatise of a Coat" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Helen Marten</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Treatise of a Coat</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Verlag der Buchhandlung Walther König &middot; 2025</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/mcgough_alphabet_1945/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/mcgough_peter_alphabet_9781961883062.jpg" alt="Alphabet" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter McGough</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Alphabet</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Karma &middot; 2024</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/morris_crease-folds_1839/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/morris_sarah_crease_folds_9788494282072.jpg" alt="Crease Folds" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Sarah Morris</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Crease Folds</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ivorypress LiberArs &middot; 2015</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/newman_richard-prince-untitled-couple_1816/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/newman_michael_richard_prince_untitled_couple_9781846380037.jpg" alt="Richard Prince: Untitled (couple)" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Michael Newman</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Richard Prince: Untitled (couple)</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Afterall &middot; 2006</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/paglen_adversarially-evolved-hallucinations_1860/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/paglen_trevor_adversarially_evolved_hallucinations_9783956795831.jpg" alt="Adversarially Evolved Hallucinations" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Trevor Paglen</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Adversarially Evolved Hallucinations</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Sternberg Press &middot; 2024</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/paglen_i-could-tell-you-but-then-you-would-have-to-be-destroyed-by-me-emblems-from-the-pentagons-black-world_1861/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/paglen_trevor_i_could_tell_you_9781935554141.jpg" alt="I Could Tell You But Then You Would Have to Be Destroyed By Me: Emblems from the Pentagon&#39;s Black World" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Trevor Paglen</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">I Could Tell You But Then You Would Have to Be Destroyed By Me: Emblems from the Pentagon&#39;s Black World</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Melville House &middot; 2010</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/pierre-et-gilles_pierre-et-gilles-double-je-1976-2007_878/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/pierre_et_gilles_taschen_9783822846506.jpg" alt="Pierre et Gilles: Double Je, 1976–2007" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Pierre et Gilles</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Pierre et Gilles: Double Je, 1976–2007</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Taschen &middot; 2007</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/pierson_jack-pierson_1854/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/pierson_jack_jack-pierson_1854.jpg" alt="Jack Pierson" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Pierson</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Jack Pierson</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Photology &middot; 2001</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/pierson_jack-pierson-its-not-dark-yet-galerie-thaddaeus-ropac_1964/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/pierson_jack_ropac_noisbn.jpg" alt="Jack Pierson: It&#39;s Not Dark Yet (Galerie Thaddaeus Ropac)" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Pierson</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Jack Pierson: It&#39;s Not Dark Yet (Galerie Thaddaeus Ropac)</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Galerie Thaddaeus Ropac &middot; 2010</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/pierson_jesus-and-nazimova_1952/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/pierson_jack_jesus_and_nazimova_9789491245046.jpg" alt="Jesus and Nazimova" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Pierson</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Jesus and Nazimova</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Xavier Hufkens &middot; 2012</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/pierson_the-hungry-years_1951/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/pierson_jack_the_hungry_years_9788862085625.jpg" alt="The Hungry Years" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Pierson</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Hungry Years</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Damiani &middot; 2017</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/pierson_tomorrows-man-2_1946/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/pierson_jack_tomorrows_man_2_9780978078997.jpg" alt="Tomorrow&#39;s Man 2" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Pierson</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tomorrow&#39;s Man 2</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Bywater Bros. Editions &middot; 2014</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/pierson_tomorrows-man-3_1947/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/pierson_jack_tomorrows_man_3_9780993856754.jpg" alt="Tomorrow&#39;s Man 3" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Pierson</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tomorrow&#39;s Man 3</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Bywater Bros. Editions &middot; 2015</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/pierson_tomorrows-man-4_1948/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/pierson_jack_tomorrows_man_4_9781988469065.jpg" alt="Tomorrow&#39;s Man 4" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Pierson</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tomorrow&#39;s Man 4</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Bywater Bros. Editions &middot; 2017</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/pierson_tomorrows-man-5_1949/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/pierson_jack_tomorrows_man_5_9781988469140.jpg" alt="Tomorrow&#39;s Man 5" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Pierson</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tomorrow&#39;s Man 5</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Bywater Bros. Editions &middot; 2020</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/pierson_tomorrows-man-6_1950/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/pierson_jack_tomorrows_man_6_9781988469157.jpg" alt="Tomorrow&#39;s Man 6" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Pierson</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tomorrow&#39;s Man 6</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Bywater Bros. Editions &middot; 2023</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/pierson_tomorrows-man-lynn-valley-9_879/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/pierson_jack_tomorrows_man_1_9780920293911.jpg" alt="Tomorrow&#39;s Man, Lynn Valley 9" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Pierson</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tomorrow&#39;s Man, Lynn Valley 9</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Bywater Bros. Editions &middot; 2014</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_american-english_888/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_American_English.jpg" alt="American English" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">American English</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Sadie Coles HQ / Walther König &middot; 2003</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_bibliotheque-dun-amateur_926/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Bibliotheque_d_un_Amateur.jpg" alt="Bibliothèque d’un Amateur" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Bibliothèque d’un Amateur</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Viaindustriae / Les presses du réel &middot; 2022</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_canal-zone_890/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Canal_Zone_Appeal_Appendix.jpg" alt="Canal Zone" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Canal Zone</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian &middot; 2008</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_cartoon-jokes_900/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Cartoon_Jokes.jpg" alt="Cartoon Jokes" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cartoon Jokes</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nahmad Contemporary &middot; 2020</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_check-paintings_891/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Check_Paintings.jpg" alt="Check Paintings" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Check Paintings</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian Gallery Beverly Hills &middot; 2005</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_cowboy_893/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Cowboy.jpg" alt="Cowboy" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cowboy</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian &middot; 2013</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_cowboys_1517/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Cowboy.jpg" alt="Cowboys" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cowboys</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian Beverly Hills &middot; 2013</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_cowboys-gagosian-beverly-hills_1557/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Cowboys_Beverly_Hills.jpg" alt="Cowboys gagosian , Beverly Hills+" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cowboys gagosian , Beverly Hills+</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian Gallery &middot; 2013</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_folk-songs_1827/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Richard_Prince_Folk_Songs.jpg" alt="Folk Songs" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Folk Songs</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian &middot; 2026</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_folksongs_1630/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Folksongs.jpg" alt="Folksongs" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Folksongs</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Fulton Ryder &middot; 2025</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_freaks_1558/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Richard_Prince_Freaks.jpg" alt="Freaks" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Freaks</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nahmad Contemporary &middot; 2023</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_free-love_894/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Free_Love.jpg" alt="Free Love" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Free Love</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Sadie Coles HQ &middot; 2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_high-times_896/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_High_Times.jpg" alt="High Times" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">High Times</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian &middot; 2018</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_hoods_886/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Hoods.jpg" alt="Hoods" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Hoods</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Fulton Ryder &middot; 2022</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_jokes-and-cartoons_899/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Jokes_and_Cartoons.jpg" alt="Jokes &amp; Cartoons" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Jokes &amp; Cartoons</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">JR &middot; 2006</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_new-figures_904/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_New_Figures.jpg" alt="New Figures" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">New Figures</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Almine Rech Editions &middot; 2014</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_new-paintings_1519/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Check_Paintings.jpg" alt="New Paintings" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">New Paintings</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Fulton Ryder &middot; 2022</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_phillips_905/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Phillips.jpg" alt="Phillips" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Phillips</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Abrams &middot; 1992</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_protest-paintings_907/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Protest_Paintings.jpg" alt="Protest Paintings" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Protest Paintings</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Skarstedt &middot; 2015</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_richard-prince_908/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Richard_Prince.jpg" alt="Richard Prince" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Richard Prince</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Guggenheim &middot; 2007</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_richard-prince-tiffany-paintings_1564/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Tiffany_Paintings.jpg" alt="Richard Prince - Tiffany Paintings" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Richard Prince - Tiffany Paintings</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian Gallery &middot; 2010</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_richard-prince-super-group_912/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Richard-Prince-Super-Group-Hardcover-9783947127016_79a83c68-ec69-431c-8e50-2e679ef99f30.b27641586aedf186df22f06247c2f543.avif" alt="Richard Prince Super Group" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Richard Prince Super Group</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Holzwarth Publications &middot; 2018</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_same-man-lp_1568/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Same_Man.png" alt="Same man lp" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Same man lp</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Louisiana Museum of Modern Art &middot; 2023</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_second-house_913/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Second_House.jpg" alt="Second House" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Second House</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gladstone Gallery &middot; 2005</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_she_914/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_SHE.jpg" alt="SHE" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">SHE</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">McKenna &middot; 2009</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_special-guest_915/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Special_Guest.jpg" alt="Special Guest" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Special Guest</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Karma &middot; 2015</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_super-group_1570/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Super_Group.jpg" alt="Super group" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Super group</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Holzwarth Publications &middot; 2018</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_the-fug_909/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_The_Fug.jpg" alt="The Fug" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Fug</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Almine Rech &middot; 2011</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_the-fug_1441/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_The_Fug.jpg" alt="The Fug" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Fug</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Almine Rech Editions &middot; 2011</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_the-girl-next-door_917/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_The_Girl_Next_Door.jpg" alt="The Girl Next Door" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Girl Next Door</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Hatje Cantz &middot; 2000</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_the-karpidas-collection_1572/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Karpedas_Collection.jpg" alt="The Karpidas Collection" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Karpidas Collection</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2022</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_the-magic-castle_918/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_The_Magic_Castle.jpg" alt="The Magic Castle" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Magic Castle</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Les presses du réel &middot; 2013</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_untitled-band-20132014_919/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_Untitled_Band_2013_2014.jpg" alt="untitled (band) 2013/2014" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">untitled (band) 2013/2014</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">A&amp;M bookstore Edizioni &middot; 2014</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_white-paintings_920/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Prince_White_Paintings.jpg" alt="White Paintings" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">White Paintings</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Skarstedt &middot; 2014</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prince_works-from-the-astrup-fearnley-collection_1742/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/prince_richard_works_from_the_astrup_fearnley_collection_9788293654025.jpg" alt="Works from the Astrup Fearnley Collection" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Works from the Astrup Fearnley Collection</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Astrup Fearnley Museet &middot; 2018</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/queau_fury_1783/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/queau_marie_fury_9789464460933.jpg" alt="Fury" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Marie Quéau</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Fury</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">LE BAL &middot; 2025</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/rafman_report-a-concern-nine-eyes-2008-25_1782/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/rafman_jon_report_a_concern_nine_eyes_2008_25_9788793659940.jpg" alt="Report a Concern - Nine Eyes 2008-25" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jon Rafman</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Report a Concern - Nine Eyes 2008-25</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Louisiana Museum of Modern Art &middot; 2025</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/rosenquist_a-retrospective_983/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Rosenquist_A_Retrospective_9780892072675.jpg" alt="A Retrospective" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">James Rosenquist</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">A Retrospective</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Guggenheim Museum Publications &middot; 2003</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/schorr_8-women_1041/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Schorr_8_Women_9781907946424.jpg" alt="8 Women" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Collier Schorr</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">8 Women</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">MACK &middot; 2014</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/sepuya_dark-room-a-z_1047/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/sepuya_dark-room-a-z_1047.jpg" alt="Dark Room A–Z" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Paul Mpagi Sepuya</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Dark Room A–Z</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aperture &middot; 2024</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/sepuya_paul-mpagi-sepuya_1691/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/sepuya_paul-mpagi-sepuya_aperture.jpg" alt="Paul Mpagi Sepuya" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Paul Mpagi Sepuya</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Paul Mpagi Sepuya</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aperture &middot; 2022</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/sepuya_shoot_1689/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Sepuya_Shoot_9798991036771.jpg" alt="Shoot" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Paul Mpagi Sepuya</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Shoot</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Primary Information &middot; 2026</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/stezaker_john-stezaker_1878/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/stezaker_john_monograph_2010_9781905464333.jpg" alt="John Stezaker" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">John Stezaker</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ridinghouse, in association with Whitechapel Gallery, Mudam Luxembourg, and Mildred Lane Kemper Art Museum &middot; 2010</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/stezaker_john-stezaker-crossing-over_1874/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/stezaker_john_crossing_over_9781905464890.jpg" alt="John Stezaker: Crossing Over" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">John Stezaker: Crossing Over</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ridinghouse &middot; 2014</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/stezaker_john-stezaker-double-shadow_1875/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/stezaker_john_double_shadow_9783753304021.jpg" alt="John Stezaker: Double Shadow" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">John Stezaker: Double Shadow</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Verlag der Buchhandlung Walther König / Ridinghouse &middot; 2024</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/stezaker_john-stezaker-film-still_1876/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/stezaker_john_film_still_9781905464418.jpg" alt="John Stezaker: Film Still" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">John Stezaker: Film Still</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ridinghouse &middot; 2011</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/stezaker_john-stezaker-lost-world_1877/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/stezaker_john_lost_world_9781909932432.jpg" alt="John Stezaker: Lost World" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">John Stezaker: Lost World</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ridinghouse &middot; 2017</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/stezaker_nude-and-landscape_1838/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/stezaker_john_nude_and_landscape_9781905464531.jpg" alt="Nude and Landscape" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nude and Landscape</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ridinghouse &middot; 2012</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/stezaker_one-on-one_1841/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/stezaker_john_one_on_one_9781905464715.jpg" alt="One on One" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">One on One</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ridinghouse / Tel Aviv Museum of Art &middot; 2013</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/stezaker_silkscreens_1840/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/stezaker_john_silkscreens_9781905464340.jpg" alt="Silkscreens" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Silkscreens</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ridinghouse &middot; 2010</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/tillmans_abstract-pictures_1166/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Tillmans_Abstract_Pictures_9783775727433.jpg" alt="Abstract Pictures" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Wolfgang Tillmans</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Abstract Pictures</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Hatje Cantz &middot; 2011</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/tissue_tissue-magazine-n1_1774/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/magazines/tissue/tissue-1.jpg" alt="Tissue Magazine N°1" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tissue Magazine</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tissue Magazine N°1</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2011</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/tissue_tissue-magazine-n2_1775/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/magazines/tissue/tissue-2.jpg" alt="Tissue Magazine N°2" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tissue Magazine</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tissue Magazine N°2</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2012</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/tissue_tissue-magazine-n3_1776/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/magazines/tissue/tissue-3.jpg" alt="Tissue Magazine N°3" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tissue Magazine</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tissue Magazine N°3</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2015</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/tissue_tissue-magazine-n4_1777/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/magazines/tissue/tissue-4.jpg" alt="Tissue Magazine N°4" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tissue Magazine</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tissue Magazine N°4</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2014</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/tissue_tissue-magazine-n5_1778/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/magazines/tissue/tissue-5.jpg" alt="Tissue Magazine N°5" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tissue Magazine</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tissue Magazine N°5</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2014</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/villareal_leo-villareal-coding-light_1355/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Villareal_Leo_Villareal_Coding_Light_9781580936538.jpg" alt="Leo Villareal: Coding Light" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Leo Villareal</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Leo Villareal: Coding Light</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Monacelli Press/Phaidon &middot; 2025</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/walker_the-ecstasy-of-st-kara-kara-walker-new-work_1227/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Walker_The_Ecstasy_of_St_Kara_9780300227154.jpg" alt="The Ecstasy of St. Kara: Kara Walker, New Work" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Kara Walker</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Ecstasy of St. Kara: Kara Walker, New Work</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Cleveland Museum of Art &middot; 2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/winters_terry-winters-red-yellow-green-blue_1924/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/winters_terry_red_yellow_green_blue_2014.jpg" alt="Terry Winters: Red Yellow Green Blue" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Terry Winters</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Terry Winters: Red Yellow Green Blue</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">&#39;T&#39; Space Rhinebeck &middot; 2014</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/wittenberg_nicole-wittenberg_1439/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Wittenberg_Nicole_Wittenberg_9781580936811.jpg" alt="Nicole Wittenberg" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Nicole Wittenberg</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole Wittenberg</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Monacelli Press &middot; 2025</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/yuasa_letter-to-the-world_1762/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/yuasa_megumi_letter_to_the_world_9798234001054.jpg" alt="Letter to the World" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Megumi Yuasa</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Letter to the World</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ortuzar / Gomide&amp;Co &middot; 2026</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/yuskavage_lisa-yuskavage-contemporary-artists-series_1682/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Yuskavage_Lisa_Yuskavage_Contemporary_Artists_978_1_83866_811_2.jpg" alt="Lisa Yuskavage (Contemporary Artists Series)" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Lisa Yuskavage</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Lisa Yuskavage (Contemporary Artists Series)</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press &middot; 2026</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/artists_time-travel_1858/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Various Artists</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Time Travel</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Petzel Gallery / DYS 44 Lampronti Gallery &middot; 2023</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/morris_sarah-morris_1836/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Sarah Morris</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Sarah Morris</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">EMMA – Espoo Museum of Modern Art &middot; 2019</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/sepuya_d-r-m-p-x-b-f-d_1692/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Paul Mpagi Sepuya</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">D-R-M / P-X / B-F-D</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self-Published</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/sze_sarah-sze-paintings_1438/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Sarah Sze</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Sarah Sze: Paintings</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon &middot; 2025</p>
+        
+    </div>
+</a>
+
+        
+    </div>
+</section>
+
+            
+        
+    </div>
+</main>
+
+
+
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
+        
+        <p>© 2026 Hudson Street Library · <a href="/colophon.html" class="text-neutral-600 underline hover:text-neutral-900">Colophon</a></p>
+    </div>
+</footer>
+
+<script>
+    // Mobile Menu Toggle Logic
+    const mobileMenuButton = document.querySelector('button.md\\:hidden');
+    const mobileNavMenu = document.getElementById('mobile-nav-menu');
+
+    if (mobileMenuButton && mobileNavMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+            mobileNavMenu.classList.toggle('hidden');
+            mobileNavMenu.classList.toggle('flex');
+            const icon = mobileMenuButton.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            }
+        });
+    }
+
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            if (this.hash) {
+               const targetElement = document.querySelector(this.hash);
+               if (targetElement) {
+                    e.preventDefault();
+                    const headerOffset = document.querySelector('header')?.offsetHeight || 70;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                    if (mobileMenuButton && mobileMenuButton.getAttribute('aria-expanded') === 'true') {
+                         mobileMenuButton.click();
+                    }
+               }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
