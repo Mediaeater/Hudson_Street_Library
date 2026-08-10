@@ -6,8 +6,10 @@ function matchesCollection(book, config) {
   if (rule.tag) {
     // Exact match against the comma-split tag list. Substring matching here
     // sweeps in wrong books ("Art" would match "Appropriation Art").
-    const wanted = rule.tag.toLowerCase();
-    return (book.tags || '').split(',').some(t => t.trim().toLowerCase() === wanted);
+    // Accepts a string or an array of variants (tag aliases).
+    const wanted = (Array.isArray(rule.tag) ? rule.tag : [rule.tag]).map(t => t.toLowerCase());
+    const bookTags = (book.tags || '').split(',').map(t => t.trim().toLowerCase());
+    return wanted.some(w => bookTags.includes(w));
   }
   if (rule.authorLast) {
     return (book.author_last || '').trim() === rule.authorLast;
