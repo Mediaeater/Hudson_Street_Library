@@ -16,11 +16,12 @@
      mark carries it on screen (the class reads .text-teal-900, but
      design-system.css overrides that class and wins the unlayered cascade,
      so the class name says teal and the pixels say green). An earlier
-     revision specified a deeper press green on dry-back grounds; that split
+     revision specified a deeper press green, on the grounds that ink dries back
+     and loses density on uncoated stock; that split
      is gone, and reintroducing one means the printed mark and the screen
      mark stop being the same mark. Match to a Pantone chip drawn down on
      the running stock before the run. */
-  --seal:#034706; --slate:#2F4858;
+  --seal:#034706;
   --rule:rgba(10,10,10,.14);
   --serif:'Literata',Georgia,serif;
   --wordmark:'Crimson Pro',Georgia,serif;
@@ -231,7 +232,10 @@ figure{margin:0}
 .card{width:calc(125*var(--mm));height:calc(75*var(--mm));padding:calc(7*var(--mm)) calc(8*var(--mm))}
 .card .ruled{position:absolute;left:0;right:0;top:calc(18*var(--mm));bottom:0;
   background:repeating-linear-gradient(to bottom,transparent 0,transparent calc(5.4*var(--mm) - 1px),rgba(10,10,10,.18) calc(5.4*var(--mm)))}
-.card .vr{position:absolute;top:0;bottom:0;left:calc(25*var(--mm));border-left:1px solid rgba(19,78,74,.22)}
+/* the call-number column rule. Black at the 18% ruling floor — it was drawn in
+   #134E4A for a long time, a third ink nobody specified and nobody would have
+   paid for. Only the seal is green. */
+.card .vr{position:absolute;top:0;bottom:0;left:calc(25*var(--mm));border-left:1px solid rgba(10,10,10,.18)}
 .card .hd{display:flex;justify-content:space-between;align-items:flex-start;position:relative}
 .card .cn{font-family:var(--mono);font-size:calc(2.1*var(--mm));line-height:1.5;color:var(--ink)}
 .card .entry{position:relative;margin-left:calc(17*var(--mm));font-family:var(--serif);
@@ -239,7 +243,8 @@ figure{margin:0}
 .card .hole{position:absolute;bottom:calc(2.6*var(--mm));left:50%;transform:translateX(-50%);
   width:calc(4.6*var(--mm));height:calc(4.6*var(--mm));border:1px solid rgba(10,10,10,.3);border-radius:50%}
 
-/* accession label 60 × 32 — REMOVABLE sticker, die-cut on a release liner */
+/* accession label 60 × 32 — REMOVABLE sticker, cut through the face only so the
+   release liner underneath stays whole */
 .liner{position:relative;display:inline-block;background:#e6e2d8;padding:calc(5*var(--mm));
   box-shadow:0 12px 28px -12px rgba(0,0,0,.6)}
 .liner::after{content:'RELEASE LINER';position:absolute;left:calc(5*var(--mm));bottom:calc(1.3*var(--mm));
@@ -290,7 +295,9 @@ figure{margin:0}
   padding:0 16px 10px 0;letter-spacing:.1em;text-transform:uppercase;font-size:10px}
 .spec td{padding:11px 16px 11px 0;border-bottom:1px solid #333338;color:#c9c6c1;vertical-align:top;line-height:1.55}
 .spec td:first-child{color:#f0eee9;white-space:nowrap}
-.spec .n{color:var(--brown)}
+/* trim and seal are dimensions, not prose — they break at the <br> between the
+   metric and imperial line and nowhere else, or "203 × 330 mm" comes apart. */
+.spec .n{color:var(--brown);white-space:nowrap}
 
 @media(max-width:1180px){.marks{gap:34px}.rules{margin-left:0;border-left:0;padding-left:0}}
 @media print{
@@ -354,7 +361,7 @@ never a fourth. Everything else on the sheet prints black.</p>
   </div>
   <div class="item">
     <div class="box"><div class="seal k" style="--s:15"><div class="r"><i></i><i></i><i></i><i></i></div></div></div>
-    <p class="cap"><b>1-INK FALLBACK</b>black, if the job is<br>quoted black-only</p>
+    <p class="cap"><b>ONE-COLOUR VERSION</b>black, when the whole<br>job prints in black alone</p>
   </div>
   <div class="item big">
     <div class="box"><div class="cs" style="padding:calc(4*var(--mm))">
@@ -368,8 +375,8 @@ never a fourth. Everything else on the sheet prints black.</p>
     <ul>
       <li>Square, ruled at <b>5.8% of its own width</b>, so the frame scales with the mark.</li>
       <li>Always <b>#034706</b> — the same green on press and on screen. There is no
-      print-only variant. Never a third colour. The black variant exists only for the
-      1-ink fallback.</li>
+      print-only variant. Never a third colour. The black drawing is used only when the
+      whole job prints in black alone.</li>
       <li>Never smaller than 7 mm — the leaning spine closes up below that.</li>
       <li>Clear space on all sides equal to <b>one spine width</b>.</li>
       <li>The seal never sits inside a rule, box, or panel other than its own.</li>
@@ -545,14 +552,14 @@ the page, and the form reference set vertically in the left margin.</p>
       </div>
     </div>
     <p class="lbl">05 · Accession label 60 × 32 mm (2⅜ × 1¼ in) — seal 7 mm (¼ in)<br>
-    removable low-tack adhesive · die-cut, radius 1.6 mm · 21-up on A4 liner</p>
+    removable low-tack adhesive · cut through the face only, corner radius 1.6 mm · 21 up on an A4 liner</p>
   </figure>
 </div>
 
 <p class="note" style="margin:54px 0 26px"><b>One bookmark, not five.</b> The collection is
-ticked by hand rather than printed, so there is a single SKU, a single plate set, and no ink
-swap — and a new collection never obsoletes the stock. It also puts the bookmark in the same
-idiom as everything else in the family: a form you fill in.</p>
+ticked by hand rather than printed, so the bookmark is one item printed one way, and adding a
+collection to the library never makes the stock in the drawer obsolete. It also puts the
+bookmark in the same idiom as everything else in the family: a form you fill in.</p>
 
 <div class="fam" style="align-items:flex-start">
   <figure>
@@ -576,7 +583,7 @@ idiom as everything else in the family: a form you fill in.</p>
       <div class="row"><span class="o"></span><span class="nm">Other ____________</span><span class="n">—</span></div>
       <div class="ft">ACC. NO. ____________<br>421 HUDSON ST., NY 10014</div>
     </div>
-    <p class="lbl">06 · Bookmark, recto 55 × 210 mm (2³⁄₁₆ × 8¼ in) — seal 10 mm (⅜ in) · one SKU</p>
+    <p class="lbl">06 · Bookmark, recto 55 × 210 mm (2³⁄₁₆ × 8¼ in) — seal 10 mm (⅜ in) · one version</p>
   </figure>
 
   <figure>
@@ -589,18 +596,18 @@ idiom as everything else in the family: a form you fill in.</p>
   </figure>
 
   <div class="rules" style="margin-left:0;border-left:1px solid #3d3d44;padding-left:30px;max-width:32ch">
-    <b>Printer's notes — bookmark</b>
+    <b>Item 06 — bookmark</b>
     <ul>
-      <li><b>One SKU, one static forme.</b> No versioning, no plate change, no wash-up between
-      collections. Single run, single quantity.</li>
-      <li><b>4/4 process-free:</b> 2 spot colours both sides — black + PMS green — same two
-      units, work-and-turn. Identical artwork on every sheet, so no imposition variants.</li>
-      <li><b>Imposition:</b> 5-up on A4 (210 × 297), 10-up on SRA3 (320 × 450). Guillotine only —
-      no die, no kiss-cut.</li>
-      <li><b>No bleed.</b> All artwork inset 6 mm from trim; 3 mm trim allowance is sufficient.</li>
-      <li><b>Grain</b> long, parallel to the 210 mm dimension, so the piece stays flat in a book.</li>
-      <li>Reprints need no new artwork: new collections are written into the <i>Other</i> rule
-      by hand.</li>
+      <li><b>Every copy is identical.</b> The collection is written on by hand, not printed, so
+      there is one version of this item and reprints run from the same artwork file. A new
+      collection is entered on the <i>Other</i> rule.</li>
+      <li><b>Imposition:</b> 5 up on A4 (210 × 297 mm), or 10 up on SRA3 (320 × 450 mm).</li>
+      <li><b>Cutting:</b> straight guillotine cuts on all four edges. Nothing on this item is
+      die-cut.</li>
+      <li><b>Grain direction:</b> the grain must run parallel to the 210 mm dimension, so the
+      bookmark lies flat between the pages of a book rather than curling.</li>
+      <li>Stock, colours, bleed, proofing and delivery for this item are as set out in
+      <b>section C</b> and are not restated here.</li>
     </ul>
   </div>
 </div>
@@ -608,60 +615,79 @@ idiom as everything else in the family: a form you fill in.</p>
 <!-- ============ C · SPEC ============ -->
 <div class="sec-head" id="spec">
   <span class="n">C</span><h2>Production specification</h2>
-  <span class="meta">uncoated · no die-cutting</span>
+  <span class="meta">uncoated · two colours · no bleed</span>
 </div>
 <table class="spec">
-  <thead><tr><th>Item</th><th>Trim</th><th>Seal</th><th>Stock</th><th>Inks</th><th>Imposition &amp; note</th></tr></thead>
+  <thead><tr><th>Item</th><th>Trim size</th><th>Seal</th><th>Stock</th><th>Colours</th><th>Imposition &amp; finishing</th></tr></thead>
   <tbody>
     <tr><td>01 Accession pad</td><td class="n">203 × 330 mm<br>8 × 13 in</td><td class="n">15 mm<br>⅝ in</td>
-      <td>100 gsm uncoated wove, natural white; 1.5 mm chipboard back</td><td>2 — black + green</td>
-      <td><b>50 sheets, padded at the head</b> with flexible padding compound. 1-up from SRA3 — foolscap wastes ~35% of the parent sheet, the one premium in the family. Falls back to A4 unchanged.</td></tr>
-    <tr><td>02 Compliment slip</td><td class="n">203 × 110 mm<br>8 × 4⁵⁄₁₆ in</td><td class="n">10 mm<br>⅜ in</td><td>as above, or 120 gsm</td><td>2</td>
-      <td><b>3-up per pad sheet, zero waste.</b> Loose, not padded.</td></tr>
+      <td>100 gsm uncoated wove, natural white; 1.5 mm chipboard back</td>
+      <td>Two colours, one side only<br>(2/0)</td>
+      <td><b>50 sheets, padded at the head</b> with flexible padding compound. 1 up from SRA3, which leaves about 35% of the parent sheet as waste — the one premium in the family. Foolscap is the specified trim: the sheet is drawn to 203 × 330 mm and cannot be reduced to A4 without redrawing every field on it, so please do not substitute.</td></tr>
+    <tr><td>02 Compliment slip</td><td class="n">203 × 110 mm<br>8 × 4⁵⁄₁₆ in</td><td class="n">10 mm<br>⅜ in</td>
+      <td>100 gsm uncoated wove, natural white — the same stock as item 01</td>
+      <td>Two colours, one side only<br>(2/0)</td>
+      <td><b>3 up from one pad sheet, no waste</b> — which is why the stock has to be the same as item 01. Supplied loose, not padded.</td></tr>
     <tr><td>03 Envelope</td><td class="n">110 × 220 mm (DL)<br>4⁵⁄₁₆ × 8¹¹⁄₁₆ in</td><td class="n">15 mm<br>⅝ in</td>
-      <td>100 gsm wove, gummed banker flap</td><td>2 both faces</td>
-      <td>Stock envelope, overprinted — no conversion, no tooling, no die charge. <b>Print face and reverse:</b> face carries return block, postage box and recipient rules; reverse carries the seal centred on the flap point at 44 mm from the head. Hold 5 mm clear of all gummed areas and of the flap fold.</td></tr>
+      <td>100 gsm wove, gummed banker flap</td>
+      <td>Two colours on the face and again on the reverse<br>(2/2, two passes)</td>
+      <td>Print onto bought-in stock envelopes. These are not converted from flat sheet, so no cutting tool is needed. <b>Face:</b> return address block, postage box and recipient rules. <b>Reverse:</b> the seal centred on the flap point, 44 mm down from the head. Keep all printing 5 mm clear of the gummed areas and of the flap fold.</td></tr>
     <tr><td>04 Catalogue card</td><td class="n">125 × 75 mm<br>4¹⁵⁄₁₆ × 2¹⁵⁄₁₆ in</td><td class="n">7 mm<br>¼ in</td>
-      <td>180 gsm card, uncoated</td><td>2</td><td>16-up on SRA3. Within a millimetre of the 5 × 3 in standard, so it fits stock card drawers. Punch optional.</td></tr>
+      <td>180 gsm card, uncoated</td><td>Two colours, one side only<br>(2/0)</td>
+      <td>16 up on SRA3. Within a millimetre of the 5 × 3 in standard, so the cards fit catalogue drawers bought off the shelf. The circle at the foot is <b>printed artwork, not a drilled hole</b> — do not drill or punch this item.</td></tr>
     <tr><td>05 Accession label</td><td class="n">60 × 32 mm<br>2⅜ × 1¼ in</td><td class="n">7 mm<br>¼ in</td>
       <td>Uncoated matt litho face stock, 80 gsm, on a <b>removable low-tack acid-free
-      adhesive</b>, glassine or PET release liner</td><td>2</td>
-      <td><b>Removable is a spec, not a preference</b> — permanent adhesive is not acceptable on
-      collection material. Kiss-cut through the face only, liner uncut; die radius 1.6 mm;
-      21-up on A4 liner (3 across × 7 down). Supply on sheets, not rolls.</td></tr>
+      adhesive</b>. Release liner glassine or PET, either is acceptable</td>
+      <td>Two colours, one side only<br>(2/0)</td>
+      <td><b>The removable adhesive is a requirement, not a preference</b> — permanent adhesive is
+      not acceptable on collection material. Cut through the face material only and leave the
+      liner uncut (kiss-cut), corner radius 1.6 mm, 21 up on an A4 liner, 3 across by 7 down.
+      Deliver on sheets, not rolls.</td></tr>
     <tr><td>06 Bookmark</td><td class="n">55 × 210 mm<br>2³⁄₁₆ × 8¼ in</td><td class="n">10 mm<br>⅜ in</td>
-      <td>300 gsm uncoated board, matte</td><td>2 — black + green, both sides</td>
-      <td><b>One SKU, 5-up on A4, 10-up on SRA3.</b> Collection ticked by hand, so no per-collection plate or ink swap. Straight cuts, no die, no bleed.</td></tr>
+      <td>300 gsm uncoated board, matt</td>
+      <td>Two colours on both sides<br>(2/2)</td>
+      <td>5 up on A4, or 10 up on SRA3. One version only — the collection is written on by hand,
+      so there is nothing to change between copies. Straight guillotine cuts, no die-cutting, no
+      bleed.</td></tr>
   </tbody>
 </table>
 <div class="rules" style="margin:34px 0 0;max-width:none;border-left:0;padding-left:0;
   border-top:2px solid var(--brown);padding-top:18px">
   <b>Notes to the printer — whole job</b>
   <ul style="columns:2;column-gap:44px">
-    <li><b>Colours:</b> 2 spot, no process. Black, plus one green — the artwork is built at
-    <b>#034706</b>, which is also the value the mark carries on screen. Match to a Pantone chip
-    <i>drawn down on the running stock</i> rather than to the on-screen value, and allow for
-    dry-back on uncoated when choosing the chip — but do not re-specify the artwork.</li>
-    <li><b>No bleed anywhere.</b> All artwork inset a minimum 6 mm from trim on every item.
-    3 mm trim allowance is sufficient throughout.</li>
-    <li><b>No coatings, no varnish, no lamination, no foil, no emboss.</b> Uncoated must stay
-    writable — these are forms that get filled in with pen and pencil.</li>
-    <li><b>No die-cutting</b> except the kiss-cut labels (item 05). Everything else is straight
-    guillotine.</li>
-    <li><b>Grain long</b> on all items, parallel to the longer dimension. Critical on the pad,
-    or the sheets cockle at the head.</li>
+    <li><b>Quantities</b> are given on the order. Please quote each of the six items separately
+    at 250, 500 and 1,000.</li>
+    <li><b>Colours:</b> two spot colours across the whole job — black, and one green. There is no
+    four-colour process on any item. The green is drawn at <b>#034706</b>, which is the same
+    value the mark carries on screen. No Pantone number is specified: please match to a drawdown
+    on the running stock and send it for approval before the run. Allow for the ink drying back
+    and losing density on uncoated stock when choosing the match, but do not alter the supplied
+    artwork to compensate.</li>
+    <li><b>Artwork supplied</b> as PDF/X-4, one file per item, at 100% size. Two spot channels
+    only, named <i>Black</i> and <i>HSL Green</i>; no CMYK or RGB objects anywhere in the files.
+    Fonts embedded. No bleed allowance in the files. Trim marks offset 5 mm.</li>
+    <li><b>No bleed anywhere.</b> All artwork is inset at least 6 mm from the trim on every item,
+    so a 3 mm trim allowance is sufficient throughout.</li>
+    <li><b>No coatings, no varnish, no lamination, no foil, no embossing.</b> The uncoated
+    surface has to stay writable — these are forms that get filled in with pen and pencil.</li>
+    <li><b>No die-cutting</b> anywhere except the labels (item 05), which are cut through the
+    face material only. Every other item is cut on the guillotine.</li>
+    <li><b>Grain long</b> on all items, running parallel to the longer dimension. This matters
+    most on the pad: across the grain, the sheets ripple at the glued head.</li>
     <li><b>Pad build (01):</b> 50 sheets, flexible padding compound at the head, 1.5 mm
-    chipboard back, no tape strip. Jog to the head before gluing.</li>
-    <li><b>Overprinting stock envelopes (03):</b> keep 5 mm clear of gummed areas and of the
-    flap fold; reverse prints after the face, with make-ready for flap thickness.</li>
-    <li><b>Registration:</b> the green only ever meets black at rules and the seal frame —
-    ±0.15 mm is adequate. No trapping required.</li>
-    <li><b>1-ink fallback:</b> if the job is quoted black-only, the seal prints black and
-    nothing else changes. Do not substitute a screen or tint for the green.</li>
-    <li><b>Proofs:</b> one wet or press proof on the running stock for the pad and the
-    bookmark; laser is adequate for the rest.</li>
-    <li><b>Delivery:</b> labels on sheets, not rolls. Bookmarks banded in 50s. Pads shrink-wrapped
-    in 5s.</li>
+    chipboard back, no tape strip. Knock the stack up square to the head edge before gluing.</li>
+    <li><b>Envelopes (03):</b> keep all printing 5 mm clear of the gummed areas and of the flap
+    fold. Print the reverse after the face, allowing for the extra thickness at the flap when
+    setting up.</li>
+    <li><b>Registration:</b> the green never overprints or butts the black — the two colours meet
+    only as separate elements on the same sheet, so ±0.15 mm is ample. Do not add trapping,
+    spread or choke to the supplied artwork.</li>
+    <li><b>If the job is quoted as one colour:</b> the seal prints black and nothing else on any
+    item changes. Do not substitute a tint or screen of black for the green.</li>
+    <li><b>Proofs:</b> one wet proof on the running stock for the pad (01) and the bookmark (06),
+    for approval before the run. A laser proof is sufficient for the other four items.</li>
+    <li><b>Delivery</b> to 421 Hudson St., New York, NY 10014. Labels on sheets, not rolls;
+    bookmarks banded in 50s; pads shrink-wrapped in 5s.</li>
   </ul>
 </div>
 
