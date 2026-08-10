@@ -7,12 +7,13 @@ currentPage: collections
 {#
   DYNAMICALLY GENERATED RICHARD PRINCE COLLECTION PAGE
 
-  This page automatically reads from books.csv and displays all books
-  where author_last = "Prince" and author_first = "Richard".
+  This page automatically reads from books.csv and displays every book that
+  names Richard Prince — either in the author columns, or in author_full_name,
+  contributors, tags or title (see the note on the loop below).
 
   The page regenerates whenever books.csv changes - no manual updates needed.
   Image paths come from the image_url field in CSV.
-  Last verified: 2026-03-28
+  Last verified: 2026-08-10
 #}
 
 <main>
@@ -45,9 +46,22 @@ currentPage: collections
         <!-- Grid for Items within this Collection -->
         <div id="item-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 md:gap-8">
 
+            {#-
+              Books BY Prince come from the author columns. Books that name him
+              anywhere else — a two-person catalogue where he is the second
+              author, or a work about/after him — are caught by scanning the
+              other fields, because the intro above promises a collection "by
+              and about Prince" and an author-column match alone only delivers
+              the "by" half. That gap hid four titles, including both volumes of
+              the Fondazione Prada "Helter Skelter" catalogue, where the CSV has
+              author_full_name = "Arthur Jafa, Richard Prince" but author_last =
+              "Jafa". Verified against books.csv: this adds exactly 4 rows and no
+              false positives.
+            -#}
             {%- set princeBooks = [] -%}
             {%- for book in books -%}
-            {%- if book.author_last == "Prince" and book.author_first == "Richard" -%}
+            {%- set haystack = (book.author_full_name or "") ~ " " ~ (book.contributors or "") ~ " " ~ (book.tags or "") ~ " " ~ (book.title or "") -%}
+            {%- if (book.author_last == "Prince" and book.author_first == "Richard") or ("Richard Prince" in haystack) -%}
                 {%- set princeBooks = (princeBooks.push(book), princeBooks) -%}
             {%- endif -%}
             {%- endfor -%}
