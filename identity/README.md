@@ -6,8 +6,8 @@ would need to quote from.
 
 ```
 identity/
-└── stationery/     Foolscap Mk II — letterhead pad, continuation, compliment
-                    slip, envelope, catalogue card, accession label, bookmark
+└── stationery/     Foolscap Mk II — six pieces: accession pad, compliment slip,
+                    envelope, catalogue card, accession label, bookmark
 ```
 
 Open `stationery/index.html` in a browser. It prints at true 1:1, so the sheets
@@ -29,13 +29,14 @@ screen mark stop being the same mark.
 
 If the palette changes, `--seal` in `stationery/index.html` has to move with
 `--primary-700` in `src/assets/css/design-system.css`. `npm run test:design`
-guards the site side of that; this directory is outside its scope, so right now
-the link is held by this paragraph rather than by a check.
+enforces that: its palette check walks this directory as well as `src/`, so an
+off-palette green or teal here fails the pre-commit hook. It earned its keep on
+the first run, catching a catalogue-card rule set in `#134E4A` — a third ink on
+a job specified as two.
 
-> **TODO** — teach the palette check to scan `identity/` as well, so `--seal`
-> can't quietly diverge. One-line change in `checkPalette()`. Tracked in
-> [`plans/open-items/plan.md`](../plans/open-items/plan.md); worth doing next
-> time these comps are edited.
+The check only knows about greens and teals. Everything else about this
+directory — that it stays out of `src/`, that the seal never grows a fourth
+size — is still held by prose.
 
 Full specification, including the ramp and the rules for the mark:
 [`src/design-system.md`](../src/design-system.md).
