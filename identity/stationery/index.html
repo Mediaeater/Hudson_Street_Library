@@ -74,10 +74,18 @@ figure{margin:0}
   text-transform:uppercase;color:var(--ink)}
 
 /* ---- mark-system display panel ---- */
-.marks{display:flex;gap:52px;align-items:flex-end;flex-wrap:wrap;
+.marks{display:flex;gap:40px;align-items:flex-start;
   background:#2b2b30;border:1px solid #37373d;padding:38px 40px}
+/* swatches wrap among themselves; the rules stay a column beside them rather
+   than being flung onto a second row by the shared wrap. */
+.marks .swatches{display:flex;gap:22px;flex-wrap:wrap;flex:1;min-width:0;align-items:flex-start}
+.marks .rules{flex:none;width:28ch;margin-left:0;max-width:none}
 .marks .item{text-align:center}
-.marks .item .box{background:var(--paper);color:var(--ink);padding:20px;display:flex;align-items:center;justify-content:center}
+.marks .item .box{background:var(--paper);color:var(--ink);padding:20px;display:flex;
+  align-items:center;justify-content:center;min-width:128px;min-height:104px}
+/* the drawing itself, enlarged so it can be read on screen. Every other swatch on
+   this page is true size; this one is captioned so it can't be scaled off. */
+.marks .item.big .box{min-width:178px;min-height:178px}
 .marks .cap{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:#8a8782;margin-top:12px;line-height:1.7}
 .marks .cap b{display:block;color:#e8e6e1;font-weight:500;letter-spacing:.16em}
 .rules{margin-left:auto;max-width:34ch;font-size:13.5px;line-height:1.7;color:#a8a5a0;border-left:1px solid #3d3d44;padding-left:30px}
@@ -315,6 +323,11 @@ ruled square, stamped in dark green <b>#034706</b>. Every piece uses it, at thre
 never a fourth. Everything else on the sheet prints black.</p>
 
 <div class="marks">
+  <div class="swatches">
+  <div class="item big">
+    <div class="box"><div class="seal" style="--s:100"><div class="r"><i></i><i></i><i></i><i></i></div></div></div>
+    <p class="cap"><b>THE DRAWING</b>four rectangles, the<br>fourth rotated 9°<br><i>enlarged, not to size</i></p>
+  </div>
   <div class="item">
     <div class="box"><div class="seal" style="--s:15"><div class="r"><i></i><i></i><i></i><i></i></div></div></div>
     <p class="cap"><b>15 MM · ⅝ IN</b>accession pad<br>envelope</p>
@@ -329,11 +342,12 @@ never a fourth. Everything else on the sheet prints black.</p>
   </div>
   <div class="item">
     <div class="box" style="align-items:flex-start;gap:calc(5*var(--mm));padding:24px">
-      <div class="seal" style="--s:13"><div class="r"><i></i><i></i><i></i><i></i></div></div>
+      <div class="seal" style="--s:15"><div class="r"><i></i><i></i><i></i><i></i></div></div>
       <div class="wmk" style="font-size:calc(6*var(--mm))"><em>Hudson Street</em><em>Library</em>
         <small style="font-size:calc(1.7*var(--mm));margin-top:calc(3*var(--mm))">Art &amp; photography books · Ephemera</small></div>
     </div>
     <p class="cap"><b>LOCKUP</b>seal + stacked wordmark<br>seal always leads</p>
+  </div>
   </div>
   <div class="rules">
     <b>Rules</b>
