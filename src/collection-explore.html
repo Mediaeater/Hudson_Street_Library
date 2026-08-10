@@ -371,6 +371,7 @@ permalink: /collection-explore.html
     .art-bg { background: linear-gradient(135deg, #f5e8e8, #e8d6d6); }
     .ephemera-bg { background: linear-gradient(135deg, #e8f2f5, #d6e5e8); }
     .magazines-bg { background: linear-gradient(135deg, #f5e8f2, #e8d6e5); }
+    .subject-bg { background: linear-gradient(135deg, color-mix(in srgb, #034706 5%, white), color-mix(in srgb, #034706 12%, white)); }
 
     /* Loading State */
     .loading-indicator {
@@ -500,6 +501,7 @@ permalink: /collection-explore.html
         <div class="filter-group">
             <span class="filter-label">Filter:</span>
             <button class="filter-btn active" data-category="all">All</button>
+            <button class="filter-btn" data-category="subject">Subjects</button>
             <button class="filter-btn" data-category="fashion">Fashion</button>
             <button class="filter-btn" data-category="photography">Photography</button>
             <button class="filter-btn" data-category="magazines">Magazines</button>
@@ -518,134 +520,60 @@ permalink: /collection-explore.html
         </div>
     </div>
 
-    <!-- Collections Grid -->
+    <!-- Collections Grid (rendered at build from exploreCollections) -->
     <div class="collections-container">
         <div id="collections-grid" class="collections-grid">
-            <!-- Collections will be loaded dynamically -->
+            {% for collection in exploreCollections %}
+            <a href="{{ collection.path }}"
+               class="collection-card{% if collection.featured %} featured{% endif %}"
+               data-category="{{ collection.category }}">
+                <div class="collection-image-wrapper">
+                    {% if collection.image %}
+                    <img src="{{ collection.image }}"
+                         alt="{{ collection.name }}"
+                         class="collection-image"
+                         loading="lazy">
+                    {% endif %}
+                    <div class="collection-placeholder {{ collection.category }}-bg">
+                        <div class="collection-placeholder-text">{{ collection.name }}</div>
+                    </div>
+                    <div class="collection-overlay">
+                        <div class="collection-overlay-text">{{ collection.description }}</div>
+                    </div>
+                    <div class="collection-category">{{ collection.category }}</div>
+                </div>
+                <div class="collection-info">
+                    <div class="collection-number">Lot {% if loop.index < 10 %}00{% elif loop.index < 100 %}0{% endif %}{{ loop.index }}</div>
+                    <h2 class="collection-name">{{ collection.name }}</h2>
+                    <p class="collection-description">{{ collection.description }}</p>
+                    <div class="collection-count">{{ collection.bookCount or 0 }} Items</div>
+                </div>
+            </a>
+            {% endfor %}
         </div>
-    </div>
-
-    <!-- Loading Indicator -->
-    <div id="loading-indicator" class="loading-indicator">
-        <div class="loading-spinner"></div>
-        <p class="loading-text">Loading Collections...</p>
     </div>
 </div>
 
 {% include "components/site-footer.njk" %}
 
 <script>
-    let allCollections = [];
-    let currentFilter = 'all';
-
-    // Load collections from JSON
-    async function loadCollections() {
-        const loadingIndicator = document.getElementById('loading-indicator');
-        loadingIndicator.classList.add('active');
-
-        try {
-            const response = await fetch('/cms/data/libraryCollections.json');
-            const data = await response.json();
-            allCollections = data.collections;
-
-            // Sort to put featured collections first
-            allCollections.sort((a, b) => {
-                if (a.featured && !b.featured) return -1;
-                if (!a.featured && b.featured) return 1;
-                return 0;
-            });
-
-            renderCollections();
-        } catch (error) {
-            console.error('Error loading collections:', error);
-            document.getElementById('collections-grid').innerHTML = `
-                <div style="grid-column: 1/-1; text-align: center; padding: 4rem 2rem;">
-                    <p style="font-size: 1.125rem; color: var(--color-brown);">
-                        Unable to load collections. Please try again later.
-                    </p>
-                </div>
-            `;
-        } finally {
-            loadingIndicator.classList.remove('active');
-        }
-    }
-
-    function renderCollections() {
-        const grid = document.getElementById('collections-grid');
-
-        // Filter collections
-        const filtered = allCollections.filter(collection =>
-            currentFilter === 'all' || collection.category === currentFilter
-        );
-
-        if (filtered.length === 0) {
-            grid.innerHTML = `
-                <div style="grid-column: 1/-1; text-align: center; padding: 4rem 2rem;">
-                    <p style="font-family: 'Archivo Narrow', sans-serif; font-size: 0.875rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-brown);">
-                        No collections found in this category
-                    </p>
-                </div>
-            `;
-            return;
-        }
-
-        // Render collection cards
-        grid.innerHTML = filtered.map((collection, index) => {
-            const categoryClass = collection.category + '-bg';
-            const featuredClass = collection.featured ? 'featured' : '';
-            const lotNumber = String(index + 1).padStart(3, '0');
-
-            return `
-                <a href="${collection.path}"
-                   class="collection-card ${featuredClass}"
-                   data-category="${collection.category}">
-                    <div class="collection-image-wrapper">
-                        ${collection.image ? `
-                            <img src="${collection.image}"
-                                 alt="${collection.name}"
-                                 class="collection-image"
-                                 loading="lazy">
-                        ` : ''}
-                        <div class="collection-placeholder ${categoryClass}">
-                            <div class="collection-placeholder-text">${collection.name}</div>
-                        </div>
-                        <div class="collection-overlay">
-                            <div class="collection-overlay-text">${collection.description}</div>
-                        </div>
-                        <div class="collection-category">${collection.category}</div>
-                    </div>
-                    <div class="collection-info">
-                        <div class="collection-number">Lot ${lotNumber}</div>
-                        <h2 class="collection-name">${collection.name}</h2>
-                        <p class="collection-description">${collection.description}</p>
-                        <div class="collection-count">${collection.bookCount || 0} Items</div>
-                    </div>
-                </a>
-            `;
-        }).join('');
-    }
-
-    // Filter functionality
-    function setupFilters() {
+    // Cards are rendered at build time; the buttons just show/hide them.
+    document.addEventListener('DOMContentLoaded', () => {
         const filterButtons = document.querySelectorAll('.filter-btn');
+        const cards = document.querySelectorAll('.collection-card');
 
         filterButtons.forEach(button => {
             button.addEventListener('click', () => {
-                // Update active state
                 filterButtons.forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
 
-                // Update current filter and render
-                currentFilter = button.dataset.category;
-                renderCollections();
+                const category = button.dataset.category;
+                cards.forEach(card => {
+                    card.style.display =
+                        (category === 'all' || card.dataset.category === category) ? '' : 'none';
+                });
             });
         });
-    }
-
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
-        loadCollections();
-        setupFilters();
     });
 </script>
 
