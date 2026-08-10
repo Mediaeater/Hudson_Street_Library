@@ -9,7 +9,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,300;7..72,400;7..72,600&family=Crimson+Pro:wght@300;400;600&family=Archivo+Narrow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --mm:1.55px;
+  /* One CSS millimetre = 96/25.4 px, because CSS defines an inch as 96 px no
+     matter what the display actually is. Almost no screen is 96 dpi — a Retina
+     Mac is nearer 109 — so this default renders about 12% small and the bar at
+     the top of the page lets you calibrate it against a bank card. The measured
+     value is written to --mm on <html> and kept in localStorage. */
+  --mm:3.7795px;
   --paper:#F8F7F4; --ink:#0A0A0A; --brown:#8B7355;
   /* the second ink — the same green the site renders, not a print-only
      variant. design-system.css sets --primary-700 to this value and the
@@ -31,7 +36,38 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;padding:0 0 140px;background:#242428;color:#e8e6e1;font-family:var(--label);-webkit-font-smoothing:antialiased}
+/* the old overview scale, kept as an option: every piece small enough to see the
+   whole family at once. Set on <body> so it beats the calibrated value written
+   to <html>, which body then inherits when this class is off. */
+body.fit{--mm:1.55px}
 .wrap{max-width:1320px;margin:0 auto;padding:0 44px}
+
+/* ---- scale bar. Presentation furniture: hidden in print like the rest. ---- */
+/* kept to a single row: it is sticky, so every millimetre of its height is
+   millimetres of sheet it hides when you scroll. */
+.scalebar{position:sticky;top:0;z-index:50;background:#1c1c20;border-bottom:1px solid #3a3a40;
+  padding:9px 44px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.scalebar .grp{display:flex;align-items:center;gap:8px}
+.scalebar button{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  background:none;color:#7d7a75;border:1px solid #3a3a40;padding:6px 12px;cursor:pointer}
+.scalebar button:hover{color:#e8e6e1;border-color:#5a5a62}
+.scalebar button.on{color:#0A0A0A;background:#c9c6c1;border-color:#c9c6c1}
+.scalebar .cap{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:#7d7a75}
+.scalebar output{font-family:var(--mono);font-size:11px;color:var(--brown);min-width:11ch}
+.scalebar input[type=range]{width:190px;accent-color:var(--brown)}
+/* The calibration gauge, drawn at the current scale so it resizes as you drag.
+   85.60 mm is the width of ISO/IEC 7810 ID-1 — every bank and credit card in
+   the world, to a tenth of a millimetre. Only the width is drawn: scaling is
+   isotropic, so matching one dimension calibrates both, and a full 53.98 mm
+   card outline would make this sticky bar 200 px tall. */
+.cardref{width:calc(85.6*var(--mm));height:24px;flex:none;position:relative;
+  border-left:1px solid #8a8782;border-right:1px solid #8a8782;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:#6a6760;
+  overflow:hidden;white-space:nowrap}
+.cardref::before{content:'';position:absolute;left:0;right:0;top:50%;border-top:1px dashed #4a4a52}
+.cardref span{position:relative;background:#1c1c20;padding:0 6px}
+body.fit .cal-only{display:none}
 
 .masthead{padding:70px 0 34px;border-bottom:1px solid #3a3a40}
 .kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#7d7a75;margin:0 0 16px}
@@ -88,8 +124,9 @@ figure{margin:0}
    this page is true size; this one is captioned so it can't be scaled off. */
 .marks .item.big .box{min-width:178px;min-height:178px}
 /* clear-space diagram — the dashed frame stands one spine width off the seal,
-   which is the rule stated on the right. Drawn enlarged; at 15 mm the offset is
-   1.5 mm and shows nothing. */
+   which is the rule stated on the right. A spine is 0.10 of the seal, so the
+   padding must be a tenth of --s: 3 mm at --s:30. Drawn enlarged because at the
+   real 15 mm the offset is 1.5 mm and shows nothing. */
 .marks .cs{position:relative;display:inline-block;outline:1px dashed rgba(10,10,10,.4)}
 .marks .cap{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:#8a8782;margin-top:12px;line-height:1.7}
 .marks .cap b{display:block;color:#e8e6e1;font-weight:500;letter-spacing:.16em}
@@ -208,7 +245,7 @@ figure{margin:0}
 .f2 .cond .fl b{font-family:var(--mono);font-weight:400;font-size:calc(1.6*var(--mm));letter-spacing:.12em;
   text-transform:uppercase;color:rgba(10,10,10,.55);width:calc(22*var(--mm));flex:none}
 .f2 .cond .fl u{flex:1;text-decoration:none;border-bottom:1px solid rgba(10,10,10,.28);height:calc(5*var(--mm))}
-/* 98 mm = exactly 14 rules at 7 mm, and clears the footer rule by 5.7 mm.
+/* 98 mm = exactly 14 rules at 7 mm, and clears the footer rule by 6.6 mm.
    Hand-tuned to the blocks above it — if the volume block or docket gains a
    row, this has to come down with it or the ruling runs into the footer. */
 .f2 .field{margin-top:calc(2.4*var(--mm));height:calc(98*var(--mm));
@@ -301,22 +338,42 @@ figure{margin:0}
 
 @media(max-width:1180px){.marks{gap:34px}.rules{margin-left:0;border-left:0;padding-left:0}}
 @media print{
-  :root{--mm:1mm}
+  /* real millimetres on paper, whatever the screen was calibrated to. Has to
+     name body and body.fit too, or the screen scale wins on specificity. */
+  :root,body,body.fit{--mm:1mm !important}
   body{background:#fff;padding:0}
-  .masthead,.sec-head,.lbl,.note,.spec,nav.jump,.marks,.rules{display:none}
+  .masthead,.sec-head,.lbl,.note,.spec,nav.jump,.marks,.rules,.scalebar{display:none}
   .sheet,.env{box-shadow:none;page-break-inside:avoid}
 }
 </style>
 </head>
 <body>
+
+<div class="scalebar">
+  <div class="grp">
+    <button id="b-actual" class="on">Actual size</button>
+    <button id="b-fit">Fit to screen</button>
+  </div>
+  <div class="grp cal-only">
+    <span class="cap">Calibrate — fit a bank card between the stops</span>
+    <div class="cardref"><span>85.60 mm — card width</span></div>
+    <input type="range" id="cal" min="2.6" max="6.4" step="0.0005" value="3.7795"
+           aria-label="Screen scale, pixels per millimetre">
+    <output id="calout"></output>
+    <button id="b-reset">Reset</button>
+  </div>
+</div>
+
 <div class="wrap">
 
 <header class="masthead">
   <p class="kicker">Hudson Street Library · New York · Design comps · August 2026</p>
   <h1>Administrative Stationery</h1>
   <p>Foolscap Mk II — the British administrative sheet, 203 × 330 mm, with Japanese detailing.
-  One mark system applied identically across every piece in the family. The page prints at
-  true 1:1.</p>
+  One mark system applied identically across every piece in the family. Every piece is drawn
+  in millimetres and shown at actual size, on screen and on paper — calibrate the screen against
+  a bank card using the bar above, or switch to <i>fit to screen</i> to see the whole family at
+  once. Only the two swatches captioned <i>enlarged</i> are off scale.</p>
   <nav class="jump">
     <a href="#mark">A · The mark system</a>
     <a href="#family">B · The family</a>
@@ -336,7 +393,7 @@ never a fourth. Everything else on the sheet prints black.</p>
 <div class="marks">
   <div class="swatches">
   <div class="item big">
-    <div class="box"><div class="seal" style="--s:100"><div class="r"><i></i><i></i><i></i><i></i></div></div></div>
+    <div class="box"><div class="seal" style="--s:45"><div class="r"><i></i><i></i><i></i><i></i></div></div></div>
     <p class="cap"><b>THE DRAWING</b>four rectangles, the<br>fourth rotated 9°<br><i>enlarged, not to size</i></p>
   </div>
   <div class="item">
@@ -364,8 +421,8 @@ never a fourth. Everything else on the sheet prints black.</p>
     <p class="cap"><b>ONE-COLOUR VERSION</b>black, when the whole<br>job prints in black alone</p>
   </div>
   <div class="item big">
-    <div class="box"><div class="cs" style="padding:calc(4*var(--mm))">
-      <div class="seal" style="--s:40"><div class="r"><i></i><i></i><i></i><i></i></div></div>
+    <div class="box"><div class="cs" style="padding:calc(3*var(--mm))">
+      <div class="seal" style="--s:30"><div class="r"><i></i><i></i><i></i><i></i></div></div>
     </div></div>
     <p class="cap"><b>CLEAR SPACE</b>one spine width, all sides<br><i>enlarged, not to size</i></p>
   </div>
@@ -692,5 +749,48 @@ bookmark in the same idiom as everything else in the family: a form you fill in.
 </div>
 
 </div>
+
+<script>
+/* Screen scale. CSS hard-codes 96 px to the inch, so its millimetre is only
+   right on a 96 dpi display; calibration measures the real one once and keeps
+   it. Written to <html>, which body inherits — except in "fit to screen",
+   where body.fit overrides it. */
+(function () {
+  var CSS_MM = 96 / 25.4;              // 3.7795… — the spec default
+  var KEY_MM = 'hsl-stationery-mm', KEY_FIT = 'hsl-stationery-fit';
+  var root = document.documentElement, body = document.body;
+  var cal = document.getElementById('cal'), out = document.getElementById('calout');
+  var bActual = document.getElementById('b-actual'), bFit = document.getElementById('b-fit');
+
+  function num(v, fallback) { v = parseFloat(v); return isFinite(v) && v > 0 ? v : fallback; }
+
+  function setScale(px, save) {
+    root.style.setProperty('--mm', px + 'px');
+    cal.value = px;
+    out.textContent = px.toFixed(3) + ' px/mm';
+    if (save) try { localStorage.setItem(KEY_MM, px); } catch (e) {}
+  }
+
+  function setFit(on, save) {
+    body.classList.toggle('fit', on);
+    bFit.classList.toggle('on', on);
+    bActual.classList.toggle('on', !on);
+    if (save) try { localStorage.setItem(KEY_FIT, on ? '1' : '0'); } catch (e) {}
+  }
+
+  var stored = {};
+  try { stored = { mm: localStorage.getItem(KEY_MM), fit: localStorage.getItem(KEY_FIT) }; } catch (e) {}
+
+  setScale(num(stored.mm, CSS_MM), false);
+  setFit(stored.fit === '1', false);
+
+  cal.addEventListener('input', function () { setScale(num(cal.value, CSS_MM), true); });
+  bActual.addEventListener('click', function () { setFit(false, true); });
+  bFit.addEventListener('click', function () { setFit(true, true); });
+  document.getElementById('b-reset').addEventListener('click', function () {
+    setScale(CSS_MM, true);
+  });
+})();
+</script>
 </body>
 </html>
