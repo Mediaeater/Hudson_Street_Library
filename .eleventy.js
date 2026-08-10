@@ -639,7 +639,6 @@ module.exports = function(eleventyConfig) {
 
   // Copy data files for search functionality
   eleventyConfig.addPassthroughCopy({"src/_data/books.csv": "cms/data/books.csv"});
-  eleventyConfig.addPassthroughCopy({"src/_data/libraryCollections.json": "cms/data/libraryCollections.json"});
   eleventyConfig.addPassthroughCopy({"src/_data/news.json": "cms/data/news.json"});
   eleventyConfig.addPassthroughCopy({"data": "data"});
 
