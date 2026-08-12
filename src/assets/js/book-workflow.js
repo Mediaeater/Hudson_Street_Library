@@ -283,20 +283,10 @@ class BookWorkflow {
             formData.append('enhance_quality', enhanceQuality);
             formData.append('remove_background', removeBackground);
             
-            // Upload and process image
-            const response = await fetch('/admin/api/media/upload', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${this.getAuthToken()}`
-                },
-                body: formData
+            // Upload and process image, reporting real upload progress as it streams
+            const result = await this.uploadWithProgress('/admin/api/media/upload', formData, (percent) => {
+                this.updateUploadProgress(percent);
             });
-            
-            if (!response.ok) {
-                throw new Error('Upload failed');
-            }
-            
-            const result = await response.json();
             
             // Store uploaded image data
             this.uploadedImages.cover = {
@@ -326,19 +316,50 @@ class BookWorkflow {
     showUploadProgress() {
         document.getElementById('upload-prompt').classList.add('hidden');
         document.getElementById('upload-progress').classList.remove('hidden');
-        
-        // Simulate progress for now - in real implementation, track actual upload progress
-        let progress = 0;
-        const interval = setInterval(() => {
-            progress += Math.random() * 15;
-            if (progress >= 100) {
-                progress = 100;
-                clearInterval(interval);
-            }
-            
-            document.getElementById('progress-bar').style.width = `${progress}%`;
-            document.getElementById('progress-text').textContent = `${Math.round(progress)}%`;
-        }, 200);
+
+        // Reset the bar; real progress is reported by uploadWithProgress via updateUploadProgress
+        this.updateUploadProgress(0);
+    }
+
+    updateUploadProgress(percent) {
+        const clamped = Math.max(0, Math.min(100, percent));
+        document.getElementById('progress-bar').style.width = `${clamped}%`;
+        document.getElementById('progress-text').textContent = `${Math.round(clamped)}%`;
+    }
+
+    // Upload via XMLHttpRequest so we can report real byte-level upload progress.
+    // fetch() cannot expose upload progress, so we use XHR's upload.onprogress event.
+    uploadWithProgress(url, formData, onProgress) {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', url);
+            // Note: don't set Content-Type here - the browser adds the multipart boundary for FormData
+            xhr.setRequestHeader('Authorization', `Bearer ${this.getAuthToken()}`);
+
+            xhr.upload.addEventListener('progress', (event) => {
+                if (event.lengthComputable && typeof onProgress === 'function') {
+                    onProgress((event.loaded / event.total) * 100);
+                }
+            });
+
+            xhr.addEventListener('load', () => {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    if (typeof onProgress === 'function') onProgress(100);
+                    try {
+                        resolve(JSON.parse(xhr.responseText));
+                    } catch (err) {
+                        reject(new Error('Invalid server response'));
+                    }
+                } else {
+                    reject(new Error('Upload failed'));
+                }
+            });
+
+            xhr.addEventListener('error', () => reject(new Error('Upload failed')));
+            xhr.addEventListener('abort', () => reject(new Error('Upload aborted')));
+
+            xhr.send(formData);
+        });
     }
 
     hideUploadProgress() {
