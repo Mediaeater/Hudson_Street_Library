@@ -47,6 +47,15 @@
             z-index: 1;
         }
 
+        /* Mobile scroll-jitter fix: this is a live SVG feTurbulence filter
+           layer; over a long page it exceeds mobile-GPU texture limits and the
+           browser re-rasterizes it in chunks on scroll, making the page shake.
+           At 3% opacity it's imperceptible on a phone — drop it on small/touch
+           screens. Desktop keeps it. */
+        @media (max-width: 900px), (hover: none) and (pointer: coarse) {
+            body::before { display: none; }
+        }
+
         .article-container {
             max-width: 860px;
             margin: 0 auto;
@@ -296,11 +305,18 @@
       `.site-header.site-header` selector out-specifies the `bg-white/95` and
       `backdrop-blur-sm` utility classes without needing !important.
     */
-    @media (max-width: 767px) {
+    @media (max-width: 900px), (hover: none) and (pointer: coarse) {
         .site-header.site-header {
             background-color: #ffffff;
             -webkit-backdrop-filter: none;
             backdrop-filter: none;
+            /* Promote the sticky bar to its own compositor layer so it isn't
+               re-rasterized against the scrolling content every frame — this
+               is what stops the header (and the text under it) juddering on
+               mobile. Pairs with dropping the backdrop blur above. */
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            will-change: transform;
         }
     }
 

@@ -57,6 +57,18 @@
             z-index: 1;
         }
 
+        /* Mobile scroll-jitter fix (the real one).
+           This paper-texture overlay is a live SVG feTurbulence filter used as
+           a background. Over a long article the layer is many thousands of px
+           tall, which exceeds mobile-GPU texture limits, so the browser
+           re-rasterizes the noise filter in chunks as you scroll — the whole
+           page shudders and becomes unreadable. At 3% opacity the texture is
+           imperceptible on a phone, so drop it entirely on small/touch screens.
+           (Desktop keeps it.) */
+        @media (max-width: 900px), (hover: none) and (pointer: coarse) {
+            body::before { display: none; }
+        }
+
         /* Header */
         .page-header {
             background: var(--color-paper);
@@ -547,11 +559,18 @@
       `.site-header.site-header` selector out-specifies the `bg-white/95` and
       `backdrop-blur-sm` utility classes without needing !important.
     */
-    @media (max-width: 767px) {
+    @media (max-width: 900px), (hover: none) and (pointer: coarse) {
         .site-header.site-header {
             background-color: #ffffff;
             -webkit-backdrop-filter: none;
             backdrop-filter: none;
+            /* Promote the sticky bar to its own compositor layer so it isn't
+               re-rasterized against the scrolling content every frame — this
+               is what stops the header (and the text under it) juddering on
+               mobile. Pairs with dropping the backdrop blur above. */
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            will-change: transform;
         }
     }
 
