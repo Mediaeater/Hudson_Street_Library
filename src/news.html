@@ -60,6 +60,18 @@ permalink: /news.html
             z-index: 1;
         }
 
+        /* Mobile scroll-jitter fix (the real one).
+           This paper-texture overlay is a live SVG feTurbulence filter used as
+           a background. Over a long article the layer is many thousands of px
+           tall, which exceeds mobile-GPU texture limits, so the browser
+           re-rasterizes the noise filter in chunks as you scroll — the whole
+           page shudders and becomes unreadable. At 3% opacity the texture is
+           imperceptible on a phone, so drop it entirely on small/touch screens.
+           (Desktop keeps it.) */
+        @media (max-width: 900px), (hover: none) and (pointer: coarse) {
+            body::before { display: none; }
+        }
+
         /* Header */
         .page-header {
             background: var(--color-paper);
