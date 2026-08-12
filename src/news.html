@@ -41,7 +41,15 @@ permalink: /news.html
         /* Subtle paper texture */
         body::before {
             content: '';
-            position: fixed;
+            /* Was position: fixed. A fixed full-viewport layer whose
+               background is a live SVG feTurbulence filter is repainted on
+               every scroll frame, and re-running the noise filter across the
+               whole viewport each frame overwhelms mobile GPUs — the page
+               visibly jitters/shakes while scrolling. `absolute` (body is
+               position: relative) paints the texture once with the document
+               and scrolls it along, so there is no per-frame repaint.
+               Visually identical; kills the mobile scroll jitter. */
+            position: absolute;
             top: 0;
             left: 0;
             right: 0;

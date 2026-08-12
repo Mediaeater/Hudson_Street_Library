@@ -36,12 +36,17 @@ permalink: /collection-explore.html
         font-family: 'Literata', Georgia, serif;
         line-height: 1.5;
         overflow-x: hidden;
+        position: relative;
     }
 
     /* Subtle paper texture */
     body::before {
         content: '';
-        position: fixed;
+        /* Was position: fixed — a fixed full-viewport overlay repaints on
+           every scroll frame and contributes to mobile scroll jitter.
+           `absolute` (body is now position: relative) scrolls the texture
+           with the document; visually identical. */
+        position: absolute;
         top: 0;
         left: 0;
         width: 100%;
