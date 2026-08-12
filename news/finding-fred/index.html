@@ -34,7 +34,12 @@
 
         body::before {
             content: '';
-            position: fixed;
+            /* Was position: fixed. A fixed full-viewport layer backed by a
+               live SVG feTurbulence filter repaints on every scroll frame and
+               makes mobile scrolling jitter/shake. `absolute` (body is
+               position: relative) paints once and scrolls with the document —
+               visually identical, no per-frame repaint. */
+            position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
             opacity: 0.03;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
@@ -279,6 +284,25 @@
     */
     .site-header .menu-toggle { display: none; }
     .site-header .mobile-nav { display: none; }
+
+    /*
+      Mobile scroll-jitter fix.
+      The header ships as `sticky top-0 bg-white/95 backdrop-blur-sm`. On mobile
+      a sticky bar with backdrop-filter: blur() forces the browser to re-sample
+      and re-blur the pixels scrolling beneath it every frame; on mobile GPUs
+      that readback lags the scroll compositor and the bar (and the text passing
+      under it) shudders. Drop the blur and use an opaque background on small
+      screens — the frosted-glass effect stays desktop-only. The doubled
+      `.site-header.site-header` selector out-specifies the `bg-white/95` and
+      `backdrop-blur-sm` utility classes without needing !important.
+    */
+    @media (max-width: 767px) {
+        .site-header.site-header {
+            background-color: #ffffff;
+            -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+        }
+    }
 
     @media (max-width: 767px) {
         .site-header .menu-toggle {
