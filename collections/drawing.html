@@ -1,0 +1,885 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> | Hudson Street Library</title>
+    
+    <link rel="stylesheet" href="/assets/css/tailwind.css">
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="api-catalog" type="application/linkset+json" href="/.well-known/api-catalog">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Hudson Street Library",
+  "url": "https://hudsonstreetlibrary.com",
+  "logo": "https://hudsonstreetlibrary.com/assets/images/logo.png",
+  "description": "A curated collection of photography, art, and design books"
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "",
+  "url": "https://hudsonstreetlibrary.comcollections/{{ collectionConfig.slug }}.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Hudson Street Library",
+    "url": "https://hudsonstreetlibrary.com"
+  }
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://hudsonstreetlibrary.com/"
+    }
+  ]
+}
+</script>
+
+</head>
+<body class="min-h-screen bg-neutral-50 text-neutral-900">
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+
+<style>
+    .site-header {
+        font-family: 'Literata', Georgia, serif;
+    }
+    .site-header .site-logo {
+        font-family: 'Crimson Pro', Georgia, serif;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        white-space: nowrap;
+    }
+    /* Book-spines mark (same drawing as the favicon). Inlined with
+       fill: currentColor rather than <img src=favicon.svg> because the
+       SVG file self-inverts to off-white in OS dark mode and would
+       disappear against the white header. */
+    .site-header .logo-mark {
+        width: 1.3em;
+        height: 1.3em;
+        display: block;
+        flex-shrink: 0;
+        fill: currentColor;
+    }
+    .site-header .nav-link {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+        font-weight: 400;
+        letter-spacing: 0.005em;
+    }
+    .site-header .nav-link[aria-current="page"],
+    .site-header .nav-link-active {
+        font-weight: 600;
+    }
+    .site-header #mobile-nav-menu a {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+    }
+
+    /*
+      Mobile menu uses self-contained, component-scoped CSS rather than
+      Tailwind utilities, so its layout can't be broken by global stylesheet
+      changes. This originally fixed an invisible-sliver bug: design-system.css
+      ships an unlayered `* { padding: 0 }` reset that beats Tailwind's layered
+      utilities and collapsed the old icon-only button. The self-contained
+      styling is kept deliberately.
+    */
+    .site-header .menu-toggle { display: none; }
+    .site-header .mobile-nav { display: none; }
+
+    /*
+      Mobile scroll-jitter fix.
+      The header ships as `sticky top-0 bg-white/95 backdrop-blur-sm`. On mobile
+      a sticky bar with backdrop-filter: blur() forces the browser to re-sample
+      and re-blur the pixels scrolling beneath it every frame; on mobile GPUs
+      that readback lags the scroll compositor and the bar (and the text passing
+      under it) shudders. Drop the blur and use an opaque background on small
+      screens — the frosted-glass effect stays desktop-only. The doubled
+      `.site-header.site-header` selector out-specifies the `bg-white/95` and
+      `backdrop-blur-sm` utility classes without needing !important.
+    */
+    @media (max-width: 900px), (hover: none) and (pointer: coarse) {
+        .site-header.site-header {
+            background-color: #ffffff;
+            -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+            /* Promote the sticky bar to its own compositor layer so it isn't
+               re-rasterized against the scrolling content every frame — this
+               is what stops the header (and the text under it) juddering on
+               mobile. Pairs with dropping the backdrop blur above. */
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            will-change: transform;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .site-header .menu-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.45rem 0.7rem;
+            border: 1px solid rgba(0, 49, 0, 0.3);
+            border-radius: 0.5rem;
+            background: #ffffff;
+            color: #003100;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .site-header .menu-toggle:hover { background: #f0f5f0; }
+        .site-header .menu-toggle:focus-visible {
+            outline: 2px solid #003100;
+            outline-offset: 2px;
+        }
+        .site-header .menu-toggle svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+            flex-shrink: 0;
+        }
+        .site-header .menu-toggle .menu-toggle-label {
+            font-family: 'Literata', Georgia, serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .site-header .menu-toggle .icon-close { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-open { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-close { display: block; }
+
+        .site-header .mobile-nav.is-open {
+            display: flex;
+            flex-direction: column;
+        }
+        .site-header .mobile-nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            padding: 0.5rem;
+            z-index: 40;
+        }
+        .site-header .mobile-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            color: #404040;
+            text-decoration: none;
+        }
+        .site-header .mobile-nav a:hover {
+            background: #f0f5f0;
+            color: #002000;
+        }
+    }
+</style>
+
+<header class="site-header sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="site-logo text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                <svg class="logo-mark" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+                    <rect x="38" y="128" width="72" height="318"/>
+                    <rect x="138" y="68" width="76" height="378"/>
+                    <rect x="242" y="100" width="72" height="346"/>
+                    <rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)"/>
+                </svg>
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link ">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Accessions
+                </a>
+                <a href="/discover.html"
+                   class="nav-link ">
+                   Discover
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <!-- Icon + visible "Menu" label so the control is obvious on mobile.
+                 Sizing/visibility come from the unlayered styles above, not
+                 Tailwind utilities (see note in the <style> block). Icons are
+                 inline SVGs so the menu works on pages without an icon font. -->
+            <button class="menu-toggle"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <svg class="icon-open" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg class="icon-close" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+                <span class="menu-toggle-label">Menu</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu" class="mobile-nav" aria-label="Mobile navigation">
+        <a href="/#about">About</a>
+        <a href="/collection-explore.html">Collections</a>
+        <a href="/static-demo/">Search</a>
+        <a href="/#publications">Publications</a>
+        <a href="/news.html">News</a>
+        <a href="/collections/recently_added.html">Accessions</a>
+        <a href="/discover.html">Discover</a>
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const button = document.querySelector('button[aria-controls="mobile-nav-menu"]');
+    const willOpen = !menu.classList.contains('is-open');
+
+    menu.classList.toggle('is-open', willOpen);
+    // Icon swap (hamburger <-> X) is driven by aria-expanded in CSS.
+    if (button) button.setAttribute('aria-expanded', String(willOpen));
+}
+</script>
+
+
+<main>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+        
+        
+        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
+            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Drawing</h1>
+            <div class="line-divider inline-block"></div>
+            
+                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Drawing.”</p>
+            
+            
+        </div>
+        
+
+        
+        
+            
+        
+        
+
+        
+            
+                
+                
+<section class="mb-16">
+    <div class="volume-header pl-4 mb-8">
+        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
+        
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        
+            
+<a href="/books/ackermann-and-andro-wekua_chapter-5_1852/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/ackermann_rita_chapter_5_9783907179987.jpg" alt="Chapter 5" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Rita Ackermann &amp; Andro Wekua</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Chapter 5</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nieves &middot; 2026</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/brown_cecily-brown-death-and-the-maid_1982/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Cecily_Brown_Cecily_Brown_Death_and_the_Maid_9781588397614.jpg" alt="Cecily Brown: Death and the Maid" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Cecily Brown</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cecily Brown: Death and the Maid</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Metropolitan Museum of Art &middot; 2023</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/brown_cecily-brown-the-triumph-of-death_1981/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Cecily_Brown_Cecily_Brown_The_Triumph_of_Death_9781909932753.jpg" alt="Cecily Brown: The Triumph of Death" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Cecily Brown</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cecily Brown: The Triumph of Death</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ridinghouse / Thomas Dane Gallery &middot; 2023</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/campbell_if-you-dont-belong-dont-be-long_1990/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Scott_Campbell_If_You_Dont_Belong_Dont_Be_Long_9780789324962.jpg" alt="If You Don&#39;t Belong, Don&#39;t Be Long" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Scott Campbell</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">If You Don&#39;t Belong, Don&#39;t Be Long</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Rizzoli, in association with OHWOW &middot; 2012</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/cerletty_shelf-life_1991/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Mathew_Cerletty_Shelf_Life_9781942607892.jpg" alt="Shelf Life" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mathew Cerletty</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Shelf Life</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Karma &middot; 2018</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/clayton_the-most-special-day-of-my-life-works-by-rob-clayton-and-christian-clayton_1995/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Rob_Clayton_The_Most_Special_Day_of_My_Life_Works_by_Rob_Clayt_9780867195729.jpg" alt="The Most Special Day of My Life: Works by Rob Clayton &amp; Christian Clayton" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Rob Clayton, Christian Clayton</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Most Special Day of My Life: Works by Rob Clayton &amp; Christian Clayton</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">La Luz de Jesus Press / Last Gasp &middot; 2003</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/dunham_carroll-dunham-drawings-1974-2024_2010/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Carroll_Dunham_Carroll_Dunham_Drawings_19742024_9780300286496.jpg" alt="Carroll Dunham: Drawings 1974–2024" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Carroll Dunham</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Carroll Dunham: Drawings 1974–2024</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Art Institute of Chicago &middot; 2026</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/dunham_carroll-dunham-in-the-flowers-the-beach_2011/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Carroll_Dunham_Carroll_Dunham_In_the_Flowers_The_Beach.jpg" alt="Carroll Dunham: In the Flowers, The Beach" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Carroll Dunham</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Carroll Dunham: In the Flowers, The Beach</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Karma / Galerie Eva Presenhuber &middot; 2014</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/dzama_marcel-dzama-puppets-pawns-and-prophets_2012/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Marcel_Dzama_Marcel_Dzama_Puppets_Pawns_and_Prophets_9783775737326.jpg" alt="Marcel Dzama: Puppets, Pawns, and Prophets" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Marcel Dzama</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Marcel Dzama: Puppets, Pawns, and Prophets</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">David Zwirner / Hatje Cantz &middot; 2013</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/dzama_marcel-dzama-sower-of-discord_2013/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Marcel_Dzama_Marcel_Dzama_Sower_of_Discord_9781419704079.jpg" alt="Marcel Dzama: Sower of Discord" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Marcel Dzama</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Marcel Dzama: Sower of Discord</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Abrams &middot; 2013</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/eder_martin-eder-der-blasse-tanz-the-pale-dance_2014/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Martin_Eder_Martin_Eder_Der_blasse_Tanz_The_Pale_Dance_9783791344423.jpg" alt="Martin Eder: Der blasse Tanz / The Pale Dance" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Martin Eder</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Martin Eder: Der blasse Tanz / The Pale Dance</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Prestel &middot; 2010</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/kelly_1954-drawings-on-a-bus-sketchbook-23_1831/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/kelly_ellsworth_1954_drawings_on_a_bus_sketchbook_23_9783865214157.jpg" alt="1954 Drawings on a Bus, Sketchbook 23" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ellsworth Kelly</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">1954 Drawings on a Bus, Sketchbook 23</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Matthew Marks Gallery / Steidl &middot; 2007</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/langendorff_black-mirrors_1868/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/langendorff_julien_black_mirrors_9782365820011.jpg" alt="Black Mirrors" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Julien Langendorff</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Black Mirrors</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Galerie du Jour – agnès b./Shelter Press &middot; 2012</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/longo_men-in-the-cities-photographs-1976-1982_2032/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Robert_Longo_Men_in_the_Cities_Photographs_19761982_9783829604116.jpg" alt="Men in the Cities: Photographs 1976-1982" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Robert Longo</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Men in the Cities: Photographs 1976-1982</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Schirmer/Mosel &middot; 2009</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/lozano_lee-lozano_2037/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Lee_Lozano_Lee_Lozano_9783775725675.jpg" alt="Lee Lozano" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Lee Lozano</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Lee Lozano</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Moderna Museet / Hatje Cantz &middot; 2010</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/marten_treatise-of-a-coat_1780/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/marten_helen_treatise_of_a_coat_9783753309132.jpg" alt="Treatise of a Coat" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Helen Marten</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Treatise of a Coat</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Verlag der Buchhandlung Walther König &middot; 2025</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/mcgee_fuzz-gathering_2016/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Barry_McGee_Fuzz_Gathering_9791091539326.jpg" alt="Fuzz Gathering" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Barry McGee</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Fuzz Gathering</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Perrotin &middot; 2021</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/pierson_jack-pierson-its-not-dark-yet-galerie-thaddaeus-ropac_1964/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/pierson_jack_ropac_noisbn.jpg" alt="Jack Pierson: It&#39;s Not Dark Yet (Galerie Thaddaeus Ropac)" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Pierson</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Jack Pierson: It&#39;s Not Dark Yet (Galerie Thaddaeus Ropac)</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Galerie Thaddaeus Ropac &middot; 2010</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/rex_portfolio_1958/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/rex_portfolios_noisbn.jpg" alt="Portfolio" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">REX</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Portfolio</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">REX Publications (rexbooks.press) &middot; 2022</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/sillman_faux-pas-selected-writings-and-drawings_2002/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Amy_Sillman_Faux_Pas_Selected_Writings_and_Drawings_9782492650048.jpg" alt="Faux Pas: Selected Writings and Drawings" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Amy Sillman</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Faux Pas: Selected Writings and Drawings</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">After 8 Books &middot; 2022</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/upson_the-house_2042/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Kaari_Upson_The_House_9783863356248.jpg" alt="The House" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Kaari Upson</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The House</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">UCCA/Koenig Books &middot; 2015</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/walker_the-ecstasy-of-st-kara-kara-walker-new-work_1227/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Walker_The_Ecstasy_of_St_Kara_9780300227154.jpg" alt="The Ecstasy of St. Kara: Kara Walker, New Work" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Kara Walker</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Ecstasy of St. Kara: Kara Walker, New Work</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Cleveland Museum of Art &middot; 2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/weiermair_treasures-of-gay-art-from-the-leslielohman-gay-art-foundation_1966/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/weiermair_treasures_of_gay_art_9783900361020.jpg" alt="Treasures of Gay Art from the Leslie/Lohman Gay Art Foundation" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Weiermair</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Treasures of Gay Art from the Leslie/Lohman Gay Art Foundation</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">All Saints Press &middot; 2008</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/weiss_david-weiss-works-1968-1979_1853/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/weiss_david_works_1968_1979_9781942607236.jpg" alt="David Weiss: Works, 1968–1979" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">David Weiss</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">David Weiss: Works, 1968–1979</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Swiss Institute / Karma &middot; 2016</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/ackerman_rita-ackermann-and-andro-wekua-chapter-4_9/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Rita Ackerman</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Rita Ackermann &amp; Andro Wekua: Chapter 4</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Fergus McCaffrey, Case Publishing &middot; 2021</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/burkert_the-art-of-nancy-ekholm-burkert_1985/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Nancy Ekholm Burkert</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Art of Nancy Ekholm Burkert</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Peacock Press / Bantam Books &middot; 1977</p>
+        
+    </div>
+</a>
+
+        
+    </div>
+</section>
+
+            
+        
+    </div>
+</main>
+
+
+
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
+        
+        <p>© 2026 Hudson Street Library · <a href="/colophon.html" class="text-neutral-600 underline hover:text-neutral-900">Colophon</a></p>
+    </div>
+</footer>
+
+<script>
+    // Mobile Menu Toggle Logic
+    const mobileMenuButton = document.querySelector('button.md\\:hidden');
+    const mobileNavMenu = document.getElementById('mobile-nav-menu');
+
+    if (mobileMenuButton && mobileNavMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+            mobileNavMenu.classList.toggle('hidden');
+            mobileNavMenu.classList.toggle('flex');
+            const icon = mobileMenuButton.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            }
+        });
+    }
+
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            if (this.hash) {
+               const targetElement = document.querySelector(this.hash);
+               if (targetElement) {
+                    e.preventDefault();
+                    const headerOffset = document.querySelector('header')?.offsetHeight || 70;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                    if (mobileMenuButton && mobileMenuButton.getAttribute('aria-expanded') === 'true') {
+                         mobileMenuButton.click();
+                    }
+               }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
