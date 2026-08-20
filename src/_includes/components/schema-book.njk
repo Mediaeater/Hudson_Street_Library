@@ -27,8 +27,8 @@
   {%- if book.description %},
   "description": "{{ book.description | truncate(500) | escape | replace('\n', ' ') | replace('\r', '') }}"
   {%- endif %}
-  {%- if book.page_count %},
-  "numberOfPages": {{ book.page_count }}
+  {%- if book.page_count and book.page_count != '' %},
+  "numberOfPages": {{ book.page_count | int }}
   {%- endif %}
   {%- if book.binding %},
   "bookFormat": "{% if 'Hardcover' in book.binding or 'Hardback' in book.binding %}https://schema.org/Hardcover{% elif 'Softcover' in book.binding or 'Paperback' in book.binding %}https://schema.org/Paperback{% else %}https://schema.org/EBook{% endif %}"
