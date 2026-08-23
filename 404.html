@@ -291,5 +291,20 @@
     </div>
 </footer>
 
+<script>
+/* Old book URLs: the trailing _<id> is stable across slug changes. If this 404
+   came from one, look the id up in the build-generated map and go there. */
+(function () {
+  var m = location.pathname.match(/^\/books\/[^\/]*_(\d+)\/?$/);
+  if (!m) return;
+  fetch('/assets/data/book-urls.json')
+    .then(function (r) { return r.json(); })
+    .then(function (map) {
+      var to = map[m[1]];
+      if (to && to !== location.pathname) location.replace(to);
+    })
+    .catch(function () {});
+})();
+</script>
 </body>
 </html>
