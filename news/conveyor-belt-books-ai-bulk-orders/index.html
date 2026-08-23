@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Kentucky Bookseller Called the Number on the Order. An AI Bot Picked Up. · Hudson Street Library</title>
+    <meta name="description" content="Conveyor Belt Books says it has fielded weeks of strange bulk-purchase requests, including two for a rare Chris Burden artist's book. In the replies, other dealers describe a trade dividing over whether to take the money.">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    <link rel="stylesheet" href="/assets/css/tailwind.css">
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-ink: #0A0A0A;
+            --color-paper: #F8F7F4;
+            --color-vellum: #EEEDE8;
+            --color-brown: #8B7355;
+            --color-border: rgba(10, 10, 10, 0.12);
+            --color-accent: #D4A574;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--color-paper);
+            color: var(--color-ink);
+            font-family: 'Literata', Georgia, serif;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            /* Was position: fixed. A fixed full-viewport layer backed by a
+               live SVG feTurbulence filter repaints on every scroll frame and
+               makes mobile scrolling jitter/shake. `absolute` (body is
+               position: relative) paints once and scrolls with the document —
+               visually identical, no per-frame repaint. */
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Mobile scroll-jitter fix: this is a live SVG feTurbulence filter
+           layer; over a long page it exceeds mobile-GPU texture limits and the
+           browser re-rasterizes it in chunks on scroll, making the page shake.
+           At 3% opacity it's imperceptible on a phone — drop it on small/touch
+           screens. Desktop keeps it. */
+        @media (max-width: 900px), (hover: none) and (pointer: coarse) {
+            body::before { display: none; }
+        }
+
+        .article-container {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 6rem 2rem 4rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .back-link {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-brown);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 3rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover { color: var(--color-ink); }
+
+        .featured-content { animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+        .feature-category {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--color-accent);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .feature-category::after {
+            content: '';
+            height: 1px;
+            width: 60px;
+            background: var(--color-accent);
+        }
+
+        .feature-title {
+            font-family: 'Literata', Georgia, serif;
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+            color: var(--color-ink);
+        }
+
+        .feature-subtitle {
+            font-family: 'Literata', Georgia, serif;
+            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+            line-height: 1.4;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--color-brown);
+            margin-bottom: 2rem;
+            max-width: 45ch;
+        }
+
+        .feature-meta {
+            display: flex;
+            gap: 2rem;
+            padding-bottom: 2rem;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--color-border);
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--color-brown);
+            flex-wrap: wrap;
+        }
+
+        .feature-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-meta i { font-size: 0.75rem; opacity: 0.6; }
+
+        .feature-hero {
+            width: 100%;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+            background: var(--color-vellum);
+            border: 1px solid var(--color-border);
+            aspect-ratio: 16/9;
+        }
+
+        .feature-hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.9;
+        }
+
+        .feature-hero-caption {
+            margin-top: 0.75rem;
+            margin-bottom: 3rem;
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.8125rem;
+            color: var(--color-brown);
+            font-style: italic;
+        }
+
+        .feature-body { max-width: 680px; margin: 0 auto; }
+
+        .feature-body > p {
+            font-size: 1.1875rem;
+            line-height: 1.8;
+            margin-bottom: 1.75rem;
+            color: var(--color-ink);
+        }
+
+        /* Links in the running text. The base reset makes every <a> inherit
+           its colour and drop the underline, so prose links have to say what
+           they are or they read as body text. */
+        .feature-body a {
+            color: var(--primary-700);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+        .feature-body a:hover {
+            color: var(--primary-600);
+        }
+
+        /* Drop Cap */
+        .feature-body > p:first-of-type::first-letter {
+            font-family: 'Literata', Georgia, serif;
+            font-size: 5.5rem;
+            line-height: 0.85;
+            float: left;
+            margin: 0.1em 0.15em 0 0;
+            font-weight: 700;
+            color: var(--color-brown);
+        }
+
+        .pull-quote {
+            font-family: 'Literata', Georgia, serif;
+            font-size: 1.75rem;
+            line-height: 1.35;
+            font-weight: 400;
+            font-style: italic;
+            color: var(--color-brown);
+            margin: 3rem 0;
+            padding: 2rem 0;
+            border-top: 2px solid var(--color-ink);
+            border-bottom: 2px solid var(--color-ink);
+            position: relative;
+        }
+
+        .pull-quote::before {
+            content: '"';
+            font-size: 6rem;
+            position: absolute;
+            left: -0.25em;
+            top: -0.15em;
+            opacity: 0.15;
+            font-family: 'Literata', Georgia, serif;
+        }
+
+        .section-ornament {
+            text-align: center;
+            margin: 3rem 0;
+            font-size: 1.5rem;
+            color: var(--color-brown);
+            opacity: 0.4;
+            letter-spacing: 0.5rem;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 4rem 1.25rem 3rem; }
+            .feature-meta { gap: 1rem; font-size: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+
+<style>
+    .site-header {
+        font-family: 'Literata', Georgia, serif;
+    }
+    .site-header .site-logo {
+        font-family: 'Crimson Pro', Georgia, serif;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        white-space: nowrap;
+    }
+    /* Book-spines mark (same drawing as the favicon). Inlined with
+       fill: currentColor rather than <img src=favicon.svg> because the
+       SVG file self-inverts to off-white in OS dark mode and would
+       disappear against the white header. */
+    .site-header .logo-mark {
+        width: 1.3em;
+        height: 1.3em;
+        display: block;
+        flex-shrink: 0;
+        fill: currentColor;
+    }
+    .site-header .nav-link {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+        font-weight: 400;
+        letter-spacing: 0.005em;
+    }
+    .site-header .nav-link[aria-current="page"],
+    .site-header .nav-link-active {
+        font-weight: 600;
+    }
+    .site-header #mobile-nav-menu a {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+    }
+
+    /*
+      Mobile menu uses self-contained, component-scoped CSS rather than
+      Tailwind utilities, so its layout can't be broken by global stylesheet
+      changes. This originally fixed an invisible-sliver bug: design-system.css
+      ships an unlayered `* { padding: 0 }` reset that beats Tailwind's layered
+      utilities and collapsed the old icon-only button. The self-contained
+      styling is kept deliberately.
+    */
+    .site-header .menu-toggle { display: none; }
+    .site-header .mobile-nav { display: none; }
+
+    /*
+      Mobile scroll-jitter fix.
+      The header ships as `sticky top-0 bg-white/95 backdrop-blur-sm`. On mobile
+      a sticky bar with backdrop-filter: blur() forces the browser to re-sample
+      and re-blur the pixels scrolling beneath it every frame; on mobile GPUs
+      that readback lags the scroll compositor and the bar (and the text passing
+      under it) shudders. Drop the blur and use an opaque background on small
+      screens — the frosted-glass effect stays desktop-only. The doubled
+      `.site-header.site-header` selector out-specifies the `bg-white/95` and
+      `backdrop-blur-sm` utility classes without needing !important.
+    */
+    @media (max-width: 900px), (hover: none) and (pointer: coarse) {
+        .site-header.site-header {
+            background-color: #ffffff;
+            -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+            /* Promote the sticky bar to its own compositor layer so it isn't
+               re-rasterized against the scrolling content every frame — this
+               is what stops the header (and the text under it) juddering on
+               mobile. Pairs with dropping the backdrop blur above. */
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            will-change: transform;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .site-header .menu-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.45rem 0.7rem;
+            border: 1px solid rgba(0, 49, 0, 0.3);
+            border-radius: 0.5rem;
+            background: #ffffff;
+            color: #003100;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .site-header .menu-toggle:hover { background: #f0f5f0; }
+        .site-header .menu-toggle:focus-visible {
+            outline: 2px solid #003100;
+            outline-offset: 2px;
+        }
+        .site-header .menu-toggle svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+            flex-shrink: 0;
+        }
+        .site-header .menu-toggle .menu-toggle-label {
+            font-family: 'Literata', Georgia, serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .site-header .menu-toggle .icon-close { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-open { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-close { display: block; }
+
+        .site-header .mobile-nav.is-open {
+            display: flex;
+            flex-direction: column;
+        }
+        .site-header .mobile-nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            padding: 0.5rem;
+            z-index: 40;
+        }
+        .site-header .mobile-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            color: #404040;
+            text-decoration: none;
+        }
+        .site-header .mobile-nav a:hover {
+            background: #f0f5f0;
+            color: #002000;
+        }
+    }
+</style>
+
+<header class="site-header sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="site-logo text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                <svg class="logo-mark" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+                    <rect x="38" y="128" width="72" height="318"/>
+                    <rect x="138" y="68" width="76" height="378"/>
+                    <rect x="242" y="100" width="72" height="346"/>
+                    <rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)"/>
+                </svg>
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link ">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link nav-link-active">
+                   News
+                </a>
+                
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Accessions
+                </a>
+                <a href="/discover.html"
+                   class="nav-link ">
+                   Discover
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <!-- Icon + visible "Menu" label so the control is obvious on mobile.
+                 Sizing/visibility come from the unlayered styles above, not
+                 Tailwind utilities (see note in the <style> block). Icons are
+                 inline SVGs so the menu works on pages without an icon font. -->
+            <button class="menu-toggle"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <svg class="icon-open" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg class="icon-close" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+                <span class="menu-toggle-label">Menu</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu" class="mobile-nav" aria-label="Mobile navigation">
+        <a href="/#about">About</a>
+        <a href="/collection-explore.html">Collections</a>
+        <a href="/static-demo/">Search</a>
+        <a href="/#publications">Publications</a>
+        <a href="/news.html">News</a>
+        <a href="/collections/recently_added.html">Accessions</a>
+        <a href="/discover.html">Discover</a>
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const button = document.querySelector('button[aria-controls="mobile-nav-menu"]');
+    const willOpen = !menu.classList.contains('is-open');
+
+    menu.classList.toggle('is-open', willOpen);
+    // Icon swap (hamburger <-> X) is driven by aria-expanded in CSS.
+    if (button) button.setAttribute('aria-expanded', String(willOpen));
+}
+</script>
+
+
+<main>
+    <div class="article-container">
+        <a href="/news.html" class="back-link"><i class="fas fa-arrow-left"></i> News &amp; Features</a>
+
+        <article class="featured-content">
+            <div class="feature-category">Report</div>
+
+            <h1 class="feature-title">A Kentucky Bookseller Called the Number on the Order. An AI Bot Picked Up.</h1>
+
+            <p class="feature-subtitle">
+                Conveyor Belt Books says it has fielded weeks of strange bulk-purchase requests, including two for a rare Chris Burden artist's book. In the replies, other dealers describe a trade dividing over whether to take the money.
+            </p>
+
+            <div class="feature-meta">
+                <span><i class="far fa-user"></i> Hudson Street Library</span>
+                <span><i class="far fa-calendar"></i> August 2026</span>
+                <span><i class="far fa-clock"></i> 7 min read</span>
+            </div>
+
+            <div class="feature-body">
+                <p><strong>COVINGTON, Ky.</strong> — Over roughly the past two months, the used and rare bookshop <a href="https://conveyorbeltbooks.com/" target="_blank" rel="noopener noreferrer">Conveyor Belt Books</a> has received what it describes as a series of atypical emails from unfamiliar buyers seeking to purchase titles in bulk — groupings the store says had no thematic logic connecting them, mixing genuinely rare items with merely hard-to-find ones.</p>
+
+                <p>One title drew two separate inquiries: a Chris Burden artist's book that the shop notes was self-published by the artist and is especially difficult to locate.</p>
+
+                <p>The most recent request, according to a post published this week on the shop's Instagram account, arrived from a company identifying itself as Blue Angel, sent under a personal name and accompanied by a spreadsheet of unrelated titles.</p>
+
+                <p>The store says the company's online presence did not hold up to scrutiny. Its website advertised a product range the shop found incoherent — among the items listed, a Jeep Wrangler, fish eggs, and a man working with brick — alongside a mission statement the store described as reading like the output of a translation tool run through thirty languages and back into English. The shop also noted the company holds a USDOT number, which it likewise found odd.</p>
+
+                <h3 style="font-family: 'Literata', Georgia, serif; font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-brown);">The phone calls</h3>
+
+                <p>Conveyor Belt says that after reading recent coverage of AI companies and the third-party firms sourcing books for them, staff at the shop, together with the bookseller behind the account Terminal Beach Books, dialed the extension provided in the email.</p>
+
+                <p>What answered, according to the post, was not a person. The store describes reaching an automated voice that giggled and audibly glitched when pressed on substantive questions about the company — and glitched most conspicuously, the shop says, when asked deliberately absurd ones. Among them: whether it dreamed of electric sheep, a nod to the Philip K. Dick novel that supplied the Voight-Kampff test for distinguishing humans from replicants.</p>
+
+                <p>A second call to the same number, this time to customer service, produced a different automated voice identifying itself as Elsa, per the shop's account. That system told the callers an in-person visit to the company's corporate offices was not possible. The shop says it located the listed address through a search and found a warehouse.</p>
+
+                <p>Conveyor Belt's stated conclusion is that the name on the original email belongs to a registered AI voice agent rather than an employee.</p>
+
+                <p><em>None of these specifics could be independently verified for this article. Searches turned up no corroborating record of a book-buying operation called Blue Angel, and no independent confirmation of the status of the name attached to the emails. Neither the company nor the shop responded to a request for comment before publication; the shop's account is presented here as its own.</em></p>
+
+                <h3 style="font-family: 'Literata', Georgia, serif; font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-brown);">What is on the record</h3>
+
+                <p>The broader pattern the shop is describing is, by now, extensively documented.</p>
+
+                <p>The company that established the practice at industrial scale is Anthropic, maker of the Claude chatbot, and the details are in the public record because authors sued.</p>
+
+                <p>In February 2024, according to Judge William Alsup's ruling in <em>Bartz v. Anthropic</em>, the company hired Tom Turvey — formerly head of partnerships for Google Books — and charged him with obtaining, in the ruling's phrasing, all the books in the world. Anthropic then spent millions buying used print books, fed them through a hydraulic cutting machine that sheared off the bindings, scanned the loose pages on industrial imaging equipment and discarded the paper. Internal documents referred to the effort as Project Panama and described the goal as destructively scanning every book in existence, as reported by <em>The Washington Post</em>. A vendor proposal contemplated 500,000 to two million volumes in a single six-month contract. Internal material reviewed by Snopes included a line stating the company did not want the work to become known.</p>
+
+                <p>Alsup's June 2025 ruling split the question. Digitizing lawfully purchased books to train a model was fair use, he found — a first-of-its-kind holding for the industry. Downloading them from pirate libraries was not. He determined Anthropic had taken more than seven million books it knew to be pirated: roughly 200,000 from the Books3 dataset, at least five million from Library Genesis and at least two million from the Pirate Library Mirror.</p>
+
+                <p>Facing statutory damages that analysts said could have ended the company, Anthropic settled in September 2025 for $1.5 billion — the largest copyright recovery in U.S. history. Judge Araceli Martínez-Olguín <a href="https://authorsguild.org/news/court-grants-final-approval-anthropic-copyright-settlement/" target="_blank" rel="noopener noreferrer">granted final approval on July 20 of this year</a>, covering more than 482,000 works at roughly $3,000 apiece. The terms require Anthropic to destroy the pirated files. Because a settlement is not a verdict, it set no binding precedent, a point the company has been careful to preserve.</p>
+
+                <p>The destructive scanning of purchased books was never the part Anthropic had to pay for. That was ruled lawful, and it remains lawful.</p>
+
+                <p>Booksellers in the United States, Britain and continental Europe have since reported waves of bulk orders for arbitrary assortments of out-of-print titles, frequently placed through channels that keep the buyer anonymous. A Dutch bookseller who received a request for 3,000 copies initially took it for phishing, <a href="https://fortune.com/2026/07/31/dutch-bookseller-ai-spam-phishing-3000-book-copies-scan-destroy/" target="_blank" rel="noopener noreferrer"><em>Fortune</em> reported in July</a>.</p>
+
+                <p>On Aug. 17, <a href="https://www.404media.co/we-tracked-a-shipment-of-rare-books-it-ended-at-an-amazon-ai-training-facility/" target="_blank" rel="noopener noreferrer"><em>404 Media</em> published an investigation</a> in which a rare book dealer, having received an order for nearly 1,000 volumes placed through the marketplace Biblio, agreed to hide an Apple AirTag inside one of them. The tracker moved from California through Wisconsin and Colorado before coming to rest at an Amazon warehouse outside Las Vegas, at a unit the company codes VGT3 — its door marked, according to the reporting, with a logo of a dinosaur devouring a book. Workers there described stripping spines and scanning pages as the whole of the job. Amazon declined to address the findings, saying only that it buys books through commercial channels to improve its products and services — a statement that identifies neither what it buys nor what becomes of it.</p>
+
+                <p>Asked by <em>404 Media</em> and the BBC, Anthropic and xAI each said their acquisition programs do not buy and destroy rare or antiquarian books. That denial is narrower than it sounds. It concerns rarity, not the method: Anthropic's destructive scanning of ordinary used books is admitted, adjudicated and ongoing as a lawful practice. Amazon has offered no equivalent assurance about anything.</p>
+
+                <p>Books printed before 2022 command a premium in this market for a specific reason: they predate the mass release of generative text tools, and so are unlikely to contain AI-written material.</p>
+
+                <p>Reporting also indicates that workers scan each volume's ISBN before scanning its contents — a detail that lends weight to a theory circulating among dealers, that the objective is to work systematically down a list of every identifier ever issued.</p>
+
+                <p>That theory is essentially the one Conveyor Belt advances in its post, in blunter terms: that the buyers want the Burden book precisely because they do not have it, that the readily available supply has been exhausted, and that the search has therefore moved down-market to the shops holding what remains. The store's closing line offers readers unbothered by this a choice of two referrals — a mortician, or a support group for the apathetic.</p>
+
+                <h3 style="font-family: 'Literata', Georgia, serif; font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-brown);">A split in the trade</h3>
+
+                <p>The response to the post, running to dozens of comments over the following day, was almost uniformly supportive of the shop's decision not to sell. The most striking replies, though, describe a book trade divided against itself.</p>
+
+                <p>The single most-endorsed comment came from a bookseller who said a professional email list they had belonged to for two decades has lately been given over to dealers comparing how much money they are making from these buyers. The dealers on it, this commenter wrote, are enthusiastic and see no problem. In their account, the objections have come almost entirely from smaller and more idiosyncratic sellers on Instagram — those outside the Amazon and Alibris channels — along with some overseas rare book dealers who have publicly refused the orders. The commenter argued the trade now needs a visible distinction between sellers who supply AI firms and those who decline, on the grounds that the former are tarring the latter.</p>
+
+                <p>A second dealer offered a more ambivalent report: one sale of this kind so far, arriving through AbeBooks, and genuine uncertainty about how alarmed to be — though they allowed the whole situation was conspicuously dystopian.</p>
+
+                <p>Several commenters pressed an economic argument rather than a moral one. Every volume destroyed, one wrote, is a volume that can never be resold; dealers rushing to fill these orders are liquidating their own inventory of future stock. Another paraphrased a line they had encountered secondhand and could not source, to the effect that using AI amounts to stealing from one's own future, and observed that human history contains far more time without widely available print than with it.</p>
+
+                <p>Others raised what is lost beyond text. One commenter, who said the <em>404 Media</em> coverage had made them ill, noted that a book's physical construction — how it was assembled, how it was bound — carries information of its own, and that scanning captures none of it. Comparisons ran to the destruction of the Library of Alexandria, which one reader judged a school book fair by contrast, and to the fiction of Thomas Pynchon. Another described the strangeness of a dystopia unfolding quietly alongside ordinary civic life, calling the nightmare bland and boring.</p>
+
+                <p>The Burden book drew its own responses. Commenters described it as containing rare photographs and documentation of performances that are seldom discussed elsewhere, and more than one asserted that the artist, who died in 2015, would have opposed the use of his work this way.</p>
+
+                <p>At least one commenter proposed that shipping addresses from such orders be published on social media whenever they arrive. Instagram flagged an unspecified number of replies to the post as potentially misleading, offensive or spam, hiding them behind a tap.</p>
+
+                <div class="section-ornament">❖ ❖ ❖</div>
+
+                <p style="text-align: center; font-style: italic; color: var(--color-brown);">Disclosure: this report was drafted by Claude, an AI assistant made by Anthropic, the company whose book-scanning program it describes. Claims attributed to Anthropic are drawn from the court record and the reporting cited above.</p>
+            </div>
+        </article>
+    </div>
+</main>
+
+
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
+        
+        <p>© 2026 Hudson Street Library · <a href="/colophon.html" class="text-neutral-600 underline hover:text-neutral-900">Colophon</a></p>
+    </div>
+</footer>
+
+</body>
+</html>
