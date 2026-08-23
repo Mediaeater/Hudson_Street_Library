@@ -8,7 +8,7 @@
  * at one viewport with no interaction, so :hover / :focus rules and anything
  * behind a media query were structurally invisible to them.
  *
- *   1. palette   — one green. No off-palette green/teal in src/ or identity/.
+ *   1. palette   — one green. No off-palette green/teal anywhere in src/.
  *   2. coverage  — every built page loads tailwind.css, or is allowlisted.
  *                  A rule added to the Tailwind build's @layer base silently
  *                  does not apply to a page that never loads the sheet.
@@ -29,9 +29,6 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const SRC = path.join(ROOT, 'src');
 const SITE = path.join(ROOT, '_site');
-// Not published by Eleventy, but it draws the same mark in the same green, so
-// the palette check covers it too. See checkPalette().
-const IDENTITY = path.join(ROOT, 'identity');
 
 /* ------------------------------------------------------------------ *
  * The palette. This list is the single source of truth for the colour
@@ -73,6 +70,8 @@ const NO_TAILWIND_OK = new Set([
   'books/collections/queer/Louis-Fratino-Satura/index.html',
   'books/collections/queer/Paul_Thek-Peter_Hujar-Stay_Away_From_Nothing/index.html',
   'books/collections/queer/Vince_Aletti-Physique/index.html',
+  // Standalone print comp with its own styles, passthrough-copied verbatim.
+  'identity/stationery/index.html',
 ]);
 
 const HEADER_COMPONENT = '_includes/components/site-header.njk';
@@ -121,15 +120,14 @@ const RGBFN = /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/g;
 const toHex = (r, g, b) =>
   '#' + [r, g, b].map((n) => Number(n).toString(16).padStart(2, '0')).join('');
 
-// Walks src/ AND identity/. The stationery comps are not published by Eleventy,
-// which is exactly why they drifted unnoticed: they draw the same mark in the
-// same green (#034706, screen and press) with nothing enforcing it. First run
-// after adding identity/ caught the catalogue card's rule set in #134E4A — a
-// third ink on a two-ink print job.
+// Walks all of src/, which since Aug 2026 includes src/identity/ (stationery
+// comps, brand-guide artboards, published at /identity/). When identity/
+// lived outside src/ it drifted unnoticed — the catalogue card's rule set in
+// #134E4A, a third ink on a two-ink print job — so the identity sources stay
+// inside the walked tree.
 function checkPalette() {
   const violations = [];
-  const roots = [SRC, IDENTITY].filter((d) => fs.existsSync(d));
-  for (const file of roots.flatMap((d) => walk(d))) {
+  for (const file of walk(SRC)) {
     const rel = path.relative(ROOT, file);
     // The token definitions are where the palette is allowed to be spelled out.
     const isTokenFile =
@@ -211,7 +209,7 @@ if (paletteViolations.length) {
   console.error('   If the colour is deliberately non-brand (a status or alert),');
   console.error('   add it to SEMANTIC in this script with a reason.\n');
 } else {
-  console.log('✅ palette: no off-palette green/teal in src/ or identity/');
+  console.log('✅ palette: no off-palette green/teal in src/');
 }
 
 // 2 — tailwind coverage
