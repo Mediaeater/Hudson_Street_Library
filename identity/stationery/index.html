@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Administrative Stationery — Hudson Street Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,300;7..72,400;7..72,600&family=Crimson+Pro:wght@300;400;600&family=Archivo+Narrow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* One CSS millimetre = 96/25.4 px, because CSS defines an inch as 96 px no
+     matter what the display actually is. Almost no screen is 96 dpi — a Retina
+     Mac is nearer 109 — so this default renders about 12% small and the bar at
+     the top of the page lets you calibrate it against a bank card. The measured
+     value is written to --mm on <html> and kept in localStorage. */
+  --mm:3.7795px;
+  --paper:#F8F7F4; --ink:#0A0A0A; --brown:#8B7355;
+  /* the second ink — the same green the site renders, not a print-only
+     variant. design-system.css sets --primary-700 to this value and the
+     mark carries it on screen (the class reads .text-teal-900, but
+     design-system.css overrides that class and wins the unlayered cascade,
+     so the class name says teal and the pixels say green). An earlier
+     revision specified a deeper press green, on the grounds that ink dries back
+     and loses density on uncoated stock; that split
+     is gone, and reintroducing one means the printed mark and the screen
+     mark stop being the same mark. Match to a Pantone chip drawn down on
+     the running stock before the run. */
+  --seal:#034706;
+  --rule:rgba(10,10,10,.14);
+  --serif:'Literata',Georgia,serif;
+  --wordmark:'Crimson Pro',Georgia,serif;
+  --label:'Archivo Narrow',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;padding:0 0 140px;background:#242428;color:#e8e6e1;font-family:var(--label);-webkit-font-smoothing:antialiased}
+/* the old overview scale, kept as an option: every piece small enough to see the
+   whole family at once. Set on <body> so it beats the calibrated value written
+   to <html>, which body then inherits when this class is off. */
+body.fit{--mm:1.55px}
+.wrap{max-width:1320px;margin:0 auto;padding:0 44px}
+
+/* ---- scale bar. Presentation furniture: hidden in print like the rest. ---- */
+/* kept to a single row: it is sticky, so every millimetre of its height is
+   millimetres of sheet it hides when you scroll. */
+.scalebar{position:sticky;top:0;z-index:50;background:#1c1c20;border-bottom:1px solid #3a3a40;
+  padding:9px 44px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.scalebar .grp{display:flex;align-items:center;gap:8px}
+.scalebar button{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  background:none;color:#7d7a75;border:1px solid #3a3a40;padding:6px 12px;cursor:pointer}
+.scalebar button:hover{color:#e8e6e1;border-color:#5a5a62}
+.scalebar button.on{color:#0A0A0A;background:#c9c6c1;border-color:#c9c6c1}
+.scalebar .cap{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:#7d7a75}
+.scalebar output{font-family:var(--mono);font-size:11px;color:var(--brown);min-width:11ch}
+.scalebar input[type=range]{width:190px;accent-color:var(--brown)}
+/* The calibration gauge, drawn at the current scale so it resizes as you drag.
+   85.60 mm is the width of ISO/IEC 7810 ID-1 — every bank and credit card in
+   the world, to a tenth of a millimetre. Only the width is drawn: scaling is
+   isotropic, so matching one dimension calibrates both, and a full 53.98 mm
+   card outline would make this sticky bar 200 px tall. */
+.cardref{width:calc(85.6*var(--mm));height:24px;flex:none;position:relative;
+  border-left:1px solid #8a8782;border-right:1px solid #8a8782;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:#6a6760;
+  overflow:hidden;white-space:nowrap}
+.cardref::before{content:'';position:absolute;left:0;right:0;top:50%;border-top:1px dashed #4a4a52}
+.cardref span{position:relative;background:#1c1c20;padding:0 6px}
+body.fit .cal-only{display:none}
+
+.masthead{padding:70px 0 34px;border-bottom:1px solid #3a3a40}
+.kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#7d7a75;margin:0 0 16px}
+.masthead h1{font-family:var(--wordmark);font-weight:300;font-size:42px;letter-spacing:.02em;margin:0 0 14px}
+.masthead p{max-width:66ch;line-height:1.65;color:#a8a5a0;font-size:14.5px;margin:0}
+nav.jump{margin-top:26px;display:flex;gap:24px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;letter-spacing:.1em}
+nav.jump a{color:var(--brown);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:2px}
+nav.jump a:hover{border-bottom-color:var(--brown)}
+
+.sec-head{display:flex;align-items:baseline;gap:18px;border-bottom:1px solid #3a3a40;padding-bottom:12px;margin:82px 0 32px}
+.sec-head .n{font-family:var(--mono);font-size:11px;color:var(--brown);letter-spacing:.14em}
+.sec-head h2{font-family:var(--wordmark);font-weight:400;font-size:27px;margin:0}
+.sec-head .meta{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:#7d7a75;letter-spacing:.08em}
+.note{max-width:76ch;line-height:1.75;color:#a8a5a0;font-size:14px}
+.note b{color:#e8e6e1;font-weight:600}
+.lbl{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;color:#7d7a75;text-transform:uppercase;margin-top:10px}
+figure{margin:0}
+
+.sheet,.env{background:var(--paper);color:var(--ink);position:relative;overflow:hidden;
+  box-shadow:0 14px 34px -14px rgba(0,0,0,.7)}
+
+/* ============================================================
+   THE MARK — one component, one set of proportions, three sizes.
+   Every piece of stationery uses this and nothing else.
+   ============================================================ */
+.seal{width:calc(var(--s)*var(--mm));height:calc(var(--s)*var(--mm));
+  border:calc(var(--s)*var(--mm)*.058) solid var(--seal);flex:none;
+  display:flex;align-items:center;justify-content:center}
+.seal .r{display:flex;align-items:flex-end;gap:calc(var(--s)*var(--mm)*.05)}
+.seal i{display:block;background:var(--seal);width:calc(var(--s)*var(--mm)*.10)}
+.seal i:nth-child(1){height:calc(var(--s)*var(--mm)*.36)}
+.seal i:nth-child(2){height:calc(var(--s)*var(--mm)*.43)}
+.seal i:nth-child(3){height:calc(var(--s)*var(--mm)*.395)}
+.seal i:nth-child(4){height:calc(var(--s)*var(--mm)*.41);transform:rotate(9deg);transform-origin:bottom left}
+.seal.k{border-color:var(--ink)} .seal.k i{background:var(--ink)}
+
+/* the stacked wordmark, also one component */
+.wmk{font-family:var(--wordmark);font-weight:400;line-height:1.12}
+.wmk em{font-style:normal;display:block}
+.wmk small{display:block;font-family:var(--label);font-weight:500;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--ink)}
+
+/* ---- mark-system display panel ---- */
+.marks{display:flex;gap:40px;align-items:flex-start;
+  background:#2b2b30;border:1px solid #37373d;padding:38px 40px}
+/* swatches wrap among themselves; the rules stay a column beside them rather
+   than being flung onto a second row by the shared wrap. */
+.marks .swatches{display:flex;gap:22px;flex-wrap:wrap;flex:1;min-width:0;align-items:flex-start}
+.marks .rules{flex:none;width:28ch;margin-left:0;max-width:none}
+.marks .item{text-align:center}
+.marks .item .box{background:var(--paper);color:var(--ink);padding:20px;display:flex;
+  align-items:center;justify-content:center;min-width:128px;min-height:104px}
+/* the drawing itself, enlarged so it can be read on screen. Every other swatch on
+   this page is true size; this one is captioned so it can't be scaled off. */
+.marks .item.big .box{min-width:178px;min-height:178px}
+/* clear-space diagram — the dashed frame stands one spine width off the seal,
+   which is the rule stated on the right. A spine is 0.10 of the seal, so the
+   padding must be a tenth of --s: 3 mm at --s:30. Drawn enlarged because at the
+   real 15 mm the offset is 1.5 mm and shows nothing. */
+.marks .cs{position:relative;display:inline-block;outline:1px dashed rgba(10,10,10,.4)}
+.marks .cap{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:#8a8782;margin-top:12px;line-height:1.7}
+.marks .cap b{display:block;color:#e8e6e1;font-weight:500;letter-spacing:.16em}
+.rules{margin-left:auto;max-width:34ch;font-size:13.5px;line-height:1.7;color:#a8a5a0;border-left:1px solid #3d3d44;padding-left:30px}
+.rules li{margin-bottom:11px}
+.rules ul{margin:0;padding-left:16px}
+.rules b{color:#e8e6e1;font-weight:600}
+
+/* ============================================================
+   ENVELOPES
+   ============================================================ */
+.env-dl{width:calc(220*var(--mm));height:calc(110*var(--mm))}
+/* --- FACE: return address top-left, stamp top-right, recipient centre --- */
+.env .ret{position:absolute;left:calc(13*var(--mm));top:calc(12*var(--mm));display:flex;
+  align-items:flex-start;gap:calc(4.6*var(--mm));font-family:var(--mono);
+  font-size:calc(1.8*var(--mm));line-height:1.9;letter-spacing:.07em;color:rgba(10,10,10,.6)}
+.env .ret b{display:block;font-family:var(--wordmark);font-weight:400;font-size:calc(6*var(--mm));
+  color:var(--ink);margin-bottom:calc(2.4*var(--mm));line-height:1.14;letter-spacing:0}
+.env .stamp{position:absolute;right:calc(13*var(--mm));top:calc(11*var(--mm));width:calc(24*var(--mm));
+  height:calc(28*var(--mm));border:1px dashed rgba(10,10,10,.22)}
+.env .stamp span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:calc(1.5*var(--mm));letter-spacing:.14em;color:rgba(10,10,10,.24)}
+.env .to{position:absolute;left:calc(74*var(--mm));right:calc(20*var(--mm));bottom:calc(20*var(--mm))}
+.env .to i{display:block;font-style:normal;font-family:var(--mono);font-size:calc(1.5*var(--mm));
+  letter-spacing:.16em;text-transform:uppercase;color:rgba(10,10,10,.58);margin-bottom:calc(2.4*var(--mm))}
+.env .to u{display:block;text-decoration:none;border-bottom:1px solid rgba(10,10,10,.22);height:calc(7.4*var(--mm))}
+/* --- REVERSE: the banker flap, sealed with the mark --- */
+.env .flapb{position:absolute;left:0;right:0;top:0;height:calc(52*var(--mm));
+  background:linear-gradient(#f4f2ee,#efece6);
+  clip-path:polygon(0 0,100% 0,100% 62%,50% 100%,0 62%);
+  border-bottom:1px solid rgba(10,10,10,.10)}
+.env .seam{position:absolute;left:0;right:0;bottom:0;height:calc(58*var(--mm));
+  border-top:1px solid rgba(10,10,10,.07)}
+.env .seam::before,.env .seam::after{content:'';position:absolute;top:0;width:1px;height:100%;
+  background:rgba(10,10,10,.06)}
+.env .seam::before{left:calc(38*var(--mm));transform:skewX(-9deg)}
+.env .seam::after{right:calc(38*var(--mm));transform:skewX(9deg)}
+.env .seal{position:absolute;right:calc(13*var(--mm));bottom:calc(13*var(--mm))}
+.env.back .seal{left:50%;right:auto;bottom:auto;top:calc(44*var(--mm));transform:translateX(-50%)}
+.env.back .rev{position:absolute;left:0;right:0;bottom:calc(11*var(--mm));text-align:center;
+  font-family:var(--mono);font-size:calc(1.6*var(--mm));letter-spacing:.16em;color:rgba(10,10,10,.58)}
+
+/* ============================================================
+   B · THE FAMILY — Foolscap Mk II. Every piece, one mark system.
+   ============================================================ */
+.fam{display:flex;flex-wrap:wrap;gap:46px;align-items:flex-start}
+
+/* ---- letterhead PAD. Glued at the head; doubles as the accession record ---- */
+.padwrap{position:relative;display:inline-block}
+.padwrap .pl{position:absolute;background:#efece5;border:1px solid rgba(10,10,10,.08)}
+.padwrap .pl1{top:calc(2*var(--mm));right:calc(-2*var(--mm));bottom:calc(-2*var(--mm));left:calc(2*var(--mm))}
+.padwrap .pl2{top:calc(4*var(--mm));right:calc(-4*var(--mm));bottom:calc(-4*var(--mm));left:calc(4*var(--mm))}
+.padwrap .sheet{position:relative;z-index:2}
+
+.f2{width:calc(203*var(--mm));height:calc(330*var(--mm));padding:calc(21*var(--mm)) calc(16*var(--mm)) calc(16*var(--mm))}
+/* the glued head — this is what makes it a pad, not a loose sheet */
+.f2 .glue{position:absolute;left:0;right:0;top:0;height:calc(11*var(--mm));
+  background:repeating-linear-gradient(90deg,rgba(139,115,85,.22) 0 calc(1.6*var(--mm)),
+    rgba(139,115,85,.08) calc(1.6*var(--mm)) calc(3.4*var(--mm)));
+  border-bottom:1px solid rgba(10,10,10,.18)}
+.f2 .glue span{position:absolute;right:calc(4*var(--mm));top:calc(3.6*var(--mm));font-family:var(--mono);
+  font-size:calc(1.55*var(--mm));letter-spacing:.16em;color:rgba(10,10,10,.58)}
+.f2 .hd{display:flex;justify-content:space-between;align-items:flex-start}
+.f2 .wmk{font-size:calc(6.4*var(--mm))}
+.f2 .wmk small{font-size:calc(1.7*var(--mm));margin-top:calc(3*var(--mm))}
+.f2 .addr{font-family:var(--mono);font-size:calc(1.75*var(--mm));letter-spacing:.08em;
+  color:rgba(10,10,10,.58);line-height:1.85;margin-top:calc(2.6*var(--mm))}
+.f2 .hair{margin-top:calc(5.5*var(--mm));border-top:1px solid var(--ink);width:calc(34*var(--mm))}
+.f2 .vform{position:absolute;left:calc(6*var(--mm));top:calc(96*var(--mm));writing-mode:vertical-rl;
+  font-family:var(--mono);font-size:calc(1.7*var(--mm));letter-spacing:.4em;color:rgba(10,10,10,.58)}
+/* section rules */
+.f2 .sh{font-family:var(--label);font-weight:600;font-size:calc(1.95*var(--mm));letter-spacing:.22em;
+  text-transform:uppercase;color:var(--ink);border-bottom:1px solid var(--ink);
+  padding-bottom:calc(1.3*var(--mm));margin:calc(6.5*var(--mm)) 0 calc(3.2*var(--mm));
+  display:flex;justify-content:space-between;align-items:baseline}
+.f2 .sh i{font-style:normal;font-family:var(--mono);font-weight:400;font-size:calc(1.5*var(--mm));
+  letter-spacing:.12em;color:rgba(10,10,10,.58)}
+/* Field grid — 12 columns across the 171 mm measure. Fields are sized to what
+   goes in them (a date is 8 characters, a title is not), so the rule length
+   tells the person filling it in how much is expected. Span with .s2–.s8. */
+.f2 .dk{display:grid;grid-template-columns:repeat(12,1fr);
+  column-gap:calc(6*var(--mm));row-gap:calc(3.2*var(--mm))}
+.f2 .dk .c{grid-column:span 6}
+.f2 .dk .s2{grid-column:span 2}
+.f2 .dk .s3{grid-column:span 3}
+.f2 .dk .s4{grid-column:span 4}
+.f2 .dk .s5{grid-column:span 5}
+.f2 .dk .s7{grid-column:span 7}
+.f2 .dk .c i{display:block;font-style:normal;font-family:var(--mono);font-size:calc(1.55*var(--mm));
+  letter-spacing:.13em;text-transform:uppercase;color:rgba(10,10,10,.58);margin-bottom:calc(.8*var(--mm))}
+.f2 .dk .c u{display:block;text-decoration:none;border-bottom:1px solid rgba(10,10,10,.34);height:calc(5.4*var(--mm))}
+/* odd field out — runs the full measure, since what's held is a list, not a value */
+.f2 .dk .c.wide{grid-column:1 / -1}
+/* volume block — the same field system as the docket, set tighter so the
+   bibliographic record fits without swallowing the notes field */
+.f2 .dk.tight{gap:calc(2.5*var(--mm)) calc(8*var(--mm))}
+.f2 .dk.tight .c u{height:calc(4.6*var(--mm))}
+/* issue points — same tick circle as the grades. Two bands, because what you
+   can see in the copy and what you have to look up are not the same claim. */
+.f2 .flags{margin-top:calc(3.2*var(--mm))}
+.f2 .flags .r{display:flex;align-items:flex-start;margin-bottom:calc(2.4*var(--mm))}
+.f2 .flags .r > b{font-family:var(--mono);font-weight:400;font-size:calc(1.55*var(--mm));
+  letter-spacing:.12em;text-transform:uppercase;color:rgba(10,10,10,.58);
+  width:calc(22*var(--mm));flex:none;padding-top:calc(.3*var(--mm))}
+.f2 .flags .gs{display:flex;flex:1;flex-wrap:wrap;gap:calc(2*var(--mm)) calc(5.5*var(--mm))}
+/* condition — the antiquarian trade grades, ticked */
+.f2 .cond .r{display:flex;align-items:center;margin-bottom:calc(3.4*var(--mm))}
+.f2 .cond .r > b{font-family:var(--mono);font-weight:400;font-size:calc(1.6*var(--mm));letter-spacing:.12em;
+  text-transform:uppercase;color:rgba(10,10,10,.58);width:calc(22*var(--mm));flex:none}
+.f2 .cond .gs{display:flex;flex:1;justify-content:space-between}
+.f2 .g{display:flex;align-items:center;gap:calc(1.3*var(--mm));font-family:var(--label);font-weight:500;
+  font-size:calc(1.8*var(--mm));letter-spacing:.05em;text-transform:uppercase;color:var(--ink)}
+.f2 .g em{display:block;width:calc(2.9*var(--mm));height:calc(2.9*var(--mm));flex:none;
+  border:calc(.3*var(--mm)) solid rgba(10,10,10,.5);border-radius:50%}
+.f2 .cond .fl{display:flex;align-items:baseline;gap:calc(2.4*var(--mm));margin-top:calc(1.4*var(--mm))}
+.f2 .cond .fl b{font-family:var(--mono);font-weight:400;font-size:calc(1.6*var(--mm));letter-spacing:.12em;
+  text-transform:uppercase;color:rgba(10,10,10,.58);width:calc(22*var(--mm));flex:none}
+.f2 .cond .fl u{flex:1;text-decoration:none;border-bottom:1px solid rgba(10,10,10,.28);height:calc(5*var(--mm))}
+/* 98 mm = exactly 14 rules at 7 mm, and clears the footer rule by 6.6 mm.
+   Hand-tuned to the blocks above it — if the volume block or docket gains a
+   row, this has to come down with it or the ruling runs into the footer. */
+.f2 .field{margin-top:calc(2.4*var(--mm));height:calc(98*var(--mm));
+  background:repeating-linear-gradient(to bottom,transparent 0,transparent calc(7*var(--mm) - 1px),rgba(10,10,10,.18) calc(7*var(--mm)))}
+.f2 .ft{position:absolute;left:calc(16*var(--mm));right:calc(16*var(--mm));bottom:calc(11*var(--mm));
+  display:flex;justify-content:space-between;border-top:1px solid var(--rule);padding-top:calc(2.6*var(--mm));
+  font-family:var(--mono);font-size:calc(1.8*var(--mm));letter-spacing:.09em;color:rgba(10,10,10,.58)}
+
+/* compliment slip 203 × 110 */
+.slip{width:calc(203*var(--mm));height:calc(110*var(--mm));padding:calc(14*var(--mm)) calc(18*var(--mm))}
+.slip .hd{display:flex;justify-content:space-between;align-items:flex-start}
+.slip .wmk{font-size:calc(5.6*var(--mm))}
+.slip .wmk small{font-size:calc(1.7*var(--mm));margin-top:calc(3*var(--mm))}
+.slip .wc{font-family:var(--serif);font-style:italic;font-size:calc(4.2*var(--mm));color:rgba(10,10,10,.58);
+  position:absolute;left:calc(18*var(--mm));bottom:calc(24*var(--mm))}
+.slip .ft{position:absolute;left:calc(18*var(--mm));right:calc(18*var(--mm));bottom:calc(11*var(--mm));
+  border-top:1px solid var(--rule);padding-top:calc(2.6*var(--mm));display:flex;justify-content:space-between;
+  font-family:var(--mono);font-size:calc(1.8*var(--mm));letter-spacing:.09em;color:rgba(10,10,10,.58)}
+
+/* catalogue card 125 × 75 */
+.card{width:calc(125*var(--mm));height:calc(75*var(--mm));padding:calc(7*var(--mm)) calc(8*var(--mm))}
+.card .ruled{position:absolute;left:0;right:0;top:calc(18*var(--mm));bottom:0;
+  background:repeating-linear-gradient(to bottom,transparent 0,transparent calc(5.4*var(--mm) - 1px),rgba(10,10,10,.18) calc(5.4*var(--mm)))}
+/* the call-number column rule. Black at the 18% ruling floor — it was drawn in
+   #134E4A for a long time, a third ink nobody specified and nobody would have
+   paid for. Only the seal is green. */
+.card .vr{position:absolute;top:0;bottom:0;left:calc(25*var(--mm));border-left:1px solid rgba(10,10,10,.18)}
+.card .hd{display:flex;justify-content:space-between;align-items:flex-start;position:relative}
+.card .cn{font-family:var(--mono);font-size:calc(2.1*var(--mm));line-height:1.5;color:var(--ink)}
+.card .entry{position:relative;margin-left:calc(17*var(--mm));font-family:var(--serif);
+  font-size:calc(2.4*var(--mm));line-height:calc(5.4*var(--mm));color:rgba(10,10,10,.58);margin-top:calc(2*var(--mm))}
+.card .hole{position:absolute;bottom:calc(2.6*var(--mm));left:50%;transform:translateX(-50%);
+  width:calc(4.6*var(--mm));height:calc(4.6*var(--mm));border:1px solid rgba(10,10,10,.3);border-radius:50%}
+
+/* accession label 60 × 32 — REMOVABLE sticker, cut through the face only so the
+   release liner underneath stays whole */
+.liner{position:relative;display:inline-block;background:#e6e2d8;padding:calc(5*var(--mm));
+  box-shadow:0 12px 28px -12px rgba(0,0,0,.6)}
+.liner::after{content:'RELEASE LINER';position:absolute;left:calc(5*var(--mm));bottom:calc(1.3*var(--mm));
+  font-family:var(--mono);font-size:calc(1.4*var(--mm));letter-spacing:.14em;color:rgba(10,10,10,.3)}
+.liner .grid3{display:flex;gap:calc(4*var(--mm))}
+.lab{width:calc(60*var(--mm));height:calc(32*var(--mm));padding:calc(4*var(--mm)) calc(4.5*var(--mm));
+  border-radius:calc(1.6*var(--mm))}
+.lab .hd{display:flex;align-items:center;gap:calc(3*var(--mm))}
+.lab .wmk{font-size:calc(3.1*var(--mm));line-height:1.1}
+.lab .g{margin-top:calc(3*var(--mm));border-top:1px solid var(--ink);padding-top:calc(2.2*var(--mm));
+  font-family:var(--mono);font-size:calc(1.65*var(--mm));line-height:2.1;color:rgba(10,10,10,.58)}
+/* one label shown lifting off the liner, to read as removable */
+.lab.peel{transform:rotate(-2.2deg);box-shadow:0 5px 14px -4px rgba(0,0,0,.45)}
+.lab.peel::after{content:'';position:absolute;right:0;bottom:0;
+  width:calc(11*var(--mm));height:calc(11*var(--mm));
+  background:linear-gradient(315deg,#ddd8cc 0 48%,rgba(0,0,0,.14) 49%,transparent 50%);
+  border-bottom-right-radius:calc(1.6*var(--mm))}
+
+/* bookmark Mk II — ONE piece, collection ticked by hand */
+.bm3{width:calc(55*var(--mm));height:calc(210*var(--mm));padding:calc(9*var(--mm)) calc(5.5*var(--mm)) calc(8*var(--mm))}
+.bm3 .seal{margin:0 auto}
+.bm3 .wmk{text-align:center;font-size:calc(3.5*var(--mm));margin-top:calc(4.5*var(--mm))}
+.bm3 .hair{border-top:1px solid var(--ink);margin:calc(5.5*var(--mm)) 0 calc(3.4*var(--mm))}
+.bm3 .cl{font-family:var(--mono);font-size:calc(1.6*var(--mm));letter-spacing:.18em;
+  text-transform:uppercase;color:rgba(10,10,10,.58);margin-bottom:calc(2.4*var(--mm))}
+.bm3 .row{display:flex;align-items:center;gap:calc(2.4*var(--mm));height:calc(10.6*var(--mm));
+  border-bottom:1px solid rgba(10,10,10,.18)}
+.bm3 .row .o{width:calc(3.4*var(--mm));height:calc(3.4*var(--mm));border:calc(.34*var(--mm)) solid rgba(10,10,10,.5);
+  border-radius:50%;flex:none}
+.bm3 .row .nm{flex:1;font-family:var(--label);font-weight:500;font-size:calc(2.5*var(--mm));
+  letter-spacing:.02em;color:var(--ink);line-height:1.1}
+.bm3 .row .n{font-family:var(--mono);font-size:calc(1.55*var(--mm));color:rgba(10,10,10,.58);letter-spacing:.06em}
+.bm3 .ft{position:absolute;left:calc(5.5*var(--mm));right:calc(5.5*var(--mm));bottom:calc(7*var(--mm));
+  border-top:1px solid var(--ink);padding-top:calc(2.6*var(--mm));font-family:var(--mono);
+  font-size:calc(1.55*var(--mm));letter-spacing:.09em;color:rgba(10,10,10,.58);line-height:2}
+/* verso: clean spine face, printed once for all copies */
+.bm3.verso{display:flex;flex-direction:column;text-align:center}
+.bm3.verso .name-cell{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;
+  padding-bottom:calc(14*var(--mm))}
+.bm3.verso .name{writing-mode:vertical-rl;transform:rotate(180deg);font-family:var(--wordmark);
+  font-size:calc(7.4*var(--mm));letter-spacing:.05em;line-height:1}
+
+/* ============================================================
+   spec
+   ============================================================ */
+.spec{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin-top:6px}
+.spec th{text-align:left;font-weight:500;color:var(--brown);border-bottom:1px solid #3a3a40;
+  padding:0 16px 10px 0;letter-spacing:.1em;text-transform:uppercase;font-size:10px}
+.spec td{padding:11px 16px 11px 0;border-bottom:1px solid #333338;color:#c9c6c1;vertical-align:top;line-height:1.55}
+.spec td:first-child{color:#f0eee9;white-space:nowrap}
+/* trim and seal are dimensions, not prose — they break at the <br> between the
+   metric and imperial line and nowhere else, or "203 × 330 mm" comes apart. */
+.spec .n{color:var(--brown);white-space:nowrap}
+
+@media(max-width:1180px){.marks{gap:34px}.rules{margin-left:0;border-left:0;padding-left:0}}
+@media print{
+  /* real millimetres on paper, whatever the screen was calibrated to. Has to
+     name body and body.fit too, or the screen scale wins on specificity. */
+  :root,body,body.fit{--mm:1mm !important}
+  body{background:#fff;padding:0}
+  .masthead,.sec-head,.lbl,.note,.spec,nav.jump,.marks,.rules,.scalebar{display:none}
+  .sheet,.env{box-shadow:none;page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<div class="scalebar">
+  <div class="grp">
+    <button id="b-actual" class="on">Actual size</button>
+    <button id="b-fit">Fit to screen</button>
+  </div>
+  <div class="grp cal-only">
+    <span class="cap">Calibrate — fit a bank card between the stops</span>
+    <div class="cardref"><span>85.60 mm — card width</span></div>
+    <input type="range" id="cal" min="2.6" max="6.4" step="0.0005" value="3.7795"
+           aria-label="Screen scale, pixels per millimetre">
+    <output id="calout"></output>
+    <button id="b-reset">Reset</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+<header class="masthead">
+  <p class="kicker">Hudson Street Library · New York · Design comps · August 2026</p>
+  <h1>Administrative Stationery</h1>
+  <p>Foolscap Mk II — the British administrative sheet, 203 × 330 mm, with Japanese detailing.
+  One mark system applied identically across every piece in the family. Every piece is drawn
+  in millimetres and shown at actual size, on screen and on paper — calibrate the screen against
+  a bank card using the bar above, or switch to <i>fit to screen</i> to see the whole family at
+  once. Only the two swatches captioned <i>enlarged</i> are off scale.</p>
+  <nav class="jump">
+    <a href="#mark">A · The mark system</a>
+    <a href="#family">B · The family</a>
+    <a href="#spec">C · Production spec</a>
+  </nav>
+</header>
+
+<!-- ============ A · MARK SYSTEM ============ -->
+<div class="sec-head" id="mark">
+  <span class="n">A</span><h2>The mark system</h2>
+  <span class="meta">one component · three sizes · dark green</span>
+</div>
+<p class="note" style="margin-bottom:30px">The mark is a shelf of four spines, one leaning, in a
+ruled square, stamped in dark green <b>#034706</b>. Every piece uses it, at three fixed sizes and
+never a fourth. Everything else on the sheet prints black.</p>
+
+<div class="marks">
+  <div class="swatches">
+  <div class="item big">
+    <div class="box"><div class="seal" style="--s:45"><div class="r"><i></i><i></i><i></i><i></i></div></div></div>
+    <p class="cap"><b>THE DRAWING</b>four rectangles, the<br>fourth rotated 9°<br><i>enlarged, not to size</i></p>
+  </div>
+  <div class="item">
+    <div class="box"><div class="seal" style="--s:15"><div class="r"><i></i><i></i><i></i><i></i></div></div></div>
+    <p class="cap"><b>15 MM · ⅝ IN</b>accession pad<br>envelope</p>
+  </div>
+  <div class="item">
+    <div class="box"><div class="seal" style="--s:10"><div class="r"><i></i><i></i><i></i><i></i></div></div></div>
+    <p class="cap"><b>10 MM · ⅜ IN</b>compliment slip<br>bookmark</p>
+  </div>
+  <div class="item">
+    <div class="box"><div class="seal" style="--s:7"><div class="r"><i></i><i></i><i></i><i></i></div></div></div>
+    <p class="cap"><b>7 MM · ¼ IN</b>catalogue card<br>accession label</p>
+  </div>
+  <div class="item">
+    <div class="box" style="align-items:flex-start;gap:calc(5*var(--mm));padding:24px">
+      <div class="seal" style="--s:15"><div class="r"><i></i><i></i><i></i><i></i></div></div>
+      <div class="wmk" style="font-size:calc(6*var(--mm))"><em>Hudson Street</em><em>Library</em>
+        <small style="font-size:calc(1.7*var(--mm));margin-top:calc(3*var(--mm))">Art &amp; photography books · Ephemera</small></div>
+    </div>
+    <p class="cap"><b>LOCKUP</b>seal + stacked wordmark<br>seal always leads</p>
+  </div>
+  <div class="item">
+    <div class="box"><div class="seal k" style="--s:15"><div class="r"><i></i><i></i><i></i><i></i></div></div></div>
+    <p class="cap"><b>ONE-COLOUR VERSION</b>black, when the whole<br>job prints in black alone</p>
+  </div>
+  <div class="item big">
+    <div class="box"><div class="cs" style="padding:calc(3*var(--mm))">
+      <div class="seal" style="--s:30"><div class="r"><i></i><i></i><i></i><i></i></div></div>
+    </div></div>
+    <p class="cap"><b>CLEAR SPACE</b>one spine width, all sides<br><i>enlarged, not to size</i></p>
+  </div>
+  </div>
+  <div class="rules">
+    <b>Rules</b>
+    <ul>
+      <li>Square, ruled at <b>5.8% of its own width</b>, so the frame scales with the mark.</li>
+      <li>Always <b>#034706</b> — the same green on press and on screen. There is no
+      print-only variant. Never a third colour. The black drawing is used only when the
+      whole job prints in black alone.</li>
+      <li>Never smaller than 7 mm — the leaning spine closes up below that.</li>
+      <li>Clear space on all sides equal to <b>one spine width</b>.</li>
+      <li>The seal never sits inside a rule, box, or panel other than its own.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============ B · THE FAMILY ============ -->
+<div class="sec-head" id="family">
+  <span class="n">B</span><h2>The family — Foolscap Mk II</h2>
+  <span class="meta">six pieces · one mark · black + green</span>
+</div>
+<p class="note" style="margin-bottom:36px">Six pieces, all carrying the same seal at its
+specified size. The head sheet is a <b>pad</b> — glued at the head, 50 sheets on a chipboard
+back — and it is not a plain letterhead: it is the accession record. It runs in the order the
+work is actually done: <b>volume</b> (the book as it is in hand, with the issue points ticked),
+<b>accession</b> (the transaction), <b>condition</b> on the antiquarian trade grades, then notes.
+Fields are set on a twelve-column grid and sized to their content, so the length of the rule
+tells you what is expected on it — a date is eight characters wide, a title runs the full
+measure. What the design takes from Japanese
+stationery is <b>restraint and a stamp</b>: the boxed seal, the stacked wordmark, a 34 mm
+hairline in place of the full-width rule, confined ruling instead of ruling that bleeds across
+the page, and the form reference set vertically in the left margin.</p>
+
+<div class="fam">
+  <figure>
+    <div class="padwrap">
+      <span class="pl pl2"></span><span class="pl pl1"></span>
+      <div class="sheet f2">
+        <div class="glue"><span>PAD — 50 SHEETS</span></div>
+        <div class="hd">
+          <div>
+            <div class="wmk"><em>Hudson Street</em><em>Library</em>
+              <small>Art &amp; photography books · Ephemera · Artists' publications</small></div>
+            <div class="addr">421 HUDSON ST., NEW YORK, NY 10014<br>HUDSONSTREETLIBRARY.COM</div>
+          </div>
+          <div class="seal" style="--s:15"><div class="r"><i></i><i></i><i></i><i></i></div></div>
+        </div>
+        <div class="hair"></div>
+        <div class="vform">HSL · FORM A/1 · VOLUME · ACCESSION · CONDITION</div>
+
+        <div class="sh">Volume <i>as in hand</i></div>
+        <div class="dk tight">
+          <div class="c wide"><i>Title</i><u></u></div>
+          <div class="c s7"><i>Author / editor</i><u></u></div>
+          <div class="c s5"><i>Publisher</i><u></u></div>
+          <div class="c s3"><i>Place &amp; date</i><u></u></div>
+          <div class="c s4"><i>Edition / printing</i><u></u></div>
+          <div class="c s3"><i>ISBN</i><u></u></div>
+          <div class="c s2"><i>Language</i><u></u></div>
+          <div class="c s4"><i>Collation — pp · plates</i><u></u></div>
+          <div class="c s3"><i>Binding / format</i><u></u></div>
+          <div class="c s3"><i>Measurements h × w × d</i><u></u></div>
+          <div class="c s2"><i>Weight g</i><u></u></div>
+        </div>
+        <div class="flags">
+          <div class="r"><b>Issue</b>
+            <div class="gs">
+              <span class="g"><em></em>First edition</span><span class="g"><em></em>First printing</span>
+              <span class="g"><em></em>Signed</span><span class="g"><em></em>Inscribed</span>
+              <span class="g"><em></em>Limited / numbered</span><span class="g"><em></em>Dust jacket</span>
+              <span class="g"><em></em>Ex-library</span>
+            </div>
+          </div>
+          <div class="r"><b>Trade · looked up</b>
+            <div class="gs">
+              <span class="g"><em></em>Out of print</span><span class="g"><em></em>Rare</span>
+              <span class="g"><em></em>Scarce</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sh">Accession <i>one sheet per volume</i></div>
+        <div class="dk">
+          <div class="c s3"><i>Date of acquisition</i><u></u></div>
+          <div class="c s3"><i>Date added to database</i><u></u></div>
+          <div class="c s3"><i>Acc. no.</i><u></u></div>
+          <div class="c s3"><i>Shelf location</i><u></u></div>
+          <div class="c s7"><i>Acquired from</i><u></u></div>
+          <div class="c s5"><i>Collection</i><u></u></div>
+          <div class="c s3"><i>Price</i><u></u></div>
+          <div class="c s3"><i>Value</i><u></u></div>
+          <div class="c"><i>Documentation held</i><u></u></div>
+        </div>
+
+        <div class="sh">Condition <i>trade grades · graded as a whole</i></div>
+        <div class="cond">
+          <div class="r"><b>Volume</b>
+            <div class="gs">
+              <span class="g"><em></em>Fine</span><span class="g"><em></em>Near fine</span>
+              <span class="g"><em></em>Very good</span><span class="g"><em></em>Good</span>
+              <span class="g"><em></em>Fair</span><span class="g"><em></em>Poor</span>
+            </div>
+          </div>
+          <div class="fl"><b>Faults noted</b><u></u></div>
+          <div class="fl"><b></b><u></u></div>
+        </div>
+
+        <div class="sh">Notes <i>provenance · references · remarks</i></div>
+        <div class="field"></div>
+        <div class="ft"><span>ENTERED BY ____________________</span></div>
+      </div>
+    </div>
+    <p class="lbl">01 · Accession pad 203 × 330 mm (8 × 13 in) — seal 15 mm (⅝ in) · glued head, 50 sheets</p>
+  </figure>
+
+  <figure>
+    <div class="sheet slip">
+      <div class="hd">
+        <div class="wmk"><em>Hudson Street</em><em>Library</em>
+          <small>Art &amp; photography books · Ephemera · Artists' publications</small></div>
+        <div class="seal" style="--s:10"><div class="r"><i></i><i></i><i></i><i></i></div></div>
+      </div>
+      <div class="wc">With compliments</div>
+      <div class="ft"><span>421 HUDSON ST., NEW YORK, NY 10014</span><span>HUDSONSTREETLIBRARY.COM</span></div>
+    </div>
+    <p class="lbl">02 · Compliment slip 203 × 110 mm (8 × 4⁵⁄₁₆ in) — seal 10 mm (⅜ in) · one third of the pad sheet</p>
+  </figure>
+
+  <figure>
+    <div class="env env-dl face">
+      <div class="ret">
+        <div class="seal" style="--s:15;position:static"><div class="r"><i></i><i></i><i></i><i></i></div></div>
+        <div><b>Hudson Street<br>Library</b>421 Hudson St., New York, NY 10014<br>HUDSONSTREETLIBRARY.COM</div>
+      </div>
+      <div class="stamp"><span>POSTAGE</span></div>
+      <div class="to"><i>To —</i><u></u><u></u><u></u></div>
+    </div>
+    <p class="lbl">03 · Envelope, face · DL banker 110 × 220 mm (4⁵⁄₁₆ × 8¹¹⁄₁₆ in) — seal 15 mm (⅝ in)</p>
+  </figure>
+
+  <figure>
+    <div class="env env-dl back">
+      <div class="seam"></div>
+      <div class="flapb"></div>
+      <div class="seal" style="--s:15"><div class="r"><i></i><i></i><i></i><i></i></div></div>
+      <div class="rev">421 HUDSON ST., NEW YORK, NY 10014</div>
+    </div>
+    <p class="lbl">Envelope, reverse — flap sealed with the mark at the point</p>
+  </figure>
+
+  <figure>
+    <div class="sheet card">
+      <div class="ruled"></div><div class="vr"></div>
+      <div class="hd">
+        <div class="cn">CRA<br>1971</div>
+        <div class="seal" style="--s:7"><div class="r"><i></i><i></i><i></i><i></i></div></div>
+      </div>
+      <div class="entry">Craven, Ann.<br>Painted Time: (2020–2024) — Farnsworth Art Museum,
+      2025. 128 p.; 29 cm.<br>1. Painting. 2. Exhibition catalogues.</div>
+      <div class="hole"></div>
+    </div>
+    <p class="lbl">04 · Catalogue card 125 × 75 mm (4¹⁵⁄₁₆ × 2¹⁵⁄₁₆ in ≈ 5 × 3) — seal 7 mm (¼ in)</p>
+  </figure>
+
+  <figure>
+    <div class="liner">
+      <div class="grid3">
+        <div class="sheet lab">
+          <div class="hd">
+            <div class="seal" style="--s:7"><div class="r"><i></i><i></i><i></i><i></i></div></div>
+            <div class="wmk"><em>Hudson Street</em><em>Library</em></div>
+          </div>
+          <div class="g">ACC. NO. ______________<br>COLL. _________________</div>
+        </div>
+        <div class="sheet lab peel">
+          <div class="hd">
+            <div class="seal" style="--s:7"><div class="r"><i></i><i></i><i></i><i></i></div></div>
+            <div class="wmk"><em>Hudson Street</em><em>Library</em></div>
+          </div>
+          <div class="g">ACC. NO. ______________<br>COLL. _________________</div>
+        </div>
+      </div>
+    </div>
+    <p class="lbl">05 · Accession label 60 × 32 mm (2⅜ × 1¼ in) — seal 7 mm (¼ in)<br>
+    removable low-tack adhesive · cut through the face only, corner radius 1.6 mm · 21 up on an A4 liner</p>
+  </figure>
+</div>
+
+<p class="note" style="margin:54px 0 26px"><b>One bookmark, not five.</b> The collection is
+ticked by hand rather than printed, so the bookmark is one item printed one way, and adding a
+collection to the library never makes the stock in the drawer obsolete. It also puts the
+bookmark in the same idiom as everything else in the family: a form you fill in.</p>
+
+<div class="fam" style="align-items:flex-start">
+  <figure>
+    <div class="sheet bm3">
+      <div class="seal" style="--s:10"><div class="r"><i></i><i></i><i></i><i></i></div></div>
+      <div class="wmk"><em>Hudson Street</em><em>Library</em></div>
+      <div class="hair"></div>
+      <p class="cl">Collection — tick one</p>
+      <div class="row"><span class="o"></span><span class="nm">Magazines</span><span class="n">01</span></div>
+      <div class="row"><span class="o"></span><span class="nm">Photography</span><span class="n">02</span></div>
+      <div class="row"><span class="o"></span><span class="nm">Art</span><span class="n">03</span></div>
+      <div class="row"><span class="o"></span><span class="nm">Monographs</span><span class="n">04</span></div>
+      <div class="row"><span class="o"></span><span class="nm">Artists' Books</span><span class="n">05</span></div>
+      <div class="row"><span class="o"></span><span class="nm">Collage</span><span class="n">06</span></div>
+      <div class="row"><span class="o"></span><span class="nm">Fashion</span><span class="n">07</span></div>
+      <div class="row"><span class="o"></span><span class="nm">Music Photobooks</span><span class="n">08</span></div>
+      <div class="row"><span class="o"></span><span class="nm">Queer Culture</span><span class="n">09</span></div>
+      <div class="row"><span class="o"></span><span class="nm">Exhibition Catalogues</span><span class="n">10</span></div>
+      <div class="row"><span class="o"></span><span class="nm">Zines</span><span class="n">11</span></div>
+      <div class="row"><span class="o"></span><span class="nm">Ephemera</span><span class="n">12</span></div>
+      <div class="row"><span class="o"></span><span class="nm">Other ____________</span><span class="n">—</span></div>
+      <div class="ft">ACC. NO. ____________<br>421 HUDSON ST., NY 10014</div>
+    </div>
+    <p class="lbl">06 · Bookmark, recto 55 × 210 mm (2³⁄₁₆ × 8¼ in) — seal 10 mm (⅜ in) · one version</p>
+  </figure>
+
+  <figure>
+    <div class="sheet bm3 verso">
+      <div class="seal" style="--s:10"><div class="r"><i></i><i></i><i></i><i></i></div></div>
+      <div class="name-cell"><span class="name">Hudson Street Library</span></div>
+      <div class="ft" style="text-align:center">421 HUDSON ST., NEW YORK, NY 10014</div>
+    </div>
+    <p class="lbl">Bookmark, verso — spine face, identical on every copy</p>
+  </figure>
+
+  <div class="rules" style="margin-left:0;border-left:1px solid #3d3d44;padding-left:30px;max-width:32ch">
+    <b>Item 06 — bookmark</b>
+    <ul>
+      <li><b>Every copy is identical.</b> The collection is written on by hand, not printed, so
+      there is one version of this item and reprints run from the same artwork file. A new
+      collection is entered on the <i>Other</i> rule.</li>
+      <li><b>Imposition:</b> 5 up on A4 (210 × 297 mm), or 10 up on SRA3 (320 × 450 mm).</li>
+      <li><b>Cutting:</b> straight guillotine cuts on all four edges. Nothing on this item is
+      die-cut.</li>
+      <li><b>Grain direction:</b> the grain must run parallel to the 210 mm dimension, so the
+      bookmark lies flat between the pages of a book rather than curling.</li>
+      <li>Stock, colours, bleed, proofing and delivery for this item are as set out in
+      <b>section C</b> and are not restated here.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============ C · SPEC ============ -->
+<div class="sec-head" id="spec">
+  <span class="n">C</span><h2>Production specification</h2>
+  <span class="meta">uncoated · two colours · no bleed</span>
+</div>
+<table class="spec">
+  <thead><tr><th>Item</th><th>Trim size</th><th>Seal</th><th>Stock</th><th>Colours</th><th>Imposition &amp; finishing</th></tr></thead>
+  <tbody>
+    <tr><td>01 Accession pad</td><td class="n">203 × 330 mm<br>8 × 13 in</td><td class="n">15 mm<br>⅝ in</td>
+      <td>100 gsm uncoated wove, natural white; 1.5 mm chipboard back</td>
+      <td>Two colours, one side only<br>(2/0)</td>
+      <td><b>50 sheets, padded at the head</b> with flexible padding compound. 1 up from SRA3, which leaves about 35% of the parent sheet as waste — the one premium in the family. Foolscap is the specified trim: the sheet is drawn to 203 × 330 mm and cannot be reduced to A4 without redrawing every field on it, so please do not substitute.</td></tr>
+    <tr><td>02 Compliment slip</td><td class="n">203 × 110 mm<br>8 × 4⁵⁄₁₆ in</td><td class="n">10 mm<br>⅜ in</td>
+      <td>100 gsm uncoated wove, natural white — the same stock as item 01</td>
+      <td>Two colours, one side only<br>(2/0)</td>
+      <td><b>3 up from one pad sheet, no waste</b> — which is why the stock has to be the same as item 01. Supplied loose, not padded.</td></tr>
+    <tr><td>03 Envelope</td><td class="n">110 × 220 mm (DL)<br>4⁵⁄₁₆ × 8¹¹⁄₁₆ in</td><td class="n">15 mm<br>⅝ in</td>
+      <td>100 gsm wove, gummed banker flap</td>
+      <td>Two colours on the face and again on the reverse<br>(2/2, two passes)</td>
+      <td>Print onto bought-in stock envelopes. These are not converted from flat sheet, so no cutting tool is needed. <b>Face:</b> return address block, postage box and recipient rules. <b>Reverse:</b> the seal centred on the flap point, 44 mm down from the head. Keep all printing 5 mm clear of the gummed areas and of the flap fold.</td></tr>
+    <tr><td>04 Catalogue card</td><td class="n">125 × 75 mm<br>4¹⁵⁄₁₆ × 2¹⁵⁄₁₆ in</td><td class="n">7 mm<br>¼ in</td>
+      <td>180 gsm card, uncoated</td><td>Two colours, one side only<br>(2/0)</td>
+      <td>16 up on SRA3. Within a millimetre of the 5 × 3 in standard, so the cards fit catalogue drawers bought off the shelf. The circle at the foot is <b>printed artwork, not a drilled hole</b> — do not drill or punch this item.</td></tr>
+    <tr><td>05 Accession label</td><td class="n">60 × 32 mm<br>2⅜ × 1¼ in</td><td class="n">7 mm<br>¼ in</td>
+      <td>Uncoated matt litho face stock, 80 gsm, on a <b>removable low-tack acid-free
+      adhesive</b>. Release liner glassine or PET, either is acceptable</td>
+      <td>Two colours, one side only<br>(2/0)</td>
+      <td><b>The removable adhesive is a requirement, not a preference</b> — permanent adhesive is
+      not acceptable on collection material. Cut through the face material only and leave the
+      liner uncut (kiss-cut), corner radius 1.6 mm, 21 up on an A4 liner, 3 across by 7 down.
+      Deliver on sheets, not rolls.</td></tr>
+    <tr><td>06 Bookmark</td><td class="n">55 × 210 mm<br>2³⁄₁₆ × 8¼ in</td><td class="n">10 mm<br>⅜ in</td>
+      <td>300 gsm uncoated board, matt</td>
+      <td>Two colours on both sides<br>(2/2)</td>
+      <td>5 up on A4, or 10 up on SRA3. One version only — the collection is written on by hand,
+      so there is nothing to change between copies. Straight guillotine cuts, no die-cutting, no
+      bleed.</td></tr>
+  </tbody>
+</table>
+<div class="rules" style="margin:34px 0 0;max-width:none;border-left:0;padding-left:0;
+  border-top:2px solid var(--brown);padding-top:18px">
+  <b>Notes to the printer — whole job</b>
+  <ul style="columns:2;column-gap:44px">
+    <li><b>Quantities</b> are given on the order. Please quote each of the six items separately
+    at 250, 500 and 1,000.</li>
+    <li><b>Colours:</b> two spot colours across the whole job — black, and one green. There is no
+    four-colour process on any item. The green is drawn at <b>#034706</b>, which is the same
+    value the mark carries on screen. No Pantone number is specified: please match to a drawdown
+    on the running stock and send it for approval before the run. Allow for the ink drying back
+    and losing density on uncoated stock when choosing the match, but do not alter the supplied
+    artwork to compensate.</li>
+    <li><b>Artwork supplied</b> as PDF/X-4, one file per item, at 100% size. Two spot channels
+    only, named <i>Black</i> and <i>HSL Green</i>; no CMYK or RGB objects anywhere in the files.
+    Fonts embedded. No bleed allowance in the files. Trim marks offset 5 mm.</li>
+    <li><b>No bleed anywhere.</b> All artwork is inset at least 6 mm from the trim on every item,
+    so a 3 mm trim allowance is sufficient throughout.</li>
+    <li><b>No coatings, no varnish, no lamination, no foil, no embossing.</b> The uncoated
+    surface has to stay writable — these are forms that get filled in with pen and pencil.</li>
+    <li><b>No die-cutting</b> anywhere except the labels (item 05), which are cut through the
+    face material only. Every other item is cut on the guillotine.</li>
+    <li><b>Grain long</b> on all items, running parallel to the longer dimension. This matters
+    most on the pad: across the grain, the sheets ripple at the glued head.</li>
+    <li><b>Pad build (01):</b> 50 sheets, flexible padding compound at the head, 1.5 mm
+    chipboard back, no tape strip. Knock the stack up square to the head edge before gluing.</li>
+    <li><b>Envelopes (03):</b> keep all printing 5 mm clear of the gummed areas and of the flap
+    fold. Print the reverse after the face, allowing for the extra thickness at the flap when
+    setting up.</li>
+    <li><b>Registration:</b> the green never overprints or butts the black — the two colours meet
+    only as separate elements on the same sheet, so ±0.15 mm is ample. Do not add trapping,
+    spread or choke to the supplied artwork.</li>
+    <li><b>If the job is quoted as one colour:</b> the seal prints black and nothing else on any
+    item changes. Do not substitute a tint or screen of black for the green.</li>
+    <li><b>Proofs:</b> one wet proof on the running stock for the pad (01) and the bookmark (06),
+    for approval before the run. A laser proof is sufficient for the other four items.</li>
+    <li><b>Delivery</b> to 421 Hudson St., New York, NY 10014. Labels on sheets, not rolls;
+    bookmarks banded in 50s; pads shrink-wrapped in 5s.</li>
+  </ul>
+</div>
+
+</div>
+
+<script>
+/* Screen scale. CSS hard-codes 96 px to the inch, so its millimetre is only
+   right on a 96 dpi display; calibration measures the real one once and keeps
+   it. Written to <html>, which body inherits — except in "fit to screen",
+   where body.fit overrides it. */
+(function () {
+  var CSS_MM = 96 / 25.4;              // 3.7795… — the spec default
+  var KEY_MM = 'hsl-stationery-mm', KEY_FIT = 'hsl-stationery-fit';
+  var root = document.documentElement, body = document.body;
+  var cal = document.getElementById('cal'), out = document.getElementById('calout');
+  var bActual = document.getElementById('b-actual'), bFit = document.getElementById('b-fit');
+
+  function num(v, fallback) { v = parseFloat(v); return isFinite(v) && v > 0 ? v : fallback; }
+
+  function setScale(px, save) {
+    root.style.setProperty('--mm', px + 'px');
+    cal.value = px;
+    out.textContent = px.toFixed(3) + ' px/mm';
+    if (save) try { localStorage.setItem(KEY_MM, px); } catch (e) {}
+  }
+
+  function setFit(on, save) {
+    body.classList.toggle('fit', on);
+    bFit.classList.toggle('on', on);
+    bActual.classList.toggle('on', !on);
+    if (save) try { localStorage.setItem(KEY_FIT, on ? '1' : '0'); } catch (e) {}
+  }
+
+  var stored = {};
+  try { stored = { mm: localStorage.getItem(KEY_MM), fit: localStorage.getItem(KEY_FIT) }; } catch (e) {}
+
+  setScale(num(stored.mm, CSS_MM), false);
+  setFit(stored.fit === '1', false);
+
+  cal.addEventListener('input', function () { setScale(num(cal.value, CSS_MM), true); });
+  bActual.addEventListener('click', function () { setFit(false, true); });
+  bFit.addEventListener('click', function () { setFit(true, true); });
+  document.getElementById('b-reset').addEventListener('click', function () {
+    setScale(CSS_MM, true);
+  });
+})();
+</script>
+</body>
+</html>

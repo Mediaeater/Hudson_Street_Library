@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identity · Hudson Street Library</title>
+    <meta name="description" content="The Hudson Street Library visual identity: mark, wordmark, colour, typography, applications, and colophon.">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    <link rel="stylesheet" href="/assets/css/tailwind.css">
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-ink: #0A0A0A;
+            --color-paper: #F8F7F4;
+            --color-brown: #8B7355;
+            --color-green: #034706;
+            --color-border: rgba(10, 10, 10, 0.12);
+        }
+        body { background: var(--color-paper); color: var(--color-ink); font-family: 'Literata', Georgia, serif; line-height: 1.6; }
+        .identity-main { max-width: 900px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+        .identity-label { font-family: 'Archivo Narrow', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-brown); margin-bottom: 1rem; }
+        .identity-title { font-size: clamp(3rem, 8vw, 4.5rem); font-weight: 700; line-height: 1; letter-spacing: -0.02em; margin-bottom: 2rem; }
+        .identity-main > p { font-size: 1.1875rem; line-height: 1.8; margin-bottom: 1.75rem; max-width: 680px; }
+        .identity-section { margin-top: 4rem; }
+        .plate { max-width: 794px; margin: 0 auto 2.5rem; border: 1px solid var(--color-border); box-shadow: 0 1px 4px rgba(10, 10, 10, 0.07); overflow-x: auto; background: #F8F7F4; }
+        .artefact-list { list-style: none; padding: 0; margin: 0; max-width: 680px; }
+        .artefact-list li { padding: 1.1rem 0; border-top: 1px solid var(--color-border); font-size: 1.0625rem; }
+        .artefact-list li:last-child { border-bottom: 1px solid var(--color-border); }
+        .avatar-row { display: flex; gap: 1.25rem; margin-top: 0.75rem; flex-wrap: wrap; }
+        .avatar-row img { width: 88px; height: 88px; border-radius: 50%; border: 1px solid var(--color-border); }
+    </style>
+</head>
+<body>
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+
+<style>
+    .site-header {
+        font-family: 'Literata', Georgia, serif;
+    }
+    .site-header .site-logo {
+        font-family: 'Crimson Pro', Georgia, serif;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        white-space: nowrap;
+    }
+    /* Book-spines mark (same drawing as the favicon). Inlined with
+       fill: currentColor rather than <img src=favicon.svg> because the
+       SVG file self-inverts to off-white in OS dark mode and would
+       disappear against the white header. */
+    .site-header .logo-mark {
+        width: 1.3em;
+        height: 1.3em;
+        display: block;
+        flex-shrink: 0;
+        fill: currentColor;
+    }
+    .site-header .nav-link {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+        font-weight: 400;
+        letter-spacing: 0.005em;
+    }
+    .site-header .nav-link[aria-current="page"],
+    .site-header .nav-link-active {
+        font-weight: 600;
+    }
+    .site-header #mobile-nav-menu a {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+    }
+
+    /*
+      Mobile menu uses self-contained, component-scoped CSS rather than
+      Tailwind utilities, so its layout can't be broken by global stylesheet
+      changes. This originally fixed an invisible-sliver bug: design-system.css
+      ships an unlayered `* { padding: 0 }` reset that beats Tailwind's layered
+      utilities and collapsed the old icon-only button. The self-contained
+      styling is kept deliberately.
+    */
+    .site-header .menu-toggle { display: none; }
+    .site-header .mobile-nav { display: none; }
+
+    /*
+      Mobile scroll-jitter fix.
+      The header ships as `sticky top-0 bg-white/95 backdrop-blur-sm`. On mobile
+      a sticky bar with backdrop-filter: blur() forces the browser to re-sample
+      and re-blur the pixels scrolling beneath it every frame; on mobile GPUs
+      that readback lags the scroll compositor and the bar (and the text passing
+      under it) shudders. Drop the blur and use an opaque background on small
+      screens — the frosted-glass effect stays desktop-only. The doubled
+      `.site-header.site-header` selector out-specifies the `bg-white/95` and
+      `backdrop-blur-sm` utility classes without needing !important.
+    */
+    @media (max-width: 900px), (hover: none) and (pointer: coarse) {
+        .site-header.site-header {
+            background-color: #ffffff;
+            -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+            /* Promote the sticky bar to its own compositor layer so it isn't
+               re-rasterized against the scrolling content every frame — this
+               is what stops the header (and the text under it) juddering on
+               mobile. Pairs with dropping the backdrop blur above. */
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            will-change: transform;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .site-header .menu-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.45rem 0.7rem;
+            border: 1px solid rgba(0, 49, 0, 0.3);
+            border-radius: 0.5rem;
+            background: #ffffff;
+            color: #003100;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .site-header .menu-toggle:hover { background: #f0f5f0; }
+        .site-header .menu-toggle:focus-visible {
+            outline: 2px solid #003100;
+            outline-offset: 2px;
+        }
+        .site-header .menu-toggle svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+            flex-shrink: 0;
+        }
+        .site-header .menu-toggle .menu-toggle-label {
+            font-family: 'Literata', Georgia, serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .site-header .menu-toggle .icon-close { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-open { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-close { display: block; }
+
+        .site-header .mobile-nav.is-open {
+            display: flex;
+            flex-direction: column;
+        }
+        .site-header .mobile-nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            padding: 0.5rem;
+            z-index: 40;
+        }
+        .site-header .mobile-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            color: #404040;
+            text-decoration: none;
+        }
+        .site-header .mobile-nav a:hover {
+            background: #f0f5f0;
+            color: #002000;
+        }
+    }
+</style>
+
+<header class="site-header sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="site-logo text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                <svg class="logo-mark" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+                    <rect x="38" y="128" width="72" height="318"/>
+                    <rect x="138" y="68" width="76" height="378"/>
+                    <rect x="242" y="100" width="72" height="346"/>
+                    <rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)"/>
+                </svg>
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link ">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Accessions
+                </a>
+                <a href="/discover.html"
+                   class="nav-link ">
+                   Discover
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <!-- Icon + visible "Menu" label so the control is obvious on mobile.
+                 Sizing/visibility come from the unlayered styles above, not
+                 Tailwind utilities (see note in the <style> block). Icons are
+                 inline SVGs so the menu works on pages without an icon font. -->
+            <button class="menu-toggle"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <svg class="icon-open" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg class="icon-close" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+                <span class="menu-toggle-label">Menu</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu" class="mobile-nav" aria-label="Mobile navigation">
+        <a href="/#about">About</a>
+        <a href="/collection-explore.html">Collections</a>
+        <a href="/static-demo/">Search</a>
+        <a href="/#publications">Publications</a>
+        <a href="/news.html">News</a>
+        <a href="/collections/recently_added.html">Accessions</a>
+        <a href="/discover.html">Discover</a>
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const button = document.querySelector('button[aria-controls="mobile-nav-menu"]');
+    const willOpen = !menu.classList.contains('is-open');
+
+    menu.classList.toggle('is-open', willOpen);
+    // Icon swap (hamburger <-> X) is driven by aria-expanded in CSS.
+    if (button) button.setAttribute('aria-expanded', String(willOpen));
+}
+</script>
+
+
+<main class="identity-main">
+    <div class="identity-label">Hudson Street Library</div>
+    <h1 class="identity-title">Identity</h1>
+
+    <p>The library's visual identity, documented. The guide below covers the mark, the wordmark, the colour system, the typefaces, and how they are applied. The <a href="/colophon.html">colophon</a> is included as its sixth section. The stationery and the profile avatars follow the same rules.</p>
+
+    <section class="identity-section" aria-label="Identity guidelines">
+        <div class="identity-label">Identity Guidelines · August 2026</div>
+        <div class="plate"><div style="width: 794px; height: 1123px; box-sizing: border-box; background: #F8F7F4; color: #0A0A0A; font-family: 'Literata', Georgia, serif; padding: 72px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+  <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #8B7355;">Hudson Street Library</div>
+  <div style="display: flex; flex-direction: column; gap: 40px;">
+    <svg viewBox="0 0 512 512" width="168" height="168" aria-hidden="true">
+      <rect x="38" y="128" width="72" height="318" fill="#034706"></rect>
+      <rect x="138" y="68" width="76" height="378" fill="#034706"></rect>
+      <rect x="242" y="100" width="72" height="346" fill="#034706"></rect>
+      <rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)" fill="#034706"></rect>
+    </svg>
+    <div style="font-family: 'Crimson Pro', Georgia, serif; font-weight: 700; font-size: 52px; line-height: 1.08; letter-spacing: 0.01em; color: #034706;">HUDSON STREET<br>LIBRARY</div>
+    <div style="width: 129px; height: 1px; background: rgba(10, 10, 10, 0.25);"></div>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <div style="font-size: 27px; font-weight: 400;">Identity Guidelines</div>
+      <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(10, 10, 10, 0.55);">August 2026</div>
+    </div>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 8px; font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(10, 10, 10, 0.6);">
+    <div>01 &nbsp;The Mark</div>
+    <div>02 &nbsp;The Wordmark</div>
+    <div>03 &nbsp;Colour</div>
+    <div>04 &nbsp;Typography</div>
+    <div>05 &nbsp;Applications</div>
+    <div>06 &nbsp;Colophon</div>
+  </div>
+</div></div>
+        <div class="plate"><div style="width: 794px; height: 1123px; box-sizing: border-box; background: #F8F7F4; color: #0A0A0A; font-family: 'Literata', Georgia, serif; padding: 56px 72px 88px; display: flex; flex-direction: column; gap: 26px; position: relative;">
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #8B7355;">01 &middot; Identity Guidelines</div>
+    <div style="font-weight: 700; font-size: 40px; line-height: 1.05; letter-spacing: -0.02em;">The mark</div>
+  </div>
+  <p style="margin: 0; font-size: 16px; line-height: 1.65;">The whole drawing is four rectangles on a 512 square, the last one turned nine degrees. It began as the favicon and now stands at the head of every page, stamped in the green. On stationery it sits inside a hairline box and becomes the seal.</p>
+  <div style="display: flex; gap: 44px; align-items: flex-start;">
+    <div style="position: relative; flex: none;">
+      <svg viewBox="0 0 512 512" width="180" height="180" aria-hidden="true">
+        <rect x="38" y="128" width="72" height="318" fill="#034706"></rect>
+        <rect x="138" y="68" width="76" height="378" fill="#034706"></rect>
+        <rect x="242" y="100" width="72" height="346" fill="#034706"></rect>
+        <rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)" fill="#034706"></rect>
+      </svg>
+      <div style="position: absolute; right: -34px; top: 8px; font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 13px; color: #8B7355;">9&deg;</div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 14px; padding-top: 6px;">
+      <p style="margin: 0; font-size: 15px; line-height: 1.65;">The fourth spine rotates nine degrees about its foot, so the shelf reads as in use, not abandoned. Nothing else moves. Do not redraw, thin, thicken, or straighten the spines, and do not add a fifth.</p>
+      <p style="margin: 0; font-size: 15px; line-height: 1.65;">The source of truth is the inline SVG in the site header and the colophon. Reproduce those four rectangles exactly.</p>
+    </div>
+  </div>
+  <div style="display: flex; gap: 24px;">
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 10px;">
+      <div style="height: 128px; background: #F8F7F4; border: 1px solid rgba(10, 10, 10, 0.12); display: flex; align-items: center; justify-content: center;">
+        <svg viewBox="0 0 512 512" width="76" height="76" aria-hidden="true"><rect x="38" y="128" width="72" height="318" fill="#034706"></rect><rect x="138" y="68" width="76" height="378" fill="#034706"></rect><rect x="242" y="100" width="72" height="346" fill="#034706"></rect><rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)" fill="#034706"></rect></svg>
+      </div>
+      <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(10, 10, 10, 0.6);">Green on paper &middot; default</div>
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 10px;">
+      <div style="height: 128px; background: #F8F7F4; border: 1px solid rgba(10, 10, 10, 0.12); display: flex; align-items: center; justify-content: center;">
+        <svg viewBox="0 0 512 512" width="76" height="76" aria-hidden="true"><rect x="38" y="128" width="72" height="318" fill="#0A0A0A"></rect><rect x="138" y="68" width="76" height="378" fill="#0A0A0A"></rect><rect x="242" y="100" width="72" height="346" fill="#0A0A0A"></rect><rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)" fill="#0A0A0A"></rect></svg>
+      </div>
+      <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(10, 10, 10, 0.6);">Ink, where green is unavailable</div>
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 10px;">
+      <div style="height: 128px; background: #034706; display: flex; align-items: center; justify-content: center;">
+        <svg viewBox="0 0 512 512" width="76" height="76" aria-hidden="true"><rect x="38" y="128" width="72" height="318" fill="#F8F7F4"></rect><rect x="138" y="68" width="76" height="378" fill="#F8F7F4"></rect><rect x="242" y="100" width="72" height="346" fill="#F8F7F4"></rect><rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)" fill="#F8F7F4"></rect></svg>
+      </div>
+      <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(10, 10, 10, 0.6);">Paper, reversed on green</div>
+    </div>
+  </div>
+  <div style="display: flex; gap: 44px; align-items: flex-start;">
+    <div style="flex: none; padding: 18px; border: 1px dashed rgba(10, 10, 10, 0.35);">
+      <svg viewBox="0 0 512 512" width="132" height="132" aria-hidden="true"><rect x="38" y="128" width="72" height="318" fill="#034706"></rect><rect x="138" y="68" width="76" height="378" fill="#034706"></rect><rect x="242" y="100" width="72" height="346" fill="#034706"></rect><rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)" fill="#034706"></rect></svg>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 12px; padding-top: 4px;">
+      <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #8B7355;">Clear space and minimum size</div>
+      <p style="margin: 0; font-size: 15px; line-height: 1.65;">Clear space is one spine width on all sides. A spine is one tenth of the mark's height. In print the mark is never set below seven millimetres, the size at which the leaning spine closes up and the shelf becomes a smudge; on stationery it runs at 15, 10, or 7 mm only. On screen the floor is 16 pixels, the favicon.</p>
+      <div style="display: flex; gap: 28px; align-items: flex-end;">
+        <svg viewBox="0 0 512 512" width="57" height="57" aria-hidden="true"><rect x="38" y="128" width="72" height="318" fill="#034706"></rect><rect x="138" y="68" width="76" height="378" fill="#034706"></rect><rect x="242" y="100" width="72" height="346" fill="#034706"></rect><rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)" fill="#034706"></rect></svg>
+        <svg viewBox="0 0 512 512" width="38" height="38" aria-hidden="true"><rect x="38" y="128" width="72" height="318" fill="#034706"></rect><rect x="138" y="68" width="76" height="378" fill="#034706"></rect><rect x="242" y="100" width="72" height="346" fill="#034706"></rect><rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)" fill="#034706"></rect></svg>
+        <svg viewBox="0 0 512 512" width="26" height="26" aria-hidden="true"><rect x="38" y="128" width="72" height="318" fill="#034706"></rect><rect x="138" y="68" width="76" height="378" fill="#034706"></rect><rect x="242" y="100" width="72" height="346" fill="#034706"></rect><rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)" fill="#034706"></rect></svg>
+        <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(10, 10, 10, 0.6); padding-bottom: 4px;">15 &middot; 10 &middot; 7 mm</div>
+      </div>
+    </div>
+  </div>
+  <div style="border-top: 1px solid rgba(10, 10, 10, 0.25); padding-top: 14px;">
+    <p style="margin: 0; font-size: 15px; line-height: 1.65;"><strong>One hard rule.</strong> Always inline the SVG with an explicit fill. The favicon file self-inverts in OS dark mode and vanishes as an image on light backgrounds. The favicon is the one place that inversion is wanted.</p>
+  </div>
+  <div style="position: absolute; bottom: 32px; left: 72px; right: 72px; display: flex; justify-content: space-between; font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(10, 10, 10, 0.45);">
+    <div>Hudson Street Library</div>
+    <div>Identity Guidelines &middot; 01</div>
+  </div>
+</div></div>
+        <div class="plate"><div style="width: 794px; height: 1123px; box-sizing: border-box; background: #F8F7F4; color: #0A0A0A; font-family: 'Literata', Georgia, serif; padding: 64px 72px 88px; display: flex; flex-direction: column; gap: 34px; position: relative;">
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #8B7355;">02 &middot; Identity Guidelines</div>
+    <div style="font-weight: 700; font-size: 40px; line-height: 1.05; letter-spacing: -0.02em;">The wordmark</div>
+  </div>
+  <p style="margin: 0; font-size: 16px; line-height: 1.65;">HUDSON STREET LIBRARY is set in Crimson Pro, Jacques Le Bailly's rework of Sebastian Kosch's Crimson Text. Crimson set every word of this site for years. It now keeps the door: the wordmark is the only place the face survives, and it appears nowhere else. Always capitals, always bold, tracked one hundredth of an em.</p>
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #8B7355;">The lockup &middot; every page header</div>
+    <div style="border: 1px solid rgba(10, 10, 10, 0.12); padding: 44px 40px; background: #ffffff;">
+      <div style="display: inline-flex; align-items: center; gap: 0.55rem; font-family: 'Crimson Pro', Georgia, serif; font-weight: 700; font-size: 30px; letter-spacing: 0.01em; color: #034706; white-space: nowrap;">
+        <svg viewBox="0 0 512 512" style="width: 1.3em; height: 1.3em; display: block; flex-shrink: 0;" aria-hidden="true"><rect x="38" y="128" width="72" height="318" fill="#034706"></rect><rect x="138" y="68" width="76" height="378" fill="#034706"></rect><rect x="242" y="100" width="72" height="346" fill="#034706"></rect><rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)" fill="#034706"></rect></svg>
+        HUDSON STREET LIBRARY
+      </div>
+    </div>
+    <p style="margin: 0; font-size: 15px; line-height: 1.65; color: rgba(10, 10, 10, 0.75);">Mark height 1.3 em of the wordmark size, gap 0.55 rem, both set in the green. The mark and the words are one unit: do not separate them in the header, and do not let the line break.</p>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #8B7355;">Stacked &middot; stationery and cover</div>
+    <div style="border: 1px solid rgba(10, 10, 10, 0.12); padding: 40px; background: #ffffff; display: flex; gap: 56px; align-items: center;">
+      <div style="font-family: 'Crimson Pro', Georgia, serif; font-weight: 700; font-size: 30px; line-height: 1.12; letter-spacing: 0.01em; white-space: nowrap; flex: none; color: #034706;">HUDSON STREET<br>LIBRARY</div>
+      <div style="font-family: 'Crimson Pro', Georgia, serif; font-weight: 700; font-size: 30px; line-height: 1.12; letter-spacing: 0.01em; white-space: nowrap; flex: none; color: #0A0A0A;">HUDSON STREET<br>LIBRARY</div>
+    </div>
+    <p style="margin: 0; font-size: 15px; line-height: 1.65; color: rgba(10, 10, 10, 0.75);">The two-line setting is for print pieces and covers, where the strip lockup would run too wide. Green or ink, following the same colour rules as the mark.</p>
+  </div>
+  <div style="border-top: 1px solid rgba(10, 10, 10, 0.25); padding-top: 14px; display: flex; flex-direction: column; gap: 10px;">
+    <p style="margin: 0; font-size: 15px; line-height: 1.65;"><strong>Never</strong> set body text, headings, or anything else in Crimson Pro. A search of the site finding exactly one Crimson Pro declaration is correct, not an inconsistency to fix.</p>
+    <p style="margin: 0; font-size: 15px; line-height: 1.65;"><strong>Never</strong> retrack, lowercase, or letter-space the wordmark for effect. It is a fixed setting, not a style.</p>
+  </div>
+  <div style="position: absolute; bottom: 32px; left: 72px; right: 72px; display: flex; justify-content: space-between; font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(10, 10, 10, 0.45);">
+    <div>Hudson Street Library</div>
+    <div>Identity Guidelines &middot; 02</div>
+  </div>
+</div></div>
+        <div class="plate"><div style="width: 794px; height: 1123px; box-sizing: border-box; background: #F8F7F4; color: #0A0A0A; font-family: 'Literata', Georgia, serif; padding: 64px 72px 88px; display: flex; flex-direction: column; gap: 26px; position: relative;">
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #8B7355;">03 &middot; Identity Guidelines</div>
+    <div style="font-weight: 700; font-size: 40px; line-height: 1.05; letter-spacing: -0.02em;">Colour</div>
+  </div>
+  <p style="margin: 0; font-size: 16px; line-height: 1.65;">Text sits near-black on a warm paper white, and a single green does everything else. It colours the mark, every link, and the seal on the stationery. Screen and press use the same value.</p>
+  <div style="background: #034706; color: #F8F7F4; padding: 30px 34px; display: flex; justify-content: space-between; align-items: flex-end;">
+    <div style="display: flex; flex-direction: column; gap: 6px;">
+      <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;">HSL Green</div>
+      <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 22px; letter-spacing: 0.06em;">#034706</div>
+    </div>
+    <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 13px; letter-spacing: 0.06em; text-align: right; line-height: 1.7;">oklch .346 .113 143.1<br>11.01 : 1 on white &middot; reads as ink, not decoration</div>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 10px;">
+    <div style="display: flex;">
+      <div style="flex: 1; height: 72px; background: #81b182;"></div>
+      <div style="flex: 1; height: 72px; background: #508950;"></div>
+      <div style="flex: 1; height: 72px; background: #276628;"></div>
+      <div style="flex: 1; height: 72px; background: #034706;"></div>
+      <div style="flex: 1; height: 72px; background: #003100;"></div>
+      <div style="flex: 1; height: 72px; background: #002000;"></div>
+    </div>
+    <div style="display: flex; font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; letter-spacing: 0.04em; color: rgba(10, 10, 10, 0.7); text-align: center;">
+      <div style="flex: 1;">400<br>#81b182</div>
+      <div style="flex: 1;">500<br>#508950</div>
+      <div style="flex: 1;">600<br>#276628</div>
+      <div style="flex: 1;">700<br>#034706</div>
+      <div style="flex: 1;">800<br>#003100</div>
+      <div style="flex: 1;">900<br>#002000</div>
+    </div>
+  </div>
+  <p style="margin: 0; font-size: 15px; line-height: 1.65;">The paler greens are the same green thinned, not different colours. The ramp holds one hue across every step; the version before it wandered from yellow-green at the light end to a colder green at the dark end and read as grey in the middle. 600 clears 6.96 : 1 on white; 400 and 500 are for fills and tints, never for text on white.</p>
+  <div style="display: flex; gap: 20px;">
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+      <div style="height: 56px; background: #0A0A0A;"></div>
+      <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; letter-spacing: 0.04em; color: rgba(10, 10, 10, 0.7);">Ink &middot; #0A0A0A</div>
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+      <div style="height: 56px; background: #F8F7F4; border: 1px solid rgba(10, 10, 10, 0.12); box-sizing: border-box;"></div>
+      <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; letter-spacing: 0.04em; color: rgba(10, 10, 10, 0.7);">Paper &middot; #F8F7F4</div>
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+      <div style="height: 56px; background: #faf9f6; border: 1px solid rgba(10, 10, 10, 0.12); box-sizing: border-box;"></div>
+      <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; letter-spacing: 0.04em; color: rgba(10, 10, 10, 0.7);">Neutral 50 &middot; #faf9f6</div>
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+      <div style="height: 56px; background: #8B7355;"></div>
+      <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; letter-spacing: 0.04em; color: rgba(10, 10, 10, 0.7);">Brown &middot; #8B7355 &middot; labels</div>
+    </div>
+  </div>
+  <div style="border-top: 1px solid rgba(10, 10, 10, 0.25); padding-top: 16px; display: flex; flex-direction: column; gap: 12px;">
+    <p style="margin: 0; font-size: 15px; line-height: 1.65;"><strong>In print</strong> the green is a spot ink, matched to a drawdown on the running stock, never built from process colours. No Pantone number is specified; the chip is the standard.</p>
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <div style="display: flex; gap: 6px;">
+        <div style="width: 20px; height: 20px; background: #22c55e;"></div>
+        <div style="width: 20px; height: 20px; background: #f59e0b;"></div>
+        <div style="width: 20px; height: 20px; background: #ef4444;"></div>
+      </div>
+      <p style="margin: 0; font-size: 15px; line-height: 1.65; color: rgba(10, 10, 10, 0.75);">Success, warning, and error are interface status colours. They are never the brand and never leave the interface.</p>
+    </div>
+  </div>
+  <div style="position: absolute; bottom: 32px; left: 72px; right: 72px; display: flex; justify-content: space-between; font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(10, 10, 10, 0.45);">
+    <div>Hudson Street Library</div>
+    <div>Identity Guidelines &middot; 03</div>
+  </div>
+</div></div>
+        <div class="plate"><div style="width: 794px; height: 1123px; box-sizing: border-box; background: #F8F7F4; color: #0A0A0A; font-family: 'Literata', Georgia, serif; padding: 64px 72px 88px; display: flex; flex-direction: column; gap: 22px; position: relative;">
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #8B7355;">04 &middot; Identity Guidelines</div>
+    <div style="font-weight: 700; font-size: 40px; line-height: 1.05; letter-spacing: -0.02em;">Typography</div>
+  </div>
+  <div style="display: flex; gap: 36px; align-items: flex-start;">
+    <div style="font-family: 'Literata', Georgia, serif; font-size: 128px; font-weight: 700; line-height: 0.9; letter-spacing: -0.02em; flex: none;">Aa</div>
+    <div style="display: flex; flex-direction: column; gap: 12px; padding-top: 10px;">
+      <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #8B7355;">Literata &middot; TypeTogether &middot; everything readable</div>
+      <p style="margin: 0; font-size: 15px; line-height: 1.65;">One variable font does every job: display titles, deks, subheads, nav links, pull quotes, drop caps, body prose. Its optical-size axis, 7 to 72, draws a high-contrast display cut at headline sizes and a sturdier, open cut for running text, so the largest title and the smallest excerpt are the same face at different ages.</p>
+    </div>
+  </div>
+  <div style="border: 1px solid rgba(10, 10, 10, 0.12); background: #ffffff; padding: 22px 32px; display: flex; flex-direction: column; gap: 14px;">
+    <div style="font-family: 'Literata', Georgia, serif; font-size: 40px; font-weight: 700; line-height: 1.1; letter-spacing: -0.01em;">The shelf is the text</div>
+    <p style="margin: 0; font-size: 16px; line-height: 1.7; max-width: 560px;">A working collection of artists' books, photobooks, zines, and printed ephemera. Body copy runs at sixteen pixels and above, where the text cut keeps its colour on screen.</p>
+    <div style="font-family: 'Literata', Georgia, serif; font-style: italic; font-size: 16px; color: rgba(10, 10, 10, 0.7);">Italic carries captions and asides.</div>
+  </div>
+  <div style="display: flex; gap: 24px;">
+    <div style="flex: 1; border: 1px solid rgba(10, 10, 10, 0.12); padding: 20px 24px; display: flex; flex-direction: column; gap: 10px;">
+      <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #8B7355;">Crimson Pro</div>
+      <div style="font-family: 'Crimson Pro', Georgia, serif; font-weight: 700; font-size: 22px; letter-spacing: 0.01em; color: #034706;">HUDSON STREET LIBRARY</div>
+      <p style="margin: 0; font-size: 14px; line-height: 1.6; color: rgba(10, 10, 10, 0.75);">The wordmark, and nothing else. See 02.</p>
+    </div>
+    <div style="flex: 1; border: 1px solid rgba(10, 10, 10, 0.12); padding: 20px 24px; display: flex; flex-direction: column; gap: 10px;">
+      <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #8B7355;">Archivo Narrow</div>
+      <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase;">August 2026 &middot; Photobooks &middot; 12 min read</div>
+      <p style="margin: 0; font-size: 14px; line-height: 1.6; color: rgba(10, 10, 10, 0.75);">Dates, category chips, labels, and other small matter. Uppercase, tracked. From Omnibus-Type.</p>
+    </div>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 10px;">
+    <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #8B7355;">Scale &middot; pixels</div>
+    <div style="display: flex; align-items: baseline; gap: 18px; font-family: 'Literata', Georgia, serif; font-weight: 600; white-space: nowrap; overflow: hidden;">
+      <span style="font-size: 12px;">12</span><span style="font-size: 14px;">14</span><span style="font-size: 16px;">16</span><span style="font-size: 18px;">18</span><span style="font-size: 20px;">20</span><span style="font-size: 24px;">24</span><span style="font-size: 32px;">32</span><span style="font-size: 40px;">40</span><span style="font-size: 48px;">48</span><span style="font-size: 56px;">60</span><span style="font-size: 66px;">72</span>
+    </div>
+  </div>
+  <div style="border-top: 1px solid rgba(10, 10, 10, 0.25); padding-top: 14px;">
+    <p style="margin: 0; font-size: 15px; line-height: 1.65;">All three faces are free and open source, loaded from Google Fonts. New pages set body text in Literata; if a display setting feels too high-contrast, the dial is optical sizing on that heading, not a change of family.</p>
+  </div>
+  <div style="position: absolute; bottom: 32px; left: 72px; right: 72px; display: flex; justify-content: space-between; font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(10, 10, 10, 0.45);">
+    <div>Hudson Street Library</div>
+    <div>Identity Guidelines &middot; 04</div>
+  </div>
+</div></div>
+        <div class="plate"><div style="width: 794px; height: 1123px; box-sizing: border-box; background: #F8F7F4; color: #0A0A0A; font-family: 'Literata', Georgia, serif; padding: 64px 72px 88px; display: flex; flex-direction: column; gap: 28px; position: relative;">
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #8B7355;">05 &middot; Identity Guidelines</div>
+    <div style="font-weight: 700; font-size: 40px; line-height: 1.05; letter-spacing: -0.02em;">Applications</div>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #8B7355;">Profile avatars</div>
+    <div style="display: flex; gap: 32px; align-items: center;">
+      <img src="/identity/avatar/hsl-avatar-green-on-cream.png" style="width: 128px; height: 128px; border-radius: 50%; border: 1px solid rgba(10, 10, 10, 0.12); display: block;" alt="Green mark on cream avatar">
+      <img src="/identity/avatar/hsl-avatar-cream-on-green.png" style="width: 128px; height: 128px; border-radius: 50%; display: block;" alt="Cream mark on green avatar">
+      <img src="/identity/avatar/hsl-avatar-cream-on-green.png" style="width: 44px; height: 44px; border-radius: 50%; display: block;" alt="Cream on green avatar at list size">
+      <p style="margin: 0; font-size: 15px; line-height: 1.65; flex: 1;">1024 pixel squares with margins sized for a circular crop. Cream on green carries best at list sizes; green on cream matches the site. Always rasterized with explicit fills, never exported from the raw favicon file.</p>
+    </div>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #8B7355;">Stationery &middot; Foolscap Mk II</div>
+    <div style="display: flex; gap: 32px; align-items: flex-start;">
+      <div style="flex: none; width: 152px; height: 247px; background: #ffffff; border: 1px solid rgba(10, 10, 10, 0.18); box-sizing: border-box; padding: 16px 12px; display: flex; flex-direction: column; justify-content: space-between;">
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="width: 24px; height: 24px; border: 2px solid #034706; display: flex; align-items: flex-end; justify-content: center; gap: 1px; padding: 3px; box-sizing: border-box;">
+            <div style="width: 2px; height: 9px; background: #034706;"></div>
+            <div style="width: 2px; height: 11px; background: #034706;"></div>
+            <div style="width: 2px; height: 10px; background: #034706;"></div>
+            <div style="width: 2px; height: 10px; background: #034706; transform: rotate(9deg); transform-origin: bottom left;"></div>
+          </div>
+          <div style="width: 34px; height: 1px; background: rgba(10, 10, 10, 0.4);"></div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <div style="height: 1px; background: rgba(10, 10, 10, 0.15);"></div>
+          <div style="height: 1px; background: rgba(10, 10, 10, 0.15);"></div>
+          <div style="height: 1px; background: rgba(10, 10, 10, 0.15);"></div>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <p style="margin: 0; font-size: 15px; line-height: 1.65;">The print system is the pre-metric British foolscap folio, 203 &times; 330 mm (8 &times; 13 in), with a boxed seal, a stacked two-line wordmark, a 34 mm hairline, and confined ruling. Six pieces, the mark on every one:</p>
+        <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 13px; letter-spacing: 0.04em; line-height: 2; color: rgba(10, 10, 10, 0.8);">
+          01 Accession pad 203 &times; 330 &nbsp;&middot;&nbsp; 02 Compliment slip 203 &times; 110<br>
+          03 DL banker envelope 110 &times; 220 &nbsp;&middot;&nbsp; 04 Catalogue card 125 &times; 75<br>
+          05 Accession label 60 &times; 32 &nbsp;&middot;&nbsp; 06 Bookmark 55 &times; 210
+        </div>
+        <p style="margin: 0; font-size: 15px; line-height: 1.65;">Two spot colours for the whole job, Black and HSL Green, matched to a drawdown. The boxed seal runs at 15, 10, or 7 mm only. No bleed, no coatings, grain long; labels are removable low-tack acid-free adhesive. The full production spec and 1:1 printable comps live at identity/stationery.</p>
+      </div>
+    </div>
+  </div>
+  <div style="border-top: 1px solid rgba(10, 10, 10, 0.25); padding-top: 14px; display: flex; gap: 20px; align-items: flex-start;">
+    <div style="flex: none; width: 40px; height: 40px; background: #171717; display: flex; align-items: center; justify-content: center;">
+      <svg viewBox="0 0 512 512" width="22" height="22" aria-hidden="true"><rect x="38" y="128" width="72" height="318" fill="#faf9f6"></rect><rect x="138" y="68" width="76" height="378" fill="#faf9f6"></rect><rect x="242" y="100" width="72" height="346" fill="#faf9f6"></rect><rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)" fill="#faf9f6"></rect></svg>
+    </div>
+    <p style="margin: 0; font-size: 15px; line-height: 1.65;"><strong>The favicon</strong> is the one artwork that self-inverts: black in light mode, off-white in dark mode, by a media query inside the SVG. That behaviour is wanted in a browser tab and nowhere else, which is why every other use inlines the drawing with an explicit fill.</p>
+  </div>
+  <div style="position: absolute; bottom: 32px; left: 72px; right: 72px; display: flex; justify-content: space-between; font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(10, 10, 10, 0.45);">
+    <div>Hudson Street Library</div>
+    <div>Identity Guidelines &middot; 05</div>
+  </div>
+</div></div>
+        <div class="plate"><div style="width: 794px; height: 1123px; box-sizing: border-box; background: #F8F7F4; color: #0A0A0A; font-family: 'Literata', Georgia, serif; padding: 56px 84px 80px; display: flex; flex-direction: column; gap: 0; position: relative;">
+  <div style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #8B7355; margin-bottom: 14px;">06 &middot; Identity Guidelines</div>
+  <div style="font-weight: 700; font-size: 50px; line-height: 1; letter-spacing: -0.02em; margin-bottom: 26px;">Colophon</div>
+  <p style="margin: 0 0 14px; font-size: 15px; line-height: 1.65;">The website of Hudson Street Library is set in Literata, the typeface TypeTogether designed for long-form reading on screens. One variable font does every job on the site: its optical-size axis draws a high-contrast display cut at headline sizes and a sturdier, open cut for running text, so the largest title and the smallest excerpt are the same face at different ages.</p>
+  <p style="margin: 0 0 14px; font-size: 15px; line-height: 1.65;">The wordmark is the one exception. HUDSON STREET LIBRARY is set in Crimson Pro, Jacques Le Bailly's rework of Sebastian Kosch's Crimson Text. Crimson set every word of this site for years. It now keeps the door.</p>
+  <p style="margin: 0 0 14px; font-size: 15px; line-height: 1.65;">Dates, labels, and other small matter are set in Archivo Narrow, from the Argentine foundry Omnibus-Type. All three faces are free and open source.</p>
+  <p style="margin: 0 0 14px; font-size: 15px; line-height: 1.65;">The site runs on two inks. Text sits near-black on a warm paper white, and a single green does everything else: <span style="display: inline-block; width: 0.72em; height: 0.72em; background: #034706; margin-right: 0.35em; vertical-align: baseline;"></span><span style="font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; letter-spacing: 0.04em;">#034706</span>, dark enough at eleven to one against white to read as ink rather than as decoration. It colours the mark, every link, and the seal stamped on the library's stationery, where it is matched to a spot ink rather than built from process colours. Screen and press use the same value.</p>
+  <p style="margin: 0 0 14px; font-size: 15px; line-height: 1.65;">The paler greens on the site are the same green thinned, not different colours. The ramp holds one hue across every step, which is a correction: the version before it wandered from yellow-green at the light end to a colder green at the dark end, and lost so much saturation in the middle that it read as grey.</p>
+  <svg viewBox="0 0 512 512" width="60" height="60" aria-hidden="true" style="margin: 8px 0 18px;">
+    <rect x="38" y="128" width="72" height="318" fill="#034706"></rect>
+    <rect x="138" y="68" width="76" height="378" fill="#034706"></rect>
+    <rect x="242" y="100" width="72" height="346" fill="#034706"></rect>
+    <rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)" fill="#034706"></rect>
+  </svg>
+  <p style="margin: 0 0 14px; font-size: 15px; line-height: 1.65;">The mark is a shelf of four spines, one leaning. It began as the favicon and now stands at the head of every page, stamped in the green. The whole drawing is four rectangles, the last one turned nine degrees. In print it is never set below seven millimetres, the size at which the leaning spine closes up and the shelf becomes a smudge.</p>
+  <p style="margin: 0; font-size: 15px; line-height: 1.65;">The site is built with Eleventy and published as static pages. The catalog behind it is a single CSV file, one row per book, thirty-seven columns per row, 2,028 entries, each made by hand. There is no database, which seems right for a library that argues the shelf is the text.</p>
+  <div style="position: absolute; bottom: 32px; left: 84px; right: 84px; display: flex; justify-content: space-between; font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(10, 10, 10, 0.45);">
+    <div>Hudson Street Library</div>
+    <div>Identity Guidelines &middot; 06 &middot; also at /colophon.html</div>
+  </div>
+</div></div>
+    </section>
+
+    <section class="identity-section" aria-label="Related files">
+        <div class="identity-label">Files</div>
+        <ul class="artefact-list">
+            <li><a href="/identity/stationery/">Stationery print comps</a> · the six-piece set on Foolscap Mk II (203 × 330 mm), two spot colours</li>
+            <li>Profile avatars · 1024 px PNG, for social accounts
+                <div class="avatar-row">
+                    <a href="/identity/avatar/hsl-avatar-green-on-cream.png"><img src="/identity/avatar/hsl-avatar-green-on-cream.png" alt="Mark in green on cream" loading="lazy"></a>
+                    <a href="/identity/avatar/hsl-avatar-cream-on-green.png"><img src="/identity/avatar/hsl-avatar-cream-on-green.png" alt="Mark in cream on green" loading="lazy"></a>
+                    <a href="/identity/avatar/hsl-avatar-black-on-cream.png"><img src="/identity/avatar/hsl-avatar-black-on-cream.png" alt="Mark in black on cream" loading="lazy"></a>
+                </div>
+            </li>
+            <li><a href="/colophon.html">Colophon</a> · how the site itself is set</li>
+        </ul>
+    </section>
+</main>
+
+
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
+        
+        <p>© 2026 Hudson Street Library · <a href="/identity/" class="text-neutral-600 underline hover:text-neutral-900">Identity</a> · <a href="/colophon.html" class="text-neutral-600 underline hover:text-neutral-900">Colophon</a></p>
+    </div>
+</footer>
+
+</body>
+</html>
