@@ -633,9 +633,37 @@ module.exports = function(eleventyConfig) {
   // --- Add Thumbnail Shortcode ---
   eleventyConfig.addNunjucksAsyncShortcode("thumbnail", thumbnailShortcode);
 
+  // --- Brand-guide plates ---
+  // The identity guidelines live as design-canvas artboards in
+  // src/identity/brand-guide/*.dc.html (one file per page, fixed 794x1123
+  // roots, inline styles). This inlines a plate's root markup into a page:
+  // strips the canvas wrapper (<x-dc>, <helmet> font/body rules; the host
+  // page supplies both) and points the avatar images at their published
+  // location. The sources themselves are ignored below, so /identity/ is
+  // the only place they render.
+  eleventyConfig.addShortcode("brandPlate", function(name) {
+    const raw = fs.readFileSync(
+      path.join(__dirname, "src/identity/brand-guide", `${name}.dc.html`),
+      "utf8"
+    );
+    const body = raw.match(/<x-dc>([\s\S]*)<\/x-dc>/);
+    if (!body) throw new Error(`brandPlate: no <x-dc> root in ${name}.dc.html`);
+    return body[1]
+      .replace(/<helmet>[\s\S]*?<\/helmet>/, "")
+      .replace(/src="(hsl-avatar-[^"]+)"/g, 'src="/identity/avatar/$1"')
+      .trim();
+  });
+
   // --- Passthrough Copy for assets ---
   // Copy entire assets directory (images, js, css)
   eleventyConfig.addPassthroughCopy("src/assets");
+
+  // Identity artefacts: avatars served at /identity/avatar/, the stationery
+  // comp served verbatim at /identity/stationery/ (a standalone print comp
+  // with its own styles; its source is ignored below so it is not also
+  // built as a template).
+  eleventyConfig.addPassthroughCopy("src/identity/avatar");
+  eleventyConfig.addPassthroughCopy("src/identity/stationery");
 
   // Copy data files for search functionality
   eleventyConfig.addPassthroughCopy({"src/_data/books.csv": "cms/data/books.csv"});
@@ -667,6 +695,11 @@ module.exports = function(eleventyConfig) {
   // placeholders ([BOOK TITLE], [IMAGE_PATH]) to production, and the READMEs
   // are developer notes. Nothing links to any of them.
   eleventyConfig.ignores.add("src/books/templates/**");
+  // Identity sources: the stationery comp is published by passthrough copy
+  // above, and the brand-guide artboards are inlined into /identity/ by the
+  // brandPlate shortcode. Neither should build as standalone pages.
+  eleventyConfig.ignores.add("src/identity/stationery/**");
+  eleventyConfig.ignores.add("src/identity/brand-guide/**");
   eleventyConfig.ignores.add("src/**/README.md");
 
   // --- Define Input/Output Directories ---
