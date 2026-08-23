@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Library of Libraries · Hudson Street Library</title>
+    <meta name="description" content="A proposal to house private collections whole, in the order their owners gave them. It needs a building, a budget, and its first patrons.">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    <link rel="stylesheet" href="/assets/css/tailwind.css">
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-ink: #0A0A0A;
+            --color-paper: #F8F7F4;
+            --color-vellum: #EEEDE8;
+            --color-brown: #8B7355;
+            --color-border: rgba(10, 10, 10, 0.12);
+            --color-accent: #D4A574;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--color-paper);
+            color: var(--color-ink);
+            font-family: 'Literata', Georgia, serif;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            /* Was position: fixed. A fixed full-viewport layer backed by a
+               live SVG feTurbulence filter repaints on every scroll frame and
+               makes mobile scrolling jitter/shake. `absolute` (body is
+               position: relative) paints once and scrolls with the document —
+               visually identical, no per-frame repaint. */
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Mobile scroll-jitter fix: this is a live SVG feTurbulence filter
+           layer; over a long page it exceeds mobile-GPU texture limits and the
+           browser re-rasterizes it in chunks on scroll, making the page shake.
+           At 3% opacity it's imperceptible on a phone — drop it on small/touch
+           screens. Desktop keeps it. */
+        @media (max-width: 900px), (hover: none) and (pointer: coarse) {
+            body::before { display: none; }
+        }
+
+        .article-container {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 6rem 2rem 4rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .back-link {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-brown);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 3rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover { color: var(--color-ink); }
+
+        .featured-content { animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+        .feature-category {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--color-accent);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .feature-category::after {
+            content: '';
+            height: 1px;
+            width: 60px;
+            background: var(--color-accent);
+        }
+
+        .feature-title {
+            font-family: 'Literata', Georgia, serif;
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+            color: var(--color-ink);
+        }
+
+        .feature-subtitle {
+            font-family: 'Literata', Georgia, serif;
+            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+            line-height: 1.4;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--color-brown);
+            margin-bottom: 2rem;
+            max-width: 45ch;
+        }
+
+        .feature-meta {
+            display: flex;
+            gap: 2rem;
+            padding-bottom: 2rem;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--color-border);
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--color-brown);
+            flex-wrap: wrap;
+        }
+
+        .feature-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-meta i { font-size: 0.75rem; opacity: 0.6; }
+
+        .feature-hero {
+            width: 100%;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+            background: var(--color-vellum);
+            border: 1px solid var(--color-border);
+            aspect-ratio: 16/9;
+        }
+
+        .feature-hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.9;
+        }
+
+        .feature-hero-caption {
+            margin-top: 0.75rem;
+            margin-bottom: 3rem;
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.8125rem;
+            color: var(--color-brown);
+            font-style: italic;
+        }
+
+        .feature-body { max-width: 680px; margin: 0 auto; }
+
+        .feature-body > p {
+            font-size: 1.1875rem;
+            line-height: 1.8;
+            margin-bottom: 1.75rem;
+            color: var(--color-ink);
+        }
+
+        /* Links in the running text. The base reset makes every <a> inherit
+           its colour and drop the underline, so prose links have to say what
+           they are or they read as body text. */
+        .feature-body a {
+            color: var(--primary-700);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+        .feature-body a:hover {
+            color: var(--primary-600);
+        }
+
+        /* Drop Cap */
+        .feature-body > p:first-of-type::first-letter {
+            font-family: 'Literata', Georgia, serif;
+            font-size: 5.5rem;
+            line-height: 0.85;
+            float: left;
+            margin: 0.1em 0.15em 0 0;
+            font-weight: 700;
+            color: var(--color-brown);
+        }
+
+        .pull-quote {
+            font-family: 'Literata', Georgia, serif;
+            font-size: 1.75rem;
+            line-height: 1.35;
+            font-weight: 400;
+            font-style: italic;
+            color: var(--color-brown);
+            margin: 3rem 0;
+            padding: 2rem 0;
+            border-top: 2px solid var(--color-ink);
+            border-bottom: 2px solid var(--color-ink);
+            position: relative;
+        }
+
+        .pull-quote::before {
+            content: '"';
+            font-size: 6rem;
+            position: absolute;
+            left: -0.25em;
+            top: -0.15em;
+            opacity: 0.15;
+            font-family: 'Literata', Georgia, serif;
+        }
+
+        .section-ornament {
+            text-align: center;
+            margin: 3rem 0;
+            font-size: 1.5rem;
+            color: var(--color-brown);
+            opacity: 0.4;
+            letter-spacing: 0.5rem;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 4rem 1.25rem 3rem; }
+            .feature-meta { gap: 1rem; font-size: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+
+<style>
+    .site-header {
+        font-family: 'Literata', Georgia, serif;
+    }
+    .site-header .site-logo {
+        font-family: 'Crimson Pro', Georgia, serif;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        white-space: nowrap;
+    }
+    /* Book-spines mark (same drawing as the favicon). Inlined with
+       fill: currentColor rather than <img src=favicon.svg> because the
+       SVG file self-inverts to off-white in OS dark mode and would
+       disappear against the white header. */
+    .site-header .logo-mark {
+        width: 1.3em;
+        height: 1.3em;
+        display: block;
+        flex-shrink: 0;
+        fill: currentColor;
+    }
+    .site-header .nav-link {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+        font-weight: 400;
+        letter-spacing: 0.005em;
+    }
+    .site-header .nav-link[aria-current="page"],
+    .site-header .nav-link-active {
+        font-weight: 600;
+    }
+    .site-header #mobile-nav-menu a {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+    }
+
+    /*
+      Mobile menu uses self-contained, component-scoped CSS rather than
+      Tailwind utilities, so its layout can't be broken by global stylesheet
+      changes. This originally fixed an invisible-sliver bug: design-system.css
+      ships an unlayered `* { padding: 0 }` reset that beats Tailwind's layered
+      utilities and collapsed the old icon-only button. The self-contained
+      styling is kept deliberately.
+    */
+    .site-header .menu-toggle { display: none; }
+    .site-header .mobile-nav { display: none; }
+
+    /*
+      Mobile scroll-jitter fix.
+      The header ships as `sticky top-0 bg-white/95 backdrop-blur-sm`. On mobile
+      a sticky bar with backdrop-filter: blur() forces the browser to re-sample
+      and re-blur the pixels scrolling beneath it every frame; on mobile GPUs
+      that readback lags the scroll compositor and the bar (and the text passing
+      under it) shudders. Drop the blur and use an opaque background on small
+      screens — the frosted-glass effect stays desktop-only. The doubled
+      `.site-header.site-header` selector out-specifies the `bg-white/95` and
+      `backdrop-blur-sm` utility classes without needing !important.
+    */
+    @media (max-width: 900px), (hover: none) and (pointer: coarse) {
+        .site-header.site-header {
+            background-color: #ffffff;
+            -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+            /* Promote the sticky bar to its own compositor layer so it isn't
+               re-rasterized against the scrolling content every frame — this
+               is what stops the header (and the text under it) juddering on
+               mobile. Pairs with dropping the backdrop blur above. */
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            will-change: transform;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .site-header .menu-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.45rem 0.7rem;
+            border: 1px solid rgba(0, 49, 0, 0.3);
+            border-radius: 0.5rem;
+            background: #ffffff;
+            color: #003100;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .site-header .menu-toggle:hover { background: #f0f5f0; }
+        .site-header .menu-toggle:focus-visible {
+            outline: 2px solid #003100;
+            outline-offset: 2px;
+        }
+        .site-header .menu-toggle svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+            flex-shrink: 0;
+        }
+        .site-header .menu-toggle .menu-toggle-label {
+            font-family: 'Literata', Georgia, serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .site-header .menu-toggle .icon-close { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-open { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-close { display: block; }
+
+        .site-header .mobile-nav.is-open {
+            display: flex;
+            flex-direction: column;
+        }
+        .site-header .mobile-nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            padding: 0.5rem;
+            z-index: 40;
+        }
+        .site-header .mobile-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            color: #404040;
+            text-decoration: none;
+        }
+        .site-header .mobile-nav a:hover {
+            background: #f0f5f0;
+            color: #002000;
+        }
+    }
+</style>
+
+<header class="site-header sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="site-logo text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                <svg class="logo-mark" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+                    <rect x="38" y="128" width="72" height="318"/>
+                    <rect x="138" y="68" width="76" height="378"/>
+                    <rect x="242" y="100" width="72" height="346"/>
+                    <rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)"/>
+                </svg>
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link ">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link nav-link-active">
+                   News
+                </a>
+                
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Accessions
+                </a>
+                <a href="/discover.html"
+                   class="nav-link ">
+                   Discover
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <!-- Icon + visible "Menu" label so the control is obvious on mobile.
+                 Sizing/visibility come from the unlayered styles above, not
+                 Tailwind utilities (see note in the <style> block). Icons are
+                 inline SVGs so the menu works on pages without an icon font. -->
+            <button class="menu-toggle"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <svg class="icon-open" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg class="icon-close" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+                <span class="menu-toggle-label">Menu</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu" class="mobile-nav" aria-label="Mobile navigation">
+        <a href="/#about">About</a>
+        <a href="/collection-explore.html">Collections</a>
+        <a href="/static-demo/">Search</a>
+        <a href="/#publications">Publications</a>
+        <a href="/news.html">News</a>
+        <a href="/collections/recently_added.html">Accessions</a>
+        <a href="/discover.html">Discover</a>
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const button = document.querySelector('button[aria-controls="mobile-nav-menu"]');
+    const willOpen = !menu.classList.contains('is-open');
+
+    menu.classList.toggle('is-open', willOpen);
+    // Icon swap (hamburger <-> X) is driven by aria-expanded in CSS.
+    if (button) button.setAttribute('aria-expanded', String(willOpen));
+}
+</script>
+
+
+<main>
+    <div class="article-container">
+        <a href="/news.html" class="back-link"><i class="fas fa-arrow-left"></i> News &amp; Features</a>
+
+        <article class="featured-content">
+            <div class="feature-category">Essay</div>
+
+            <h1 class="feature-title">A Library of Libraries</h1>
+
+            <p class="feature-subtitle">
+                A proposal to house private collections whole, in the order their owners gave them. It needs a building, a budget, and its first patrons.
+            </p>
+
+            <div class="feature-meta">
+                <span><i class="far fa-user"></i> Hudson Street Library</span>
+                <span><i class="far fa-calendar"></i> July 2026</span>
+                <span><i class="far fa-clock"></i> 8 min read</span>
+            </div>
+
+            <div class="feature-body">
+                <h3 style="font-family: 'Literata', Georgia, serif; font-size: 1.5rem; font-weight: 700; margin: 0 0 1.5rem; color: var(--color-brown);">TL;DR / The Ask</h3>
+
+                <p>This is a proposal with a cost, and the window on it is closing.</p>
+
+                <p>A collection of collections is the only acquisition left that can't be outbid, front-run, or bought at auction next spring. It has to be built.</p>
+
+                <p>The great private collections of the last fifty years are being broken up right now, not eventually. The trade has its own shorthand for why collections come to market: death, debt, divorce. The three D's are the actual acquisition calendar, and they are indifferent to whether anyone is ready. The generation that assembled these libraries, book by book, at real personal expense, is downsizing and dying, and the default outcome is the lot sale: a life's judgment sorted by subject heading, priced by the shelf-foot, and dissolved. The books mostly survive somewhere. What disappears is the argument they were arranged to make, and that is unrecoverable. Nobody rebuilds a collection. They only ever build a different one.</p>
+
+                <p>At the same time institutions are converting from ownership to license. So happy I lived through owning my own media, anyway. Their holdings are contractual, revocable, logged, and subject to whoever renews the vendor agreement.</p>
+
+                <p>Civilization is not the accumulation of objects but the maintenance of judgment across generations, and judgment is transmitted by curation, not coverage. A library of curated libraries, each kept whole and attributed, is the only structure that preserves the judgment rather than just the inventory.</p>
+
+                <p>It requires two things that concept does not come with: a building and a budget. Yeah, this could be a blocker.</p>
+
+                <p>A building, because the unit of the collection is the collection, and collections kept whole require shelf and climate and floor. A budget, because acquisition, transport, cataloguing at the level of provenance rather than subject, and permanent stewardship are staff costs, not enthusiasm costs. The number is knowable: $8 million to open in contributed space, $2 million a year to run, $45 million to endow. $100 million buys the building and founds it outright.</p>
+
+                <p>This is addressed to two readers.</p>
+
+                <p>The first is a real estate dynasty that wants civilization in its buildings, just like a house is not a home without a family. You already own the building.</p>
+
+                <p>The second has spent thirty years building something and knows exactly what it cost. The default ending is the estate sale and the subject catalog. The offer is the alternative: your library, kept whole, in your order, under your name, not reduced to a plaque on a wing.</p>
+
+                <p>An accession standard, provenance-level cataloguing, the terms under which a collection is placed, and how the federation works across holdings are already written up as separate documents, available on request. This page sticks to the ask.</p>
+
+                <div class="section-ornament">❖ ❖ ❖</div>
+
+                <p>An institutional library collects by mandate. It has an accession policy, a committee, a budget line, and an obligation to coverage. Its ambition is completeness within a defined scope, and its highest virtue is that it does not editorialize. Ask it what matters and it will hand you everything.</p>
+
+                <p>A personal library has no mandate. It has a wall, a ceiling, a household, an income. Every book on it displaced a book that isn't. That constraint is the source of the private library's value: scarcity forces judgment, and judgment is information.</p>
+
+                <p>A collection assembled under real constraint carries the shape of a mind, and no institution can manufacture that. The choice to keep a slim exhibition catalog from a gallery that closed in 1987 while passing on the definitive monograph of a more famous contemporary is an argument. It's an unpublished essay, written in objects, revisable at any time, never finished. The order on the shelf is part of the text. Adjacency is authorship: when someone shelves Hujar next to a surveillance-camera manual rather than next to other portraitists, they have said something no catalog record can encode.</p>
+
+                <p>The corollary matters more. In a personal library, the omission is legible. You can see what a collector refused. Institutional catalogs have no omission signal at all, because absence there means only that a purchase order never cleared. When everything is theoretically in scope, nothing is a decision.</p>
+
+                <h3 style="font-family: 'Literata', Georgia, serif; font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-brown);">What institutions structurally miss</h3>
+
+                <p>The material most worth preserving is often the material institutions collect worst. Print runs of three hundred. Zines. Self-published photobooks. Artist editions with no ISBN, no distributor, no review, and no MARC record. Ephemera from spaces that existed for eighteen months. The acquisition machinery of a large library is calibrated to trade publishing, which means it works well precisely where the market has already done the preservation work and fails where nobody else is looking.</p>
+
+                <p>Private collectors get there first because they are not buying for a category. They are buying because they were in the room.</p>
+
+                <p>There is a second problem, newer and worse. The institutional collection is increasingly licensed rather than owned: vendor platforms, per-seat digital access, patron activity logged by a third party, titles that can be revoked from a catalog by a contract renegotiation or removed by political pressure. A library that cannot survive the loss of a vendor relationship is not a library, it is a subscription. Meanwhile the private shelf remains unmetered and unlogged, the last reading environment with no observer. Nobody knows how many times a book on it has been opened.</p>
+
+                <p>Distribution is also defense. A single institutional collection is a single point of removal. Ten thousand private ones are not. Seems important at this time.</p>
+
+                <h3 style="font-family: 'Literata', Georgia, serif; font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-brown);">The failure mode of private libraries</h3>
+
+                <p>Personal libraries die. This is their one structural weakness against the institution and it is severe. The collector dies, and the collection is broken into lots, sold by the shelf-foot, absorbed into other holdings, or given wholesale to an institution that will file it by subject and dissolve the very adjacencies that made it a work. The judgment evaporates. What survives is the inventory, which was never the interesting part.</p>
+
+                <p>The question is whether the durability of institutions can be had without their flattening.</p>
+
+                <h3 style="font-family: 'Literata', Georgia, serif; font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-brown);">The proposal</h3>
+
+                <p>A library composed of other libraries, each kept whole.</p>
+
+                <p>A merged catalog destroys the signal: a union of ten collections is just a bigger pile with the attribution stripped. What's wanted is federation with provenance intact: this shelf, in this order, assembled by this person, for these reasons, with these refusals. The unit of the collection is the collection, not the volume.</p>
+
+                <p>Under that model the curated library of curated libraries becomes something an institution genuinely cannot be. It is a set of positions rather than a coverage map. You consult it the way you consult a group of people whose taste you trust, not the way you consult an index. The overlaps tell you what a community of serious attention has converged on. The disjoint holdings tell you where individual conviction went out ahead of consensus. Both are readings you can only get if the boundaries between collections are preserved.</p>
+
+                <p>Selection into such a library has to be selective for the same reason the constituent collections are valuable: a federation that accepts everything reproduces the institution it was meant to answer. The curation is applied twice. Once by each collector on their own shelf, once at the door.</p>
+
+                <p>And the effect on the collector is not incidental. A shelf that is legible to others is a shelf that has to hold up. Publishing a collection turns it from an accumulation into a claim, and claims get defended, refined, corrected. Institutions produce holdings. This produces argument.</p>
+
+                <div class="pull-quote">
+                    The unit of the collection is the collection, not the volume.
+                </div>
+
+                <p>This proposal is a working one, and it is addressed to two kinds of reader. If you keep a library that argues, a shelf with refusals in it, we want to know it exists. If you are in a position to fund durability, as a patron, a foundation, or a grant program, the founding role is open. Write to us: <a href="mailto:info@hudsonstreetlibrary.com">info@hudsonstreetlibrary.com</a>.</p>
+
+                <div class="section-ornament">❖ ❖ ❖</div>
+            </div>
+        </article>
+    </div>
+</main>
+
+
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
+        
+        <p>© 2026 Hudson Street Library · <a href="/colophon.html" class="text-neutral-600 underline hover:text-neutral-900">Colophon</a></p>
+    </div>
+</footer>
+
+</body>
+</html>
