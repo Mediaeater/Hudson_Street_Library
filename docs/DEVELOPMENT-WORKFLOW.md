@@ -71,7 +71,7 @@ Hudson_Street_Library/
 │   │   ├── books.csv        # Main book catalog (1,306 books)
 │   │   └── news.json        # News items
 │   ├── _includes/           # Templates and components
-│   │   ├── layouts/         # Page layouts (book.njk, admin.njk)
+│   │   ├── layouts/         # Page layouts (book.njk, collection.njk)
 │   │   └── components/      # Reusable components
 │   ├── assets/              # Static assets
 │   │   ├── css/            # Stylesheets
@@ -556,7 +556,7 @@ Data is available in this order (lower overrides higher):
 
 **Existing layouts:**
 - `src/_includes/layouts/book.njk` - Individual book pages
-- `src/_includes/layouts/admin.njk` - Admin interface
+- `src/_includes/layouts/collection.njk` - Collection pages
 
 **Using a layout:**
 

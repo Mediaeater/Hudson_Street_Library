@@ -15,7 +15,7 @@ Hudson_Street_Library/
 │   ├── _data/            # Global data files
 │   │   └── books.csv     # Main book catalog (1,300+ books)
 │   ├── _includes/        # Reusable templates
-│   │   ├── layouts/      # Page layouts (book.njk, admin.njk)
+│   │   ├── layouts/      # Page layouts (book.njk, collection.njk)
 │   │   └── components/   # Reusable components (book-thumbnail.njk, etc.)
 │   ├── assets/           # Static assets
 │   │   ├── css/          # Stylesheets
@@ -214,9 +214,7 @@ JavaScript files are copied without bundling or minification:
 
 ```
 src/assets/js/
-├── shared.js              # Shared utilities
-├── book-workflow.js       # Book management workflows
-└── batch-operations.js    # Batch processing for books
+└── shared.js              # Shared utilities
 ```
 
 ### Image Processing

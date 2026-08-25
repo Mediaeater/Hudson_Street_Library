@@ -55,21 +55,18 @@ src/
 │   │   ├── design-system.css         # Main design system (neutral palette)
 │   │   └── input.css                 # Tailwind v4 source (→ tailwind.css)
 │   ├── js/
-│   │   ├── shared.js                 # Core HudsonStreetLibrary class
-│   │   ├── book-workflow.js          # Book addition workflow
-│   │   └── batch-operations.js       # Batch import handlers
+│   │   └── shared.js                 # Core HudsonStreetLibrary class
 │   └── images/
 │       └── books/                    # Book cover images
 ├── _includes/
 │   ├── layouts/
 │   │   ├── book.njk                  # Book detail page layout
-│   │   └── admin.njk                 # Admin interface layout
+│   │   └── collection.njk            # Collection page layout
 │   └── components/
 │       ├── book-thumbnail.njk        # Book thumbnail component
 │       ├── site-header.njk           # Global header
 │       ├── site-footer.njk           # Global footer
-│       ├── collection-hero.njk       # Collection hero section
-│       └── batch-upload.njk          # Batch upload UI
+│       └── collection-hero.njk       # Collection hero section
 └── _data/
     └── books.csv                     # Book data source
 ```
@@ -321,84 +318,13 @@ window.HSL = {
 
 ### Specialized Components
 
-#### BookWorkflow Class
+There are none. `shared.js` is the only client-side JavaScript the site ships.
 
-**File:** `/src/assets/js/book-workflow.js`
-
-Handles the multi-step book addition workflow with image processing, collection assignment, and validation.
-
-**Key Features:**
-- 4-step wizard interface
-- Form validation with ISBN verification
-- Image upload with drag-and-drop
-- Auto-save functionality
-- Collection suggestions based on content
-- Subject tag management
-- Real-time preview
-
-**Usage:**
-```javascript
-let bookWorkflow;
-document.addEventListener('DOMContentLoaded', function() {
-    bookWorkflow = new BookWorkflow();
-});
-```
-
-**Class Structure:**
-```javascript
-class BookWorkflow {
-    constructor() {
-        this.currentStep = 1;
-        this.totalSteps = 4;
-        this.bookData = {};
-        this.selectedCollections = [];
-        this.selectedSubjects = [];
-        this.uploadedImages = {};
-        this.isDirty = false;
-        this.init();
-    }
-
-    // Step navigation
-    nextStep()
-    prevStep()
-    validateCurrentStep()
-
-    // Form handling
-    validateField(fieldId)
-    validateISBN(isbn)
-
-    // Image processing
-    handleImageUpload(file)
-    loadImageFromURL(url)
-
-    // API integration
-    lookupBookByISBN()
-    detectCategory()
-    suggestCollections()
-
-    // Publishing
-    publishBook()
-    saveDraft()
-}
-```
-
-#### BatchOperations Class
-
-**File:** `/src/assets/js/batch-operations.js`
-
-Manages bulk book imports via CSV, ISBN list, or manual entry.
-
-**Key Features:**
-- CSV parsing with validation
-- ISBN batch lookup
-- Manual book entry with bulk settings
-- Progress tracking
-- Error reporting
-
-**Import Methods:**
-1. **CSV Upload** - Upload spreadsheet with book data
-2. **ISBN Batch** - Paste list of ISBNs for automatic lookup
-3. **Manual Entry** - Quick-add multiple books with forms
+Book addition and bulk import run from the command line, not the browser — see
+`npm run add` and the scripts in `scripts/`. The browser-based `BookWorkflow`
+and `BatchOperations` classes documented here previously belonged to a CMS
+front-end that was removed in August 2026; it called API endpoints that were
+never implemented and was excluded from the build for its whole life.
 
 ---
 
@@ -1034,9 +960,7 @@ Ansel_Adams_The_Negative_9780821221860.jpg
 
 #### JavaScript
 
-- `shared.js`: Core functionality, ~10KB
-- `book-workflow.js`: Admin only, ~35KB
-- `batch-operations.js`: Admin only, ~18KB
+- `shared.js`: Core functionality, ~10KB — the only script the site ships
 - All ES6+ code, modern browsers only
 
 #### Images
@@ -1664,24 +1588,7 @@ console.log('Menu:', menu);
 - Clear browser cache
 - Rebuild Tailwind: `npm run build:css` (or run `npm start` for watch mode)
 
-#### 4. Form Validation Failing
-
-**Problem:** Form won't submit, no errors shown
-
-**Check:**
-```javascript
-// In browser console
-bookWorkflow.validateCurrentStep();
-bookWorkflow.validateField('title');
-```
-
-**Solutions:**
-- Check required fields are filled
-- Verify validation logic in `book-workflow.js`
-- Check console for JavaScript errors
-- Test validation methods directly
-
-#### 5. CSV Data Not Showing
+#### 4. CSV Data Not Showing
 
 **Problem:** Book data doesn't display
 
