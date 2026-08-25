@@ -687,9 +687,6 @@ module.exports = function(eleventyConfig) {
   // Copy _headers for Netlify/Cloudflare Pages (RFC 9727 API discovery)
   eleventyConfig.addPassthroughCopy({"src/_headers": "_headers"});
 
-  // --- Ignore admin directory for static builds ---
-  eleventyConfig.ignores.add("src/admin/**");
-
   // --- Keep build artifacts off the public site ---
   // These were being published as real pages: BOOK-TEMPLATE shipped its
   // placeholders ([BOOK TITLE], [IMAGE_PATH]) to production, and the READMEs
