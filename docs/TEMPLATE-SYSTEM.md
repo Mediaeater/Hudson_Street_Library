@@ -50,28 +50,6 @@ layout: layouts/book.njk
 - `book['Collection Grouping']` - Collection membership
 - `book.Image` - Cover image filename
 
-#### `admin.njk` (261 lines)
-- **Purpose**: Admin/CMS interface pages
-- **Data Expected**: `title`, `user`, `breadcrumbs`, `content`
-- **Features**:
-  - Admin header with user menu
-  - Sidebar navigation for CMS sections
-  - Toast notification system
-  - Form styling classes
-  - JavaScript for interactive elements
-
-**Usage:**
-```nunjucks
----
-layout: layouts/admin.njk
-title: "Dashboard"
-breadcrumbs:
-  - name: "Admin"
-    url: "/admin"
-  - name: "Dashboard"
----
-```
-
 ### 2. Components (`src/_includes/components/`)
 
 Reusable template fragments that can be included in layouts or pages.
@@ -162,21 +140,6 @@ Reusable template fragments that can be included in layouts or pages.
    description: "Rare and vintage photography books" %}
 ```
 
-#### `book-form.njk`
-**Purpose**: Admin form for adding/editing books (466 lines)
-
-**Parameters:**
-- `book` (optional) - Book object for editing (omit for new books)
-- `collections` (required) - Array of available collections
-
-**Features:**
-- Complete CRUD form with all book fields
-- File upload for cover images
-- Multi-select for collections
-- Client-side validation
-- Draft saving functionality
-- JavaScript form handling with fetch API
-
 ### 3. Pages
 
 Page templates can be `.njk`, `.html`, `.md`, or `.liquid` files in the `src/` directory.
@@ -235,16 +198,15 @@ Front matter in templates can define page-specific data:
 
 ```nunjucks
 ---
-layout: layouts/admin.njk
-title: "Add New Book"
-breadcrumbs:
-  - name: "Admin"
-    url: "/admin"
-  - name: "Books"
-    url: "/admin/books"
-  - name: "New"
+layout: book.njk
+title: "Book Title"
+permalink: /books/{{ book.id }}/
 ---
 ```
+
+Note that `layout:` is resolved against the `layouts` directory configured in
+`.eleventy.js` (`_includes/layouts`), so the value is a bare filename. Writing
+`layout: layouts/book.njk` produces a doubled path that fails to resolve.
 
 ---
 
@@ -1042,7 +1004,7 @@ Usage:
 
 The Hudson Street Library template system provides:
 
-1. **Flexible Layout System** - Two main layouts (book.njk, admin.njk) with full control
+1. **Flexible Layout System** - Two main layouts (book.njk, collection.njk) with full control
 2. **Reusable Components** - Header, footer, thumbnails, forms, and more
 3. **Data Integration** - Seamless CSV and JSON data access
 4. **Image Optimization** - Automatic responsive image generation

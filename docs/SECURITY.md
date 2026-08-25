@@ -99,9 +99,13 @@ The site is currently **fully public** with no user authentication system.
 
 ### Future Considerations: Admin Interface
 
-The `src/admin/` directory contains HTML for a future admin interface. When implementing:
+There is no admin interface. A CMS front-end was built out in May 2026 and
+removed in August 2026: it called 19 `/admin/api/*` endpoints that were never
+implemented, and it was excluded from the build the whole time it existed.
 
-**Required Security Controls:**
+The site is a static Eleventy build on GitHub Pages, which cannot serve a POST
+route, so any admin interface means standing up a real server first. If one is
+ever built, these controls are required:
 
 1. **Authentication Layer**
    ```javascript
@@ -127,14 +131,7 @@ The `src/admin/` directory contains HTML for a future admin interface. When impl
    - Prevent brute force attacks
    - API rate limits
 
-**⚠️ IMPORTANT**: The admin interface at `src/admin/` is currently **EXCLUDED** from builds via `.eleventy.js` configuration:
-
-```javascript
-// Line 125 in .eleventy.js
-eleventyConfig.ignores.add("src/admin/**");
-```
-
-This is a security measure. Do not enable admin routes without implementing authentication.
+Do not add admin routes without implementing authentication first.
 
 ---
 
@@ -493,9 +490,6 @@ Nunjucks provides **automatic HTML escaping by default**, but the `| safe` filte
 **⚠️ REQUIRES REVIEW: Using safe filter**
 
 ```njk
-{# src/_includes/layouts/admin.njk:198 #}
-{{ content | safe }}
-
 {# src/news.njk:239 #}
 const newsData = {{ news | dump | safe }};
 ```
@@ -591,17 +585,16 @@ eleventyConfig.addFilter("sanitizeHTML", sanitizeHTML);
 
 ## File Upload Security
 
-The admin interface includes file upload functionality for book covers.
-
 ### Current State
 
-File upload code exists in templates but is not currently functional (admin interface disabled).
-
-**Location:** `src/_includes/components/book-form.njk` (lines 298-335)
+There is no file upload path. Cover images are added from the command line by
+the add-book scripts, which read from local disk rather than accepting uploads.
+The browser upload code that used to live in the admin scaffolding was removed
+in August 2026 along with the rest of it.
 
 ### File Upload Security Controls
 
-When implementing file uploads, enforce these controls:
+If browser uploads are ever added, enforce these controls:
 
 #### 1. File Type Validation
 
