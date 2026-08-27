@@ -32,6 +32,25 @@
      the running stock before the run. */
   --seal:#034706;
   --rule:rgba(10,10,10,.14);
+  /* ---- THE INK SYSTEM (artwork only; --rule above is screen furniture) ----
+     Two inks: solid black (--ink) and solid green (--seal). Everything else is
+     a screen of the black, and only these four values exist. They were nine
+     before Aug 27 2026 (58/50/34/30/28/24/22/18 %) — differences of two and
+     four points that no uncoated sheet can hold, and that a printer would have
+     had to guess at. Collapsed to a four-step ladder, each step far enough from
+     the next to survive dot gain on a rough stock:
+       60 %  secondary type — captions, footers, field names, addresses
+       50 %  tick-circle strokes
+       30 %  writing rules — the lines you fill in by hand
+       20 %  ruling floor — ledger ruling, column rules, the lightest ink used
+     Nothing lighter than 20 % is drawn anywhere: below that a screen on
+     uncoated wove breaks up and prints as a dirty smudge rather than a line. */
+  --t60:rgba(10,10,10,.6); --t50:rgba(10,10,10,.5);
+  --t30:rgba(10,10,10,.3); --t20:rgba(10,10,10,.2);
+  /* every rule in the artwork is this weight — 0.25 mm (0.71 pt), stated in
+     millimetres like every other dimension on the sheet. It was 1px, a screen
+     unit that does not scale with --mm and means nothing to a printer. */
+  --hair:calc(.25*var(--mm));
   --serif:'Literata',Georgia,serif;
   --wordmark:'Crimson Pro',Georgia,serif;
   --label:'Archivo Narrow',sans-serif;
@@ -151,17 +170,17 @@ figure{margin:0}
 /* --- FACE: return address top-left, stamp top-right, recipient centre --- */
 .env .ret{position:absolute;left:calc(13*var(--mm));top:calc(12*var(--mm));display:flex;
   align-items:flex-start;gap:calc(4.6*var(--mm));font-family:var(--mono);
-  font-size:calc(1.8*var(--mm));line-height:1.9;letter-spacing:.07em;color:rgba(10,10,10,.6)}
+  font-size:calc(1.8*var(--mm));line-height:1.9;letter-spacing:.07em;color:var(--t60)}
 .env .ret b{display:block;font-family:var(--wordmark);font-weight:400;font-size:calc(6*var(--mm));
   color:var(--ink);margin-bottom:calc(2.4*var(--mm));line-height:1.14;letter-spacing:0}
 .env .stamp{position:absolute;right:calc(13*var(--mm));top:calc(11*var(--mm));width:calc(24*var(--mm));
-  height:calc(28*var(--mm));border:1px dashed rgba(10,10,10,.22)}
+  height:calc(28*var(--mm));border:var(--hair) dashed var(--t20)}
 .env .stamp span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  font-family:var(--mono);font-size:calc(1.5*var(--mm));letter-spacing:.14em;color:rgba(10,10,10,.24)}
+  font-family:var(--mono);font-size:calc(1.5*var(--mm));letter-spacing:.14em;color:var(--t20)}
 .env .to{position:absolute;left:calc(74*var(--mm));right:calc(20*var(--mm));bottom:calc(20*var(--mm))}
 .env .to i{display:block;font-style:normal;font-family:var(--mono);font-size:calc(1.5*var(--mm));
-  letter-spacing:.16em;text-transform:uppercase;color:rgba(10,10,10,.58);margin-bottom:calc(2.4*var(--mm))}
-.env .to u{display:block;text-decoration:none;border-bottom:1px solid rgba(10,10,10,.22);height:calc(7.4*var(--mm))}
+  letter-spacing:.16em;text-transform:uppercase;color:var(--t60);margin-bottom:calc(2.4*var(--mm))}
+.env .to u{display:block;text-decoration:none;border-bottom:var(--hair) solid var(--t20);height:calc(7.4*var(--mm))}
 /* --- REVERSE: the banker flap, sealed with the mark --- */
 .env .flapb{position:absolute;left:0;right:0;top:0;height:calc(52*var(--mm));
   background:linear-gradient(#f4f2ee,#efece6);
@@ -176,7 +195,7 @@ figure{margin:0}
 .env .seal{position:absolute;right:calc(13*var(--mm));bottom:calc(13*var(--mm))}
 .env.back .seal{left:50%;right:auto;bottom:auto;top:calc(44*var(--mm));transform:translateX(-50%)}
 .env.back .rev{position:absolute;left:0;right:0;bottom:calc(11*var(--mm));text-align:center;
-  font-family:var(--mono);font-size:calc(1.6*var(--mm));letter-spacing:.16em;color:rgba(10,10,10,.58)}
+  font-family:var(--mono);font-size:calc(1.6*var(--mm));letter-spacing:.16em;color:var(--t60)}
 
 /* ============================================================
    B · THE FAMILY — Foolscap Mk II. Every piece, one mark system.
@@ -202,17 +221,17 @@ figure{margin:0}
 .f2 .wmk{font-size:calc(6.4*var(--mm))}
 .f2 .wmk small{font-size:calc(1.7*var(--mm));margin-top:calc(3*var(--mm))}
 .f2 .addr{font-family:var(--mono);font-size:calc(1.75*var(--mm));letter-spacing:.08em;
-  color:rgba(10,10,10,.58);line-height:1.85;margin-top:calc(2.6*var(--mm))}
-.f2 .hair{margin-top:calc(5.5*var(--mm));border-top:1px solid var(--ink);width:calc(34*var(--mm))}
+  color:var(--t60);line-height:1.85;margin-top:calc(2.6*var(--mm))}
+.f2 .hair{margin-top:calc(5.5*var(--mm));border-top:var(--hair) solid var(--ink);width:calc(34*var(--mm))}
 .f2 .vform{position:absolute;left:calc(6*var(--mm));top:calc(96*var(--mm));writing-mode:vertical-rl;
-  font-family:var(--mono);font-size:calc(1.7*var(--mm));letter-spacing:.4em;color:rgba(10,10,10,.58)}
+  font-family:var(--mono);font-size:calc(1.7*var(--mm));letter-spacing:.4em;color:var(--t60)}
 /* section rules */
 .f2 .sh{font-family:var(--label);font-weight:600;font-size:calc(1.95*var(--mm));letter-spacing:.22em;
-  text-transform:uppercase;color:var(--ink);border-bottom:1px solid var(--ink);
+  text-transform:uppercase;color:var(--ink);border-bottom:var(--hair) solid var(--ink);
   padding-bottom:calc(1.3*var(--mm));margin:calc(6.5*var(--mm)) 0 calc(3.2*var(--mm));
   display:flex;justify-content:space-between;align-items:baseline}
 .f2 .sh i{font-style:normal;font-family:var(--mono);font-weight:400;font-size:calc(1.5*var(--mm));
-  letter-spacing:.12em;color:rgba(10,10,10,.58)}
+  letter-spacing:.12em;color:var(--t60)}
 /* Field grid — 12 columns across the 171 mm measure. Fields are sized to what
    goes in them (a date is 8 characters, a title is not), so the rule length
    tells the person filling it in how much is expected. Span with .s2–.s8. */
@@ -225,8 +244,8 @@ figure{margin:0}
 .f2 .dk .s5{grid-column:span 5}
 .f2 .dk .s7{grid-column:span 7}
 .f2 .dk .c i{display:block;font-style:normal;font-family:var(--mono);font-size:calc(1.55*var(--mm));
-  letter-spacing:.13em;text-transform:uppercase;color:rgba(10,10,10,.58);margin-bottom:calc(.8*var(--mm))}
-.f2 .dk .c u{display:block;text-decoration:none;border-bottom:1px solid rgba(10,10,10,.34);height:calc(5.4*var(--mm))}
+  letter-spacing:.13em;text-transform:uppercase;color:var(--t60);margin-bottom:calc(.8*var(--mm))}
+.f2 .dk .c u{display:block;text-decoration:none;border-bottom:var(--hair) solid var(--t30);height:calc(5.4*var(--mm))}
 /* odd field out — runs the full measure, since what's held is a list, not a value */
 .f2 .dk .c.wide{grid-column:1 / -1}
 /* volume block — the same field system as the docket, set tighter so the
@@ -238,56 +257,62 @@ figure{margin:0}
 .f2 .flags{margin-top:calc(3.2*var(--mm))}
 .f2 .flags .r{display:flex;align-items:flex-start;margin-bottom:calc(2.4*var(--mm))}
 .f2 .flags .r > b{font-family:var(--mono);font-weight:400;font-size:calc(1.55*var(--mm));
-  letter-spacing:.12em;text-transform:uppercase;color:rgba(10,10,10,.58);
+  letter-spacing:.12em;text-transform:uppercase;color:var(--t60);
   width:calc(22*var(--mm));flex:none;padding-top:calc(.3*var(--mm))}
 .f2 .flags .gs{display:flex;flex:1;flex-wrap:wrap;gap:calc(2*var(--mm)) calc(5.5*var(--mm))}
 /* condition — the antiquarian trade grades, ticked */
 .f2 .cond .r{display:flex;align-items:center;margin-bottom:calc(3.4*var(--mm))}
 .f2 .cond .r > b{font-family:var(--mono);font-weight:400;font-size:calc(1.6*var(--mm));letter-spacing:.12em;
-  text-transform:uppercase;color:rgba(10,10,10,.58);width:calc(22*var(--mm));flex:none}
+  text-transform:uppercase;color:var(--t60);width:calc(22*var(--mm));flex:none}
 .f2 .cond .gs{display:flex;flex:1;justify-content:space-between}
 .f2 .g{display:flex;align-items:center;gap:calc(1.3*var(--mm));font-family:var(--label);font-weight:500;
   font-size:calc(1.8*var(--mm));letter-spacing:.05em;text-transform:uppercase;color:var(--ink)}
 .f2 .g em{display:block;width:calc(2.9*var(--mm));height:calc(2.9*var(--mm));flex:none;
-  border:calc(.3*var(--mm)) solid rgba(10,10,10,.5);border-radius:50%}
+  border:calc(.3*var(--mm)) solid var(--t50);border-radius:50%}
 .f2 .cond .fl{display:flex;align-items:baseline;gap:calc(2.4*var(--mm));margin-top:calc(1.4*var(--mm))}
 .f2 .cond .fl b{font-family:var(--mono);font-weight:400;font-size:calc(1.6*var(--mm));letter-spacing:.12em;
-  text-transform:uppercase;color:rgba(10,10,10,.58);width:calc(22*var(--mm));flex:none}
-.f2 .cond .fl u{flex:1;text-decoration:none;border-bottom:1px solid rgba(10,10,10,.28);height:calc(5*var(--mm))}
+  text-transform:uppercase;color:var(--t60);width:calc(22*var(--mm));flex:none}
+.f2 .cond .fl u{flex:1;text-decoration:none;border-bottom:var(--hair) solid var(--t30);height:calc(5*var(--mm))}
 /* 98 mm = exactly 14 rules at 7 mm, and clears the footer rule by 6.6 mm.
    Hand-tuned to the blocks above it — if the volume block or docket gains a
    row, this has to come down with it or the ruling runs into the footer. */
 .f2 .field{margin-top:calc(2.4*var(--mm));height:calc(98*var(--mm));
-  background:repeating-linear-gradient(to bottom,transparent 0,transparent calc(7*var(--mm) - 1px),rgba(10,10,10,.18) calc(7*var(--mm)))}
+  background:repeating-linear-gradient(to bottom,transparent 0,
+    transparent calc(7*var(--mm) - var(--hair)),
+    var(--t20) calc(7*var(--mm) - var(--hair)),var(--t20) calc(7*var(--mm)))}
 .f2 .ft{position:absolute;left:calc(16*var(--mm));right:calc(16*var(--mm));bottom:calc(11*var(--mm));
-  display:flex;justify-content:space-between;border-top:1px solid var(--rule);padding-top:calc(2.6*var(--mm));
-  font-family:var(--mono);font-size:calc(1.8*var(--mm));letter-spacing:.09em;color:rgba(10,10,10,.58)}
+  display:flex;justify-content:space-between;border-top:var(--hair) solid var(--t20);padding-top:calc(2.6*var(--mm));
+  font-family:var(--mono);font-size:calc(1.8*var(--mm));letter-spacing:.09em;color:var(--t60)}
 
 /* compliment slip 203 × 110 */
 .slip{width:calc(203*var(--mm));height:calc(110*var(--mm));padding:calc(14*var(--mm)) calc(18*var(--mm))}
 .slip .hd{display:flex;justify-content:space-between;align-items:flex-start}
 .slip .wmk{font-size:calc(5.6*var(--mm))}
 .slip .wmk small{font-size:calc(1.7*var(--mm));margin-top:calc(3*var(--mm))}
-.slip .wc{font-family:var(--serif);font-style:italic;font-size:calc(4.2*var(--mm));color:rgba(10,10,10,.58);
+.slip .wc{font-family:var(--serif);font-style:italic;font-size:calc(4.2*var(--mm));color:var(--t60);
   position:absolute;left:calc(18*var(--mm));bottom:calc(24*var(--mm))}
 .slip .ft{position:absolute;left:calc(18*var(--mm));right:calc(18*var(--mm));bottom:calc(11*var(--mm));
-  border-top:1px solid var(--rule);padding-top:calc(2.6*var(--mm));display:flex;justify-content:space-between;
-  font-family:var(--mono);font-size:calc(1.8*var(--mm));letter-spacing:.09em;color:rgba(10,10,10,.58)}
+  border-top:var(--hair) solid var(--t20);padding-top:calc(2.6*var(--mm));display:flex;justify-content:space-between;
+  font-family:var(--mono);font-size:calc(1.8*var(--mm));letter-spacing:.09em;color:var(--t60)}
 
 /* catalogue card 125 × 75 */
 .catcard{width:calc(125*var(--mm));height:calc(75*var(--mm));padding:calc(7*var(--mm)) calc(8*var(--mm))}
-.catcard .ruled{position:absolute;left:0;right:0;top:calc(18*var(--mm));bottom:0;
-  background:repeating-linear-gradient(to bottom,transparent 0,transparent calc(5.4*var(--mm) - 1px),rgba(10,10,10,.18) calc(5.4*var(--mm)))}
+.catcard .ruled{position:absolute;left:calc(8*var(--mm));right:calc(8*var(--mm));
+  top:calc(18*var(--mm));bottom:calc(13.8*var(--mm));
+  background:repeating-linear-gradient(to bottom,transparent 0,
+    transparent calc(5.4*var(--mm) - var(--hair)),
+    var(--t20) calc(5.4*var(--mm) - var(--hair)),var(--t20) calc(5.4*var(--mm)))}
 /* the call-number column rule. Black at the 18% ruling floor — it was drawn in
    #134E4A for a long time, a third ink nobody specified and nobody would have
    paid for. Only the seal is green. */
-.catcard .vr{position:absolute;top:0;bottom:0;left:calc(25*var(--mm));border-left:1px solid rgba(10,10,10,.18)}
+.catcard .vr{position:absolute;top:calc(7*var(--mm));bottom:calc(13.8*var(--mm));
+  left:calc(25*var(--mm));border-left:var(--hair) solid var(--t20)}
 .catcard .hd{display:flex;justify-content:space-between;align-items:flex-start;position:relative}
 .catcard .cn{font-family:var(--mono);font-size:calc(2.1*var(--mm));line-height:1.5;color:var(--ink)}
 .catcard .entry{position:relative;margin-left:calc(17*var(--mm));font-family:var(--serif);
-  font-size:calc(2.4*var(--mm));line-height:calc(5.4*var(--mm));color:rgba(10,10,10,.58);margin-top:calc(2*var(--mm))}
-.catcard .hole{position:absolute;bottom:calc(2.6*var(--mm));left:50%;transform:translateX(-50%);
-  width:calc(4.6*var(--mm));height:calc(4.6*var(--mm));border:1px solid rgba(10,10,10,.3);border-radius:50%}
+  font-size:calc(2.4*var(--mm));line-height:calc(5.4*var(--mm));color:var(--t60);margin-top:calc(2*var(--mm))}
+.catcard .hole{position:absolute;bottom:calc(6*var(--mm));left:50%;transform:translateX(-50%);
+  width:calc(4.6*var(--mm));height:calc(4.6*var(--mm));border:var(--hair) solid var(--t30);border-radius:50%}
 
 /* accession label 60 × 32 — REMOVABLE sticker, cut through the face only so the
    release liner underneath stays whole */
@@ -300,8 +325,8 @@ figure{margin:0}
   border-radius:calc(1.6*var(--mm))}
 .lab .hd{display:flex;align-items:center;gap:calc(3*var(--mm))}
 .lab .wmk{font-size:calc(3.1*var(--mm));line-height:1.1}
-.lab .g{margin-top:calc(3*var(--mm));border-top:1px solid var(--ink);padding-top:calc(2.2*var(--mm));
-  font-family:var(--mono);font-size:calc(1.65*var(--mm));line-height:2.1;color:rgba(10,10,10,.58)}
+.lab .g{margin-top:calc(3*var(--mm));border-top:var(--hair) solid var(--ink);padding-top:calc(2.2*var(--mm));
+  font-family:var(--mono);font-size:calc(1.65*var(--mm));line-height:2.1;color:var(--t60)}
 /* one label shown lifting off the liner, to read as removable */
 .lab.peel{transform:rotate(-2.2deg);box-shadow:0 5px 14px -4px rgba(0,0,0,.45)}
 .lab.peel::after{content:'';position:absolute;right:0;bottom:0;
@@ -310,22 +335,22 @@ figure{margin:0}
   border-bottom-right-radius:calc(1.6*var(--mm))}
 
 /* bookmark Mk II — ONE piece, collection ticked by hand */
-.bm3{width:calc(55*var(--mm));height:calc(210*var(--mm));padding:calc(9*var(--mm)) calc(5.5*var(--mm)) calc(8*var(--mm))}
+.bm3{width:calc(55*var(--mm));height:calc(210*var(--mm));padding:calc(9*var(--mm)) calc(6*var(--mm)) calc(8*var(--mm))}
 .bm3 .seal{margin:0 auto}
 .bm3 .wmk{text-align:center;font-size:calc(3.5*var(--mm));margin-top:calc(4.5*var(--mm))}
-.bm3 .hair{border-top:1px solid var(--ink);margin:calc(5.5*var(--mm)) 0 calc(3.4*var(--mm))}
+.bm3 .hair{border-top:var(--hair) solid var(--ink);margin:calc(5.5*var(--mm)) 0 calc(3.4*var(--mm))}
 .bm3 .cl{font-family:var(--mono);font-size:calc(1.6*var(--mm));letter-spacing:.18em;
-  text-transform:uppercase;color:rgba(10,10,10,.58);margin-bottom:calc(2.4*var(--mm))}
+  text-transform:uppercase;color:var(--t60);margin-bottom:calc(2.4*var(--mm))}
 .bm3 .row{display:flex;align-items:center;gap:calc(2.4*var(--mm));height:calc(10.6*var(--mm));
-  border-bottom:1px solid rgba(10,10,10,.18)}
-.bm3 .row .o{width:calc(3.4*var(--mm));height:calc(3.4*var(--mm));border:calc(.34*var(--mm)) solid rgba(10,10,10,.5);
+  border-bottom:var(--hair) solid var(--t20)}
+.bm3 .row .o{width:calc(3.4*var(--mm));height:calc(3.4*var(--mm));border:calc(.34*var(--mm)) solid var(--t50);
   border-radius:50%;flex:none}
 .bm3 .row .nm{flex:1;font-family:var(--label);font-weight:500;font-size:calc(2.5*var(--mm));
   letter-spacing:.02em;color:var(--ink);line-height:1.1}
-.bm3 .row .n{font-family:var(--mono);font-size:calc(1.55*var(--mm));color:rgba(10,10,10,.58);letter-spacing:.06em}
-.bm3 .ft{position:absolute;left:calc(5.5*var(--mm));right:calc(5.5*var(--mm));bottom:calc(7*var(--mm));
-  border-top:1px solid var(--ink);padding-top:calc(2.6*var(--mm));font-family:var(--mono);
-  font-size:calc(1.55*var(--mm));letter-spacing:.09em;color:rgba(10,10,10,.58);line-height:2}
+.bm3 .row .n{font-family:var(--mono);font-size:calc(1.55*var(--mm));color:var(--t60);letter-spacing:.06em}
+.bm3 .ft{position:absolute;left:calc(6*var(--mm));right:calc(6*var(--mm));bottom:calc(7*var(--mm));
+  border-top:var(--hair) solid var(--ink);padding-top:calc(2.6*var(--mm));font-family:var(--mono);
+  font-size:calc(1.55*var(--mm));letter-spacing:.09em;color:var(--t60);line-height:2}
 /* verso: clean spine face, printed once for all copies */
 .bm3.verso{display:flex;flex-direction:column;text-align:center}
 .bm3.verso .name-cell{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;
@@ -996,16 +1021,37 @@ bookmark in the same idiom as everything else in the family: a form you fill in.
     <li><b>Quantities</b> are given on the order. Please quote each of the six items separately
     at 250, 500 and 1,000.</li>
     <li><b>Colours:</b> two spot colours across the whole job — black, and one green. There is no
-    four-colour process on any item. The green is drawn at <b>#034706</b>, which is the same
-    value the mark carries on screen. No Pantone number is specified: please match to a drawdown
-    on the running stock and send it for approval before the run. Allow for the ink drying back
+    four-colour process on any item. The green is drawn at <b>#034706</b>, the same value the
+    mark carries on screen; as a number to mix from, that is
+    <b>L* 25.4 · a* &minus;30.7 · b* +29.8</b> (D50, 2°). No Pantone number is specified: mix
+    to that target, then send a drawdown on the running stock for approval before the run. Allow for the ink drying back
     and losing density on uncoated stock when choosing the match, but do not alter the supplied
     artwork to compensate.</li>
-    <li><b>Artwork supplied</b> as PDF/X-4, one file per item, at 100% size. Two spot channels
-    only, named <i>Black</i> and <i>HSL Green</i>; no CMYK or RGB objects anywhere in the files.
-    Fonts embedded. No bleed allowance in the files. Trim marks offset 5 mm.</li>
-    <li><b>No bleed anywhere.</b> All artwork is inset at least 6 mm from the trim on every item,
-    so a 3 mm trim allowance is sufficient throughout.</li>
+    <li><b>Screens:</b> the job is two inks but it is not all solids. The green prints solid
+    everywhere it appears and is never screened. The black is solid for the mark, the wordmark,
+    section headings and the heavy rules, and is screened at four values and no others —
+    <b>60 %</b> secondary type (captions, footers, field names, addresses), <b>50 %</b>
+    tick-circle strokes, <b>30 %</b> the writing rules that get filled in by hand, and
+    <b>20 %</b> the ledger ruling and column rules. Nothing is drawn lighter than 20 %.
+    Please quote accordingly: this is a screened two-colour job, not two flat colours.</li>
+    <li><b>Rules</b> are 0.25 mm (0.71 pt) throughout, at whichever of the values above the
+    element calls for. There are no hairlines and nothing is set to a device-dependent
+    &ldquo;thin&rdquo; weight.</li>
+    <li><b>Artwork supplied</b> as PDF/X-4, one file per item, at 100% size &mdash; six files,
+    of which <span class="n">03</span> and <span class="n">06</span> are two pages, face then
+    reverse. Two spot channels only, named <i>Black</i> and <i>HSL Green</i>; no CMYK or RGB
+    objects anywhere in the files. Fonts embedded and subset. Every page carries a TrimBox at
+    the size given above and no BleedBox. Trim marks in registration, 0.25 mm, offset 5 mm.
+    The output intent is CGATS 21 CRPC2, the uncoated characterisation: it describes the
+    printing condition and is not an instruction to convert anything.</li>
+    <li><b>No bleed anywhere.</b> Nothing runs off the trim on any item, so a 3 mm trim
+    allowance is sufficient throughout. The closest any ink comes to the trim, measured off the
+    artwork rather than intended: <span class="n">01</span> 6.2 mm · <span class="n">02</span>
+    11.2 mm · <span class="n">03</span> 11.0 mm · <span class="n">04</span> 6.0 mm ·
+    <span class="n">06</span> 5.9 mm. The labels (<span class="n">05</span>) are the one
+    exception at <b>4 mm</b>: six would take a third of a 32 mm label, and the kiss-cut die
+    registers to the printed sheet rather than being cut blind on a guillotine, so the tolerance
+    it has to absorb is smaller.</li>
     <li><b>No coatings, no varnish, no lamination, no foil, no embossing.</b> The uncoated
     surface has to stay writable — these are forms that get filled in with pen and pencil.</li>
     <li><b>No die-cutting</b> anywhere except the labels (item 05), which are cut through the
