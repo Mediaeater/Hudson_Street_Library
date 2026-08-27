@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ book.title }} by {{ book.author_full_name }} | Hudson Street Library</title>
     {% if book.description %}
-<meta name="description" content="{{ book.description | truncate(155) | escape }}">
+<meta name="description" content="{{ book.description | stripHtml | truncate(155) | escape }}">
     {% else %}
 <meta name="description" content="{{ book.title }} by {{ book.author_full_name }}. Published by {{ book.publisher }}{% if book.publication_year %} in {{ book.publication_year }}{% endif %}. From the Hudson Street Library collection.">
     {% endif %}
