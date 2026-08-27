@@ -9,8 +9,11 @@ scripts/stationery/build.sh
 ```
 
 Output: `dist/stationery/*.pdf` — six PDF/X-4 files, two named spot channels, trim marks,
-no bleed. Both `dist/` and `build/` are gitignored: this is a deliverable for a printer,
-not a download on the website. Send the files; don't commit them.
+no bleed — which the publish stage then copies into `src/assets/stationery/`, with a zip
+of all six and a manifest at `src/_data/stationery.json`. Those three are tracked: the
+printer is sent a link to `/identity/stationery/`, where the specification and the files
+it describes are published together and cannot drift apart. `dist/` and `build/` stay
+gitignored; commit whatever the publish stage changes.
 
 | file | pages | trim |
 |---|---|---|
@@ -20,6 +23,21 @@ not a download on the website. Send the files; don't commit them.
 | `04-catalogue-card.pdf` | 1 | 125 × 75 mm |
 | `05-accession-label.pdf` | 1 | 60 × 32 mm |
 | `06-bookmark.pdf` | 2 (recto, verso) | 55 × 210 mm |
+
+Each is about 2.7 MB, of which all but a few kB is the embedded output-intent profile.
+
+## Rebuilding does not churn the repo
+
+These are committed binaries, so a rebuild must produce the same bytes when the design
+has not moved. Three things make that true: reportlab runs with `invariant=1`, pikepdf
+saves with `deterministic_id=True`, and the date stamped into the files comes from
+`ARTWORK_DATE` in `build_artwork.py` rather than the clock. The zip is written with fixed
+entry dates for the same reason.
+
+`ARTWORK_DATE` is bumped by hand when the design changes. That is deliberate — dating from
+git would oscillate, because committing the PDFs changes the commit date they were dated
+from, which changes the PDFs. The publish stage prints a warning if the artwork moved and
+the date did not.
 
 ## Why it is built this way
 
@@ -122,5 +140,8 @@ restriction."* Apple's Generic CMYK profile is proprietary, and Ghostscript's
   on the running stock. The channel is named `HSL Green` and the printer picks the ink.
 - **No trapping.** Section C states the two colours never meet, so `/Trapped` is `False` and
   the artwork carries no spread or choke. If that ever stops being true, this needs revisiting.
+- **It does not regenerate on deploy.** GitHub Actions builds the site, not the artwork —
+  that needs a browser, the font masters and the ICC profile. The published files are
+  whatever was last committed, so rebuild and commit after changing the design.
 - **`05-accession-label.pdf` is one label, not the imposed sheet.** Section C specifies 21 up
   on an A4 liner, 3 × 7; stepping and the kiss-cut die are the printer's origination.
