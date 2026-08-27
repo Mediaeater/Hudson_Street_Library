@@ -24,6 +24,13 @@ from reportlab.lib.colors import CMYKColorSep
 
 MM = 72.0 / 25.4          # PostScript points per millimetre
 
+# The date stamped into the files. PDF/X wants one, and it should say when the
+# artwork was drawn rather than when this script last ran: the files are committed
+# and served, so a wall-clock date would rewrite six 2.7 MB binaries on every build.
+# Bump it when the design changes — publish.py complains if the artwork moves and
+# this does not.
+ARTWORK_DATE = "2026-08-27T00:00:00-04:00"
+
 
 def style_key(t):
     """(family, size, weight, style) — how type styles are identified throughout."""
@@ -329,7 +336,7 @@ class Sheet:
 
 
 # ----------------------------------------------------------------- main --------
-def build(key, title, pieces, geom, inks, fonts, out_dir, icc, condition):
+def build(key, title, pieces, geom, inks, fonts, out_dir, icc, condition, date):
     path = os.path.join(out_dir, key + ".pdf")
     w0, h0 = TRIM[pieces[0]]
     size = ((w0 + 2 * MARGIN) * MM, (h0 + 2 * MARGIN) * MM)
@@ -338,7 +345,11 @@ def build(key, title, pieces, geom, inks, fonts, out_dir, icc, condition):
     # TrueType face as the initial font drops the operator entirely — subsetted fonts
     # are written at the point of use — so no unembedded font is ever referenced.
     c = Canvas(path, pagesize=size, pdfVersion=(1, 6), enforceColorSpace="sep",
-               pageCompression=1, invariant=0,
+               # invariant: fixed document ID and no wall-clock date, so two builds
+               # of an unchanged page are byte-identical. These files are committed and
+               # served from the site, and a 2.7 MB binary that churns on every run
+               # would put a fresh copy in git history each time.
+               pageCompression=1, invariant=1,
                initialFontName=sorted(set(fonts.values()))[0])
     c.setTitle(f"Hudson Street Library — {title}")
     c.setAuthor("Hudson Street Library")
@@ -352,14 +363,14 @@ def build(key, title, pieces, geom, inks, fonts, out_dir, icc, condition):
         Sheet(c, inks, w, h, fonts).draw(g)
         c.showPage()
     c.save()
-    finalise(path, title, [TRIM[p] for p in pieces], icc, condition)
+    finalise(path, title, [TRIM[p] for p in pieces], icc, condition, date)
     return path
 
 
-def finalise(path, title, pieces, icc, condition):
+def finalise(path, title, pieces, icc, condition, date):
     """Stamp PDF/X-4 identification: output intent, XMP, Trapped, dates."""
     import pikepdf
-    now = datetime.datetime.now().astimezone().replace(microsecond=0).isoformat()
+    now = date
     with pikepdf.open(path, allow_overwriting_input=True) as pdf:
         # reportlab stores setTrimBox but never writes it to the page, and PDF/X
         # requires one on every page, so it is set here against the trim size.
@@ -402,7 +413,9 @@ def finalise(path, title, pieces, icc, condition):
                 meta.register_xml_namespace("http://www.npes.org/pdfx/ns/id/", "pdfxid")
                 meta["pdfxid:GTS_PDFXVersion"] = "PDF/X-4"
         pdf.docinfo["/Trapped"] = pikepdf.Name("/False")
-        pdf.save(path, linearize=False)
+        # deterministic_id: pikepdf otherwise writes a fresh random second half of
+        # /ID on every save, which alone would make each rebuild a new 2.7 MB blob.
+        pdf.save(path, linearize=False, deterministic_id=True)
 
 
 def main():
@@ -414,6 +427,8 @@ def main():
                     help="CMYK output-intent profile to embed; omit to skip the PDF/X-4 claim")
     ap.add_argument("--condition", default="CGATS21_CRPC2",
                     help="OutputConditionIdentifier for the embedded profile")
+    ap.add_argument("--date", default=ARTWORK_DATE,
+                    help=f"ISO 8601 date to stamp (default {ARTWORK_DATE})")
     a = ap.parse_args()
 
     geom = json.load(open(a.geometry))
@@ -424,7 +439,7 @@ def main():
         print("  ! no --icc: files are plain PDF 1.6, not stamped PDF/X-4")
     print(f"  green alternate CMYK {tuple(round(v, 3) for v in inks.green_cmyk)}")
     for key, title, pieces in DELIVERABLES:
-        p = build(key, title, pieces, geom, inks, fonts, a.out, a.icc, a.condition)
+        p = build(key, title, pieces, geom, inks, fonts, a.out, a.icc, a.condition, a.date)
         print(f"  {os.path.basename(p):26} {len(pieces)} page(s)  {os.path.getsize(p)/1024:8.0f} kB")
 
 

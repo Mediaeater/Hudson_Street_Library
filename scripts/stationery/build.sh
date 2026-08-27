@@ -5,8 +5,12 @@
 #   npm run build && npx http-server _site -p 8899 -s &
 #   scripts/stationery/build.sh
 #
-# Output lands in dist/stationery/ (gitignored — the artwork is a deliverable for a
-# printer, not a download on the website). Working files live in build/stationery/.
+# Output lands in dist/stationery/ (gitignored), and is then published into
+# src/assets/stationery/ (tracked), which is how a printer gets the files: as links on
+# /identity/stationery/ rather than as an email attachment. Working files live in
+# build/stationery/. Two builds of an unchanged page produce byte-identical PDFs, so
+# the publish step is a no-op until the design actually moves — at which point bump
+# ARTWORK_DATE in build_artwork.py, which is what the files are dated from.
 #
 # Two interpreters are used on purpose. The extraction stages drive a real browser,
 # so they run under an interpreter that has Playwright installed; the artwork stages
@@ -19,6 +23,7 @@ HERE=scripts/stationery
 BUILD=build/stationery
 DIST=dist/stationery
 URL=${URL:-http://localhost:8899/identity/stationery/}
+PUBLISH=src/assets/stationery
 BROWSER_PYTHON=${BROWSER_PYTHON:-/opt/homebrew/bin/python3}
 
 # CRPC2 is the CGATS 21 uncoated condition, which is the stock the job is specified
@@ -28,7 +33,7 @@ ICC_URL=https://www.color.org/registry/profiles/CGATS21_CRPC2.icc
 ICC=$BUILD/CGATS21_CRPC2.icc
 CONDITION=CGATS21_CRPC2
 
-mkdir -p "$BUILD" "$DIST"
+mkdir -p "$BUILD" "$DIST" "$PUBLISH"
 
 if ! curl -sf -o /dev/null "$URL"; then
   echo "! $URL is not answering." >&2
@@ -66,3 +71,7 @@ echo "== 4. verification"
 "$PY" "$HERE/verify_artwork.py" --dist "$DIST" --reference "$BUILD/reference.pdf" --render \
       --url "$URL" --browser-python "$BROWSER_PYTHON" --condition "$CONDITION" \
       --out "$BUILD/verify"
+
+# Last, and only if verification passed: nothing unverified reaches the website.
+echo "== 5. publication"
+"$PY" "$HERE/publish.py" --dist "$DIST" --to "$PUBLISH"
