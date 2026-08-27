@@ -246,6 +246,10 @@ After adding a book, verify:
    - Check file size (50KB-500KB typical); confirm `file` reports `JPEG image data`
    - Verify no trailing spaces in filename
    - Ask user to add if missing
+   - `image_url` in the CSV row must start with `/` (`/assets/images/books/...`). A missing leading slash breaks relative path resolution and 404s the book page; this was fixed repeatedly (71f110f21, e852e74da).
+   - Filename follows `{author_last}_{author_first}_{title}_{isbn}.jpg`: all lowercase, underscores for spaces, no special characters (details in `references/add-book-reference.md`). Manual files must match exactly.
+   - If `image_url` is empty but the file exists at the conventional path, set the path by hand (surgical row edit, see *Enriching unmapped columns*).
+   - After deploy, confirm the cover renders on the live site.
 
 2. **CSV record is complete** (the ingest silently drops some fields — verify them)
    - ISBN present (if available); tags comma-separated; no price; all user metadata captured

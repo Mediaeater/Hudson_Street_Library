@@ -58,41 +58,16 @@ fields and none of the columns is unused. This said 36 for a long time; it was w
 - Don't discard information during data entry
 - If unsure about a field, include it - don't leave it blank
 
-### Book Addition Workflow
+### Adding Books
 
-**Use the right tool for the job:**
-- Interactive additions: `npm run add` (requires manual input)
-- Automated additions: Write Node.js scripts using CSVHandler
-- Never try to automate the interactive script via stdin
-
-**Add-book process:**
-1. Use `node scripts/add-book-from-text.js --interactive`
-2. Include publisher URL when available for better metadata
-3. CSV validation runs automatically after adding
-4. Verify the image_url has leading slash
-5. Check tags are comma-separated
-
-### Image Management
-
-**Cover image workflow:**
-- Images stored in `src/assets/images/books/`
-- Naming: `author_last_author_first_title_isbn.jpg` (all lowercase, underscores)
-- If `image_url` field is empty but file exists, add the path manually
-- Always verify images deploy correctly - check live site
+- Use the `add-book` skill (it delegates research to `research-asst`); interactive manual entry is `npm run add`.
+- Never automate the interactive script via stdin; write Node scripts using CSVHandler instead.
+- Cover naming, `image_url` leading-slash rule, and the post-add checklist live in the `add-book` skill.
 
 ### Deployment
 
-**ALWAYS verify GitHub Pages source BEFORE troubleshooting:**
-- GitHub Pages source must be set to: gh-pages branch
-- Workflow and Pages configuration must match deployment approach
-- Changes won't go live if these don't match
-- Check: Repository Settings → Pages → Source
-
-**Deployment workflow:**
-- Auto-deploys via GitHub Actions on push to main
-- Build time: ~5 min (full Eleventy rebuild)
-- Upload time: ~5 sec (incremental, only changed files via gh-pages branch)
-- Check status: `gh run list --limit 1`
+- Auto-deploys via GitHub Actions on push to `main`, published from the `gh-pages` branch.
+- Status checks and troubleshooting (Pages source must be gh-pages, zero-run pushes, audit gate): `deploy-status` skill.
 
 ### Git Workflow
 
@@ -108,44 +83,9 @@ fields and none of the columns is unused. This said 36 for a long time; it was w
 
 ### Backup System (CRITICAL)
 
-**books.csv is the only source of truth. Four things protect it:**
-
-1. **GitHub remote** — every change is committed and pushed, so the remote holds
-   full history. This is the real protection; the rest are conveniences.
-2. **`csv-backups/` in the repo** — a snapshot committed by the "Backup
-   books.csv" GitHub Actions workflow after every push that touches the CSV.
-3. **`~/.hudson-library-backups/`** — hourly/daily/weekly copies outside the
-   project, so they survive deleting the project directory.
-4. **`src/_data/backups/`** — same copies inside the project (gitignored).
-
-**Scheduled by launchd, every 6 hours plus once at login:**
-- Agent: `~/Library/LaunchAgents/com.hudsonstreetlibrary.backup.plist`
-  (installed 2026-08-09; it did not exist before, despite this file having
-  claimed a 6-hourly job for months — the off-project copies were 14 days stale)
-- Verify it is registered: `launchctl list | grep hudson` (second column is the
-  last exit status; 0 is good)
-- Check runs: `tail -f logs/backup.log`
-- Reload after editing the plist:
-  `launchctl unload <plist> && launchctl load <plist>`
-
-**The scheduled run uses `--no-git`, deliberately.** The script's git path
-commits with `--no-verify`, which skips the pre-commit hook that validates CSV
-structure — the one gate against a structural break reaching the repo. Run
-unattended it would also commit whatever mid-edit state the file happened to be
-in. Git snapshots come from the Actions workflow instead.
-
-- Manual backup, with the git commit: `./scripts/backup-books-csv.sh`
-- Manual backup, copies only: `./scripts/backup-books-csv.sh --no-git`
-- Restore: `cp ~/.hudson-library-backups/daily/books_YYYY-MM-DD.csv src/_data/books.csv`
-- After any restore, run `npm run test:csv` before committing.
-
-## Project Structure
-
-- **Book data:** `src/_data/books.csv` (37 columns, ~1,930 books as of Aug 2026)
-- **Cover images:** `src/assets/images/books/`
-- **Templates:** `src/_includes/layouts/book.njk`
-- **Filters:** `.eleventy.js`
-- **Scripts:** `scripts/` (add-book, validation, backup)
+- `src/_data/books.csv` is the only source of truth. It is protected by the GitHub remote, `csv-backups/` (committed by the Actions bot), and launchd copies every 6 hours to `~/.hudson-library-backups/` and `src/_data/backups/`.
+- The scheduled run uses `--no-git` deliberately: the script's git path commits with `--no-verify`, skipping the CSV structure check. Don't change it.
+- Verify the job, run a manual backup, or restore: `csv-backup` skill. After any restore, run `npm run test:csv` before committing.
 
 ## Key Metadata Fields
 
@@ -161,44 +101,6 @@ in. Git snapshots come from the Actions workflow instead.
 **publisher_url** - Should point to book page, not publisher home page
 - Direct book links provide more value for readers
 
-## Related Books Logic
-
-- Uses metadata-based scoring (not just author name matching)
-- Priority: collection_grouping (+10), tags (+2 each), classification (+3), publisher (+2), author (+1)
-- Implemented in `.eleventy.js` as `relatedBooks` filter
-- Shows top 12 most relevant books
-
-## Common Commands
-
-```bash
-# Add a book interactively
-npm run add
-
-# Validate CSV structure
-npm run test:csv
-node scripts/validate-csv-structure.js
-
-# Manual backup
-./scripts/backup-books-csv.sh
-
-# Check deployment status
-gh run list --limit 1
-
-# Start dev server
-npm start
-```
-
 ## Documentation
 
 - **CSV Workflow:** `docs/CSV_WORKFLOW_GUIDE.md` - Complete workflow and rules
-- **Architecture:** Pre-commit hook validates CSV automatically
-- **Pre-commit hook:** Prevents broken CSV commits
-
-## Technical Context
-
-- **Static Site Generator:** Eleventy (11ty)
-- **Templating:** Nunjucks (.njk files)
-- **CSV Parsing:** Papa Parse (via CSVHandler wrapper)
-- **Deployment:** GitHub Pages (gh-pages branch)
-- **CI/CD:** GitHub Actions
-- **Node Version:** 18+ required
