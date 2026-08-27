@@ -526,6 +526,14 @@ module.exports = function(eleventyConfig) {
       return `/assets/images/books/${sanitized}.jpg`;
   });
 
+  // --- Plain text from an HTML description, for meta tags / JSON-LD ---
+  // books.csv descriptions are HTML (<p class="mt-6">, <em>); any text-only
+  // surface must strip tags BEFORE truncating or the markup prints literally.
+  eleventyConfig.addFilter("stripHtml", function(text) {
+    if (!text) return '';
+    return String(text).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+  });
+
   // --- Format and truncate descriptions with paragraph support ---
   eleventyConfig.addFilter("formatDescription", function(description, maxLength = 300) {
     if (!description) return '';
