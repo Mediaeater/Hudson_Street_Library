@@ -70,8 +70,6 @@ const NO_TAILWIND_OK = new Set([
   'books/collections/queer/Louis-Fratino-Satura/index.html',
   'books/collections/queer/Paul_Thek-Peter_Hujar-Stay_Away_From_Nothing/index.html',
   'books/collections/queer/Vince_Aletti-Physique/index.html',
-  // Standalone print comp with its own styles, passthrough-copied verbatim.
-  'identity/stationery/index.html',
 ]);
 
 const HEADER_COMPONENT = '_includes/components/site-header.njk';
