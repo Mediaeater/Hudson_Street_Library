@@ -1,0 +1,961 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> | Hudson Street Library</title>
+    
+    <link rel="stylesheet" href="/assets/css/tailwind.css">
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="api-catalog" type="application/linkset+json" href="/.well-known/api-catalog">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Hudson Street Library",
+  "url": "https://hudsonstreetlibrary.com",
+  "logo": "https://hudsonstreetlibrary.com/assets/images/logo.png",
+  "description": "A curated collection of photography, art, and design books"
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "",
+  "url": "https://hudsonstreetlibrary.comcollections/{{ collectionConfig.slug }}.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Hudson Street Library",
+    "url": "https://hudsonstreetlibrary.com"
+  }
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://hudsonstreetlibrary.com/"
+    }
+  ]
+}
+</script>
+
+</head>
+<body class="min-h-screen bg-neutral-50 text-neutral-900">
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+
+<style>
+    .site-header {
+        font-family: 'Literata', Georgia, serif;
+    }
+    .site-header .site-logo {
+        font-family: 'Crimson Pro', Georgia, serif;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        white-space: nowrap;
+    }
+    /* Book-spines mark (same drawing as the favicon). Inlined with
+       fill: currentColor rather than <img src=favicon.svg> because the
+       SVG file self-inverts to off-white in OS dark mode and would
+       disappear against the white header. */
+    .site-header .logo-mark {
+        width: 1.3em;
+        height: 1.3em;
+        display: block;
+        flex-shrink: 0;
+        fill: currentColor;
+    }
+    .site-header .nav-link {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+        font-weight: 400;
+        letter-spacing: 0.005em;
+    }
+    .site-header .nav-link[aria-current="page"],
+    .site-header .nav-link-active {
+        font-weight: 600;
+    }
+    .site-header #mobile-nav-menu a {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+    }
+
+    /*
+      Mobile menu uses self-contained, component-scoped CSS rather than
+      Tailwind utilities, so its layout can't be broken by global stylesheet
+      changes. This originally fixed an invisible-sliver bug: design-system.css
+      ships an unlayered `* { padding: 0 }` reset that beats Tailwind's layered
+      utilities and collapsed the old icon-only button. The self-contained
+      styling is kept deliberately.
+    */
+    .site-header .menu-toggle { display: none; }
+    .site-header .mobile-nav { display: none; }
+
+    /*
+      Mobile scroll-jitter fix.
+      The header ships as `sticky top-0 bg-white/95 backdrop-blur-sm`. On mobile
+      a sticky bar with backdrop-filter: blur() forces the browser to re-sample
+      and re-blur the pixels scrolling beneath it every frame; on mobile GPUs
+      that readback lags the scroll compositor and the bar (and the text passing
+      under it) shudders. Drop the blur and use an opaque background on small
+      screens — the frosted-glass effect stays desktop-only. The doubled
+      `.site-header.site-header` selector out-specifies the `bg-white/95` and
+      `backdrop-blur-sm` utility classes without needing !important.
+    */
+    @media (max-width: 900px), (hover: none) and (pointer: coarse) {
+        .site-header.site-header {
+            background-color: #ffffff;
+            -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+            /* Promote the sticky bar to its own compositor layer so it isn't
+               re-rasterized against the scrolling content every frame — this
+               is what stops the header (and the text under it) juddering on
+               mobile. Pairs with dropping the backdrop blur above. */
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            will-change: transform;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .site-header .menu-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.45rem 0.7rem;
+            border: 1px solid rgba(0, 49, 0, 0.3);
+            border-radius: 0.5rem;
+            background: #ffffff;
+            color: #003100;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .site-header .menu-toggle:hover { background: #f0f5f0; }
+        .site-header .menu-toggle:focus-visible {
+            outline: 2px solid #003100;
+            outline-offset: 2px;
+        }
+        .site-header .menu-toggle svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+            flex-shrink: 0;
+        }
+        .site-header .menu-toggle .menu-toggle-label {
+            font-family: 'Literata', Georgia, serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .site-header .menu-toggle .icon-close { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-open { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-close { display: block; }
+
+        .site-header .mobile-nav.is-open {
+            display: flex;
+            flex-direction: column;
+        }
+        .site-header .mobile-nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            padding: 0.5rem;
+            z-index: 40;
+        }
+        .site-header .mobile-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            color: #404040;
+            text-decoration: none;
+        }
+        .site-header .mobile-nav a:hover {
+            background: #f0f5f0;
+            color: #002000;
+        }
+    }
+</style>
+
+<header class="site-header sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="site-logo text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                <svg class="logo-mark" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+                    <rect x="38" y="128" width="72" height="318"/>
+                    <rect x="138" y="68" width="76" height="378"/>
+                    <rect x="242" y="100" width="72" height="346"/>
+                    <rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)"/>
+                </svg>
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link ">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Accessions
+                </a>
+                <a href="/discover.html"
+                   class="nav-link ">
+                   Discover
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <!-- Icon + visible "Menu" label so the control is obvious on mobile.
+                 Sizing/visibility come from the unlayered styles above, not
+                 Tailwind utilities (see note in the <style> block). Icons are
+                 inline SVGs so the menu works on pages without an icon font. -->
+            <button class="menu-toggle"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <svg class="icon-open" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg class="icon-close" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+                <span class="menu-toggle-label">Menu</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu" class="mobile-nav" aria-label="Mobile navigation">
+        <a href="/#about">About</a>
+        <a href="/collection-explore.html">Collections</a>
+        <a href="/static-demo/">Search</a>
+        <a href="/#publications">Publications</a>
+        <a href="/news.html">News</a>
+        <a href="/collections/recently_added.html">Accessions</a>
+        <a href="/discover.html">Discover</a>
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const button = document.querySelector('button[aria-controls="mobile-nav-menu"]');
+    const willOpen = !menu.classList.contains('is-open');
+
+    menu.classList.toggle('is-open', willOpen);
+    // Icon swap (hamburger <-> X) is driven by aria-expanded in CSS.
+    if (button) button.setAttribute('aria-expanded', String(willOpen));
+}
+</script>
+
+
+<main>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+        
+        
+        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
+            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Graphic Design</h1>
+            <div class="line-divider inline-block"></div>
+            
+                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Graphic Design.”</p>
+            
+            
+        </div>
+        
+
+        
+        
+            
+        
+        
+
+        
+            
+                
+                
+<section class="mb-16">
+    <div class="volume-header pl-4 mb-8">
+        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
+        
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        
+            
+<a href="/books/adamson_postmodernism-style-and-subversion-1970-1990_2098/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/adamson_glenn_postmodernism_style_and_subversion_1970_1990_9781851776597.jpg" alt="Postmodernism: Style and Subversion 1970–1990" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Glenn Adamson, Jane Pavitt</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Postmodernism: Style and Subversion 1970–1990</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">V&amp;A Publishing &middot; 2011</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/bass_saul-bass-a-life-in-film-and-design_1979/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/Saul_Bass_Saul_Bass_A_Life_in_Film_and_Design_9781856697521.jpg" alt="Saul Bass: A Life in Film and Design" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Saul Bass</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Saul Bass: A Life in Film and Design</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Laurence King Publishing &middot; 2011</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/blackshaw_scrawl-too-more-dirt_2110/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/blackshaw_ric_scrawl_too_more_dirt_9781861542137.jpg" alt="Scrawl Too: More Dirt" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ric Blackshaw, Liz Farrelly</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Scrawl Too: More Dirt</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Booth-Clibborn Editions &middot; 2001</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/burkeman_stickers-stuck-up-piece-of-crap-from-punk-rock-to-contemporary-art_2111/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/burkeman_db_stickers_from_punk_rock_to_contemporary_art_9780789320810.jpg" alt="Stickers: Stuck-Up Piece of Crap: From Punk Rock to Contemporary Art" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">DB Burkeman, Monica LoCascio</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Stickers: Stuck-Up Piece of Crap: From Punk Rock to Contemporary Art</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Rizzoli (Universe) &middot; 2010</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/cliver_disposable-a-history-of-skateboard-art_2081/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/cliver_sean_disposable_a_history_of_skateboard_art_9781584232643.jpg" alt="Disposable: A History of Skateboard Art" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Sean Cliver</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Disposable: A History of Skateboard Art</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gingko Press &middot; 2007</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/drme_fin_1895/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/drme_fin_2019.jpg" alt="FIN?" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">DR.ME (Ryan Doyle &amp; Mark Edwards)</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">FIN?</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self-published (DR.ME) &middot; 2019</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/fairey_covert-to-overt-the-underoverground-art-of-shepard-fairey_2124/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/fairey_shepard_covert_to_overt_9780847846214.jpg" alt="Covert to Overt: The Under/Overground Art of Shepard Fairey" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Unknown</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Covert to Overt: The Under/Overground Art of Shepard Fairey</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Rizzoli &middot; 2015</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/fairey_e-pluribus-venom-the-art-of-shepard-fairey_2073/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/fairey_shepard_e_pluribus_venom_the_art_of_shepard_fairey_9781584232957.jpg" alt="E Pluribus Venom: The Art of Shepard Fairey" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Shepard Fairey</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">E Pluribus Venom: The Art of Shepard Fairey</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gingko Press &middot; 2008</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/fairey_mayday-the-art-of-shepard-fairey_2074/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/fairey_shepard_mayday_the_art_of_shepard_fairey_9781584234289.jpg" alt="Mayday: The Art of Shepard Fairey" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Shepard Fairey</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Mayday: The Art of Shepard Fairey</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gingko Press &middot; 2010</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/fairey_obey-supply-and-demand-the-art-of-shepard-fairey-20th-anniversary-edition_2075/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/fairey_shepard_obey_supply_and_demand_the_art_of_shepard_fairey_9781584233497.jpg" alt="Obey: Supply &amp; Demand: The Art of Shepard Fairey, 20th Anniversary Edition" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Shepard Fairey</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Obey: Supply &amp; Demand: The Art of Shepard Fairey, 20th Anniversary Edition</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gingko Press &middot; 2009</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/frizot_vu-the-story-of-a-magazine_2086/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/frizot_michel_vu_the_story_of_a_magazine_9780500543832.jpg" alt="VU: The Story of a Magazine" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Michel Frizot</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">VU: The Story of a Magazine</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Thames &amp; Hudson &middot; 2009</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/ganz_graffiti-world-street-art-from-five-continents_2080/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/ganz_nicholas_graffiti_world_9780810949799.jpg" alt="Graffiti World: Street Art from Five Continents" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Nicholas Ganz</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Graffiti World: Street Art from Five Continents</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Harry N. Abrams &middot; 2004</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/heffner_cruisn-uncovering-gay-design-history-through-collecting_1959/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/heffner_cruisn_noisbn.jpg" alt="Cruis&#39;n: Uncovering Gay Design History Through Collecting" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Rick Heffner</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cruis&#39;n: Uncovering Gay Design History Through Collecting</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">HEFF Publishing &middot; 2023</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/heller_merz-to-emigre-and-beyond-avant-garde-magazine-design-of-the-twentieth-century_2088/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/heller_steven_merz_to_emigre_and_beyond_9780714839271.jpg" alt="Merz to Emigre and Beyond: Avant-Garde Magazine Design of the Twentieth Century" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Steven Heller</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Merz to Emigre and Beyond: Avant-Garde Magazine Design of the Twentieth Century</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press &middot; 2003</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/hundertmark_the-art-of-rebellion-world-of-streetart_2077/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/hundertmark_christian_the_art_of_rebellion_9783980747837.jpg" alt="The Art of Rebellion: World of Streetart" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Christian Hundertmark (C100)</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Art of Rebellion: World of Streetart</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Publikat &middot; 2003</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/ito_lounge-of-psychedelia_1897/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/ito_keiji_lounge_of_psychedelia_2020.jpg" alt="Lounge of Psychedelia" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Keiji Ito</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Lounge of Psychedelia</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">G/P+abp (Art Beat Publishers), NEOTOKYOZINE series &middot; 2020</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/kidd_bat-manga-the-secret-history-of-batman-in-japan_2083/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/kidd_chip_bat_manga_the_secret_history_of_batman_in_japan_9780375714849.jpg" alt="Bat-Manga!: The Secret History of Batman in Japan" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Chip Kidd</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Bat-Manga!: The Secret History of Batman in Japan</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Pantheon Books &middot; 2008</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/king_david-king-publications-1977-2019_1824/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/David_King_David_King_Publications_19772019.jpg" alt="David King Publications 1977–2019" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">David King</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">David King Publications 1977–2019</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Colpa Press / San Francisco Center for the Book &middot; 2024</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/king_red-star-over-russia-a-visual-history-of-the-soviet-union-from-the-revolution-to-the-death-of-stalin_2099/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/king_david_red_star_over_russia_9780810982796.jpg" alt="Red Star Over Russia: A Visual History of the Soviet Union from the Revolution to the Death of Stalin" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">David King</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Red Star Over Russia: A Visual History of the Soviet Union from the Revolution to the Death of Stalin</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Abrams &middot; 2009</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/klanten_trigger_2114/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/klanten_robert_trigger_9783931126216.jpg" alt="Trigger" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Robert Klanten, Hendrik Hellige, Michael Mischler</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Trigger</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Die Gestalten Verlag &middot; 1999</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/leslie_board-surfskatesnow-graphics_2125/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/leslie_jeremy_board_surf_skate_snow_graphics_9781856693738.jpg" alt="Board: Surf/Skate/Snow Graphics" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jeremy Leslie, Patrick Burgoyne</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Board: Surf/Skate/Snow Graphics</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Laurence King / Harper Design &middot; 2003</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/lupano_fashion-at-the-time-of-fascism-italian-modernist-lifestyle-1922-1943_2101/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/lupano_mario_fashion_at_the_time_of_fascism_9788862080514.jpg" alt="Fashion at the Time of Fascism: Italian Modernist Lifestyle 1922–1943" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mario Lupano, Alessandra Vaccari</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Fashion at the Time of Fascism: Italian Modernist Lifestyle 1922–1943</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Damiani &middot; 2009</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/manco_stencil-graffiti_2076/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/manco_tristan_stencil_graffiti_9780500283424.jpg" alt="Stencil Graffiti" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tristan Manco</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Stencil Graffiti</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Thames &amp; Hudson &middot; 2002</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/mount_stenberg-brothers-constructing-a-revolution-in-soviet-design_2097/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/mount_christopher_stenberg_brothers_9780870700514.jpg" alt="Stenberg Brothers: Constructing a Revolution in Soviet Design" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Christopher Mount</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Stenberg Brothers: Constructing a Revolution in Soviet Design</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Museum of Modern Art &middot; 1997</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/prelinger_another-science-fiction-advertising-the-space-race-1957-1962_2092/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/prelinger_megan_another_science_fiction_9780922233359.jpg" alt="Another Science Fiction: Advertising the Space Race 1957–1962" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Megan Prelinger</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Another Science Fiction: Advertising the Space Race 1957–1962</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Blast Books &middot; 2010</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/purvis_hn-werkman_2102/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/purvis_alston_w_h_n_werkman_9780300102901.jpg" alt="H.N. Werkman" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Alston W. Purvis</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">H.N. Werkman</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Yale University Press &middot; 2004</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/ross_mythology-the-dc-comics-art-of-alex-ross_2091/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/ross_alex_mythology_the_dc_comics_art_of_alex_ross_9780375422409.jpg" alt="Mythology: The DC Comics Art of Alex Ross" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Alex Ross</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Mythology: The DC Comics Art of Alex Ross</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Pantheon Books &middot; 2003</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/rowell_the-russian-avant-garde-book-1910-1934_2093/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/rowell_margit_the_russian_avant_garde_book_1910_1934_9780870700071.jpg" alt="The Russian Avant-Garde Book 1910–1934" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Margit Rowell, Deborah Wye</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Russian Avant-Garde Book 1910–1934</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Museum of Modern Art &middot; 2002</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/slanted_slanted-magazine-46cairo_1849/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/magazines/slanted/slanted-46-cairo.jpg" alt="Slanted Magazine #46—Cairo" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Slanted Publishers</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Slanted Magazine #46—Cairo</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Slanted Publishers &middot; 2025</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/tupitsyn_rodchenko-and-popova-defining-constructivism_2095/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/tupitsyn_margarita_rodchenko_popova_defining_constructivism_9781854377968.jpg" alt="Rodchenko &amp; Popova: Defining Constructivism" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Margarita Tupitsyn</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Rodchenko &amp; Popova: Defining Constructivism</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tate Publishing &middot; 2009</p>
+        
+    </div>
+</a>
+
+        
+    </div>
+</section>
+
+            
+        
+    </div>
+</main>
+
+
+
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
+        
+        <p>© 2026 Hudson Street Library · <a href="/identity/" class="text-neutral-600 underline hover:text-neutral-900">Identity</a> · <a href="/colophon.html" class="text-neutral-600 underline hover:text-neutral-900">Colophon</a></p>
+    </div>
+</footer>
+
+<script>
+    // Mobile Menu Toggle Logic
+    const mobileMenuButton = document.querySelector('button.md\\:hidden');
+    const mobileNavMenu = document.getElementById('mobile-nav-menu');
+
+    if (mobileMenuButton && mobileNavMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+            mobileNavMenu.classList.toggle('hidden');
+            mobileNavMenu.classList.toggle('flex');
+            const icon = mobileMenuButton.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            }
+        });
+    }
+
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            if (this.hash) {
+               const targetElement = document.querySelector(this.hash);
+               if (targetElement) {
+                    e.preventDefault();
+                    const headerOffset = document.querySelector('header')?.offsetHeight || 70;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                    if (mobileMenuButton && mobileMenuButton.getAttribute('aria-expanded') === 'true') {
+                         mobileMenuButton.click();
+                    }
+               }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
