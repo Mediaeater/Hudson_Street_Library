@@ -185,7 +185,7 @@ move on rather than re-fetching it in different ways.
 | `429` + browser interstitial | Skip the host — artist site or OpenLibrary instead (Dashwood) |
 | `429` on repeat fetches | Space out same-host calls; the Met's `met-publications` throttles fast |
 | Cloudflare CAPTCHA on everything | Static assets often still serve: try `/wp-content/uploads/…` directly |
-| Domain looks wrong (parked template) | The imprint is gone — stop, don't scrape the squatter (ceibaeditions.com) |
+| Domain looks wrong (parked template) | The imprint is gone — stop, don't scrape the squatter (ceibaeditions.com; akinabooks.com now serves an Indonesian retail template) |
 | Empty body from a Shopify `suggest.json` | The brackets weren't URL-encoded — `%5Btype%5D`, not `[type]` |
 | Confident results, all irrelevant | AbeBooks fuzzy-matched. Re-check author *and* title; cross-check on a Shopify shop |
 
@@ -200,6 +200,34 @@ curl -s -o cand.jpg '{image-url}' && md5 -q cand.jpg
 ```
 
 Match by digest, then install. Applies to any variant/edition ambiguity, not just series.
+
+## When the only cover you can find is watermarked
+
+Booksellers who photograph their own stock — **Le Plac'Art (`placartphoto.com`) and
+`josefchladek.com` are the two you will hit most** — stamp the domain across the image,
+often three times. A watermarked cover does not ship. Set `cover_image` to null and say
+"cover to be photographed" in notes.
+
+Before giving up, try the AbeBooks **ISBN image URL directly**:
+
+```bash
+curl -sL -o cover.jpg -w '%{http_code}\n' 'https://pictures.abebooks.com/isbn/{isbn13}-us.jpg'
+```
+
+This is *not* what the JSON-LD `image` field returns, and it often exists when a keyword
+search finds nothing — it rescued a watermarked Super Labo title at 270x353, small but
+clean. It 404s honestly when absent.
+
+**`auto-crop-covers.py` gives up on dark backdrops.** A book shot on near-black reads as
+"already tight" because the padding is not white. Find the real bounds instead:
+
+```python
+a = np.array(Image.open(p).convert('RGB')).astype(int)
+mask = a.max(axis=2) > 45          # anything brighter than the backdrop
+cols = np.where(mask.sum(axis=0) > im.height * 0.15)[0]
+rows = np.where(mask.sum(axis=1) > im.width * 0.05)[0]
+im.crop((cols.min(), rows.min(), cols.max()+1, rows.max()+1)).save(p, quality=92)
+```
 
 ## When to stop and say so
 
