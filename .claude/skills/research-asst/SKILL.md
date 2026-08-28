@@ -42,7 +42,7 @@ Accept any of:
 ### Fast path (default): publisher-first
 
 1. Start from what the user gave you — a publisher URL, ISBN, or title (an Amazon/retailer listing counts). `WebFetch` the **publisher's own product page first**; it almost always carries ISBN, page count, dimensions, format, description, contributors, and a cover image in one place.
-2. If you only have a title, run ONE `WebSearch` to find the publisher product page, then `WebFetch` it.
+2. If you only have a title, **try the search-free indexes below before spending a WebSearch** — they resolve roughly four out of five ordinary photobooks to an exact ISBN, publisher and cover URL for the cost of a plain HTTP GET. Only when they miss, run ONE `WebSearch` to find the publisher product page, then `WebFetch` it.
 3. Fill the JSON from that page and author the description. Set `authors[0].url` to the artist's **own official website** if one exists — a quick targeted `WebSearch`/`WebFetch` when the publisher page doesn't link it; a gallery or museum URL does **not** count and goes in `artist_links` instead (see Critical Rules). **Stop as soon as the Required fields + core Expected fields (`isbn`, `pages`, `dimensions`/`height_cm`+`width_cm`, `format`, `description`, cover, plus the artist's official site if one exists) are populated.** Emit the JSON — do not open more sources.
 
 **Stop rule / budget.** A routine add costs roughly one publisher fetch plus a cover fetch (target ≤ ~10 web calls). The moment the core fields + cover are in hand, you are done.
@@ -53,6 +53,28 @@ Accept any of:
 - the book is a major/scholarly title where authoritative LOC/LCSH subject headings materially improve the record.
 
 **Example (fast path).** Given `https://www.versobooks.com/products/3477-how-to-see-like-a-machine`: one `WebFetch` returns ISBN 9781836742166, 192 pp, 21 × 14 cm, hardcover, the publisher description, and the cover image — every core field in a single fetch. Author the description, download + crop the cover, emit the JSON. No LOC/WorldCat/distributor calls needed.
+
+### When `WebSearch` refuses (200/200) — keep going
+
+`WebSearch` is capped at 200 calls per session. `WebFetch`, `curl` and public JSON APIs
+are **not**. Search buys *discovery* — learning which host holds the record; once you
+know the host you go straight at it. So spend the search budget only on the one fact
+nothing else supplies (usually: who published this), and never on facts the publisher's
+own page already lists.
+
+The moves, in order: **AbeBooks keyword search**
+(`abebooks.com/servlet/SearchResults?kn=<author+full+title>`, whose HTML embeds a
+schema.org `Book` record giving exact title, ISBN-13, publisher, binding and a cover URL —
+the highest-yield first stop for anything that ever carried an ISBN) → OpenLibrary
+`search.json` / `api/books?bibkeys=ISBN:…&jscmd=data` → the artist's own site (usually a
+complete bibliography, and not behind a bot check) → the publisher's WordPress `wp-json`
+or Shopify `search/suggest.json` → the publisher's index page grepped for the real
+product slug. **Full playbook, with working commands and
+the traps in each: `references/no-search.md`.** Read it the moment a search call is
+refused — or before starting a batch of 20+ rows, where the cap is a certainty.
+
+If the publisher is still unknown after all of that, **stop and say the budget ran out**.
+Record what is known and what is missing. Never guess a publisher, title or author.
 
 ### Deep sweep (opt-in — only per the escalation triggers above)
 
@@ -72,7 +94,7 @@ Query in parallel (respect rate limits):
 ### Phase 2: Publisher & Distributor Research
 
 Search systematically (parallel where possible):
-- **Publisher's official site**: `WebSearch` `site:publishername.com "book title"`, then `WebFetch` the product page
+- **Publisher's official site**: try the constructed URL first; fall back to `WebSearch` `site:publishername.com "book title"`, then `WebFetch` the product page
   - Extract: official description, press release, exhibition dates, cover image URL, purchase link
   - Some art publishers/distributors (e.g. Printed Matter) return **403 to `WebFetch`** — fall back to `curl` with a browser `User-Agent`, or use the OpenLibrary cover API
 - **DAP / Distributed Art Publishers** (`artbook.com`)
@@ -161,6 +183,9 @@ See **`references/json-schema.md`** for the full annotated JSON example (a compl
 - **Subtitle is glued onto the title on ingest.** There is no subtitle column: the `add-book` `--json` ingest writes `title: subtitle` unless `title` already contains the subtitle string. So never put a series tag, edition, or a paraphrase of the title in `subtitle` — that lands in the display title ("Stickers: From Punk Rock…: From Punk Rock… (Stuck-Up…)", "Board: …: Expanded Edition" happened 2026-08-27). Put the full display title in `title` and leave `subtitle` null; edition text goes in `edition`.
 - **Ingest-shape fields agents get wrong.** `research_log` must be an object `{"sources_checked": [...]}` (a string or bare array crashes the ingest on `.join`), and `authors[].name` must be set (it becomes `author_full_name`; blank otherwise). When briefing parallel research agents, point them at `references/json-schema.md` instead of paraphrasing the schema.
 - **Publisher hero image ≠ front cover.** Publisher pages often lead with an interior spread or a hero crop. `Read` the downloaded image to confirm it is the actual front cover before setting `cover_image`.
+- **A missing OpenLibrary cover returns HTTP 200.** `covers.openlibrary.org/b/isbn/{isbn}-L.jpg` serves a 43-byte 1×1 GIF when it has no cover. Always append `?default=false` — then it 404s when absent and 302s to the real image when present.
+- **Series covers that differ only in colour.** When volumes share one design (Nocito's three *Pud* books: same die, different cloth and foil), filenames and alt text are unreliable. Match by `md5` against the images on each volume's *own* detail page before installing.
+- **Guessed product slugs 404.** Don't build a publisher URL from the title — fetch the catalogue/index page and grep it for real hrefs. Akio Nagasawa's *Record No. 26* is `record-no-26`; *No. 34* is `record-no34`, no hyphen.
 - **Angled product-shot cover.** Amazon/dealer covers are often shot at a 3/4 angle on white. Prefer a flat front cover; after download run `python3 scripts/auto-crop-covers.py --input <path> --overwrite` to trim, then verify by `Read`.
 - **Eating the whole web.** If you are opening LOC + WorldCat + five distributors + museum sites for a routine title, stop — the publisher page had the core fields. Reserve the Deep Sweep for genuine gaps/conflicts.
 - **Publisher or shop behind Cloudflare (403 to `WebFetch` *and* curl).** Some publishers gate the whole site with a Cloudflare CAPTCHA (e.g. Fondazione Prada's bookshop and main site). Fallbacks: (1) static assets often still load via `curl` — try `/wp-content/uploads/...` PDFs/images directly; (2) get the ISBN + cover from an accessible distributor instead — **ARTBOOK / D.A.P.** (`artbook.com/{isbn13}.html`), **IDEA Books** (`ideabooks.nl`, whose `/media/` CDN serves the cover image directly via `curl`), or the ISBN listing on Amazon. Always `Read` the sourced cover to confirm — a distributor's image can be a variant crop of the publisher's.
@@ -168,6 +193,9 @@ See **`references/json-schema.md`** for the full annotated JSON example (a compl
 ## Error Handling
 
 Edge-case handling — no ISBN, gallery publisher, historical (pre-2010), emerging artist, conflicting sources, non-English — lives in **`references/edge-cases.md`**. Consult it when a title hits one of those.
+
+Blocked or exhausted sources — `WebSearch` at 200/200, a `403`/`429`/Cloudflare host, a
+dead publisher domain, an ambiguous edition — live in **`references/no-search.md`**.
 
 ## Handoff to Add-Book
 
