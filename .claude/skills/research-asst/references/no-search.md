@@ -44,16 +44,22 @@ Two rules, both non-negotiable:
   completely unrelated books (`Aaron McElroy Sweet` → children's personalised storybooks).
   A result that matches on only one of the two is a miss.
 - **Never copy `offers.price`.** Every record carries one. Pricing must not enter any field.
+- **Match the payload, not the script tag.** Attribute order varies, so a strict
+  `<script type="application/ld\+json">` regex finds nothing on a page that has two of
+  them. Anchor on `"@type":"ItemList"`, as the grep above does.
 
 **Query shaping matters more than it looks.** Pass the *full* title, colon and subtitle
 included. Truncating at the colon dropped the ladder's hit rate on a fourteen-row test set
 from 11/14 to 9/14.
 
-`plans/stub-fill/lookup.js` runs this rung plus the two below in one call:
+`scripts/lookup-book.js` runs this rung plus the two below in one call:
 
 ```bash
-node plans/stub-fill/lookup.js "mizutani hanon"        # or: --isbn 9784865872941
+node scripts/lookup-book.js "mizutani hanon"        # or: --isbn 9784865872941
 ```
+
+(`plans/stub-fill/lookup.js` is the same tool, but `plans/` is gitignored — cite and
+maintain the tracked copy in `scripts/`.)
 
 Measured against fourteen rows already filled by hand, the ladder recovered the *exact
 same ISBN* for eleven of them (79%) with zero WebSearch calls.
@@ -88,8 +94,14 @@ curl -sL -o cover.jpg -w '%{http_code}\n' 'https://covers.openlibrary.org/b/isbn
 /wp-json/wp/v2/media?search={slug}        # full-size cover URLs
 ```
 
-Not universal — MACBA's returns 404/HTML. Check the status and content-type before
-parsing; fall back to fetching the HTML page and reading `og:image` / `og:description`.
+Not universal, and not complete where it exists: MACBA's returns 404/HTML, and IMA's
+`/wp-json/wp/v2/search` returns `[]` for a title its own `?s=` page renders. Check the
+status and content-type before parsing; fall back to fetching the HTML page and reading
+`og:image` / `og:description`. An `og:image` path often dates the record when nothing else
+will — `/uploads/2016/07/exhibition-hanon_og-1200x630.jpg` puts *Hanon* at July 2016.
+
+**Site-internal search is just a URL.** `?s=` on WordPress, `/search?q=` on shops. That is
+discovery without WebSearch, as long as you can name the host.
 
 **Shopify shops** (Mack, and most independent photobook shops) expose:
 
@@ -102,7 +114,9 @@ curl -s 'https://{shop}/products/{handle}.json'   # full product record incl. im
 `vendor` in the response is the publisher — often the one fact you were missing. Hosts
 verified to answer `suggest.json`: **`www.photobookstore.co.uk`** (broadest stock, try it
 first), `mackbooks.co.uk`, `twelve-books.com`, `loosejoints.biz`, `www.setantabooks.com`,
-`deadbeatclub.com`, `tbwbooks.com`. Confirmed *not* Shopify, don't bother: dashwoodbooks
+`deadbeatclub.com`, `tbwbooks.com`, `shop.photoeye.com`. Unlike AbeBooks these answer a
+real "0 results" honestly, so use one to sanity-check a suspicious AbeBooks hit.
+Confirmed *not* Shopify, don't bother: dashwoodbooks
 (429 bot check), nieves.ch, aperture.org, steidl.de, ideabooks.nl, chosecommune.com,
 void.photo.
 
@@ -158,6 +172,11 @@ thomasprior.com settled the attribution. Booksellers, by contrast, sit behind bo
 (Dashwood Books returns `429` with a "Checking your browser…" interstitial) and mix in
 price language you must not copy.
 
+The limit: plenty of artist sites are image-only. thomasprior.com's *Bomba* page is a bare
+carousel of `wp-content/uploads` JPEGs, and its `wp-json` record has an empty
+`content.rendered` — no publisher is recoverable there at any price. Read the page, then
+move on rather than re-fetching it in different ways.
+
 ## Blocked hosts and their ways around
 
 | Symptom | Move |
@@ -167,6 +186,8 @@ price language you must not copy.
 | `429` on repeat fetches | Space out same-host calls; the Met's `met-publications` throttles fast |
 | Cloudflare CAPTCHA on everything | Static assets often still serve: try `/wp-content/uploads/…` directly |
 | Domain looks wrong (parked template) | The imprint is gone — stop, don't scrape the squatter (ceibaeditions.com) |
+| Empty body from a Shopify `suggest.json` | The brackets weren't URL-encoded — `%5Btype%5D`, not `[type]` |
+| Confident results, all irrelevant | AbeBooks fuzzy-matched. Re-check author *and* title; cross-check on a Shopify shop |
 
 ## Matching a cover to the right volume
 
