@@ -16,6 +16,7 @@ skill delegates its research step here: it invokes this skill to produce
 | Step | Action | Output |
 |------|--------|--------|
 | 1 | Parse input (ISBN / title / publisher URL) | search key |
+| 1a | No publisher yet? **Search-free lookup first** — `node scripts/lookup-book.js "<author> <title>"` — before spending a capped `WebSearch` | ISBN + publisher |
 | 2 | **Fast path**: `WebFetch` the publisher page, fill the record, author the description — **stop when core fields + cover are done** | `book_data_{slug}.json` |
 | 3 | **Deep sweep** (only for a gap/conflict): LOC, WorldCat, distributors, artist/museum | filled gaps |
 | 4 | Download + crop cover → `src/assets/images/books/` | cover `.jpg` |
@@ -54,13 +55,19 @@ Accept any of:
 
 **Example (fast path).** Given `https://www.versobooks.com/products/3477-how-to-see-like-a-machine`: one `WebFetch` returns ISBN 9781836742166, 192 pp, 21 × 14 cm, hardcover, the publisher description, and the cover image — every core field in a single fetch. Author the description, download + crop the cover, emit the JSON. No LOC/WorldCat/distributor calls needed.
 
-### When `WebSearch` refuses (200/200) — keep going
+### Search-free lookup — run this *before* any `WebSearch`
 
-`WebSearch` is capped at 200 calls per session. `WebFetch`, `curl` and public JSON APIs
-are **not**. Search buys *discovery* — learning which host holds the record; once you
-know the host you go straight at it. So spend the search budget only on the one fact
-nothing else supplies (usually: who published this), and never on facts the publisher's
-own page already lists.
+`WebSearch` is capped at 200 calls per session, and that cap is what stalls long
+cataloguing runs. `WebFetch`, `curl` and public JSON APIs are **not** capped. Search buys
+*discovery* — learning which host holds the record; once you know the host you go straight
+at it. So spend the search budget only on the one fact nothing else supplies (usually: who
+published this), and never on facts the publisher's own page already lists.
+
+In this repo the first three rungs are one command — run it before reaching for search:
+
+```bash
+node scripts/lookup-book.js "<author last> <full title>"   # or: --isbn 9784865872941
+```
 
 The moves, in order: **AbeBooks keyword search**
 (`abebooks.com/servlet/SearchResults?kn=<author+full+title>`, whose HTML embeds a
@@ -72,6 +79,11 @@ or Shopify `search/suggest.json` → the publisher's index page grepped for the 
 product slug. **Full playbook, with working commands and
 the traps in each: `references/no-search.md`.** Read it the moment a search call is
 refused — or before starting a batch of 20+ rows, where the cap is a certainty.
+
+Two failure modes to hold in mind while doing this: AbeBooks **never returns empty**, so a
+confident-looking set of unrelated books is what a true miss looks like — confirm title
+*and* author before believing it. And a 0 from OpenLibrary means almost nothing for a
+small-press art photobook.
 
 If the publisher is still unknown after all of that, **stop and say the budget ran out**.
 Record what is known and what is missing. Never guess a publisher, title or author.
