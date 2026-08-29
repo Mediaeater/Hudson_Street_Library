@@ -81,6 +81,11 @@ product slug. **Full playbook, with working commands and
 the traps in each: `references/no-search.md`.** Read it the moment a search call is
 refused — or before starting a batch of 20+ rows, where the cap is a certainty.
 
+**Getty SRU belongs on this list too.** It is a keyless `curl` against a real art-library
+catalogue, so it costs nothing from the search budget and often resolves an art title the
+trade indexes miss. Full syntax in *Phase 1* below; the one-liner is
+`curl -s "https://na01.alma.exlibrisgroup.com/view/sru/01GRI_INST?version=1.2&operation=searchRetrieve&recordSchema=marcxml&maximumRecords=5&query=alma.all_for_ui=%22<author>+<title>%22"`.
+
 Two failure modes to hold in mind while doing this: AbeBooks **never returns empty**, so a
 confident-looking set of unrelated books is what a true miss looks like — confirm title
 *and* author before believing it. And a 0 from OpenLibrary means almost nothing for a
@@ -94,11 +99,34 @@ Record what is known and what is missing. Never guess a publisher, title or auth
 ### Phase 1: Core Bibliographic Data
 
 Query in parallel (respect rate limits):
-1. **Library of Congress SRU API** (`lx2.loc.gov/sru`)
+1. **Getty Research Institute** — the strongest of the three for art books, and the one to
+   try first. The GRI catalogues photobooks, exhibition catalogues and small-press artist
+   books that LOC and WorldCat never picked up. Its public face, `https://primo.getty.edu`,
+   is an un-fetchable SPA; query the catalogue itself through **Alma SRU, which needs no API
+   key** and returns MARCXML to a plain `curl`:
+
+   ```bash
+   SRU="https://na01.alma.exlibrisgroup.com/view/sru/01GRI_INST?version=1.2&operation=searchRetrieve&recordSchema=marcxml&maximumRecords=5&query="
+   curl -s "${SRU}alma.isbn=9783869309347"                   # exact record
+   curl -s "${SRU}alma.creator=araki"                        # 104 records
+   curl -s "${SRU}alma.title=%22sentimental+journey%22"      # 32 records
+   curl -s "${SRU}alma.all_for_ui=%22guy+bourdin+untouched%22"  # author + title in one
+   ```
+
+   Indexes: `alma.isbn`, `alma.title`, `alma.creator`, `alma.all_for_ui` (keyword). **Join
+   multi-word terms with `+` inside `%22…%22` quotes** — a bare multi-word term returns a
+   `<diagnostics>` block, not results, and `%20` fails the same way.
+
+   Extract: `020` (ISBN-13 and ISBN-10), `100`/`700` with `$e` relator terms (photographer,
+   editor, designer — these fill `contributors`, `designer`, `editor`), `245$a/$b/$c`,
+   `264` place/publisher/year, `300` pagination + illustration note + **height in cm**, and
+   `650` LCSH subject headings, which become authoritative Tags. `001` is the MMS ID; the
+   human-readable record is `https://primo.getty.edu/primo-explore/fulldisplay?docid=01GRI_ALMA<mmsid>&vid=GRI`.
+2. **Library of Congress SRU API** (`lx2.loc.gov/sru`)
    - Use ISBN or title search
    - Extract: LC Control Number, MARC record, subject headings, classification
    - Subject headings become authoritative Tags
-2. **WorldCat** (use public search at worldcat.org — no API key required)
+3. **WorldCat** (use public search at worldcat.org — no API key required)
    - Extract: OCLC number, contributor roles, alternate ISBNs, holdings count
    - Cross-check pagination and dimensions
 
@@ -208,7 +236,15 @@ voice and de-slop pull the same direction: state what the work is, drop the flou
 
 ## Gotchas
 
-- **No LOC/WorldCat record for new or small-press art books.** Common — most 2024–2026 titles and nonprofit-press artist books aren't cataloged yet. Symptom: SRU/search returns zero. Fix: leave `loc_data` null and list it in `unresolved_fields`; if you construct subject headings editorially, say so in `notes` — never present invented headings as LOC-sourced.
+- **`primo.getty.edu` cannot be scraped — use Alma SRU.** The site is classic Primo (the
+  root redirects to `/primo-explore/search?vid=GRI`), an Angular SPA whose HTML carries no
+  record data. Its REST endpoints 403 unauthenticated; a guest JWT does authenticate (HTTP
+  200) but every `pnxs` query returns `total: 0` on every tab and scope, so that route is a
+  dead end — don't rebuild it. And `/primo-explore/fulldisplay?docid=…` returns **200 for
+  any docid, including a fabricated one**, so a status check never verifies a Getty record;
+  verify against the SRU response instead. Working endpoint and query syntax: *Phase 1*.
+- **No LOC/WorldCat record for new or small-press art books.** Common — most 2024–2026 titles and nonprofit-press artist books aren't cataloged yet. Symptom: SRU/search returns zero. Fix: try the Getty first — it holds art books the trade
+  catalogues skip. If it misses too, leave `loc_data` null and list it in `unresolved_fields`; if you construct subject headings editorially, say so in `notes` — never present invented headings as LOC-sourced.
 - **Subtitle is glued onto the title on ingest.** There is no subtitle column: the `add-book` `--json` ingest writes `title: subtitle` unless `title` already contains the subtitle string. So never put a series tag, edition, or a paraphrase of the title in `subtitle` — that lands in the display title ("Stickers: From Punk Rock…: From Punk Rock… (Stuck-Up…)", "Board: …: Expanded Edition" happened 2026-08-27). Put the full display title in `title` and leave `subtitle` null; edition text goes in `edition`.
 - **Ingest-shape fields agents get wrong.** `research_log` must be an object `{"sources_checked": [...]}` (a string or bare array crashes the ingest on `.join`), and `authors[].name` must be set (it becomes `author_full_name`; blank otherwise). When briefing parallel research agents, point them at `references/json-schema.md` instead of paraphrasing the schema.
 - **Publisher hero image ≠ front cover.** Publisher pages often lead with an interior spread or a hero crop. `Read` the downloaded image to confirm it is the actual front cover before setting `cover_image`.
