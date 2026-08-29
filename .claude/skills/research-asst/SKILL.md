@@ -20,7 +20,8 @@ skill delegates its research step here: it invokes this skill to produce
 | 2 | **Fast path**: `WebFetch` the publisher page, fill the record, author the description — **stop when core fields + cover are done** | `book_data_{slug}.json` |
 | 3 | **Deep sweep** (only for a gap/conflict): LOC, WorldCat, distributors, artist/museum | filled gaps |
 | 4 | Download + crop cover → `src/assets/images/books/` | cover `.jpg` |
-| 5 | Emit JSON + `research_log`; hand to `add-book` — decline to ingest yourself | outputs |
+| 5 | **De-slop the description** — scan it, fix what fires | clean prose |
+| 6 | Emit JSON + `research_log`; hand to `add-book` — decline to ingest yourself | outputs |
 
 ## When NOT to Use
 
@@ -177,6 +178,22 @@ See **`references/json-schema.md`** for the full annotated JSON example (a compl
   3. **Artist + other-works context** (a `<p class="mt-6">`) — who the artist is and how this fits their body of work, when there is one. Don't bolt it on. Inline `<em>` for titles.
 - `main`: 2–3 sentence summary. Fallback only, used if `extended` is absent.
 - `artist_bio` / `exhibition_context`: raw material for beat 3 — significance, major works, representation, venue, career fit. Neither is a CSV column, so **fold their substance into `extended`** (paraphrase across sources).
+
+**De-slop before you emit.** The description is published prose — run it through the
+scanner and fix what fires *before* writing the JSON, while the sources are still in front
+of you. Rewriting it later means re-researching the facts the tic was dressing up.
+
+```bash
+python3 ~/.claude/skills/de-slop/scripts/scan.py book_data_{slug}.json   # or paste the description into a file
+```
+
+Fix by saying the plain thing, not by rewording around the regex. The tics that actually
+recur in catalogue copy are the **dash-appositive tail** ("…Steidl, 2019 — the artist's
+first monograph"), **participle tails** ("…, underscoring his interest in…"),
+**promotional boilerplate** ("boasts", "breathtaking", "hidden gem" — publisher blurbs are
+full of it, and copying the publisher's page is how it gets in), **"not just X but Y"**,
+and the **AI vocabulary** words (delve, tapestry, meticulous, interplay, vibrant). Curatorial
+voice and de-slop pull the same direction: state what the work is, drop the flourish.
 
 **Links**: Map every proper noun with authoritative URL to `artist_links` or `distributors` arrays.
 

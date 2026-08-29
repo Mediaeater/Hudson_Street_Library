@@ -58,6 +58,28 @@ fields and none of the columns is unused. This said 36 for a long time; it was w
 - Don't discard information during data entry
 - If unsure about a field, include it - don't leave it blank
 
+### Prose We Publish — run de-slop
+
+**Anything written for a reader gets scanned before it ships.** Book descriptions, news
+posts and articles, collection blurbs, reviews, and written summaries or reports handed
+over as a deliverable. Not chat replies, not commit messages, not `plans/` notes.
+
+```bash
+node scripts/deslop-descriptions.js <id>              # a catalogue description
+node scripts/deslop-descriptions.js --all             # the whole catalogue
+python3 ~/.claude/skills/de-slop/scripts/scan.py src/news/<page>.html   # news, or any file
+```
+
+Exit 0 clean, 1 tics found. Fix by writing the plain sentence the tic was dressing up, then
+re-run — not by rewording around the regex. A line that is right as written can be marked
+`<!-- de-slop: ignore -->` on the line before it.
+
+The two that bite this project hardest: **publisher blurbs**, which arrive pre-loaded with
+"boasts" / "breathtaking" / dash-appositive tails and carry them straight into a
+description; and the **run checks**, which compare consecutive sentences — so scan each
+description as its own document (`deslop-descriptions.js` does), never as one concatenated
+stream, or a shelf of similarly-worded magazine rows reports phantom hits.
+
 ### Adding Books
 
 - Use the `add-book` skill (it delegates research to `research-asst`); interactive manual entry is `npm run add`.

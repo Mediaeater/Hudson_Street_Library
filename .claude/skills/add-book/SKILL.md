@@ -298,6 +298,18 @@ The book page's `description` is ingested from research-asst's `description.exte
 
 `artist_bio` and `exhibition_context` are **not** separate CSV columns — their substance must be folded into `description`. If what landed is the short `main` (thin, no framing, no artist context), re-run `/research-asst` for that title rather than hand-writing prose here.
 
+**De-slop the description that landed.** research-asst scans before emitting; this confirms
+it on the row as stored, and catches descriptions written or patched by hand:
+
+```bash
+node scripts/deslop-descriptions.js <id>          # the row you just added
+node scripts/deslop-descriptions.js --all         # whole catalogue (149 rows had hits, 2026-08-29)
+```
+
+Exit 0 is clean, 1 means tics found. Fix by rewriting the sentence, then re-run — never by
+rewording around the regex. Publisher blurbs are the usual source: copying one in brings
+its "boasts", "breathtaking" and dash-tails with it.
+
 ## Reference Files
 
 - `references/add-book-reference.md`: cover-image naming convention, troubleshooting, implementation / file-map.
