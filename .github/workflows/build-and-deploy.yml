@@ -23,7 +23,10 @@ concurrency:
 jobs:
   # Build job
   build:
-    runs-on: ubuntu-latest
+    # Self-hosted runner on the iMac (~/Projects/actions-runner/hsl, a launchd
+    # user service). Push-to-main and workflow_dispatch only — no pull_request
+    # trigger, so fork code never runs on this machine.
+    runs-on: [self-hosted, macOS]
     steps:
       - name: Checkout
         uses: actions/checkout@v7
