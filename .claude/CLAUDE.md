@@ -11,14 +11,25 @@
 - Example: `const handler = new CSVHandler(); const books = await handler.readCSV();`
 
 **Run CSV validation before committing:**
-- Always run `npm run test:csv` before committing changes to books.csv
+- Always run `npm run test:csv` before committing changes to any catalogue CSV (it checks every file plus id uniqueness across files)
 - Pre-commit hook enforces this, but verify manually if bypassed
 - A single structural error breaks the entire Eleventy build
 
-**CSV must always have exactly 37 columns per row:**
+**The catalogue is several files, one schema:**
+- `src/_data/books.csv` (the art wing) plus `src/_data/catalog/<wing>.csv` for
+  every other wing, declared in `src/_data/wings.json` (registry; schema in
+  `src/schemas/wings.schema.json`). Each wing owns an integer id block.
+- Loaded and merged by `scripts/utils/catalog.js` (`loadCatalog` /
+  `loadCatalogSync`), which stamps `collection` from the file and throws on a
+  duplicate id, an out-of-block id, or a bad column count. Never read
+  `books.csv` directly from `_data` modules or `.eleventy.js`.
+- Plan and decisions: `plans/collections-expansion/plan.md`.
+
+**Every catalogue CSV must have exactly 37 columns per row:**
 (`id` … `cataloged_date`. Verified 8 Aug 2026 by strict parse — every row has 37
 fields and none of the columns is unused. This said 36 for a long time; it was wrong.)
-- Run `node scripts/validate-csv-structure.js` if you manually edit the CSV
+- Every file under `src/_data/catalog/` shares the `books.csv` header exactly
+- Run `node scripts/validate-csv-structure.js` if you manually edit a CSV
 - Missing or extra columns cause build failures
 
 ### Book Metadata Rules
@@ -105,7 +116,7 @@ stream, or a shelf of similarly-worded magazine rows reports phantom hits.
 
 ### Backup System (CRITICAL)
 
-- `src/_data/books.csv` is the only source of truth. It is protected by the GitHub remote, `csv-backups/` (committed by the Actions bot), and launchd copies every 6 hours to `~/.hudson-library-backups/` and `src/_data/backups/`.
+- `src/_data/books.csv` plus every file under `src/_data/catalog/` are the only source of truth. They are protected by the GitHub remote, `csv-backups/` (committed by the Actions bot), and launchd copies every 6 hours to `~/.hudson-library-backups/` and `src/_data/backups/` (wing copies prefixed `catalog_<wing>_`).
 - The scheduled run uses `--no-git` deliberately: the script's git path commits with `--no-verify`, skipping the CSV structure check. Don't change it.
 - Verify the job, run a manual backup, or restore: `csv-backup` skill. After any restore, run `npm run test:csv` before committing.
 
