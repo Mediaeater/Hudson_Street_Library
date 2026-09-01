@@ -29,10 +29,21 @@ const fs = require('fs');
 const path = require('path');
 const { parse } = require('csv-parse/sync');
 const CSVHandler = require('./csv-handler');
+const { validateSchema } = require('./validate-schema');
 
 const ROOT = path.join(__dirname, '..', '..');
 const DATA_DIR = path.join(ROOT, 'src', '_data');
 const WINGS_FILE = 'wings.json';
+const WINGS_SCHEMA = path.join(ROOT, 'src', 'schemas', 'wings.schema.json');
+const WING_DEFAULTS = {
+    isDefault: false,
+    live: false,
+    allowLegacyIds: [],
+    classifications: [],
+    defaultGrouping: '',
+    intro: '',
+    featuredTags: [],
+};
 const CATALOG_SUBDIR = 'catalog';
 const EXPECTED_COLUMNS = 37;
 
@@ -58,16 +69,24 @@ function loadWings(dataDir = DATA_DIR) {
     } catch (err) {
         throw new CatalogError(`${rel(file)} is not valid JSON: ${err.message}`);
     }
-    if (!Array.isArray(wings) || wings.length === 0) {
-        throw new CatalogError(`${rel(file)} must be a non-empty array of wings`);
+    const problems = validateSchema(wings, JSON.parse(fs.readFileSync(WINGS_SCHEMA, 'utf8')));
+    if (problems.length) {
+        throw new CatalogError(`${rel(file)} does not match ${rel(WINGS_SCHEMA)}:\n  ${problems.join('\n  ')}`);
     }
+    wings = wings.map(w => ({ ...WING_DEFAULTS, ...w }));
+
     const slugs = new Set();
     for (const w of wings) {
-        if (!w.slug || !w.file || !Array.isArray(w.idBlock) || w.idBlock.length !== 2) {
-            throw new CatalogError(`${rel(file)}: every wing needs slug, file and idBlock [lo, hi] (offending: ${JSON.stringify(w)})`);
-        }
         if (slugs.has(w.slug)) throw new CatalogError(`${rel(file)}: duplicate wing slug "${w.slug}"`);
         slugs.add(w.slug);
+        if (w.idBlock[0] > w.idBlock[1]) throw new CatalogError(`${rel(file)}: wing "${w.slug}" idBlock lo > hi`);
+        if (w.slug !== 'art' && w.file !== `catalog/${w.slug}.csv`) {
+            throw new CatalogError(`${rel(file)}: wing "${w.slug}" must use file catalog/${w.slug}.csv (slug = filename)`);
+        }
+    }
+    const defaults = wings.filter(w => w.isDefault);
+    if (defaults.length !== 1 || !wings[0].isDefault) {
+        throw new CatalogError(`${rel(file)}: exactly one wing must be isDefault and it must be entry 0`);
     }
     for (let i = 0; i < wings.length; i++) {
         for (let j = i + 1; j < wings.length; j++) {

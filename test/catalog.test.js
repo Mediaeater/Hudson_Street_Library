@@ -59,14 +59,31 @@ describe('catalog loader', () => {
 
     it('overlapping id blocks in wings.json', () =>
       throws('overlap', /id blocks of "art" and "zz" overlap/));
+
+    it('a wings.json entry that violates the schema', () =>
+      throws('bad-wing', /wings\.schema\.json:[\s\S]*\$\[1\]\.itemPath: must be one of "books", "objects"[\s\S]*\$\[1\]: unknown property "colour"/));
   });
 
   describe('loadWings', () => {
-    it('returns the registry with the default wing first', () => {
+    it('returns the seven wings with the default wing first', () => {
       const wings = loadWings();
-      expect(wings[0].slug).to.equal('art');
+      expect(wings.map(w => w.slug)).to.deep.equal(['art', 'cryptology', 'fiction', 'ephemera', 'comics', 'posters', 'artworks']);
       expect(wings[0].isDefault).to.equal(true);
       expect(wings[0].idBlock).to.deep.equal([1, 9999]);
+      expect(wings.filter(w => w.isDefault)).to.have.length(1);
+    });
+
+    it('fills optional fields with defaults', () => {
+      const wings = loadWings(fixture('ok').dataDir);
+      expect(wings[1].live).to.equal(false);
+      expect(wings[1].classifications).to.deep.equal([]);
+      expect(wings[1].intro).to.equal('');
+    });
+
+    it('every declared wing file exists and shares the 37-column header', () => {
+      const { files, columns } = loadCatalogSync();
+      expect(files).to.have.length(7);
+      expect(columns).to.have.length(37);
     });
   });
 });
