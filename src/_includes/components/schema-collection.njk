@@ -1,11 +1,17 @@
+{#- page.url is the resolved URL. `permalink` is the raw front-matter string,
+    which on the paginated collection pages is itself a template expression and
+    was being shipped unrendered. title/description are only set by the static
+    collection pages, so fall back to the config the paginated ones carry. -#}
+{%- set schemaName = title or collectionConfig.title -%}
+{%- set schemaDescription = description or collectionConfig.description -%}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  "name": "{{ title | escape }}",
-  "url": "https://hudsonstreetlibrary.com{{ permalink }}"
-  {%- if description %},
-  "description": "{{ description | escape | replace('\n', ' ') | replace('\r', '') }}"
+  "name": "{{ schemaName | escape }}",
+  "url": "https://hudsonstreetlibrary.com{{ page.url }}"
+  {%- if schemaDescription %},
+  "description": "{{ schemaDescription | escape | replace('\n', ' ') | replace('\r', '') }}"
   {%- endif %},
   "isPartOf": {
     "@type": "WebSite",
