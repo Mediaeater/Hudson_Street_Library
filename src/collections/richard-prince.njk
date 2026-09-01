@@ -59,7 +59,7 @@ currentPage: collections
               false positives.
             -#}
             {%- set princeBooks = [] -%}
-            {%- for book in books -%}
+            {%- for book in books | inWing(wing) -%}
             {%- set haystack = (book.author_full_name or "") ~ " " ~ (book.contributors or "") ~ " " ~ (book.tags or "") ~ " " ~ (book.title or "") -%}
             {%- if (book.author_last == "Prince" and book.author_first == "Richard") or ("Richard Prince" in haystack) -%}
                 {%- set princeBooks = (princeBooks.push(book), princeBooks) -%}

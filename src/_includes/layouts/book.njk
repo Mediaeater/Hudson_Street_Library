@@ -646,8 +646,8 @@
     {% endif %}
 
     <!-- Other Books by Same Author -->
-    {% set authorBooks = books | otherBooksByAuthor(book.author_last, book.id) %}
-    {% set totalByAuthor = books | countByAuthor(book.author_last, book.id) %}
+    {% set wingBooks = books | inWing(book.collection) %}{% set authorBooks = wingBooks | otherBooksByAuthor(book.author_last, book.id) %}
+    {% set totalByAuthor = wingBooks | countByAuthor(book.author_last, book.id) %}
 
     {% if authorBooks.length > 0 %}
     <hr class="separator">
