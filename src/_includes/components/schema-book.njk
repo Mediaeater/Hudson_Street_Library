@@ -27,7 +27,7 @@
   {%- if book.description %},
   "description": "{{ book.description | stripHtml | truncate(500) | escape | replace('\n', ' ') | replace('\r', '') }}"
   {%- endif %}
-  {%- if book.page_count and book.page_count != '' %},
+  {%- if (book.page_count | int) > 0 %},
   "numberOfPages": {{ book.page_count | int }}
   {%- endif %}
   {%- if book.binding %},
