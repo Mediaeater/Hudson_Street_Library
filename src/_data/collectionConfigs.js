@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const CSVHandler = require('../../scripts/utils/csv-handler');
+const { loadCatalogSync } = require('../../scripts/utils/catalog');
 const { buildTagCollections } = require('../../scripts/utils/tag-collections');
 
 // Pagination source for collections.njk: curated configs plus auto-generated
@@ -18,12 +18,7 @@ module.exports = function() {
     .filter(f => f.endsWith('.json'))
     .map(f => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')));
 
-  let books = [];
-  try {
-    books = CSVHandler.readBooksSync(path.join(__dirname, 'books.csv')).data;
-  } catch (err) {
-    console.error('collectionConfigs: could not read books.csv:', err.message);
-  }
+  const books = loadCatalogSync().data;
 
   // Dedupe the tag tier: a curated config or static page owns its slug, and a
   // curated config can declare coversTags to suppress a redundant auto page.

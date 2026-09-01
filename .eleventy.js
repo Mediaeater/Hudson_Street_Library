@@ -4,7 +4,7 @@ const path = require("path");
 const slugify = require("slugify");
 // eleventy-img 7 is ESM-only; require() returns the namespace, the callable is .default
 const Image = require("@11ty/eleventy-img").default;
-const CSVHandler = require("./scripts/utils/csv-handler");
+const { loadCatalog } = require("./scripts/utils/catalog");
 
 const { exec } = require("child_process");
 
@@ -114,18 +114,15 @@ module.exports = function(eleventyConfig) {
   // Disable reserved data property checking to allow custom collections
   eleventyConfig.setFreezeReservedData(false);
 
-  // --- Load CSV Data ---
+  // --- Load catalogue data ---
+  // books.csv (art) + src/_data/catalog/*.csv, merged, each row stamped with
+  // `collection` from its filename. A structural problem in any file throws,
+  // failing the build rather than publishing a partial catalogue.
   eleventyConfig.addGlobalData("books", async () => {
-    const csvPath = path.join(__dirname, "src/_data/books.csv");
-    try {
-      console.log(`--- Attempting to read CSV: ${csvPath}`);
-      const result = await CSVHandler.readBooks(csvPath);
-      console.log(`--- Parsed ${result.data.length} records from ${csvPath}`);
-      return result.data;
-    } catch (err) {
-      console.error(`--- Error parsing CSV: ${csvPath}`, err);
-      return [];
-    }
+    const { data, files } = await loadCatalog();
+    files.forEach(f => console.log(`--- catalog: ${f.rows} rows from ${path.relative(__dirname, f.file)} (${f.slug})`));
+    console.log(`--- catalog: ${files.length} files, ${data.length} rows`);
+    return data;
   });
 
   // --- Add Slugify Filter ---
