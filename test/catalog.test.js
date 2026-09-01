@@ -1,0 +1,72 @@
+const path = require('path');
+const { expect } = require('chai');
+const { loadCatalog, loadCatalogSync, loadWings, CatalogError } = require('../scripts/utils/catalog');
+
+const fixture = name => ({ dataDir: path.join(__dirname, 'fixtures', 'catalog', name) });
+
+describe('catalog loader', () => {
+  describe('a valid multi-file catalogue', () => {
+    it('merges files in wings.json order and stamps collection from the wing', async () => {
+      const { data, files } = await loadCatalog(fixture('ok'));
+      expect(files.map(f => f.slug)).to.deep.equal(['art', 'zz']);
+      expect(data.map(b => `${b.id}:${b.collection}`)).to.deep.equal(['1:art', '2:art', '10001:zz', '42:zz']);
+    });
+
+    it('sync and async loaders agree', async () => {
+      const a = await loadCatalog(fixture('ok'));
+      const s = loadCatalogSync(fixture('ok'));
+      expect(s.data).to.deep.equal(a.data);
+      expect(s.columns).to.have.length(37);
+    });
+
+    it('accepts an out-of-block id when the wing lists it in allowLegacyIds', () => {
+      const { data } = loadCatalogSync(fixture('ok'));
+      expect(data.find(b => b.id === '42').collection).to.equal('zz');
+    });
+
+    it('loads the real catalogue without throwing', () => {
+      const { data, files, columns } = loadCatalogSync();
+      expect(columns).to.have.length(37);
+      expect(files[0].slug).to.equal('art');
+      expect(data.length).to.be.greaterThan(2000);
+      expect(data.every(b => b.collection)).to.equal(true);
+    });
+  });
+
+  describe('fails the build on', () => {
+    const throws = (name, pattern) => {
+      expect(() => loadCatalogSync(fixture(name))).to.throw(CatalogError, pattern);
+      return loadCatalog(fixture(name)).then(
+        () => { throw new Error('expected loadCatalog to reject'); },
+        err => expect(err.message).to.match(pattern)
+      );
+    };
+
+    it('a duplicate id across files', () =>
+      throws('collision', /duplicate id 5: .*zz\.csv row 3 collides with wing "art"/));
+
+    it('an id outside the wing\'s block', () =>
+      throws('out-of-block', /zz\.csv row 2: id 7 is outside the "zz" block 10001–19999/));
+
+    it('a row with fewer than 37 fields', () =>
+      throws('short-row', /zz\.csv: Invalid Record Length.*36.*line 3/));
+
+    it('a header that differs from the default wing\'s', () =>
+      throws('bad-header', /zz\.csv: column 11 is "medium", expected "binding"/));
+
+    it('a catalog/*.csv with no wing entry', () =>
+      throws('unregistered', /zz\.csv has no entry in wings\.json/));
+
+    it('overlapping id blocks in wings.json', () =>
+      throws('overlap', /id blocks of "art" and "zz" overlap/));
+  });
+
+  describe('loadWings', () => {
+    it('returns the registry with the default wing first', () => {
+      const wings = loadWings();
+      expect(wings[0].slug).to.equal('art');
+      expect(wings[0].isDefault).to.equal(true);
+      expect(wings[0].idBlock).to.deep.equal([1, 9999]);
+    });
+  });
+});
