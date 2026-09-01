@@ -2,8 +2,11 @@
 #
 # Hudson Street Library - Critical CSV Backup Script
 #
-# This script creates multiple backup copies of books.csv with timestamps
-# and rotates old backups to prevent disk space issues.
+# This script creates multiple backup copies of the catalogue CSVs with
+# timestamps and rotates old backups to prevent disk space issues. The
+# catalogue is src/_data/books.csv (the art wing) plus one
+# src/_data/catalog/<wing>.csv per wing; wing copies are named
+# catalog_<wing>_… alongside the books_… copies.
 #
 # Backup locations:
 # 1. Local project backups directory (src/_data/backups/)
@@ -37,6 +40,7 @@ done
 # Configuration
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CSV_FILE="$PROJECT_DIR/src/_data/books.csv"
+CATALOG_DIR="$PROJECT_DIR/src/_data/catalog"
 LOCAL_BACKUP_DIR="$PROJECT_DIR/src/_data/backups"
 SAFE_BACKUP_DIR="$HOME/.hudson-library-backups"
 TIMESTAMP=$(date +"%Y-%m-%d_%H%M%S")
@@ -140,27 +144,52 @@ if [[ ! -f "$WEEKLY_BACKUP" ]]; then
 fi
 
 # ============================================
+# Backup 1b + 2b: the per-wing files (src/_data/catalog/*.csv)
+# ============================================
+# Same three copies as books.csv, prefixed catalog_<wing>_ so the rotation
+# below can keep each file's history separately.
+CATALOG_COUNT=0
+for wing_file in "$CATALOG_DIR"/*.csv; do
+    [[ -e "$wing_file" ]] || continue
+    wing="catalog_$(basename "$wing_file" .csv)"
+    CATALOG_COUNT=$((CATALOG_COUNT + 1))
+
+    wing_local="$LOCAL_BACKUP_DIR/${wing}_backup_${DATE_ONLY}.csv"
+    [[ -f "$wing_local" ]] && wing_local="$LOCAL_BACKUP_DIR/${wing}_backup_${TIMESTAMP}.csv"
+    cp "$wing_file" "$wing_local"
+    if [[ "$(stat -f%z "$wing_local" 2>/dev/null || stat -c%s "$wing_local")" -ne "$(stat -f%z "$wing_file" 2>/dev/null || stat -c%s "$wing_file")" ]]; then
+        error "Local backup size mismatch for $(basename "$wing_file")"
+        exit 1
+    fi
+
+    cp "$wing_file" "$SAFE_BACKUP_DIR/hourly/${wing}_${TIMESTAMP}.csv"
+    [[ -f "$SAFE_BACKUP_DIR/daily/${wing}_${DATE_ONLY}.csv" ]] || cp "$wing_file" "$SAFE_BACKUP_DIR/daily/${wing}_${DATE_ONLY}.csv"
+    [[ -f "$SAFE_BACKUP_DIR/weekly/${wing}_${WEEK_NUMBER}.csv" ]] || cp "$wing_file" "$SAFE_BACKUP_DIR/weekly/${wing}_${WEEK_NUMBER}.csv"
+done
+log "Wing files backed up: $CATALOG_COUNT (local + safe hourly/daily/weekly)"
+
+# ============================================
 # Backup 3: Git commit (if changes detected)
 # ============================================
 cd "$PROJECT_DIR"
 
 if [[ $SKIP_GIT -eq 1 ]]; then
     log "Git backup skipped (--no-git)"
-elif git diff --quiet "$CSV_FILE"; then
-    log "No changes in books.csv since last commit"
+elif git diff --quiet -- "$CSV_FILE" "$CATALOG_DIR"; then
+    log "No changes in the catalogue CSVs since last commit"
 else
-    log "Changes detected in books.csv"
+    log "Changes detected in the catalogue CSVs"
 
     # Check if we're in a git repo
     if git rev-parse --git-dir > /dev/null 2>&1; then
         # Create automatic backup commit
-        git add "$CSV_FILE"
+        git add -- "$CSV_FILE" "$CATALOG_DIR"
 
         # Get stats for commit message
-        ADDITIONS=$(git diff --cached --numstat "$CSV_FILE" | awk '{print $1}')
-        DELETIONS=$(git diff --cached --numstat "$CSV_FILE" | awk '{print $2}')
+        ADDITIONS=$(git diff --cached --numstat -- "$CSV_FILE" "$CATALOG_DIR" | awk '{s+=$1} END {print s+0}')
+        DELETIONS=$(git diff --cached --numstat -- "$CSV_FILE" "$CATALOG_DIR" | awk '{s+=$2} END {print s+0}')
 
-        COMMIT_MSG="Automatic backup: books.csv updated ($RECORD_COUNT records)
+        COMMIT_MSG="Automatic backup: catalogue CSVs updated (books.csv $RECORD_COUNT lines)
 
 Automated backup commit
 Timestamp: $TIMESTAMP
@@ -186,56 +215,63 @@ fi
 
 log "Rotating old backups..."
 
+# Every copied file has a prefix: "books" for books.csv, "catalog_<wing>" for
+# each wing file. Count-based rotation runs per prefix so a run that copies
+# seven files does not push the older books.csv copies out early.
+PREFIXES=("books")
+for wing_file in "$CATALOG_DIR"/*.csv; do
+    [[ -e "$wing_file" ]] && PREFIXES+=("catalog_$(basename "$wing_file" .csv)")
+done
+
+# rotate_count <dir> <prefix> <keep>: keep only the <keep> most recent files
+rotate_count() {
+    local dir="$1" prefix="$2" keep="$3" count
+    [[ -d "$dir" ]] || return 0
+    count=$(find "$dir" -name "${prefix}_*.csv" -type f | wc -l)
+    if [[ $count -gt $keep ]]; then
+        find "$dir" -name "${prefix}_*.csv" -type f -print0 | \
+            xargs -0 ls -t | \
+            tail -n +$((keep + 1)) | \
+            xargs rm -f
+        log "  Rotated $(basename "$dir") ${prefix}_ backups (keeping $keep most recent)"
+    fi
+}
+
 # Clean up local backups older than KEEP_LOCAL_DAYS
 if [[ -d "$LOCAL_BACKUP_DIR" ]]; then
-    DELETED_LOCAL=$(find "$LOCAL_BACKUP_DIR" -name "books_backup_*.csv" -type f -mtime +${KEEP_LOCAL_DAYS} -delete -print | wc -l)
+    DELETED_LOCAL=$(find "$LOCAL_BACKUP_DIR" \( -name "books_backup_*.csv" -o -name "catalog_*_backup_*.csv" \) -type f -mtime +${KEEP_LOCAL_DAYS} -delete -print | wc -l)
     if [[ $DELETED_LOCAL -gt 0 ]]; then
         log "  Deleted $DELETED_LOCAL old local backup(s) (>$KEEP_LOCAL_DAYS days)"
     fi
 fi
 
-# Clean up hourly backups
-if [[ -d "$SAFE_BACKUP_DIR/hourly" ]]; then
-    HOURLY_COUNT=$(find "$SAFE_BACKUP_DIR/hourly" -name "books_*.csv" -type f | wc -l)
-    if [[ $HOURLY_COUNT -gt $KEEP_HOURLY ]]; then
-        # Keep only the most recent KEEP_HOURLY files
-        find "$SAFE_BACKUP_DIR/hourly" -name "books_*.csv" -type f -print0 | \
-            xargs -0 ls -t | \
-            tail -n +$((KEEP_HOURLY + 1)) | \
-            xargs rm -f
-        log "  Rotated hourly backups (keeping $KEEP_HOURLY most recent)"
-    fi
-fi
+# Hourly: keep KEEP_HOURLY most recent per file
+for prefix in "${PREFIXES[@]}"; do
+    rotate_count "$SAFE_BACKUP_DIR/hourly" "$prefix" "$KEEP_HOURLY"
+done
 
 # Clean up daily backups
 if [[ -d "$SAFE_BACKUP_DIR/daily" ]]; then
-    DELETED_DAILY=$(find "$SAFE_BACKUP_DIR/daily" -name "books_*.csv" -type f -mtime +${KEEP_DAILY} -delete -print | wc -l)
+    DELETED_DAILY=$(find "$SAFE_BACKUP_DIR/daily" \( -name "books_*.csv" -o -name "catalog_*.csv" \) -type f -mtime +${KEEP_DAILY} -delete -print | wc -l)
     if [[ $DELETED_DAILY -gt 0 ]]; then
         log "  Deleted $DELETED_DAILY old daily backup(s) (>$KEEP_DAILY days)"
     fi
 fi
 
-# Clean up weekly backups older than KEEP_WEEKLY weeks
-if [[ -d "$SAFE_BACKUP_DIR/weekly" ]]; then
-    WEEKLY_COUNT=$(find "$SAFE_BACKUP_DIR/weekly" -name "books_*.csv" -type f | wc -l)
-    if [[ $WEEKLY_COUNT -gt $KEEP_WEEKLY ]]; then
-        find "$SAFE_BACKUP_DIR/weekly" -name "books_*.csv" -type f -print0 | \
-            xargs -0 ls -t | \
-            tail -n +$((KEEP_WEEKLY + 1)) | \
-            xargs rm -f
-        log "  Rotated weekly backups (keeping $KEEP_WEEKLY most recent)"
-    fi
-fi
+# Weekly: keep KEEP_WEEKLY most recent per file
+for prefix in "${PREFIXES[@]}"; do
+    rotate_count "$SAFE_BACKUP_DIR/weekly" "$prefix" "$KEEP_WEEKLY"
+done
 
 # ============================================
 # Summary
 # ============================================
 
 # Count total backups
-TOTAL_LOCAL=$(find "$LOCAL_BACKUP_DIR" -name "books_backup_*.csv" -type f 2>/dev/null | wc -l)
-TOTAL_HOURLY=$(find "$SAFE_BACKUP_DIR/hourly" -name "books_*.csv" -type f 2>/dev/null | wc -l)
-TOTAL_DAILY=$(find "$SAFE_BACKUP_DIR/daily" -name "books_*.csv" -type f 2>/dev/null | wc -l)
-TOTAL_WEEKLY=$(find "$SAFE_BACKUP_DIR/weekly" -name "books_*.csv" -type f 2>/dev/null | wc -l)
+TOTAL_LOCAL=$(find "$LOCAL_BACKUP_DIR" \( -name "books_backup_*.csv" -o -name "catalog_*_backup_*.csv" \) -type f 2>/dev/null | wc -l)
+TOTAL_HOURLY=$(find "$SAFE_BACKUP_DIR/hourly" \( -name "books_*.csv" -o -name "catalog_*.csv" \) -type f 2>/dev/null | wc -l)
+TOTAL_DAILY=$(find "$SAFE_BACKUP_DIR/daily" \( -name "books_*.csv" -o -name "catalog_*.csv" \) -type f 2>/dev/null | wc -l)
+TOTAL_WEEKLY=$(find "$SAFE_BACKUP_DIR/weekly" \( -name "books_*.csv" -o -name "catalog_*.csv" \) -type f 2>/dev/null | wc -l)
 
 success "Backup complete!"
 log "Summary:"

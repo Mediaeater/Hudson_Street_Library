@@ -1,131 +1,106 @@
 #!/usr/bin/env node
 /**
  * CSV Structure Validator
- * Checks for common CSV issues in books.csv
+ * Line-oriented check for the catalogue files: every row must have exactly the
+ * header's column count (37). Run it after a manual edit; `npm run test:csv`
+ * (validate-csv-robust.js) is the full pass.
+ *
+ * With no argument it checks every file declared in src/_data/wings.json
+ * (books.csv + src/_data/catalog/*.csv). Pass a path to check one file.
  */
 
 const fs = require('fs');
 const path = require('path');
 const { parse } = require('csv-parse/sync');
+const { listCatalogFiles, EXPECTED_COLUMNS } = require('./utils/catalog');
 
-const CSV_PATH = path.join(__dirname, '../src/_data/books.csv');
+const RULE = '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
 
-console.log('🔍 CSV Structure Validator\n');
-console.log(`Checking: ${CSV_PATH}\n`);
+function checkFile(csvPath) {
+  console.log(`Checking: ${path.relative(process.cwd(), csvPath)}\n`);
 
-// Read the file
-const csvContent = fs.readFileSync(CSV_PATH, 'utf8');
-const lines = csvContent.split('\n');
+  const csvContent = fs.readFileSync(csvPath, 'utf8');
+  const lines = csvContent.split('\n');
+  console.log(`Total lines: ${lines.length}`);
 
-console.log(`Total lines: ${lines.length}`);
+  const header = parse(lines[0], { columns: false })[0];
+  const expectedColumns = header.length;
+  console.log(`Expected columns: ${expectedColumns}${expectedColumns === EXPECTED_COLUMNS ? '' : `  ⚠ schema is ${EXPECTED_COLUMNS}`}\n`);
 
-// Get header
-const header = lines[0].split(',');
-const expectedColumns = header.length;
-console.log(`Expected columns: ${expectedColumns}\n`);
-
-// Check each line
-const issues = [];
-let validLines = 0;
-
-for (let i = 1; i < lines.length; i++) {
-  const lineNum = i + 1;
-  const line = lines[i];
-
-  // Skip empty lines
-  if (!line.trim()) {
-    continue;
-  }
-
-  // Count columns (simple comma split - won't handle quoted commas correctly)
-  const simpleSplit = line.split(',');
-
-  // Try to parse with csv-parse for accurate count
-  try {
-    const parsed = parse(line, {
-      columns: false,
-      skip_empty_lines: true,
-      relax_column_count: false
-    });
-
-    if (parsed.length > 0) {
-      const actualColumns = parsed[0].length;
-
-      if (actualColumns !== expectedColumns) {
-        issues.push({
-          line: lineNum,
-          expected: expectedColumns,
-          actual: actualColumns,
-          preview: line.substring(0, 100) + '...'
-        });
+  // Line-by-line pass. A multi-line field cannot be checked this way (the
+  // whole-file parse below covers it); what this catches is the common manual
+  // edit mistake, a single row with a comma too many or too few.
+  const issues = [];
+  let validLines = 0;
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i];
+    if (!line.trim()) continue;
+    try {
+      const parsed = parse(line, { columns: false, skip_empty_lines: true, relax_column_count: false });
+      if (parsed.length === 0) continue;
+      const actual = parsed[0].length;
+      if (actual !== expectedColumns) {
+        issues.push({ line: i + 1, expected: expectedColumns, actual, preview: line.substring(0, 100) + '...' });
       } else {
         validLines++;
       }
+    } catch (error) {
+      issues.push({ line: i + 1, error: error.message, preview: line.substring(0, 100) + '...' });
     }
-  } catch (error) {
-    issues.push({
-      line: lineNum,
-      error: error.message,
-      preview: line.substring(0, 100) + '...'
+  }
+
+  console.log(RULE);
+  console.log('Results:');
+  console.log(`${RULE}\n`);
+  console.log(`✓ Valid lines: ${validLines}`);
+  console.log(`✗ Issues found: ${issues.length}\n`);
+
+  if (issues.length > 0) {
+    console.log('Issues:\n');
+    issues.slice(0, 10).forEach(issue => {
+      console.log(`Line ${issue.line}:`);
+      if (issue.error) console.log(`  Error: ${issue.error}`);
+      else console.log(`  Expected ${issue.expected} columns, got ${issue.actual}`);
+      console.log(`  Preview: ${issue.preview}\n`);
     });
-  }
-}
-
-// Report results
-console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-console.log('Results:');
-console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-
-console.log(`✓ Valid lines: ${validLines}`);
-console.log(`✗ Issues found: ${issues.length}\n`);
-
-if (issues.length > 0) {
-  console.log('Issues:\n');
-  issues.slice(0, 10).forEach(issue => {
-    console.log(`Line ${issue.line}:`);
-    if (issue.error) {
-      console.log(`  Error: ${issue.error}`);
-    } else {
-      console.log(`  Expected ${issue.expected} columns, got ${issue.actual}`);
-    }
-    console.log(`  Preview: ${issue.preview}`);
-    console.log('');
-  });
-
-  if (issues.length > 10) {
-    console.log(`... and ${issues.length - 10} more issues\n`);
+    if (issues.length > 10) console.log(`... and ${issues.length - 10} more issues\n`);
+    console.log(RULE);
+    console.log('Recommended Actions:');
+    console.log(`${RULE}\n`);
+    console.log('1. Fix quoted fields containing commas');
+    console.log(`2. Ensure all rows have exactly ${EXPECTED_COLUMNS} columns`);
+    console.log('3. Check for newlines within fields');
+    console.log('4. Run: node scripts/fix-csv-issues.js (if available)\n');
+  } else {
+    console.log('✅ No structural issues found!\n');
   }
 
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('Recommended Actions:');
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-  console.log('1. Fix quoted fields containing commas');
-  console.log('2. Ensure all rows have exactly 36 columns');
-  console.log('3. Check for newlines within fields');
-  console.log('4. Run: node scripts/fix-csv-issues.js (if available)\n');
-} else {
-  console.log('✅ No structural issues found!\n');
+  console.log('Additional Checks:\n');
+  const unescapedQuotes = (csvContent.match(/(?<![",])"(?![,"])/g) || []).length;
+  console.log(`Potentially unescaped quotes: ${unescapedQuotes}`);
+
+  console.log('\nTrying to parse entire CSV...');
+  let parseFailed = false;
+  try {
+    const records = parse(csvContent, { columns: true, skip_empty_lines: true, relax_column_count: false });
+    console.log(`✓ Successfully parsed ${records.length} records\n`);
+  } catch (error) {
+    parseFailed = true;
+    console.log(`✗ Parse error: ${error.message}\n`);
+  }
+
+  return parseFailed || expectedColumns !== EXPECTED_COLUMNS;
 }
 
-// Additional checks
-console.log('Additional Checks:\n');
+console.log('🔍 CSV Structure Validator\n');
 
-// Check for common issues
-const allContent = csvContent;
-const unescapedQuotes = (allContent.match(/(?<![",])"(?![,"])/g) || []).length;
-const suspiciousNewlines = lines.filter(l => l.includes('\n') && l.trim()).length;
-
-console.log(`Potentially unescaped quotes: ${unescapedQuotes}`);
-console.log(`Lines with embedded newlines: ${suspiciousNewlines}`);
-
-// Try to parse entire file
-console.log('\nTrying to parse entire CSV...');
+let targets;
 try {
-  const records = parse(csvContent, {
-    columns: true,
-    skip_empty_lines: true
-  });
-  console.log(`✓ Successfully parsed ${records.length} records`);
+  targets = process.argv[2] ? [path.resolve(process.argv[2])] : listCatalogFiles().map(f => f.file);
 } catch (error) {
-  console.log(`✗ Parse error: ${error.message}`);
+  console.error(`❌ ${error.message}`);
+  process.exit(1);
 }
+
+const failed = targets.map(checkFile).filter(Boolean).length;
+process.exit(failed > 0 ? 1 : 0);

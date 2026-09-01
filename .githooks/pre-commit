@@ -1,9 +1,11 @@
 #!/bin/sh
-# Pre-commit hook to validate books.csv before commit
+# Pre-commit hook to validate the catalogue before commit
 
-# Check if books.csv is being committed
-if git diff --cached --name-only | grep -q "src/_data/books.csv"; then
-  echo "📋 Validating books.csv structure..."
+# Check if any catalogue file (books.csv, src/_data/catalog/*.csv) or the wing
+# registry is being committed. The validator checks every file plus the
+# cross-file rules (37 columns, unique ids, id blocks).
+if git diff --cached --name-only | grep -qE '^src/_data/(books\.csv|catalog/[^/]+\.csv|wings\.json)$'; then
+  echo "📋 Validating catalogue CSV structure..."
 
   # Run the robust validator
   node scripts/validate-csv-robust.js

@@ -1,11 +1,13 @@
 name: Backup books.csv
 
-# The entire site is generated from src/_data/books.csv, so it is a single
-# point of failure. This workflow keeps durable, GitHub-hosted backups that do
-# not depend on any local machine:
-#   1. A validated, timestamped snapshot is committed to csv-backups/
-#      (permanent, browsable restore points in the repo history).
-#   2. The current books.csv is also uploaded as a workflow artifact with
+# The entire site is generated from the catalogue CSVs: src/_data/books.csv
+# (the art wing) plus one src/_data/catalog/<wing>.csv per wing, declared in
+# src/_data/wings.json. This workflow keeps durable, GitHub-hosted backups that
+# do not depend on any local machine:
+#   1. A validated, timestamped snapshot of each changed file is committed to
+#      csv-backups/ (books_<stamp>.csv, catalog_<wing>_<stamp>.csv): permanent,
+#      browsable restore points in the repo history.
+#   2. The current files are also uploaded as a workflow artifact with
 #      90-day retention (a fallback if the commit step is ever blocked).
 
 on:
@@ -14,6 +16,7 @@ on:
     branches: ["main"]
     paths:
       - "src/_data/books.csv"
+      - "src/_data/catalog/*.csv"
   # Daily safety net (only commits if the catalog actually changed).
   schedule:
     - cron: "0 3 * * *"
@@ -45,16 +48,19 @@ jobs:
         run: npm ci
 
       # Refuse to back up a corrupt catalog — a bad backup is worse than none.
-      - name: Validate books.csv
-        run: node scripts/validate-csv-robust.js src/_data/books.csv
+      # No argument = every file in wings.json plus the cross-file id checks.
+      - name: Validate catalogue CSVs
+        run: node scripts/validate-csv-robust.js
 
       # Always upload the current catalog as an artifact (guaranteed backup,
       # even if the repo commit step is blocked by branch protection).
-      - name: Upload books.csv artifact (90-day retention)
+      - name: Upload catalogue artifact (90-day retention)
         uses: actions/upload-artifact@v7
         with:
           name: books-csv-backup
-          path: src/_data/books.csv
+          path: |
+            src/_data/books.csv
+            src/_data/catalog/*.csv
           retention-days: 90
 
       # Create a new committed snapshot only when the catalog has actually
@@ -64,22 +70,38 @@ jobs:
         id: snapshot
         run: |
           mkdir -p csv-backups
-          latest=$(ls -1 csv-backups/books_*.csv 2>/dev/null | sort | tail -1 || true)
-          if [ -n "$latest" ] && cmp -s src/_data/books.csv "$latest"; then
-            echo "books.csv unchanged since $latest — no new snapshot needed."
-            echo "created=false" >> "$GITHUB_OUTPUT"
-          else
-            stamp=$(date -u +'%Y-%m-%d_%H%M%S')
-            cp src/_data/books.csv "csv-backups/books_${stamp}.csv"
-            echo "Created snapshot csv-backups/books_${stamp}.csv"
-            echo "created=true" >> "$GITHUB_OUTPUT"
-          fi
+          stamp=$(date -u +'%Y-%m-%d_%H%M%S')
+          created=false
+          # snapshot <source file> <prefix>: copy only if it differs from the
+          # most recent snapshot with that prefix.
+          snapshot() {
+            src="$1"; prefix="$2"
+            latest=$(ls -1 "csv-backups/${prefix}_"*.csv 2>/dev/null | sort | tail -1 || true)
+            if [ -n "$latest" ] && cmp -s "$src" "$latest"; then
+              echo "$src unchanged since $latest — no new snapshot needed."
+            else
+              cp "$src" "csv-backups/${prefix}_${stamp}.csv"
+              echo "Created snapshot csv-backups/${prefix}_${stamp}.csv"
+              created=true
+            fi
+          }
+          snapshot src/_data/books.csv books
+          for f in src/_data/catalog/*.csv; do
+            [ -e "$f" ] || continue
+            snapshot "$f" "catalog_$(basename "$f" .csv)"
+          done
+          echo "created=$created" >> "$GITHUB_OUTPUT"
 
-      # Bound repository growth: keep the 90 most recent snapshots.
+      # Bound repository growth: keep the 90 most recent snapshots per file.
       - name: Prune old snapshots
         if: steps.snapshot.outputs.created == 'true'
         run: |
           ls -1 csv-backups/books_*.csv | sort | head -n -90 | xargs -r rm -v
+          for f in src/_data/catalog/*.csv; do
+            [ -e "$f" ] || continue
+            prefix="catalog_$(basename "$f" .csv)"
+            ls -1 "csv-backups/${prefix}_"*.csv 2>/dev/null | sort | head -n -90 | xargs -r rm -v
+          done
 
       - name: Commit snapshot
         if: steps.snapshot.outputs.created == 'true'
@@ -92,6 +114,6 @@ jobs:
           else
             # [skip ci] prevents this backup-only commit from triggering a
             # redundant site rebuild/deploy.
-            git commit -m "backup: snapshot books.csv ($(date -u +'%Y-%m-%d')) [skip ci]"
+            git commit -m "backup: snapshot catalogue CSVs ($(date -u +'%Y-%m-%d')) [skip ci]"
             git push
           fi
