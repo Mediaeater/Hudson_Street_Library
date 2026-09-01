@@ -119,9 +119,9 @@ module.exports = function(eleventyConfig) {
   // `collection` from its filename. A structural problem in any file throws,
   // failing the build rather than publishing a partial catalogue.
   eleventyConfig.addGlobalData("books", async () => {
-    const { data, files } = await loadCatalog();
+    const { data, files, wings } = await loadCatalog();
     files.forEach(f => console.log(`--- catalog: ${f.rows} rows from ${path.relative(__dirname, f.file)} (${f.slug})`));
-    console.log(`--- catalog: ${files.length} files, ${data.length} rows`);
+    console.log(`--- catalog: ${files.length} files, ${data.length} rows, ${wings.length} wings (${wings.filter(w => w.live).length} live)`);
     return data;
   });
 

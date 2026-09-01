@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hudsonstreetlibrary.com/schemas/wings.schema.json",
+  "title": "Hudson Street Library wing registry",
+  "description": "src/_data/wings.json. One entry per wing (collection). Entry 0 is the default wing (isDefault: true); its file is what unscoped surfaces such as the homepage show. slug = catalog filename = URL prefix = owner of the id block. Validated at build by scripts/utils/catalog.js.",
+  "type": "array",
+  "minItems": 1,
+  "items": {
+    "type": "object",
+    "required": ["slug", "name", "file", "idBlock", "itemPath"],
+    "additionalProperties": false,
+    "properties": {
+      "slug": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]*$",
+        "description": "URL prefix (/<slug>/) and, for non-default wings, the catalog/<slug>.csv basename."
+      },
+      "name": { "type": "string", "minLength": 1, "description": "Display name." },
+      "file": {
+        "type": "string",
+        "pattern": "^(books\\.csv|catalog/[a-z][a-z0-9-]*\\.csv)$",
+        "description": "CSV path relative to src/_data/. Shares the 37-column schema with every other wing."
+      },
+      "isDefault": {
+        "type": "boolean",
+        "description": "Exactly one wing. Pages with no wing declared show this one; it has no landing page of its own (the homepage is its front door)."
+      },
+      "live": {
+        "type": "boolean",
+        "description": "false = block reserved and file seeded, but no landing page is generated and the wing is not linked. Flip to true at go-live."
+      },
+      "idBlock": {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 2,
+        "items": { "type": "integer", "minimum": 1 },
+        "description": "[lo, hi] inclusive. Every id in the wing's file must fall inside unless listed in allowLegacyIds. Blocks must not overlap."
+      },
+      "allowLegacyIds": {
+        "type": "array",
+        "items": { "type": "integer", "minimum": 1 },
+        "uniqueItems": true,
+        "description": "Rows migrated from another wing that keep their original id (URLs contain ids)."
+      },
+      "itemPath": {
+        "type": "string",
+        "enum": ["books", "objects"],
+        "description": "Item pages publish at /books/... (book wings) or /objects/... (object wings)."
+      },
+      "classifications": {
+        "type": "array",
+        "items": { "type": "string", "minLength": 1 },
+        "uniqueItems": true,
+        "description": "Allowed values of the classification column (the form axis) in this wing. Empty = not yet decided."
+      },
+      "defaultGrouping": {
+        "type": "string",
+        "description": "collection_grouping (shelf) new rows get when none is given."
+      },
+      "intro": {
+        "type": "string",
+        "description": "Landing-page intro, HTML allowed. Written at go-live; de-slop before shipping."
+      },
+      "featuredTags": {
+        "type": "array",
+        "items": { "type": "string", "minLength": 1 },
+        "uniqueItems": true,
+        "description": "Tags surfaced as clusters on the landing page."
+      }
+    }
+  }
+}
