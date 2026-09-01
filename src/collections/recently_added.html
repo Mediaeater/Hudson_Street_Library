@@ -30,7 +30,7 @@ currentPage: recently-added
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
 
-{% set recentBooks = books | recentlyAdded %}
+{% set recentBooks = books | inWing(wing) | recentlyAdded %}
 {% for book in recentBooks %}
 {% if book.publisher != "BUTT Publications" and book.author_last != "Ethridge" and book.id != "1859" %}
                     <!-- {{ book.author_full_name }} - {{ book.title }} - {{ book.accession_no }} -->

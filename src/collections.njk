@@ -5,7 +5,7 @@ pagination:
   size: 1
   alias: collectionConfig
   addAllPagesToCollections: true
-permalink: "collections/{{ collectionConfig.slug }}.html"
+permalink: "{{ collectionConfig.permalink }}"
 ---
 <main>
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 {% if collectionConfig.headerImage %}py-8 md:py-10{% else %}py-16 md:py-20{% endif %}">
@@ -65,7 +65,7 @@ permalink: "collections/{{ collectionConfig.slug }}.html"
         </div>
         {% endif %}
 
-        {% set matched = books | booksInCollection(collectionConfig) | sortBooks(collectionConfig.sortBy) %}
+        {% set matched = books | inWing(collectionConfig.wing) | booksInCollection(collectionConfig) | sortBooks(collectionConfig.sortBy) %}
         {% if collectionConfig.coversFirst %}
             {% set matched = matched | coversFirst %}
         {% endif %}

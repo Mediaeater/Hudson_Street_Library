@@ -4,7 +4,7 @@ const path = require("path");
 const slugify = require("slugify");
 // eleventy-img 7 is ESM-only; require() returns the namespace, the callable is .default
 const Image = require("@11ty/eleventy-img").default;
-const { loadCatalog, writeMergedCsv } = require("./scripts/utils/catalog");
+const { loadCatalog, writeMergedCsv, loadWings } = require("./scripts/utils/catalog");
 
 const { exec } = require("child_process");
 
@@ -175,6 +175,19 @@ module.exports = function(eleventyConfig) {
     });
 
     return matchedBooks.slice(0, 12);
+  });
+
+  // --- Filter: scope a book list to one wing ---
+  // Every browsing surface that belongs to a single wing runs its list through
+  // this: `books | inWing(wing)`. A page with no `wing` in its front matter is
+  // an art page (the default wing), which is what keeps the existing site
+  // unchanged. Surfaces that are deliberately global (search, sitemaps, the
+  // JSON API, item-page generation) simply don't call it.
+  const DEFAULT_WING = loadWings().find(w => w.isDefault).slug;
+  eleventyConfig.addFilter("inWing", function(books, slug) {
+    if (!Array.isArray(books)) return [];
+    const wing = slug || DEFAULT_WING;
+    return books.filter(b => b.collection === wing);
   });
 
   // --- Find related books based on metadata (collection_grouping, tags, classification) ---

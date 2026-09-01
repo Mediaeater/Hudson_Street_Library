@@ -103,4 +103,26 @@ function buildTagCollections(books, options = {}) {
   return collections.sort((a, b) => b.bookCount - a.bookCount);
 }
 
-module.exports = { buildTagCollections, slugifyTag, TAG_ALIASES, THRESHOLD };
+// Partitions the catalogue by wing and builds each wing's tag tier on its own
+// books, so a tag has to clear the threshold *within* its wing. Without this a
+// subject that is common in one wing would auto-publish a collection page
+// listing another wing's books. Returns Map<wingSlug, configs[]>, each config
+// stamped with its wing.
+function buildTagCollectionsByWing(books, options = {}) {
+  const defaultWing = options.defaultWing || 'art';
+  const byWing = new Map();
+
+  (books || []).forEach(book => {
+    const wing = book.collection || defaultWing;
+    if (!byWing.has(wing)) byWing.set(wing, []);
+    byWing.get(wing).push(book);
+  });
+
+  const out = new Map();
+  byWing.forEach((wingBooks, wing) => {
+    out.set(wing, buildTagCollections(wingBooks, options).map(c => ({ ...c, wing })));
+  });
+  return out;
+}
+
+module.exports = { buildTagCollections, buildTagCollectionsByWing, slugifyTag, TAG_ALIASES, THRESHOLD };
