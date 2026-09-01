@@ -61,6 +61,13 @@ jobs:
       - name: Validate design system
         run: node scripts/validate-design-system.js
 
+      # Structured data fails silently — a malformed ld+json block is discarded
+      # by search engines while the page renders fine, so nothing short of
+      # parsing every block catches it. Runs against the final _site for the
+      # same reason as the design check above.
+      - name: Validate JSON-LD
+        run: node scripts/validate-jsonld.js
+
       - name: Audit dependencies
         run: npm audit --audit-level=critical
 
