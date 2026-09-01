@@ -222,6 +222,53 @@ function loadCatalogSync(options = {}) {
     return { ...assemble(parts), wings: entries.map(e => e.wing), columns };
 }
 
+/**
+ * Render the merged catalogue as one CSV string for the client-rendered
+ * catalog page (/cms/data/catalog.csv). Source rows are passed through as
+ * their original bytes (csv-parse raw mode) with one extra trailing column,
+ * `collection`, so this file has 38 columns. It is an OUTPUT, never a source:
+ * the loader still refuses a 38-column file under src/_data/.
+ * @param {{dataDir?: string}} [options]
+ * @returns {string}
+ */
+function renderMergedCsv(options = {}) {
+    const dataDir = options.dataDir || DATA_DIR;
+    const entries = listCatalogFiles(dataDir);
+    structuralPass(entries);
+    const out = [];
+    entries.forEach(({ slug, file }, fileIndex) => {
+        const records = parse(fs.readFileSync(file, 'utf8'), {
+            columns: false,
+            raw: true,
+            relax_column_count: false,
+            skip_empty_lines: true,
+            quote: '"',
+            escape: '"',
+        });
+        records.forEach(({ raw }, i) => {
+            if (i === 0) {
+                if (fileIndex === 0) out.push(raw.replace(/\r?\n$/, '') + ',"collection"\n');
+                return; // later files: header already emitted
+            }
+            out.push(raw.replace(/\r?\n$/, '') + `,"${slug}"\n`);
+        });
+    });
+    return out.join('');
+}
+
+/**
+ * Write renderMergedCsv() to disk, creating parent directories.
+ * @param {string} outFile
+ * @param {{dataDir?: string}} [options]
+ * @returns {{file: string, bytes: number}}
+ */
+function writeMergedCsv(outFile, options = {}) {
+    const csv = renderMergedCsv(options);
+    fs.mkdirSync(path.dirname(outFile), { recursive: true });
+    fs.writeFileSync(outFile, csv);
+    return { file: outFile, bytes: Buffer.byteLength(csv) };
+}
+
 module.exports = {
     DATA_DIR,
     EXPECTED_COLUMNS,
@@ -230,4 +277,6 @@ module.exports = {
     listCatalogFiles,
     loadCatalog,
     loadCatalogSync,
+    renderMergedCsv,
+    writeMergedCsv,
 };

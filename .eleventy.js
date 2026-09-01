@@ -4,7 +4,7 @@ const path = require("path");
 const slugify = require("slugify");
 // eleventy-img 7 is ESM-only; require() returns the namespace, the callable is .default
 const Image = require("@11ty/eleventy-img").default;
-const { loadCatalog } = require("./scripts/utils/catalog");
+const { loadCatalog, writeMergedCsv } = require("./scripts/utils/catalog");
 
 const { exec } = require("child_process");
 
@@ -668,8 +668,15 @@ module.exports = function(eleventyConfig) {
   // Aug 2026 — it includes the site header and footer.
   eleventyConfig.addPassthroughCopy("src/identity/avatar");
 
-  // Copy data files for search functionality
+  // Copy data files for search functionality.
+  // books.csv stays at its public path (documented in api-documentation.njk
+  // and .well-known/api-catalog); the client-rendered catalog pages fetch the
+  // merged, collection-stamped cms/data/catalog.csv written below.
   eleventyConfig.addPassthroughCopy({"src/_data/books.csv": "cms/data/books.csv"});
+  eleventyConfig.on("eleventy.after", ({ dir }) => {
+    const out = writeMergedCsv(path.join(dir.output, "cms", "data", "catalog.csv"));
+    console.log(`--- catalog: wrote ${path.relative(__dirname, out.file)} (${out.bytes} bytes)`);
+  });
   eleventyConfig.addPassthroughCopy({"src/_data/news.json": "cms/data/news.json"});
   eleventyConfig.addPassthroughCopy({"data": "data"});
 
