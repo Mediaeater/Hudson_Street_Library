@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const CSVHandler = require('../../scripts/utils/csv-handler');
+const { loadCatalogSync } = require('../../scripts/utils/catalog');
 const { matchesCollection } = require('../../scripts/utils/collection-matcher');
 const collectionConfigs = require('./collectionConfigs');
 
@@ -13,12 +13,7 @@ const collectionConfigs = require('./collectionConfigs');
 // when the page is hand-built). Registry entries with no config (richard-prince,
 // magazines) fall back to their registry bookCount until those pages migrate.
 module.exports = function() {
-  let books = [];
-  try {
-    books = CSVHandler.readBooksSync(path.join(__dirname, 'books.csv')).data;
-  } catch (err) {
-    console.error('exploreCollections: could not read books.csv:', err.message);
-  }
+  const books = loadCatalogSync().data;
 
   const registry = JSON.parse(
     fs.readFileSync(path.join(__dirname, 'libraryCollections.json'), 'utf8')
