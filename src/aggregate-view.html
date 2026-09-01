@@ -856,7 +856,12 @@ class BookSearch {
     populateFilters() {
         const publishers = [...new Set(this.books.map(book => book.publisher).filter(p => p && p !== 'NULL'))].sort();
         const years = [...new Set(this.books.map(book => book.publication_year).filter(y => y && y !== 'NULL'))].sort((a, b) => b - a);
-        const collections = [...new Set(this.books.map(book => book.collection_grouping).filter(c => c && c !== 'NULL'))].sort();
+        const collectionCounts = {};
+        this.books.forEach(book => {
+            const c = book.collection_grouping;
+            if (c && c !== 'NULL') collectionCounts[c] = (collectionCounts[c] || 0) + 1;
+        });
+        const collections = Object.keys(collectionCounts).filter(c => collectionCounts[c] >= 10).sort();
 
         const allTags = new Set();
         this.books.forEach(book => {
