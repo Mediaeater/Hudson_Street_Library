@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// Run the de-slop scanner over books.csv descriptions.
+// Run the de-slop scanner over the catalogue's descriptions — every wing, not
+// just books.csv.
 //
 //   node scripts/deslop-descriptions.js 1503 1505     # named rows
 //   node scripts/deslop-descriptions.js --all         # every row with a description
@@ -16,9 +17,8 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
-const { parse } = require('csv-parse/sync');
+const { loadCatalogSync } = require('./utils/catalog');
 
-const CSV = path.join(__dirname, '..', 'src/_data/books.csv');
 const SCANNER = path.join(os.homedir(), '.claude/skills/de-slop/scripts/scan.py');
 
 const argv = process.argv.slice(2);
@@ -36,7 +36,7 @@ if (!fs.existsSync(SCANNER)) {
   process.exit(2);
 }
 
-const rows = parse(fs.readFileSync(CSV), { columns: true, relax_column_count: true });
+const rows = loadCatalogSync().data;
 const has = r => (r.description || '').trim().length > 0;
 
 let wanted;

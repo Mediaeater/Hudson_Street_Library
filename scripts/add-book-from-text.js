@@ -230,21 +230,28 @@ async function searchBookMetadata(bookInfo) {
 }
 
 /**
- * Generate cover filename following convention
+ * Generate cover filename following convention:
+ *   {author_last}_{author_first}_{title-kebab}_{isbn}.jpg — all lowercase.
+ *
+ * This used to emit `{First}_{Last}_{Title}_{isbn}.jpg` in mixed case, which is
+ * neither the documented convention nor what the shelf uses. It only showed on
+ * records where research-asst hadn't already set `cover_image.local_path`
+ * (it names files correctly itself), so the ingest's own naming went unexercised
+ * on most adds. Existing files keep their historical names; this fixes new ones.
  */
 function generateCoverFilename(author_last, author_first, title, isbn) {
-  // Clean up names and title for filename
-  const cleanName = (str) => str
-    .replace(/[^a-zA-Z0-9\s]/g, '')
-    .replace(/\s+/g, '_')
-    .substring(0, 50);
+  const part = (str, sep) => (str || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/[\s-]+/g, sep)
+    .substring(0, 50)
+    .replace(new RegExp(`\\${sep}+$`), '');
 
-  const authorPart = author_last ?
-    cleanName(`${author_first} ${author_last}`.trim()) :
-    cleanName(author_first || 'Unknown');
-
-  const titlePart = cleanName(title);
-  const isbnPart = isbn ? `_${isbn.replace(/[^0-9X]/g, '')}` : '';
+  const authorPart = [part(author_last, '_'), part(author_first, '_')]
+    .filter(Boolean).join('_') || 'unknown';
+  const titlePart = part(title, '-');
+  const isbnPart = isbn ? `_${isbn.replace(/[^0-9Xx]/g, '').toLowerCase()}` : '';
 
   return `${authorPart}_${titlePart}${isbnPart}.jpg`;
 }
