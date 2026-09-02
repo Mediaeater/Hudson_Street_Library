@@ -22,6 +22,18 @@
       "name": "{{ book.title | escape }}",
       "item": "https://hudsonstreetlibrary.com{{ page.url }}"
     }
+    {#- A wing landing page sits directly under the homepage: it is the front
+        door for its wing, not an entry in the art wing's collections index. -#}
+    {%- elif wingPage %},
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "{{ wingPage.name | escape }}",
+      "item": "https://hudsonstreetlibrary.com{{ page.url }}"
+    }
+    {#- `page.url` is the resolved URL. `permalink` is the raw front-matter
+        string, which on any paginated page is itself a template expression and
+        would ship unrendered — the same bug fixed in schema-collection.njk. -#}
     {%- elif title and permalink %},
     {
       "@type": "ListItem",
@@ -33,7 +45,7 @@
       "@type": "ListItem",
       "position": 3,
       "name": "{{ title | escape }}",
-      "item": "https://hudsonstreetlibrary.com{{ permalink }}"
+      "item": "https://hudsonstreetlibrary.com{{ page.url }}"
     }
     {%- endif %}
   ]

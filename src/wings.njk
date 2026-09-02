@@ -1,0 +1,99 @@
+---
+layout: collection.njk
+pagination:
+  data: wingPages
+  size: 1
+  alias: wingPage
+  addAllPagesToCollections: true
+permalink: "{{ wingPage.permalink }}"
+eleventyComputed:
+  title: "{{ wingPage.name }}"
+  description: "{{ wingPage.intro }}"
+---
+{#
+  Wing landing page. One per live non-default wing (see src/_data/wingPages.js);
+  the art wing's front door is the site homepage.
+
+  Every list here is scoped with `inWing` — a landing page is a single-wing
+  surface, so nothing on it may reach across the catalogue. Search stays global
+  and is entered through the facet link below.
+
+  Spacing classes are restricted to the ones design-system.css defines. Its
+  unlayered `* { margin: 0; padding: 0 }` reset beats every layered Tailwind
+  utility, so any padding/margin class it does not redeclare — `p-5`, `py-1.5`,
+  `mt-auto`, and every responsive variant such as `md:mb-16` — silently computes
+  to zero on any page that loads it. See memory: dual CSS systems.
+#}
+<main>
+    <div class="container mx-auto px-6 py-16">
+
+        <div class="max-w-3xl mx-auto text-center mb-16">
+            <p class="text-xs uppercase tracking-widest text-gray-500 mb-3">Hudson Street Library</p>
+            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">{{ wingPage.name }}</h1>
+            <div class="line-divider inline-block"></div>
+            {% if wingPage.intro %}
+                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">{{ wingPage.intro }}</p>
+            {% endif %}
+            <p class="text-sm text-gray-500 mt-4">{{ wingPage.itemCount | commafy }} catalogued {% if wingPage.itemCount == 1 %}item{% else %}items{% endif %}</p>
+            <div class="mt-6">
+                <a href="/static-demo/?collection={{ wingPage.slug }}" class="inline-block border border-primary-700 text-primary-700 px-6 py-3 hover:bg-primary-700 hover:text-white transition-all rounded-xs font-medium">Search {{ wingPage.name }}</a>
+            </div>
+        </div>
+
+        {% if wingPage.featured.length %}
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Featured</h2>
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {% for c in wingPage.featured %}
+                    {#- The thumbnail is a book cover, so it keeps a cover's
+                        proportions and a fixed width. An aspect-ratio box whose
+                        width is indefinite is sized by the image instead of the
+                        ratio, which is what stretched an earlier draft. -#}
+                    <a href="{{ c.url }}" class="item-card no-underline bg-white rounded-lg shadow-xs flex gap-4 p-4">
+                        {% if c.image %}
+                            <div class="w-20 flex-shrink-0 aspect-3/4 bg-gray-100 rounded-xs overflow-hidden">
+                                <img src="{{ c.image }}" alt="" class="w-full h-full object-cover" loading="lazy">
+                            </div>
+                        {% endif %}
+                        <div>
+                            <h3 class="text-lg font-bold text-primary-700 mb-2">{{ c.title }}</h3>
+                            {% if c.description %}
+                                <p class="text-sm text-gray-600 leading-relaxed">{{ c.description }}</p>
+                            {% endif %}
+                            <p class="text-xs text-gray-500 mt-4">{{ c.count | commafy }} {% if c.count == 1 %}item{% else %}items{% endif %}</p>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        {% set recent = books | inWing(wingPage.slug) | recentlyAdded(12) %}
+        {% if recent.length %}
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Recently Added</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                {% for book in recent %}
+                    {% include "components/collection-card.njk" %}
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        {% if wingPage.collections.length %}
+        <section>
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Browse by Subject</h2>
+            <ul class="flex flex-wrap gap-2 list-none">
+                {% for c in wingPage.collections %}
+                    <li>
+                        <a href="{{ c.url }}" class="inline-flex items-baseline gap-2 no-underline border border-gray-200 rounded-full px-4 py-2 text-sm text-gray-700 hover:border-primary-700 hover:text-primary-700">
+                            {{ c.title }}<span class="text-xs text-gray-400">{{ c.count | commafy }}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
+
+    </div>
+</main>
