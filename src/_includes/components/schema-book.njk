@@ -30,8 +30,18 @@
   {%- if (book.page_count | int) > 0 %},
   "numberOfPages": {{ book.page_count | int }}
   {%- endif %}
-  {%- if book.binding %},
-  "bookFormat": "{% if 'Hardcover' in book.binding or 'Hardback' in book.binding %}https://schema.org/Hardcover{% elif 'Softcover' in book.binding or 'Paperback' in book.binding %}https://schema.org/Paperback{% else %}https://schema.org/EBook{% endif %}"
+  {#- bookFormat: match case-insensitively, and emit nothing when the binding
+      isn't recognisably one of the two formats schema.org has a term for.
+      Omitting the property is neutral; the previous `else` branch asserted
+      EBook on 224 rows, none of which is an ebook. Hardcover is tested first
+      so "Perfect bound, hardcover" and "Clothbound hardcover" resolve to it. -#}
+  {%- set b = (book.binding or '') | lower -%}
+  {%- if 'hardcover' in b or 'hardback' in b or 'hardbound' in b or 'clothbound' in b or 'cloth hardcover' in b or 'boards' in b or 'case binding' in b %},
+  "bookFormat": "https://schema.org/Hardcover"
+  {#- 'magazine' is listed in its own right, not left to be swallowed by the
+      'zine' token it happens to contain. Both are soft-bound. -#}
+  {%- elif 'softcover' in b or 'paperback' in b or 'softback' in b or 'soft cover' in b or 'softbound' in b or 'wrappers' in b or 'flexibound' in b or 'flexicover' in b or 'magazine' in b or 'zine' in b or 'booklet' in b or 'pamphlet' in b or 'brochure' in b or 'saddle' in b or 'staple' in b or 'perfect bound' in b %},
+  "bookFormat": "https://schema.org/Paperback"
   {%- endif %}
 }
 </script>
