@@ -12,4 +12,26 @@ eleventyExcludeFromCollections: true
   </url>
 {%- endif %}
 {%- endfor %}
+{#- Wing landing pages and the collections that belong to them. Listed from
+    wingPages rather than matched out of collections.all: a wing publishes at
+    /<slug>/collections/<slug>.html, and a prefix test loose enough to catch
+    that also catches unrelated pages such as /books/collections/queer/. #}
+{%- for w in wingPages %}
+  <url>
+    <loc>{{ site.url }}{{ w.url }}</loc>
+    <changefreq>weekly</changefreq>
+  </url>
+{%- for c in w.featured %}
+  <url>
+    <loc>{{ site.url }}{{ c.url }}</loc>
+    <changefreq>weekly</changefreq>
+  </url>
+{%- endfor %}
+{%- for c in w.collections %}
+  <url>
+    <loc>{{ site.url }}{{ c.url }}</loc>
+    <changefreq>weekly</changefreq>
+  </url>
+{%- endfor %}
+{%- endfor %}
 </urlset>
