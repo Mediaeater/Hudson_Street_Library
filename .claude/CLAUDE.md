@@ -120,6 +120,48 @@ stream, or a shelf of similarly-worded magazine rows reports phantom hits.
 - The scheduled run uses `--no-git` deliberately: the script's git path commits with `--no-verify`, skipping the CSV structure check. Don't change it.
 - Verify the job, run a manual backup, or restore: `csv-backup` skill. After any restore, run `npm run test:csv` before committing.
 
+## Design Language (read BEFORE writing any page)
+
+The site is a letterpress-editorial surface, not a web app. `src/index.html` is the
+canonical statement of the language; read it before designing anything. Do not derive the
+design from whatever utility classes happen to be lying around in a neighbouring template
+— several templates carry Tailwind-admin markup that predates the system and is not a
+precedent.
+
+**The rules:**
+
+1. **Square corners. No `border-radius`, anywhere.** The homepage has zero radius
+   declarations in 511 lines; so do `.tag-pill` (tags.html) and `.book-cover-tile`
+   (design-system.css). The `--radius-*` tokens exist for genuine circles (spinners, icon
+   wells) and nothing else. Radius in the templates is Tailwind creep, not a decision.
+2. **No fills, no boxes, no buttons.** Things are separated by a 1px hairline
+   `rgba(10, 10, 10, 0.12)` or by whitespace. Never a filled chip, pill, badge or card.
+   Navigation is text. The one sanctioned button form is the hero CTA: `2px solid` ink,
+   square, uppercase Archivo Narrow, inverting on hover — used twice on the whole site.
+3. **Two typefaces, fixed jobs.** Literata (serif) for titles and prose. Archivo Narrow
+   uppercase, 0.12–0.2em tracking, for eyebrows, counts, labels and small metadata.
+   Crimson Pro is the wordmark only.
+4. **Brown `#8B7355` is the accent** for that small tracked type. Not `gray-400`/`gray-500`.
+   Green `#034706` is the mark, not a UI colour.
+5. **Paper `#F8F7F4` is the ground.** White is for sheets that hold an object (cover tiles,
+   the about band), not for cards.
+6. **Section structure:** small brown uppercase heading, a hairline rule under it, then
+   content. Not a heading inside a panel.
+
+Palette tokens: `--color-ink #0A0A0A`, `--color-paper #F8F7F4`, `--color-vellum #EEEDE8`,
+`--color-brown #8B7355`, `--color-border rgba(10,10,10,0.12)`.
+
+**Verify before saying it's done** — class names lie on this site (two CSS systems, and
+design-system.css loads last). Render over HTTP and sample computed styles:
+
+```js
+// inside the page's own container
+document.querySelectorAll('.wing-page *').forEach(el => { const s = getComputedStyle(el);
+  /* flag any borderRadius > 0 or a backgroundColor that isn't transparent */ });
+```
+
+`src/wings.njk` is the worked example of a page written correctly in this language.
+
 ## Key Metadata Fields
 
 **collection_grouping** - Groups thematically related books (e.g., "Ephemera", "Photography", "Magazines")
