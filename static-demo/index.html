@@ -167,9 +167,13 @@
             background-color: white;
         }
 
+        /* auto-fit rather than repeat(3, 1fr) so the Wing filter, which is
+           hidden while the catalogue holds a single wing, can appear as a
+           fourth control without leaving a hole in the row. With three visible
+           children the rendered result is the same three equal columns. */
         .filter-row {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 1.25rem;
             padding-top: 1.5rem;
         }
@@ -765,6 +769,12 @@ function toggleMobileMenu() {
             </div>
 
             <div class="filter-row">
+                <div id="wing-filter-wrap" hidden>
+                    <label for="wing-filter" class="control-label">Wing</label>
+                    <select id="wing-filter" class="search-select">
+                        <option value="">All Wings</option>
+                    </select>
+                </div>
                 <div>
                     <label for="publisher-filter" class="control-label">Publisher</label>
                     <select id="publisher-filter" class="search-select">
@@ -822,6 +832,9 @@ function toggleMobileMenu() {
         </div>
     </div>
 </main>
+<script>
+window.LIBRARY_WINGS = [{"slug": "art", "name": "Art & Photography"}, {"slug": "cryptology", "name": "Cryptology"}, {"slug": "fiction", "name": "Fiction & Non-fiction"}, {"slug": "ephemera", "name": "Ephemera"}, {"slug": "comics", "name": "Comics"}, {"slug": "posters", "name": "Posters"}, {"slug": "artworks", "name": "Artworks"}];
+</script>
 
 <script>
 class BookSearch {
@@ -835,6 +848,7 @@ class BookSearch {
             publisher: '',
             year: '',
             collection: '',
+            wing: '',
             cover: ''
         };
         this.visualBrowse = false;
@@ -992,6 +1006,13 @@ class BookSearch {
             this.performSearch();
         });
 
+        const wingFilter = document.getElementById('wing-filter');
+        wingFilter.addEventListener('change', (e) => {
+            this.filters.wing = e.target.value;
+            this.currentPage = 1;
+            this.performSearch();
+        });
+
         visualBrowseCheckbox.addEventListener('change', (e) => {
             this.visualBrowse = e.target.checked;
             this.performSearch();
@@ -1030,6 +1051,37 @@ class BookSearch {
         this.populateSelect('publisher-filter', publishers);
         this.populateSelect('year-filter', years);
         this.populateSelect('collection-filter', collections);
+        this.populateWingFilter();
+    }
+
+    // The wing facet is driven by the `collection` column the catalogue loader
+    // stamps from each file. Search itself stays global — this only scopes it.
+    populateWingFilter() {
+        const wrap = document.getElementById('wing-filter-wrap');
+        const select = document.getElementById('wing-filter');
+        const slugs = [...new Set(this.books.map(book => book.collection).filter(Boolean))];
+
+        // One wing is the whole catalogue; a control offering that is noise.
+        if (slugs.length < 2) return;
+
+        const names = new Map((window.LIBRARY_WINGS || []).map(w => [w.slug, w.name]));
+        slugs
+            .sort((a, b) => (names.get(a) || a).localeCompare(names.get(b) || b))
+            .forEach(slug => {
+                const option = document.createElement('option');
+                option.value = slug;
+                option.textContent = names.get(slug) || slug;
+                select.appendChild(option);
+            });
+
+        wrap.hidden = false;
+
+        // Wing landing pages link here with the wing preselected.
+        const requested = new URLSearchParams(window.location.search).get('collection');
+        if (requested && slugs.includes(requested)) {
+            select.value = requested;
+            this.filters.wing = requested;
+        }
     }
 
     populateSelect(selectId, options) {
@@ -1056,10 +1108,11 @@ class BookSearch {
         document.getElementById('publisher-filter').value = '';
         document.getElementById('year-filter').value = '';
         document.getElementById('collection-filter').value = '';
+        document.getElementById('wing-filter').value = '';
         document.getElementById('visual-browse').checked = false;
 
         this.searchTerm = '';
-        this.filters = { publisher: '', year: '', collection: '' };
+        this.filters = { publisher: '', year: '', collection: '', wing: '' };
         this.visualBrowse = false;
         this.sortBy = 'date';
         this.currentPage = 1;
@@ -1089,6 +1142,10 @@ class BookSearch {
             }
 
             if (this.filters.collection && book.collection_grouping !== this.filters.collection) {
+                return false;
+            }
+
+            if (this.filters.wing && book.collection !== this.filters.wing) {
                 return false;
             }
 
