@@ -19,7 +19,10 @@ module.exports = function() {
     fs.existsSync(path.join(hardcodedDir, `${slug}.html`)) ||
     fs.existsSync(path.join(hardcodedDir, `${slug}.njk`));
 
-  const wings = loadWings();
+  // Only published wings get collection pages. An unpublished wing has no
+  // landing page to reach them from (wingPages.js applies the same filter), so
+  // generating them would publish orphan pages for a wing still being catalogued.
+  const wings = loadWings().filter(w => w.isDefault || w.live);
   const defaultWing = wings.find(w => w.isDefault).slug;
 
   // A curated config belongs to the art wing unless its JSON says otherwise.
