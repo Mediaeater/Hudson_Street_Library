@@ -1,6 +1,17 @@
 const path = require('path');
 const { expect } = require('chai');
-const { loadCatalog, loadCatalogSync, loadWings, CatalogError } = require('../scripts/utils/catalog');
+const {
+  loadCatalog,
+  loadCatalogSync,
+  loadWings,
+  resolveWing,
+  defaultWing,
+  wingFile,
+  wingForId,
+  nextIdForWing,
+  fileForIdentifier,
+  CatalogError,
+} = require('../scripts/utils/catalog');
 
 const fixture = name => ({ dataDir: path.join(__dirname, 'fixtures', 'catalog', name) });
 
@@ -84,6 +95,55 @@ describe('catalog loader', () => {
       const { files, columns } = loadCatalogSync();
       expect(files).to.have.length(7);
       expect(columns).to.have.length(37);
+    });
+  });
+
+  // What a write needs to know: which wing, which file, which id. Used by the
+  // add-book ingest and by CSVHandler to route an update to the right file.
+  describe('wing resolution', () => {
+    const dir = fixture('ok').dataDir;
+
+    it('resolveWing throws on an unknown slug rather than falling back', () => {
+      expect(() => resolveWing('nope', dir)).to.throw(CatalogError, /unknown wing "nope" \(known: art, zz\)/);
+      expect(resolveWing('zz', dir).slug).to.equal('zz');
+    });
+
+    it('defaultWing is the wing a write lands in when none is named', () => {
+      expect(defaultWing(dir).slug).to.equal('art');
+      expect(defaultWing().slug).to.equal('art');
+    });
+
+    it('wingFile takes a slug or a wing object', () => {
+      expect(wingFile('zz', dir)).to.equal(path.join(dir, 'catalog', 'zz.csv'));
+      expect(wingFile(resolveWing('art', dir), dir)).to.equal(path.join(dir, 'books.csv'));
+    });
+
+    it('wingForId reads the id blocks, including allowLegacyIds', () => {
+      expect(wingForId(1, dir).slug).to.equal('art');
+      expect(wingForId('10001', dir).slug).to.equal('zz');
+      expect(wingForId(42, dir).slug).to.equal('zz'); // out of block, allowed
+      expect(wingForId(500000, dir)).to.equal(null);
+      expect(wingForId('9780306406157', dir)).to.equal(null);
+    });
+
+    it('nextIdForWing counts within the wing, not across the catalogue', () => {
+      expect(nextIdForWing('art', { dataDir: dir })).to.equal(3);
+      // zz holds 10001 and the legacy 42; the next id follows the block, not 43.
+      expect(nextIdForWing('zz', { dataDir: dir })).to.equal(10002);
+    });
+
+    it('nextIdForWing starts at the bottom of an empty wing\'s block', () => {
+      expect(nextIdForWing('cryptology')).to.equal(10001);
+      expect(nextIdForWing('artworks')).to.equal(90001);
+    });
+
+    it('fileForIdentifier routes an id by block and an ISBN by lookup', () => {
+      expect(fileForIdentifier('10001', { dataDir: dir }).slug).to.equal('zz');
+      expect(fileForIdentifier(2, { dataDir: dir }).slug).to.equal('art');
+
+      const anIsbn = loadCatalogSync().data.find(b => b.isbn_asin)?.isbn_asin;
+      expect(fileForIdentifier(anIsbn).file).to.match(/books\.csv$/);
+      expect(fileForIdentifier('nosuchisbn')).to.equal(null);
     });
   });
 });
