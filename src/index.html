@@ -216,6 +216,61 @@
             transform: translateY(-2px);
         }
 
+        /* Wings Section */
+        /* Capped, centered tracks rather than 1fr: with one or two wings live,
+           1fr stretches a single card the full 1200px and the section reads as
+           a banner instead of a card. */
+        .wing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 360px));
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .wing-card {
+            display: block;
+            padding: 2rem;
+            border: 1px solid var(--color-border);
+            background: white;
+            text-decoration: none;
+            color: var(--color-ink);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .wing-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(10, 10, 10, 0.08);
+        }
+
+        .wing-card h3 {
+            font-family: 'Literata', Georgia, serif;
+            font-size: 1.375rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .wing-card p {
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            /* design-system.css caps every p at 65ch and centers it with auto
+               inline margins; inside a card that reads as a stray indent. */
+            max-width: none;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .wing-card .wing-count {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-brown);
+        }
+
         /* Contact Section */
         .contact-section {
             background: var(--color-vellum);
@@ -370,6 +425,27 @@
         </div>
     </div>
 </section>
+
+{#- Other wings. Below the fold and after Publications by design: art is the
+    library's front door and stays first. The whole section is conditional, so
+    while every other wing is still un-live the homepage is unchanged. #}
+{% if wingPages.length %}
+<section id="wings" class="section">
+    <div class="section-header">
+        <div class="section-label">Beyond Art &amp; Photography</div>
+        <h2 class="section-title">Other Wings</h2>
+    </div>
+    <div class="wing-grid">
+        {% for w in wingPages %}
+        <a href="{{ w.url }}" class="wing-card">
+            <h3>{{ w.name }}</h3>
+            {% if w.intro %}<p>{{ w.intro }}</p>{% endif %}
+            <span class="wing-count">{{ w.itemCount | commafy }} {% if w.itemCount == 1 %}item{% else %}items{% endif %}</span>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
 
 <!-- Contact Section -->
 <section id="contact" class="section contact-section">
