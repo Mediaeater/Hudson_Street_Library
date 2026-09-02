@@ -14,53 +14,315 @@ eleventyComputed:
   Wing landing page. One per live non-default wing (see src/_data/wingPages.js);
   the art wing's front door is the site homepage.
 
+  DESIGN. This page is written in the site's own language, taken from
+  src/index.html — the canonical statement of it — not in Tailwind's. The rules,
+  and they are not optional:
+
+    * Square corners. The homepage has zero border-radius declarations. So does
+      .tag-pill on tags.html and .book-cover-tile in design-system.css. Radius on
+      this site is Tailwind creep, not a decision.
+    * No fills and no buttons. Things are separated by a 1px hairline
+      (--color-border) or by whitespace. The one sanctioned button form is the
+      hero CTA: 2px solid ink, square, uppercase Archivo Narrow, inverting on
+      hover. Navigation is text.
+    * Two typefaces with fixed jobs. Literata for titles and prose; Archivo
+      Narrow, uppercase, tracked, in brown, for eyebrows, counts and labels.
+    * Brown (--color-brown) is the accent for that small type. Not gray-500.
+
   Every list here is scoped with `inWing` — a landing page is a single-wing
   surface, so nothing on it may reach across the catalogue. Search stays global
   and is entered through the facet link below.
 
-  Spacing classes are restricted to the ones design-system.css defines. Its
-  unlayered `* { margin: 0; padding: 0 }` reset beats every layered Tailwind
-  utility, so any padding/margin class it does not redeclare — `p-5`, `py-1.5`,
-  `mt-auto`, and every responsive variant such as `md:mb-16` — silently computes
-  to zero on any page that loads it. See memory: dual CSS systems.
+  The layout loads design-system.css, whose unlayered `* { margin: 0; padding: 0 }`
+  reset beats every layered Tailwind utility — which is why the spacing here is
+  declared in this block rather than borrowed from utility classes. Its `p` rule
+  also caps prose at 65ch and centers it with auto margins; anywhere that reads as
+  a stray indent, override all three properties (see .wing-featured-item p).
 #}
-<main>
-    <div class="container mx-auto px-6 py-16">
+<style>
+    .wing-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
 
-        <div class="max-w-3xl mx-auto text-center mb-16">
-            <p class="text-xs uppercase tracking-widest text-gray-500 mb-3">Hudson Street Library</p>
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">{{ wingPage.name }}</h1>
-            <div class="line-divider inline-block"></div>
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    /* Masthead */
+    .wing-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .wing-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .wing-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        margin-bottom: 1.5rem;
+    }
+
+    .wing-intro {
+        font-size: clamp(1.0625rem, 2vw, 1.25rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .wing-count {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 1.75rem;
+    }
+
+    /* Text link, not a button. A hairline underline that darkens on hover is the
+       site's link idiom (see .contact-item a on the homepage). */
+    .wing-search {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .wing-search:hover { border-bottom-color: var(--color-brown); }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .wing-section { margin-bottom: 4.5rem; }
+    .wing-section:last-child { margin-bottom: 0; }
+
+    .wing-section > h2 {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    /* Featured: hairline-separated rows, not cards. */
+    .wing-featured { display: block; }
+
+    .wing-featured-item {
+        display: flex;
+        gap: 1.5rem;
+        align-items: flex-start;
+        padding: 1.5rem 0;
+        border-bottom: 1px solid var(--color-border);
+        text-decoration: none;
+        color: var(--color-ink);
+    }
+
+    .wing-featured-item:first-child { padding-top: 0; }
+
+    .wing-featured-thumb {
+        width: 72px;
+        flex-shrink: 0;
+        aspect-ratio: 3 / 4;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(10, 10, 10, 0.12);
+    }
+
+    .wing-featured-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .wing-featured-item h3 {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        line-height: 1.3;
+        margin-bottom: 0.5rem;
+        transition: color 0.3s ease;
+    }
+
+    .wing-featured-item:hover h3 { color: var(--color-brown); }
+
+    .wing-featured-item p {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        font-weight: 300;
+        /* design-system.css caps every p at 65ch and centers it. */
+        max-width: none;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .wing-featured-count {
+        display: block;
+        margin-top: 0.75rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    /* Recently added. Covers sit on the paper, held by their own shadow. */
+    .wing-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .wing-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .wing-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .wing-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .wing-book:hover .wing-book-cover img { transform: translateY(-4px); }
+
+    .wing-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .wing-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .wing-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .wing-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    /* Browse by subject: a list of names, set as text. */
+    .wing-subjects {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem 2.5rem;
+        margin: 0;
+        padding: 0;
+    }
+
+    .wing-subjects a {
+        text-decoration: none;
+        color: var(--color-ink);
+        font-size: 1.0625rem;
+        transition: color 0.3s ease;
+    }
+
+    .wing-subjects a:hover { color: var(--color-brown); }
+
+    .wing-subjects .count {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        color: var(--color-brown);
+        margin-left: 0.4rem;
+    }
+
+    @media (max-width: 768px) {
+        .wing-page { padding: 3rem 1.5rem 4rem; }
+        .wing-masthead { margin-bottom: 3.5rem; }
+        .wing-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+<main>
+    <div class="wing-page">
+
+        <div class="wing-masthead">
+            <div class="wing-eyebrow">Hudson Street Library</div>
+            <h1 class="wing-title">{{ wingPage.name }}</h1>
             {% if wingPage.intro %}
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">{{ wingPage.intro }}</p>
+                <p class="wing-intro">{{ wingPage.intro }}</p>
             {% endif %}
-            <p class="text-sm text-gray-500 mt-4">{{ wingPage.itemCount | commafy }} catalogued {% if wingPage.itemCount == 1 %}item{% else %}items{% endif %}</p>
-            <div class="mt-6">
-                <a href="/static-demo/?collection={{ wingPage.slug }}" class="inline-block border border-primary-700 text-primary-700 px-6 py-3 hover:bg-primary-700 hover:text-white transition-all rounded-xs font-medium">Search {{ wingPage.name }}</a>
+            <div class="wing-count">{{ wingPage.itemCount | commafy }} catalogued {% if wingPage.itemCount == 1 %}item{% else %}items{% endif %}</div>
+            <div>
+                <a href="/static-demo/?collection={{ wingPage.slug }}" class="wing-search">Search {{ wingPage.name }}</a>
             </div>
         </div>
 
         {% if wingPage.featured.length %}
-        <section class="mb-16">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">Featured</h2>
-            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <section class="wing-section">
+            <h2>Featured</h2>
+            <div class="wing-featured">
                 {% for c in wingPage.featured %}
-                    {#- The thumbnail is a book cover, so it keeps a cover's
-                        proportions and a fixed width. An aspect-ratio box whose
-                        width is indefinite is sized by the image instead of the
-                        ratio, which is what stretched an earlier draft. -#}
-                    <a href="{{ c.url }}" class="item-card no-underline bg-white rounded-lg shadow-xs flex gap-4 p-4">
+                    <a href="{{ c.url }}" class="wing-featured-item">
                         {% if c.image %}
-                            <div class="w-20 flex-shrink-0 aspect-3/4 bg-gray-100 rounded-xs overflow-hidden">
-                                <img src="{{ c.image }}" alt="" class="w-full h-full object-cover" loading="lazy">
+                            <div class="wing-featured-thumb">
+                                <img src="{{ c.image }}" alt="" loading="lazy">
                             </div>
                         {% endif %}
                         <div>
-                            <h3 class="text-lg font-bold text-primary-700 mb-2">{{ c.title }}</h3>
-                            {% if c.description %}
-                                <p class="text-sm text-gray-600 leading-relaxed">{{ c.description }}</p>
-                            {% endif %}
-                            <p class="text-xs text-gray-500 mt-4">{{ c.count | commafy }} {% if c.count == 1 %}item{% else %}items{% endif %}</p>
+                            <h3>{{ c.title }}</h3>
+                            {% if c.description %}<p>{{ c.description }}</p>{% endif %}
+                            <span class="wing-featured-count">{{ c.count | commafy }} {% if c.count == 1 %}item{% else %}items{% endif %}</span>
                         </div>
                     </a>
                 {% endfor %}
@@ -70,25 +332,38 @@ eleventyComputed:
 
         {% set recent = books | inWing(wingPage.slug) | recentlyAdded(12) %}
         {% if recent.length %}
-        <section class="mb-16">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">Recently Added</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        <section class="wing-section">
+            <h2>Recently Added</h2>
+            <div class="wing-books">
                 {% for book in recent %}
-                    {% include "components/collection-card.njk" %}
+                    <a href="/books/{{ book.author_last | slugify }}_{{ book.title | slugify }}_{{ book.id }}/" class="wing-book">
+                        <div class="wing-book-cover">
+                            {% if book.image_url %}
+                                <img src="{{ book.image_url }}" alt="{{ book.title }}" loading="lazy">
+                            {% else %}
+                                <span class="no-cover">No cover</span>
+                            {% endif %}
+                        </div>
+                        {% if book.author_full_name %}
+                            <div class="wing-book-author">{{ book.author_full_name }}</div>
+                        {% endif %}
+                        <div class="wing-book-title">{{ book.title }}</div>
+                        {% if book.publisher or book.publication_year %}
+                            <div class="wing-book-meta">{% if book.publisher %}{{ book.publisher }}{% if book.publication_year %} &middot; {% endif %}{% endif %}{{ book.publication_year }}</div>
+                        {% endif %}
+                    </a>
                 {% endfor %}
             </div>
         </section>
         {% endif %}
 
         {% if wingPage.collections.length %}
-        <section>
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">Browse by Subject</h2>
-            <ul class="flex flex-wrap gap-2 list-none">
+        <section class="wing-section">
+            <h2>Browse by Subject</h2>
+            <ul class="wing-subjects">
                 {% for c in wingPage.collections %}
                     <li>
-                        <a href="{{ c.url }}" class="inline-flex items-baseline gap-2 no-underline border border-gray-200 rounded-full px-4 py-2 text-sm text-gray-700 hover:border-primary-700 hover:text-primary-700">
-                            {{ c.title }}<span class="text-xs text-gray-400">{{ c.count | commafy }}</span>
-                        </a>
+                        <a href="{{ c.url }}">{{ c.title }}<span class="count">{{ c.count | commafy }}</span></a>
                     </li>
                 {% endfor %}
             </ul>
