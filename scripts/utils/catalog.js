@@ -242,6 +242,102 @@ function loadCatalogSync(options = {}) {
 }
 
 /**
+ * Look a wing up by slug. Throws rather than falling back to the default wing:
+ * a typo'd --wing must not quietly file a cryptology book in books.csv.
+ * @param {string} slug
+ * @param {string} [dataDir]
+ * @returns {Object}
+ */
+function resolveWing(slug, dataDir = DATA_DIR) {
+    const wings = loadWings(dataDir);
+    const wing = wings.find(w => w.slug === slug);
+    if (!wing) {
+        throw new CatalogError(`unknown wing "${slug}" (known: ${wings.map(w => w.slug).join(', ')})`);
+    }
+    return wing;
+}
+
+/**
+ * The default wing — what a script writes to when no wing is named.
+ * @param {string} [dataDir]
+ */
+function defaultWing(dataDir = DATA_DIR) {
+    return loadWings(dataDir).find(w => w.isDefault);
+}
+
+/**
+ * Absolute path of a wing's CSV.
+ * @param {Object|string} wing - wing object or slug
+ * @param {string} [dataDir]
+ */
+function wingFile(wing, dataDir = DATA_DIR) {
+    const w = typeof wing === 'string' ? resolveWing(wing, dataDir) : wing;
+    return path.join(dataDir, w.file);
+}
+
+/**
+ * The wing that owns this id, or null. Registry lookup only — no file is read,
+ * because the block IS the answer.
+ *
+ * An explicit allowLegacyIds entry wins over a block match: a legacy id is by
+ * definition one that sits outside its own wing's block, so it usually lands
+ * inside somebody else's, and the wing that claims it is the one that has it.
+ * @param {number|string} id
+ * @param {string} [dataDir]
+ */
+function wingForId(id, dataDir = DATA_DIR) {
+    const n = Number(id);
+    if (!Number.isInteger(n)) return null;
+    const wings = loadWings(dataDir);
+    return wings.find(w => (w.allowLegacyIds || []).map(Number).includes(n))
+        || wings.find(w => n >= w.idBlock[0] && n <= w.idBlock[1])
+        || null;
+}
+
+/**
+ * Next free id for a wing: one past the highest id it already holds, or the
+ * bottom of its block when empty. Ids are per-wing — a first cryptology book
+ * takes 10001, not one past the art catalogue's maximum.
+ * @param {string} slug
+ * @param {{dataDir?: string}} [options]
+ * @returns {number}
+ */
+function nextIdForWing(slug, options = {}) {
+    const dataDir = options.dataDir || DATA_DIR;
+    const wing = resolveWing(slug, dataDir);
+    const [lo, hi] = wing.idBlock;
+    const result = CSVHandler.readBooksSync(wingFile(wing, dataDir));
+    fatal(result, wingFile(wing, dataDir));
+    let max = lo - 1;
+    for (const row of result.data) {
+        const id = Number(row.id);
+        if (Number.isInteger(id) && id >= lo && id <= hi && id > max) max = id;
+    }
+    const next = max + 1;
+    if (next > hi) throw new CatalogError(`wing "${slug}" has no free ids left in block ${lo}–${hi}`);
+    return next;
+}
+
+/**
+ * Which catalogue file holds a row, given an id or an ISBN. An id resolves
+ * from the registry alone; an ISBN needs a scan, so the merged load is only
+ * paid for when the identifier is not an id.
+ * @param {string|number} identifier
+ * @param {{dataDir?: string}} [options]
+ * @returns {{slug: string, file: string}|null}
+ */
+function fileForIdentifier(identifier, options = {}) {
+    const dataDir = options.dataDir || DATA_DIR;
+    const byId = wingForId(identifier, dataDir);
+    if (byId) return { slug: byId.slug, file: wingFile(byId, dataDir) };
+    const { data } = loadCatalogSync({ dataDir });
+    const row = data.find(r => r.isbn_asin === identifier || r.id === String(identifier));
+    if (!row) return null;
+    const wing = resolveWing(row.collection, dataDir);
+    return { slug: wing.slug, file: wingFile(wing, dataDir) };
+}
+
+/**
  * Render the merged catalogue as one CSV string for the client-rendered
  * catalog page (/cms/data/catalog.csv). Source rows are passed through as
  * their original bytes (csv-parse raw mode) with one extra trailing column,
@@ -296,6 +392,12 @@ module.exports = {
     listCatalogFiles,
     loadCatalog,
     loadCatalogSync,
+    resolveWing,
+    defaultWing,
+    wingFile,
+    wingForId,
+    nextIdForWing,
+    fileForIdentifier,
     renderMergedCsv,
     writeMergedCsv,
 };

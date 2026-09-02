@@ -565,7 +565,15 @@ class CSVHandler {
         }
 
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-        const backupPath = filePath.replace(/\.csv$/, `_backup_${timestamp}.csv`);
+        // A backup written beside a wing file lands in src/_data/catalog/, which
+        // the catalogue loader scans — every build then fails with "has no entry
+        // in wings.json", and the stray file isn't gitignored either. Wing
+        // backups go one level up, named the way the scheduled backup job names
+        // its copies (catalog_<wing>_...).
+        const dir = path.dirname(resolvedPath);
+        const backupPath = path.basename(dir) === 'catalog'
+            ? path.join(path.dirname(dir), `catalog_${path.basename(filePath, '.csv')}_backup_${timestamp}.csv`)
+            : filePath.replace(/\.csv$/, `_backup_${timestamp}.csv`);
 
         // Validate the generated backup path as well
         const resolvedBackup = path.resolve(backupPath);
@@ -694,14 +702,37 @@ class CSVHandler {
     }
 
     /**
-     * Update a book record in books.csv
+     * The catalogue file a record lives in. Required lazily: catalog.js requires
+     * this module, so a top-level require would be circular.
+     *
+     * With no explicit path, the id (or ISBN) decides the file — id 10042 is a
+     * cryptology record and belongs in catalog/cryptology.csv, not books.csv.
+     * An unresolvable identifier falls back to the default wing so the caller
+     * still gets the familiar "Book not found" rather than a loader throw.
+     * @param {string} identifier
+     * @param {string|null} csvPath
+     * @returns {string}
+     */
+    static resolveCatalogFile(identifier, csvPath = null) {
+        if (csvPath) return csvPath;
+        const fallback = path.join(__dirname, '../../src/_data/books.csv');
+        try {
+            const { fileForIdentifier } = require('./catalog');
+            return fileForIdentifier(identifier)?.file || fallback;
+        } catch (err) {
+            return fallback;
+        }
+    }
+
+    /**
+     * Update a book record in the catalogue
      * @param {string} identifier - ISBN or book ID
      * @param {Object} updates - Fields to update
-     * @param {string} csvPath - Path to books.csv (optional)
+     * @param {string} csvPath - Explicit file (optional; otherwise routed by id)
      * @returns {Promise<Object>} - Update result
      */
     static async updateBook(identifier, updates, csvPath = null, options = {}) {
-        const booksPath = csvPath || path.join(__dirname, '../../src/_data/books.csv');
+        const booksPath = this.resolveCatalogFile(identifier, csvPath);
         const readResult = await this.readBooks(booksPath);
 
         // Find the book to update
@@ -718,8 +749,8 @@ class CSVHandler {
         }
 
         // Apply updates, restricted to columns the CSV already has. A stray
-        // key becomes a brand-new column on every row at write time — books.csv
-        // must stay exactly 36 columns.
+        // key becomes a brand-new column on every row at write time — every
+        // catalogue file must stay exactly 37 columns.
         const validColumns = new Set(Object.keys(readResult.data[bookIndex]));
         const skippedKeys = Object.keys(updates).filter(key => !validColumns.has(key));
         const originalBook = { ...readResult.data[bookIndex] };
@@ -744,12 +775,43 @@ class CSVHandler {
     }
 
     /**
-     * Batch update multiple books
+     * Batch update multiple books.
+     *
+     * With no explicit path the batch is split by the file each identifier
+     * resolves to and each file is read/written once, so one call can fix rows
+     * in several wings. Counts and errors are merged; `backup` becomes a list
+     * when more than one file was touched.
      * @param {Array} updates - Array of {identifier, updates} objects
-     * @param {string} csvPath - Path to books.csv (optional)
+     * @param {string} csvPath - Explicit file (optional; otherwise routed by id)
      * @returns {Promise<Object>} - Batch update result
      */
     static async batchUpdateBooks(updates, csvPath = null, options = {}) {
+        if (!csvPath) {
+            const byFile = new Map();
+            for (const update of updates) {
+                const file = this.resolveCatalogFile(update.identifier, null);
+                if (!byFile.has(file)) byFile.set(file, []);
+                byFile.get(file).push(update);
+            }
+            if (byFile.size > 1) {
+                const merged = { successful: 0, failed: 0, errors: [], updatedBooks: [], backup: [] };
+                for (const [file, group] of byFile) {
+                    const r = await this.batchUpdateBooks(group, file, options);
+                    merged.successful += r.successful;
+                    merged.failed += r.failed;
+                    merged.errors.push(...r.errors);
+                    merged.updatedBooks.push(...r.updatedBooks);
+                    if (r.backup) merged.backup.push(r.backup);
+                    if (r.writeSuccess === false) merged.writeSuccess = false;
+                    if (r.writeErrors) merged.writeErrors = [...(merged.writeErrors || []), ...r.writeErrors];
+                }
+                if (merged.writeSuccess === undefined && merged.successful > 0) merged.writeSuccess = true;
+                return merged;
+            }
+            // Single file: fall through with it resolved, so the result shape
+            // stays exactly what callers have always seen.
+            csvPath = byFile.keys().next().value || null;
+        }
         const booksPath = csvPath || path.join(__dirname, '../../src/_data/books.csv');
         const readResult = await this.readBooks(booksPath);
 

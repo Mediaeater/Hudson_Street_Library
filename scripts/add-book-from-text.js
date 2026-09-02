@@ -8,6 +8,7 @@
  * Usage:
  *   node scripts/add-book-from-text.js --text "Book description here"
  *   node scripts/add-book-from-text.js --file books-to-add.txt
+ *   node scripts/add-book-from-text.js --json book_data_slug.json --wing cryptology
  *   node scripts/add-book-from-text.js --interactive
  *
  * Example text format:
@@ -17,8 +18,8 @@
  * The script will:
  *   1. Parse the text to extract book details
  *   2. Look up ISBN and additional info from APIs
- *   3. Generate next sequential ID
- *   4. Add to books.csv with today's accession date
+ *   3. Resolve the wing, and take the next free id from that wing's block
+ *   4. Append the row to that wing's CSV with today's accession date
  *   5. Provide cover filename for you to add
  */
 
@@ -29,9 +30,16 @@ const https = require('https');
 const { execSync } = require('child_process');
 const { BookMetadataAggregator } = require('./utils/book-metadata-aggregator');
 const CSVHandler = require('./utils/csv-handler');
+const {
+  loadCatalogSync,
+  resolveWing,
+  defaultWing,
+  wingFile,
+  nextIdForWing,
+} = require('./utils/catalog');
 
 // Configuration
-const CSV_PATH = path.join(__dirname, '../src/_data/books.csv');
+const ROOT = path.join(__dirname, '..');
 const COVERS_DIR = path.join(__dirname, '../src/assets/images/books');
 const ACCESSION_LOCATION = 'Hudson Street Library, NYC';
 
@@ -42,6 +50,7 @@ let inputFile = '';
 let inputJson = '';
 let interactive = false;
 let assumeYes = false;
+let wingArg = '';
 
 for (let i = 0; i < args.length; i++) {
   if (args[i] === '--text') {
@@ -50,6 +59,8 @@ for (let i = 0; i < args.length; i++) {
     inputFile = args[++i];
   } else if (args[i] === '--json') {
     inputJson = args[++i];
+  } else if (args[i] === '--wing') {
+    wingArg = args[++i];
   } else if (args[i] === '--interactive') {
     interactive = true;
   } else if (args[i] === '--yes' || args[i] === '-y') {
@@ -62,12 +73,16 @@ Usage:
   node scripts/add-book-from-text.js --text "Book description"
   node scripts/add-book-from-text.js --file books-to-add.txt
   node scripts/add-book-from-text.js --json book_data.json
+  node scripts/add-book-from-text.js --json book_data.json --wing cryptology
   node scripts/add-book-from-text.js --interactive
 
 Options:
   --text <description>    Book description text
   --file <path>           File with book descriptions (one per paragraph)
   --json <path>           JSON file from research-asst skill
+  --wing <slug>           Catalogue wing to file under (default: the JSON
+                          record's "wing", else art). The wing decides both
+                          the target CSV and the id block.
   --interactive           Interactive mode with prompts
   --yes, -y               Skip the confirmation prompt (for --json; scriptable)
   --help                  Show this help
@@ -278,39 +293,50 @@ function warnIfSuspiciousIsbn(isbnAsin) {
 }
 
 /**
- * Read current CSV and get next ID using robust CSVHandler
+ * Today's date in the cataloguer's own timezone, YYYY-MM-DD.
+ * `toISOString()` is UTC, so an evening add in New York stamped tomorrow's
+ * accession date — and an accession date one day in the future reorders
+ * Recently Added.
  */
-async function readCSV() {
-  const result = await CSVHandler.readBooks(CSV_PATH);
+function todayLocal() {
+  const d = new Date();
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
 
-  if (result.errors.length > 0 && result.errors.some(e => e.type === 'error')) {
-    console.warn('⚠️  CSV has validation warnings:', result.errors.length);
-  }
+/**
+ * Which wing this add is filed under. An explicit --wing wins; otherwise the
+ * research record may name one; otherwise the default wing. An unknown slug
+ * throws (catalog.js lists the valid ones) rather than silently landing the
+ * row in books.csv.
+ */
+function resolveTargetWing(recordWing) {
+  const slug = wingArg || recordWing || defaultWing().slug;
+  return resolveWing(slug);
+}
 
-  const records = result.data;
-
-  // Get max ID
-  let maxId = 0;
-  records.forEach(record => {
-    const id = parseInt(record.id);
-    if (!isNaN(id) && id > maxId) {
-      maxId = id;
-    }
-  });
-
+/**
+ * Read the catalogue for an add.
+ *
+ * The duplicate guard sees EVERY wing — the same book must not be filed twice
+ * under two wings — while the id and the target file come from the wing being
+ * added to. Columns come from the loader, not from the first row, so a wing
+ * whose file is still header-only works.
+ */
+function readCatalogFor(wing) {
+  const { data, columns } = loadCatalogSync();
   return {
-    records,
-    nextId: maxId + 1,
-    headers: Object.keys(records[0])
+    records: data,
+    nextId: nextIdForWing(wing.slug),
+    headers: columns,
+    file: wingFile(wing),
   };
 }
 
 /**
- * Add book to CSV using robust CSVHandler
+ * Add book to its wing's CSV using robust CSVHandler
  */
-async function addBookToCSV(bookData, nextId) {
-  const { headers } = await readCSV();
-
+async function addBookToCSV(bookData, nextId, headers, file) {
   // Create new record with all columns
   const newRecord = {};
   headers.forEach(header => {
@@ -319,13 +345,13 @@ async function addBookToCSV(bookData, nextId) {
 
   // Set ID and accession date
   newRecord.id = nextId.toString();
-  newRecord.accession_no = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  newRecord.accession_no = todayLocal();
   newRecord.location = ACCESSION_LOCATION;
 
   // Append only the new row. This never rewrites the existing rows, so the
   // diff is a single added line — no whole-file re-quoting churn, and no
   // read-time trimming/auto-correction leaking into unrelated records.
-  const appendResult = await CSVHandler.appendBook(CSV_PATH, newRecord);
+  const appendResult = await CSVHandler.appendBook(file, newRecord);
 
   if (!appendResult.success) {
     throw new Error(`Failed to append to CSV: ${appendResult.errors.join(', ')}`);
@@ -480,8 +506,10 @@ async function processBook(text) {
       bookData.isbn_asin = '';
     }
 
-    // Get next ID
-    const { nextId } = await readCSV();
+    // Wing, id and target file
+    const wing = resolveTargetWing();
+    const { nextId, headers, file } = readCatalogFor(wing);
+    const target = path.relative(ROOT, file);
 
     // Generate cover filename
     const coverFilename = generateCoverFilename(
@@ -495,6 +523,7 @@ async function processBook(text) {
 
     console.log('\n📋 Book Details:');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log(`Wing:            ${wing.name} (${wing.slug}) → ${target}`);
     console.log(`ID:              ${nextId}`);
     console.log(`Title:           ${bookData.title}`);
     console.log(`Author:          ${bookData.author_full_name}`);
@@ -503,7 +532,7 @@ async function processBook(text) {
     console.log(`ISBN:            ${bookData.isbn_asin || '(not found)'}`);
     console.log(`Pages:           ${bookData.page_count || '(not specified)'}`);
     console.log(`Binding:         ${bookData.binding || '(not specified)'}`);
-    console.log(`Accession Date:  ${new Date().toISOString().split('T')[0]}`);
+    console.log(`Accession Date:  ${todayLocal()}`);
     console.log(`Location:        ${ACCESSION_LOCATION}`);
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
@@ -513,10 +542,10 @@ async function processBook(text) {
       output: process.stdout
     });
 
-    rl.question('Add this book to books.csv? (y/n): ', async (answer) => {
+    rl.question(`Add this book to ${target}? (y/n): `, async (answer) => {
       if (answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes') {
         // Add to CSV
-        const record = await addBookToCSV(bookData, nextId);
+        const record = await addBookToCSV(bookData, nextId, headers, file);
 
         console.log('\n✅ Book added successfully!\n');
 
@@ -674,16 +703,19 @@ async function processBookFromJSON(jsonPath) {
     warnIfThinDescription(bookData.description);
     warnIfSuspiciousIsbn(bookData.isbn_asin);
 
-    // Get next ID
-    const { records, nextId } = await readCSV();
+    // Wing, id and target file. The record may name its own wing; --wing wins.
+    const wing = resolveTargetWing(researchData.wing);
+    const { records, nextId, headers, file } = readCatalogFor(wing);
+    const target = path.relative(ROOT, file);
 
     // Duplicate guard: runs before the cover download so an aborted re-run
-    // leaves no orphan cover file behind.
+    // leaves no orphan cover file behind. `records` is the whole catalogue,
+    // so a match in another wing is caught too.
     const existing = findExistingMatches(records, bookData);
     if (existing.length > 0) {
-      console.log('⚠️  Possible duplicate — already in books.csv:');
+      console.log('⚠️  Possible duplicate — already in the catalogue:');
       existing.forEach((r) => {
-        console.log(`   id ${r.id}: ${r.title} — ${r.author_full_name}${r.isbn_asin ? ` (ISBN ${r.isbn_asin})` : ''}`);
+        console.log(`   id ${r.id} [${r.collection}]: ${r.title} — ${r.author_full_name}${r.isbn_asin ? ` (ISBN ${r.isbn_asin})` : ''}`);
       });
       const proceed = await confirmDuplicateAdd();
       if (!proceed) {
@@ -719,6 +751,7 @@ async function processBookFromJSON(jsonPath) {
 
     console.log('\n📋 Book Details:');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log(`Wing:            ${wing.name} (${wing.slug}) → ${target}`);
     console.log(`ID:              ${nextId}`);
     console.log(`Title:           ${bookData.title}`);
     console.log(`Author:          ${bookData.author_full_name}`);
@@ -729,13 +762,13 @@ async function processBookFromJSON(jsonPath) {
     console.log(`Pages:           ${bookData.page_count || '(not specified)'}`);
     console.log(`Binding:         ${bookData.binding || '(not specified)'}`);
     console.log(`Tags:            ${bookData.tags}`);
-    console.log(`Accession Date:  ${new Date().toISOString().split('T')[0]}`);
+    console.log(`Accession Date:  ${todayLocal()}`);
     console.log(`Location:        ${ACCESSION_LOCATION}`);
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
     // Perform the add and structure validation.
     const doAdd = async () => {
-      await addBookToCSV(bookData, nextId);
+      await addBookToCSV(bookData, nextId, headers, file);
 
       console.log('\n✅ Book added successfully!\n');
 
@@ -757,7 +790,7 @@ async function processBookFromJSON(jsonPath) {
       }
 
       console.log('🔨 Next Steps:');
-      console.log('  1. Review book details in books.csv');
+      console.log(`  1. Review book details in ${target}`);
       console.log('  2. Run: npm test');
       console.log('  3. Run: npm run build');
       console.log('  4. Commit changes\n');
@@ -771,7 +804,7 @@ async function processBookFromJSON(jsonPath) {
         input: process.stdin,
         output: process.stdout
       });
-      rl.question('Add this book to books.csv? (y/n): ', async (answer) => {
+      rl.question(`Add this book to ${target}? (y/n): `, async (answer) => {
         if (answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes') {
           await doAdd();
         } else {

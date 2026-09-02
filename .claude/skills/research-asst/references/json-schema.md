@@ -2,11 +2,14 @@
 
 The complete annotated record this skill produces. Field tiers and the CSV-mapped enrichment fields are described in `SKILL.md` (Output Format). Use `null` for unavailable fields.
 
+`wing` is optional and names the catalogue wing the item belongs to (`art`, `cryptology`, `fiction`, `ephemera`, `comics`, `posters`, `artworks` — the slugs in `src/_data/wings.json`). It decides which CSV the row lands in and which id block it draws from. Omit it for an art or photography book and the ingest files it under the default wing; `--wing` on the ingest command overrides whatever the record says.
+
 Give the primary author explicit `last` and `first` — the ingest uses them verbatim for the CSV sort keys, page slug, and cover filename (see SKILL.md Critical Rules); its fallback name-split can't detect family-name-first order or particles ("van der …"). `publisher` should be the `{name, url, …}` object shown here (the ingest tolerates a bare string, but then `publisher_url` is lost).
 
 ```json
 {
   "page_slug": "condo_the-mad-and-the-lonely_1759",
+  "wing": "art",
   "cover_image": {
     "url": "https://...",
     "local_path": "/assets/images/books/condo_george_the_mad_and_the_lonely_9786185039455.jpg"

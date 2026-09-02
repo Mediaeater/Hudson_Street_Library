@@ -115,7 +115,15 @@ with `ls book_data_*.json` in the current directory.
 node scripts/add-book-from-text.js --json book_data_{slug}.json --yes
 ```
 
-This maps the JSON to CSV columns, downloads/links the cover, validates structure, and adds the row with the next sequential ID. It **appends only the new row** (via `CSVHandler.appendBook`), so `books.csv` isn't rewritten — the diff is exactly one added line, no whole-file re-quoting churn. `--yes` skips the confirmation prompt so the ingest runs non-interactively; drop it if you want to review the parsed record and confirm by hand.
+This maps the JSON to CSV columns, downloads/links the cover, validates structure, and adds the row with the next sequential ID. It **appends only the new row** (via `CSVHandler.appendBook`), so the file isn't rewritten — the diff is exactly one added line, no whole-file re-quoting churn. `--yes` skips the confirmation prompt so the ingest runs non-interactively; drop it if you want to review the parsed record and confirm by hand.
+
+**Which wing it lands in.** The catalogue is several CSVs, one per wing (`src/_data/wings.json`), and each wing owns an id block. An art or photography book needs nothing — it goes to the default wing, `books.csv`, exactly as before. Anything else names its wing:
+
+```bash
+node scripts/add-book-from-text.js --json book_data_{slug}.json --wing cryptology --yes
+```
+
+`--wing` beats a `"wing"` field in the JSON record, which beats the default. The wing decides both the target file and the id — a first cryptology book takes 10001, not one past the art catalogue's maximum — and the ingest prints the resolved wing and file before it writes. An unknown slug is an error, never a silent fallback to `books.csv`. The duplicate guard reads the **whole** catalogue, so a book already filed in one wing is flagged when you try to add it to another.
 
 ### 4. Automatic Validation
 
@@ -184,7 +192,7 @@ npm run build
 
 # 6. Commit, then push. A github-actions backup bot commits after each push,
 #    so a plain push is usually rejected (remote ahead) — rebase and retry.
-git add src/_data/books.csv src/assets/images/books/
+git add src/_data/books.csv src/assets/images/books/   # or src/_data/catalog/<wing>.csv
 git commit -m "Add: [Book Title]"
 git pull --rebase origin main && git push
 ```
@@ -202,7 +210,7 @@ git pull --rebase origin main && git push
 - `artist_url` (from `authors[0].url` — which research-asst sets to the artist's **official site**, not a gallery/museum — else `artist_links[0].url`), cover image
 
 **Always auto-generated:**
-- ID (next sequential number)
+- ID (next free id in the target wing's block)
 - Accession date (today as YYYY-MM-DD)
 - Location ("Hudson Street Library, NYC")
 - Cover filename (following convention)
@@ -221,7 +229,7 @@ base add plus manual patching.
 
 ## CSV Error Prevention
 
-The ingest writes structurally-correct rows (36 columns, proper escaping, auto-backup) and validates immediately. Your only job: never hand-edit the CSV via bash/heredoc — use the surgical Node approach (see the *Enriching unmapped columns* gotcha), and run `node scripts/validate-csv-structure.js` after any manual edit.
+The ingest writes structurally-correct rows (37 columns, proper escaping, auto-backup) and validates immediately. Your only job: never hand-edit the CSV via bash/heredoc — use the surgical Node approach (see the *Enriching unmapped columns* gotcha), and run `node scripts/validate-csv-structure.js` after any manual edit.
 
 ## Gotchas
 
@@ -229,10 +237,10 @@ The ingest writes structurally-correct rows (36 columns, proper escaping, auto-b
 - **`--json` ingest fails with "file not found".** The script resolves paths relative to CWD. Run it from `~/Projects/Hudson_Street_Library` and pass the `book_data_{slug}.json` path research-asst wrote (current dir), not an absolute guess.
 - **Thin or empty JSON from research-asst.** Don't patch the CSV by hand. Re-run `/research-asst` for that title — it owns the multi-source research and produces a complete record.
 - **Cover looks like a product shot (white border / trim).** research-asst downloads the cover but doesn't always crop it. Run `python3 scripts/auto-crop-covers.py --input <path> --overwrite` after ingest.
-- **Wrong or colliding ID.** The next sequential ID is computed from `books.csv` at ingest time. Don't run two adds in parallel, and don't pre-write an ID into the JSON.
+- **Wrong or colliding ID.** The ID is computed at ingest time from the target wing's own rows — one past that wing's highest id, inside its block. Don't run two adds in parallel, and don't pre-write an ID into the JSON. A row whose id falls outside its wing's block fails the build, so a hand-written id is worse than useless.
 - **Enriching unmapped columns (`bisac`/`lcc`/`num_images`/`featured`/`custom_page_url`).** After the add, edit the row surgically — never `CSVHandler.write` (it re-quotes every empty field and churns all ~1800 rows). Raw-parse with `csv-parse/sync` (arrays, `relax_column_count:true` only — not `CSVHandler.read`, whose `trim`/auto-correct mutate other rows), change just the target cells, then `csv-stringify/sync` the whole array with `{ header:false, quoted:true, quoted_empty:false }` and match the trailing newline. This round-trips byte-for-byte (verified on the full file, incl. multi-line description fields), so `git diff` shows only the cells you touched. Confirm `git diff --numstat` and `npm run test:csv`. **Reading a row back to verify: `CSVHandler.read` is now safe for this.** It used to render `; ` as ` `, making correctly-punctuated fields look like run-ons — that was `sanitizeCSVField` stripping every `;` and `|` from all fields as (misplaced) formula-injection defence. Fixed Aug 7 2026 (`4f859711f`): the quote-prefix already neutralizes the real DDE vector, so punctuation in non-formula fields is left alone. Semicolons now round-trip through read *and* write.
 - **Author sort keys + string publisher: FIXED in the ingest (2026-07-31).** The `--json` ingest now honors explicit `last`/`first` on `authors[0]` (research-asst supplies them — see its Critical Rules); without them it falls back to a heuristic split (last token → `author_last`; a mononym lands in `author_last` so the page slug works). The heuristic still can't detect family-name-first order ("Sun Yanchu") or particles ("van der …") — those need the explicit fields. Also fixed: a string-shaped `publisher` ("Mack" instead of `{name, url}`) no longer drops the field, though the object form is still preferred (a bare string has no `publisher_url`). The ingest prints `Author sort: last=… first=…` in its details block — check it there, not by re-opening the CSV.
-- **Re-running the `--json` ingest: duplicate guard since 2026-07-31.** The ingest is still not idempotent, but it now checks `books.csv` first — a row matching on ISBN (or title + surname) triggers a warning listing the existing row and an `Add anyway? (y/n)` prompt that appears **even with `--yes`**; a scripted run with no interactive stdin aborts (exit 1, nothing appended, no orphan cover). Don't lean on the guard as a workflow — inspect the earlier run's output instead of re-running — and answer `y` only for a genuine second copy or new edition. If a duplicate somehow lands, delete the row surgically per the *Enriching unmapped columns* method.
+- **Re-running the `--json` ingest: duplicate guard since 2026-07-31.** The ingest is still not idempotent, but it now checks the whole catalogue first — every wing, not just the target file — and a row matching on ISBN (or title + surname) triggers a warning listing the existing row and an `Add anyway? (y/n)` prompt that appears **even with `--yes`**; a scripted run with no interactive stdin aborts (exit 1, nothing appended, no orphan cover). Don't lean on the guard as a workflow — inspect the earlier run's output instead of re-running — and answer `y` only for a genuine second copy or new edition. If a duplicate somehow lands, delete the row surgically per the *Enriching unmapped columns* method.
 - **Subtitle + co-authors: FIXED in the ingest (2026-07-30).** The `--json` ingest now folds `subtitle` into `title` (colon-joined — there is still no subtitle column) and joins **all** `authors[].name` into `author_full_name` (authors[0] alone supplies the first/last sort keys). No upstream workaround or post-ingest patch needed; still verify both landed in the checklist below.
 
 ## Post-Add Verification Checklist
