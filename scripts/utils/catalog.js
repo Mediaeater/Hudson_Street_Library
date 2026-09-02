@@ -343,13 +343,20 @@ function fileForIdentifier(identifier, options = {}) {
  * their original bytes (csv-parse raw mode) with one extra trailing column,
  * `collection`, so this file has 38 columns. It is an OUTPUT, never a source:
  * the loader still refuses a 38-column file under src/_data/.
- * @param {{dataDir?: string}} [options]
+ *
+ * Only the default wing and wings whose `live` flag is set are emitted — this
+ * file is what the client-rendered catalogue page fetches, so a wing being
+ * catalogued but not yet published must not appear in it. The structural pass
+ * still runs over every wing, so a broken unpublished file still fails the
+ * build. Pass `includeUnpublished` for a full merge (backups, audits).
+ * @param {{dataDir?: string, includeUnpublished?: boolean}} [options]
  * @returns {string}
  */
 function renderMergedCsv(options = {}) {
     const dataDir = options.dataDir || DATA_DIR;
-    const entries = listCatalogFiles(dataDir);
-    structuralPass(entries);
+    const all = listCatalogFiles(dataDir);
+    structuralPass(all);
+    const entries = options.includeUnpublished ? all : all.filter(e => e.wing.isDefault || e.wing.live);
     const out = [];
     entries.forEach(({ slug, file }, fileIndex) => {
         const records = parse(fs.readFileSync(file, 'utf8'), {

@@ -133,8 +133,22 @@ describe('catalog loader', () => {
     });
 
     it('nextIdForWing starts at the bottom of an empty wing\'s block', () => {
-      expect(nextIdForWing('cryptology')).to.equal(10001);
-      expect(nextIdForWing('artworks')).to.equal(90001);
+      // Pick the empty wings out of the live registry rather than naming one —
+      // a wing that is empty today gets books tomorrow (cryptology did).
+      const { data, wings } = loadCatalogSync();
+      const counts = data.reduce((m, b) => ({ ...m, [b.collection]: (m[b.collection] || 0) + 1 }), {});
+      const empty = wings.filter(w => !counts[w.slug]);
+      expect(empty.length, 'no empty wing left to exercise this path').to.be.greaterThan(0);
+      for (const w of empty) expect(nextIdForWing(w.slug), w.slug).to.equal(w.idBlock[0]);
+    });
+
+    it('nextIdForWing follows the highest id in a populated wing', () => {
+      const { data, wings } = loadCatalogSync();
+      for (const w of wings) {
+        const ids = data.filter(b => b.collection === w.slug).map(b => Number(b.id));
+        if (!ids.length) continue;
+        expect(nextIdForWing(w.slug), w.slug).to.equal(Math.max(...ids) + 1);
+      }
     });
 
     it('fileForIdentifier routes an id by block and an ISBN by lookup', () => {

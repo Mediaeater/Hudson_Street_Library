@@ -125,6 +125,19 @@ module.exports = function(eleventyConfig) {
     return data;
   });
 
+  // The rows readers can actually reach. `books` is every row, including wings
+  // still being catalogued — book pages build for those so they're ready the
+  // moment the wing goes live, but nothing should *advertise* them. Anything
+  // outward-facing (sitemaps, feeds) uses this instead.
+  eleventyConfig.addGlobalData("publishedBooks", async () => {
+    const { data, wings } = await loadCatalog();
+    const published = new Set(wings.filter(w => w.isDefault || w.live).map(w => w.slug));
+    const rows = data.filter(b => published.has(b.collection));
+    const held = data.length - rows.length;
+    if (held) console.log(`--- catalog: ${held} row(s) held back from sitemaps — wing not live`);
+    return rows;
+  });
+
   // --- Add Slugify Filter ---
   eleventyConfig.addFilter("slugify", function(str) {
     if (!str) return "";
