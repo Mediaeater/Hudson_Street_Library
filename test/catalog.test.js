@@ -76,9 +76,9 @@ describe('catalog loader', () => {
   });
 
   describe('loadWings', () => {
-    it('returns the seven wings with the default wing first', () => {
+    it('returns the nine wings with the default wing first', () => {
       const wings = loadWings();
-      expect(wings.map(w => w.slug)).to.deep.equal(['art', 'cryptology', 'fiction', 'ephemera', 'comics', 'posters', 'artworks']);
+      expect(wings.map(w => w.slug)).to.deep.equal(['art', 'cryptology', 'hacking', 'media-theory', 'fiction', 'ephemera', 'comics', 'posters', 'artworks']);
       expect(wings[0].isDefault).to.equal(true);
       expect(wings[0].idBlock).to.deep.equal([1, 9999]);
       expect(wings.filter(w => w.isDefault)).to.have.length(1);
@@ -98,12 +98,15 @@ describe('catalog loader', () => {
       const wings = loadWings();
       const by = Object.fromEntries(wings.map(w => [w.slug, w.intake]));
       expect(by.art).to.equal('acquired');
+      // Every wing built off the existing shelves catalogues rather than acquires.
       expect(by.cryptology).to.equal('catalogued');
+      expect(by.hacking).to.equal('catalogued');
+      expect(by['media-theory']).to.equal('catalogued');
     });
 
     it('every declared wing file exists and shares the 37-column header', () => {
       const { files, columns } = loadCatalogSync();
-      expect(files).to.have.length(7);
+      expect(files).to.have.length(9);
       expect(columns).to.have.length(37);
     });
   });
