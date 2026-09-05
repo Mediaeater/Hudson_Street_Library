@@ -41,6 +41,9 @@ const WING_DEFAULTS = {
     allowLegacyIds: [],
     classifications: [],
     defaultGrouping: '',
+    // How adds to a wing are dated. 'acquired' is the historical behaviour and
+    // stays the default, so the art wing is unaffected.
+    intake: 'acquired',
     intro: '',
     featuredTags: [],
 };

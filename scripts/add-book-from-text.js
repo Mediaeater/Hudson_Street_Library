@@ -19,7 +19,8 @@
  *   1. Parse the text to extract book details
  *   2. Look up ISBN and additional info from APIs
  *   3. Resolve the wing, and take the next free id from that wing's block
- *   4. Append the row to that wing's CSV with today's accession date
+ *   4. Append the row to that wing's CSV, dated by the wing's `intake` mode
+ *      (accession_no for an acquisition, cataloged_date for a catalogue add)
  *   5. Provide cover filename for you to add
  */
 
@@ -312,6 +313,38 @@ function todayLocal() {
 }
 
 /**
+ * How this wing dates an add, as the two columns the three Recently pages read.
+ *
+ *   acquired   accession_no = today, cataloged_date empty  → Recently Added
+ *   catalogued cataloged_date = today, accession_no EMPTY  → Recently Catalogued
+ *
+ * The distinction is when the *library* got the book, not how old the book is.
+ * A wing being built from shelves the library has owned for years is
+ * `catalogued`: stamping those as acquisitions files a whole wing as arriving
+ * this week and buries the genuine new arrivals. Cryptology is the first wing
+ * declared that way; art stays `acquired`, which is the default.
+ *
+ * Returns only the columns this mode owns, so `acquired` leaves any
+ * cataloged_date the research record supplied alone.
+ *
+ * @returns {{accession_no: string, cataloged_date?: string}}
+ */
+function intakeDates(wing) {
+  const today = todayLocal();
+  return wing.intake === 'catalogued'
+    ? { accession_no: '', cataloged_date: today }
+    : { accession_no: today };
+}
+
+/** The same decision, spelled out for the pre-add details block. */
+function describeIntake(wing) {
+  const d = intakeDates(wing);
+  return d.cataloged_date
+    ? `catalogued — cataloged_date ${d.cataloged_date}, accession_no left empty`
+    : `acquired — accession_no ${d.accession_no}`;
+}
+
+/**
  * Which wing this add is filed under. An explicit --wing wins; otherwise the
  * research record may name one; otherwise the default wing. An unknown slug
  * throws (catalog.js lists the valid ones) rather than silently landing the
@@ -343,16 +376,16 @@ function readCatalogFor(wing) {
 /**
  * Add book to its wing's CSV using robust CSVHandler
  */
-async function addBookToCSV(bookData, nextId, headers, file) {
+async function addBookToCSV(bookData, nextId, headers, file, wing) {
   // Create new record with all columns
   const newRecord = {};
   headers.forEach(header => {
     newRecord[header] = bookData[header] || '';
   });
 
-  // Set ID and accession date
+  // Set ID, intake date(s) and location
   newRecord.id = nextId.toString();
-  newRecord.accession_no = todayLocal();
+  Object.assign(newRecord, intakeDates(wing));
   newRecord.location = ACCESSION_LOCATION;
 
   // Append only the new row. This never rewrites the existing rows, so the
@@ -539,7 +572,7 @@ async function processBook(text) {
     console.log(`ISBN:            ${bookData.isbn_asin || '(not found)'}`);
     console.log(`Pages:           ${bookData.page_count || '(not specified)'}`);
     console.log(`Binding:         ${bookData.binding || '(not specified)'}`);
-    console.log(`Accession Date:  ${todayLocal()}`);
+    console.log(`Intake:          ${describeIntake(wing)}`);
     console.log(`Location:        ${ACCESSION_LOCATION}`);
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
@@ -552,7 +585,7 @@ async function processBook(text) {
     rl.question(`Add this book to ${target}? (y/n): `, async (answer) => {
       if (answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes') {
         // Add to CSV
-        const record = await addBookToCSV(bookData, nextId, headers, file);
+        const record = await addBookToCSV(bookData, nextId, headers, file, wing);
 
         console.log('\n✅ Book added successfully!\n');
 
@@ -769,13 +802,13 @@ async function processBookFromJSON(jsonPath) {
     console.log(`Pages:           ${bookData.page_count || '(not specified)'}`);
     console.log(`Binding:         ${bookData.binding || '(not specified)'}`);
     console.log(`Tags:            ${bookData.tags}`);
-    console.log(`Accession Date:  ${todayLocal()}`);
+    console.log(`Intake:          ${describeIntake(wing)}`);
     console.log(`Location:        ${ACCESSION_LOCATION}`);
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
     // Perform the add and structure validation.
     const doAdd = async () => {
-      await addBookToCSV(bookData, nextId, headers, file);
+      await addBookToCSV(bookData, nextId, headers, file, wing);
 
       console.log('\n✅ Book added successfully!\n');
 
