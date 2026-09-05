@@ -1120,6 +1120,13 @@ class BookSearch {
     }
 
     performSearch() {
+        if (this.searchTerm) {
+            const escaped = this.searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const boundary = '(^|[^\\p{L}\\p{N}])';
+            this.wordPrefixPattern = new RegExp(boundary + escaped, 'u');
+            this.wholeWordPattern = new RegExp(boundary + escaped + '($|[^\\p{L}\\p{N}])', 'u');
+        }
+
         this.filteredBooks = this.books.filter(book => {
             if (this.searchTerm) {
                 const searchableText = [
@@ -1131,6 +1138,11 @@ class BookSearch {
                 if (!searchableText.includes(this.searchTerm)) {
                     return false;
                 }
+
+                // Rank: whole word ("ARN") > word start ("Arnold") > mid-word
+                // ("Warning"); see sortResults.
+                book._rank = this.wholeWordPattern.test(searchableText) ? 2
+                    : this.wordPrefixPattern.test(searchableText) ? 1 : 0;
             }
 
             if (this.filters.publisher && book.publisher !== this.filters.publisher) {
@@ -1161,6 +1173,10 @@ class BookSearch {
     sortResults() {
         this.filteredBooks.sort((a, b) => {
             let aValue, bValue;
+
+            if (this.searchTerm && a._rank !== b._rank) {
+                return b._rank - a._rank;
+            }
 
             switch (this.sortBy) {
                 case 'date':
