@@ -603,11 +603,12 @@ permalink: /static-demo/index.html
     </div>
 </main>
 
-{#- Slug -> display name for the wing facet. Only these two fields, not the
-    whole registry: the rest of wings.json (file paths, id blocks) has no
-    business in a page. #}
+{#- Slug -> display name for the wing facet, plus which wing is the default —
+    the catalogue opens scoped to it. Only these three fields, not the whole
+    registry: the rest of wings.json (file paths, id blocks) has no business
+    in a page. #}
 <script>
-window.LIBRARY_WINGS = [{% for w in wings %}{"slug": {{ w.slug | dump | safe }}, "name": {{ w.name | dump | safe }}}{% if not loop.last %}, {% endif %}{% endfor %}];
+window.LIBRARY_WINGS = [{% for w in wings %}{"slug": {{ w.slug | dump | safe }}, "name": {{ w.name | dump | safe }}, "isDefault": {{ (w.isDefault or false) | dump | safe }}}{% if not loop.last %}, {% endif %}{% endfor %}];
 </script>
 
 <script>
@@ -625,6 +626,9 @@ class BookSearch {
             wing: '',
             cover: ''
         };
+        // Resolved in populateWingFilter() once the data is in; stays '' (all
+        // wings) while the catalogue has only one wing and the facet is hidden.
+        this.defaultWingSlug = '';
         this.visualBrowse = false;
         this.sortBy = 'date';
 
@@ -830,6 +834,10 @@ class BookSearch {
 
     // The wing facet is driven by the `collection` column the catalogue loader
     // stamps from each file. Search itself stays global — this only scopes it.
+    //
+    // The catalogue OPENS on the default wing (art), not on every wing: this is
+    // the art front door, and the other wings are reached deliberately, through
+    // the facet or from a wing landing page. "All Wings" is one selection away.
     populateWingFilter() {
         const wrap = document.getElementById('wing-filter-wrap');
         const select = document.getElementById('wing-filter');
@@ -850,12 +858,28 @@ class BookSearch {
 
         wrap.hidden = false;
 
-        // Wing landing pages link here with the wing preselected.
+        // Resolved here rather than in the constructor: with a single wing the
+        // facet never renders, this line never runs, and Clear keeps returning
+        // to the unscoped view.
+        this.defaultWingSlug = this.defaultWing();
+
+        // Wing landing pages link here with the wing preselected; ?collection=all
+        // is the escape hatch to the unscoped view. Anything else falls back to
+        // the default wing rather than filtering the page to nothing.
         const requested = new URLSearchParams(window.location.search).get('collection');
-        if (requested && slugs.includes(requested)) {
-            select.value = requested;
-            this.filters.wing = requested;
-        }
+        const wing = requested === 'all' ? ''
+            : (requested && slugs.includes(requested)) ? requested
+            : this.defaultWingSlug;
+        select.value = wing;
+        this.filters.wing = wing;
+    }
+
+    // The registry's own default wing, if it has rows. Empty string (all wings)
+    // when the registry is missing or the default wing isn't in the data.
+    defaultWing() {
+        const slugs = new Set(this.books.map(book => book.collection).filter(Boolean));
+        const fallback = (window.LIBRARY_WINGS || []).find(w => w.isDefault);
+        return fallback && slugs.has(fallback.slug) ? fallback.slug : '';
     }
 
     populateSelect(selectId, options) {
@@ -882,11 +906,13 @@ class BookSearch {
         document.getElementById('publisher-filter').value = '';
         document.getElementById('year-filter').value = '';
         document.getElementById('collection-filter').value = '';
-        document.getElementById('wing-filter').value = '';
+        // Clear returns to the catalogue's opening state, which is the default
+        // wing — not every wing. Widening past it stays a deliberate choice.
+        document.getElementById('wing-filter').value = this.defaultWingSlug;
         document.getElementById('visual-browse').checked = false;
 
         this.searchTerm = '';
-        this.filters = { publisher: '', year: '', collection: '', wing: '' };
+        this.filters = { publisher: '', year: '', collection: '', wing: this.defaultWingSlug };
         this.visualBrowse = false;
         this.sortBy = 'date';
         this.currentPage = 1;
