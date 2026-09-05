@@ -8,7 +8,11 @@ pagination:
 permalink: "{{ wingPage.permalink }}"
 eleventyComputed:
   title: "{{ wingPage.name }}"
-  description: "{{ wingPage.intro }}"
+  # `| safe` because this string is escaped again where it is used — in the meta
+  # description and in the CollectionPage JSON-LD. Without it an apostrophe in
+  # the intro ships as a literal &#39; on the page. The value is plain text from
+  # wings.json, never markup.
+  description: "{{ wingPage.intro | safe }}"
 ---
 {#
   Wing landing page. One per live non-default wing (see src/_data/wingPages.js);
