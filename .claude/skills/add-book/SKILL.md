@@ -123,7 +123,7 @@ This maps the JSON to CSV columns, downloads/links the cover, validates structur
 node scripts/add-book-from-text.js --json book_data_{slug}.json --wing cryptology --yes
 ```
 
-`--wing` beats a `"wing"` field in the JSON record, which beats the default. The wing decides both the target file and the id — a first cryptology book takes 10001, not one past the art catalogue's maximum — and the ingest prints the resolved wing and file before it writes. An unknown slug is an error, never a silent fallback to `books.csv`. The duplicate guard reads the **whole** catalogue, so a book already filed in one wing is flagged when you try to add it to another.
+`--wing` beats a `"wing"` field in the JSON record, which beats the default. The wing decides the target file, the id, and how the row is dated (its `intake` mode — see checklist item 4) — a first cryptology book takes 10001, not one past the art catalogue's maximum — and the ingest prints the resolved wing and file before it writes. An unknown slug is an error, never a silent fallback to `books.csv`. The duplicate guard reads the **whole** catalogue, so a book already filed in one wing is flagged when you try to add it to another.
 
 ### 4. Automatic Validation
 
@@ -211,7 +211,9 @@ git pull --rebase origin main && git push
 
 **Always auto-generated:**
 - ID (next free id in the target wing's block)
-- Accession date (today as YYYY-MM-DD)
+- Intake date, per the wing's `intake` mode in `wings.json` (today as YYYY-MM-DD):
+  `acquired` (the default) writes `accession_no`; `catalogued` writes `cataloged_date`
+  and leaves `accession_no` empty. The ingest prints the `Intake:` line it chose.
 - Location ("Hudson Street Library, NYC")
 - Cover filename (following convention)
 
@@ -269,10 +271,23 @@ After adding a book, verify:
    - Script runs automatically after adding
    - Check output shows: `CSV validation passed`
 
-4. **Accession date fits the acquisition**
-   - The ingest always stamps **today** (`YYYY-MM-DD`), which puts the book at the top of Recently Added — correct for a genuine new acquisition.
-   - For a **backlist / archiving add** (an older book catalogued now), that's wrong: after ingest, patch `accession_no` to an earlier sort date so it sorts *below* the real new entries, and append a provenance note (e.g. `Summer acquisitions and archiving 2026. Accessioned <today>.`). Surgical row-scoped edit, per the *Enriching unmapped columns* gotcha.
-   - Format: `YYYY-MM-DD`; controls position on the Recently Added page.
+4. **Intake dating fits how the library got the book**
+
+   Two cases, and the wing usually decides which:
+   - **Acquisition** — the book just arrived. `accession_no` = today, `cataloged_date` empty. It belongs at the top of Recently Added.
+   - **Catalogue add** — a book the library has owned for a while, now entering the digital catalogue. `cataloged_date` = today and `accession_no` stays **empty**, so it lands on Recently Catalogued instead of jumping the queue on Recently Added.
+
+   The `intake` field in `src/_data/wings.json` sets this per wing: `"acquired"` is the
+   default (art), `"catalogued"` is declared on cryptology, whose whole wing is being
+   entered off the shelves. The ingest applies it on write and prints the `Intake:` line —
+   check that line rather than re-opening the CSV. **No post-add patch is needed for a
+   `catalogued` wing.**
+
+   Patch only when a single book runs against its wing's mode (a genuinely new acquisition
+   into a `catalogued` wing, or an old book into an `acquired` one): move the date to the
+   other column surgically, per the *Enriching unmapped columns* gotcha. Format is
+   `YYYY-MM-DD` in both columns; a season string ("Fall 2025") hides the row from **both**
+   Recently pages.
 
 ## Notes for Claude
 

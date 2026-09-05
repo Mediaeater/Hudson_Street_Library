@@ -89,6 +89,16 @@ describe('catalog loader', () => {
       expect(wings[1].live).to.equal(false);
       expect(wings[1].classifications).to.deep.equal([]);
       expect(wings[1].intro).to.equal('');
+      // A wing that says nothing about intake dates its adds as acquisitions,
+      // which is what add-book did before the field existed.
+      expect(wings[1].intake).to.equal('acquired');
+    });
+
+    it('carries the declared intake mode: art acquires, cryptology catalogues', () => {
+      const wings = loadWings();
+      const by = Object.fromEntries(wings.map(w => [w.slug, w.intake]));
+      expect(by.art).to.equal('acquired');
+      expect(by.cryptology).to.equal('catalogued');
     });
 
     it('every declared wing file exists and shares the 37-column header', () => {
