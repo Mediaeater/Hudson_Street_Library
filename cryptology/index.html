@@ -1,0 +1,842 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cryptology | Hudson Street Library</title>
+    
+    <link rel="stylesheet" href="/assets/css/tailwind.css">
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="api-catalog" type="application/linkset+json" href="/.well-known/api-catalog">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Hudson Street Library",
+  "url": "https://hudsonstreetlibrary.com",
+  "logo": "https://hudsonstreetlibrary.com/assets/images/logo.png",
+  "description": "A curated collection of photography, art, and design books"
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Cryptology",
+  "url": "https://hudsonstreetlibrary.com/cryptology/",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Hudson Street Library",
+    "url": "https://hudsonstreetlibrary.com"
+  }
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://hudsonstreetlibrary.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Cryptology",
+      "item": "https://hudsonstreetlibrary.com/cryptology/"
+    }
+  ]
+}
+</script>
+
+</head>
+<body class="min-h-screen bg-neutral-50 text-neutral-900">
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+
+<style>
+    .site-header {
+        font-family: 'Literata', Georgia, serif;
+    }
+    .site-header .site-logo {
+        font-family: 'Crimson Pro', Georgia, serif;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        white-space: nowrap;
+    }
+    /* Book-spines mark (same drawing as the favicon). Inlined with
+       fill: currentColor rather than <img src=favicon.svg> because the
+       SVG file self-inverts to off-white in OS dark mode and would
+       disappear against the white header. */
+    .site-header .logo-mark {
+        width: 1.3em;
+        height: 1.3em;
+        display: block;
+        flex-shrink: 0;
+        fill: currentColor;
+    }
+    .site-header .nav-link {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+        font-weight: 400;
+        letter-spacing: 0.005em;
+    }
+    .site-header .nav-link[aria-current="page"],
+    .site-header .nav-link-active {
+        font-weight: 600;
+    }
+    .site-header #mobile-nav-menu a {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+    }
+
+    /*
+      Mobile menu uses self-contained, component-scoped CSS rather than
+      Tailwind utilities, so its layout can't be broken by global stylesheet
+      changes. This originally fixed an invisible-sliver bug: design-system.css
+      ships an unlayered `* { padding: 0 }` reset that beats Tailwind's layered
+      utilities and collapsed the old icon-only button. The self-contained
+      styling is kept deliberately.
+    */
+    .site-header .menu-toggle { display: none; }
+    .site-header .mobile-nav { display: none; }
+
+    /*
+      Mobile scroll-jitter fix.
+      The header ships as `sticky top-0 bg-white/95 backdrop-blur-sm`. On mobile
+      a sticky bar with backdrop-filter: blur() forces the browser to re-sample
+      and re-blur the pixels scrolling beneath it every frame; on mobile GPUs
+      that readback lags the scroll compositor and the bar (and the text passing
+      under it) shudders. Drop the blur and use an opaque background on small
+      screens — the frosted-glass effect stays desktop-only. The doubled
+      `.site-header.site-header` selector out-specifies the `bg-white/95` and
+      `backdrop-blur-sm` utility classes without needing !important.
+    */
+    @media (max-width: 900px), (hover: none) and (pointer: coarse) {
+        .site-header.site-header {
+            background-color: #ffffff;
+            -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+            /* Promote the sticky bar to its own compositor layer so it isn't
+               re-rasterized against the scrolling content every frame — this
+               is what stops the header (and the text under it) juddering on
+               mobile. Pairs with dropping the backdrop blur above. */
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            will-change: transform;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .site-header .menu-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.45rem 0.7rem;
+            border: 1px solid rgba(0, 49, 0, 0.3);
+            border-radius: 0.5rem;
+            background: #ffffff;
+            color: #003100;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .site-header .menu-toggle:hover { background: #f0f5f0; }
+        .site-header .menu-toggle:focus-visible {
+            outline: 2px solid #003100;
+            outline-offset: 2px;
+        }
+        .site-header .menu-toggle svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+            flex-shrink: 0;
+        }
+        .site-header .menu-toggle .menu-toggle-label {
+            font-family: 'Literata', Georgia, serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .site-header .menu-toggle .icon-close { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-open { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-close { display: block; }
+
+        .site-header .mobile-nav.is-open {
+            display: flex;
+            flex-direction: column;
+        }
+        .site-header .mobile-nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            padding: 0.5rem;
+            z-index: 40;
+        }
+        .site-header .mobile-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            color: #404040;
+            text-decoration: none;
+        }
+        .site-header .mobile-nav a:hover {
+            background: #f0f5f0;
+            color: #002000;
+        }
+    }
+</style>
+
+<header class="site-header sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="site-logo text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                <svg class="logo-mark" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+                    <rect x="38" y="128" width="72" height="318"/>
+                    <rect x="138" y="68" width="76" height="378"/>
+                    <rect x="242" y="100" width="72" height="346"/>
+                    <rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)"/>
+                </svg>
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link ">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Accessions
+                </a>
+                <a href="/discover.html"
+                   class="nav-link ">
+                   Discover
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <!-- Icon + visible "Menu" label so the control is obvious on mobile.
+                 Sizing/visibility come from the unlayered styles above, not
+                 Tailwind utilities (see note in the <style> block). Icons are
+                 inline SVGs so the menu works on pages without an icon font. -->
+            <button class="menu-toggle"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <svg class="icon-open" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg class="icon-close" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+                <span class="menu-toggle-label">Menu</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu" class="mobile-nav" aria-label="Mobile navigation">
+        <a href="/#about">About</a>
+        <a href="/collection-explore.html">Collections</a>
+        <a href="/static-demo/">Search</a>
+        <a href="/#publications">Publications</a>
+        <a href="/news.html">News</a>
+        <a href="/collections/recently_added.html">Accessions</a>
+        <a href="/discover.html">Discover</a>
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const button = document.querySelector('button[aria-controls="mobile-nav-menu"]');
+    const willOpen = !menu.classList.contains('is-open');
+
+    menu.classList.toggle('is-open', willOpen);
+    // Icon swap (hamburger <-> X) is driven by aria-expanded in CSS.
+    if (button) button.setAttribute('aria-expanded', String(willOpen));
+}
+</script>
+
+
+
+<style>
+    .wing-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    /* Masthead */
+    .wing-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .wing-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .wing-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        margin-bottom: 1.5rem;
+    }
+
+    .wing-intro {
+        font-size: clamp(1.0625rem, 2vw, 1.25rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .wing-count {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 1.75rem;
+    }
+
+    /* Text link, not a button. A hairline underline that darkens on hover is the
+       site's link idiom (see .contact-item a on the homepage). */
+    .wing-search {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .wing-search:hover { border-bottom-color: var(--color-brown); }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .wing-section { margin-bottom: 4.5rem; }
+    .wing-section:last-child { margin-bottom: 0; }
+
+    .wing-section > h2 {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    /* Featured: hairline-separated rows, not cards. */
+    .wing-featured { display: block; }
+
+    .wing-featured-item {
+        display: flex;
+        gap: 1.5rem;
+        align-items: flex-start;
+        padding: 1.5rem 0;
+        border-bottom: 1px solid var(--color-border);
+        text-decoration: none;
+        color: var(--color-ink);
+    }
+
+    .wing-featured-item:first-child { padding-top: 0; }
+
+    .wing-featured-thumb {
+        width: 72px;
+        flex-shrink: 0;
+        aspect-ratio: 3 / 4;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(10, 10, 10, 0.12);
+    }
+
+    .wing-featured-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .wing-featured-item h3 {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        line-height: 1.3;
+        margin-bottom: 0.5rem;
+        transition: color 0.3s ease;
+    }
+
+    .wing-featured-item:hover h3 { color: var(--color-brown); }
+
+    .wing-featured-item p {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        font-weight: 300;
+        /* design-system.css caps every p at 65ch and centers it. */
+        max-width: none;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .wing-featured-count {
+        display: block;
+        margin-top: 0.75rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    /* Recently added. Covers sit on the paper, held by their own shadow. */
+    .wing-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .wing-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .wing-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .wing-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .wing-book:hover .wing-book-cover img { transform: translateY(-4px); }
+
+    .wing-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .wing-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .wing-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .wing-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    /* Browse by subject: a list of names, set as text. */
+    .wing-subjects {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem 2.5rem;
+        margin: 0;
+        padding: 0;
+    }
+
+    .wing-subjects a {
+        text-decoration: none;
+        color: var(--color-ink);
+        font-size: 1.0625rem;
+        transition: color 0.3s ease;
+    }
+
+    .wing-subjects a:hover { color: var(--color-brown); }
+
+    .wing-subjects .count {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        color: var(--color-brown);
+        margin-left: 0.4rem;
+    }
+
+    @media (max-width: 768px) {
+        .wing-page { padding: 3rem 1.5rem 4rem; }
+        .wing-masthead { margin-bottom: 3.5rem; }
+        .wing-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+<main>
+    <div class="wing-page">
+
+        <div class="wing-masthead">
+            <div class="wing-eyebrow">Hudson Street Library</div>
+            <h1 class="wing-title">Cryptology</h1>
+            
+            <div class="wing-count">46 catalogued items</div>
+            <div>
+                <a href="/static-demo/?collection=cryptology" class="wing-search">Search Cryptology</a>
+            </div>
+        </div>
+
+        
+
+        
+        
+        <section class="wing-section">
+            <h2>Recently Added</h2>
+            <div class="wing-books">
+                
+                    <a href="/books/dagapeyeff_codes-and-ciphers_10029/" class="wing-book">
+                        <div class="wing-book-cover">
+                            
+                                <span class="no-cover">No cover</span>
+                            
+                        </div>
+                        
+                            <div class="wing-book-author">Alexander D&#39;Agapeyeff</div>
+                        
+                        <div class="wing-book-title">Codes and Ciphers</div>
+                        
+                            <div class="wing-book-meta">Compass Books / Geoffrey Cumberlege, Oxford University Press &middot; 1949</div>
+                        
+                    </a>
+                
+                    <a href="/books/harper_capturing-enigma-how-hms-petard-seized-the-german-naval-codes_10030/" class="wing-book">
+                        <div class="wing-book-cover">
+                            
+                                <img src="/assets/images/books/harper_stephen_capturing-enigma-how-hms-petard-seized-the-german_9780750923163.jpg" alt="Capturing Enigma: How HMS Petard Seized the German Naval Codes" loading="lazy">
+                            
+                        </div>
+                        
+                            <div class="wing-book-author">Stephen Harper</div>
+                        
+                        <div class="wing-book-title">Capturing Enigma: How HMS Petard Seized the German Naval Codes</div>
+                        
+                            <div class="wing-book-meta">Sutton Publishing &middot; 1999</div>
+                        
+                    </a>
+                
+                    <a href="/books/singh_fermats-enigma-the-epic-quest-to-solve-the-worlds-greatest-mathematical-problem_10031/" class="wing-book">
+                        <div class="wing-book-cover">
+                            
+                                <img src="/assets/images/books/singh_simon_fermats-enigma-the-epic-quest-to-solve-the-worlds_9780802713315.jpg" alt="Fermat&#39;s Enigma: The Epic Quest to Solve the World&#39;s Greatest Mathematical Problem" loading="lazy">
+                            
+                        </div>
+                        
+                            <div class="wing-book-author">Simon Singh</div>
+                        
+                        <div class="wing-book-title">Fermat&#39;s Enigma: The Epic Quest to Solve the World&#39;s Greatest Mathematical Problem</div>
+                        
+                            <div class="wing-book-meta">Walker &amp; Company &middot; 1997</div>
+                        
+                    </a>
+                
+                    <a href="/books/swire_none-of-your-business-world-data-flows-electronic-commerce-and-the-european-privacy-directive_10032/" class="wing-book">
+                        <div class="wing-book-cover">
+                            
+                                <img src="/assets/images/books/swire_peter_none-of-your-business-world-data-flows-electronic_9780815782391.jpg" alt="None of Your Business: World Data Flows, Electronic Commerce, and the European Privacy Directive" loading="lazy">
+                            
+                        </div>
+                        
+                            <div class="wing-book-author">Peter P. Swire, Robert E. Litan</div>
+                        
+                        <div class="wing-book-title">None of Your Business: World Data Flows, Electronic Commerce, and the European Privacy Directive</div>
+                        
+                            <div class="wing-book-meta">Brookings Institution Press &middot; 1998</div>
+                        
+                    </a>
+                
+                    <a href="/books/hentoff_the-war-on-the-bill-of-rights-and-the-gathering-resistance_10033/" class="wing-book">
+                        <div class="wing-book-cover">
+                            
+                                <img src="/assets/images/books/hentoff_nat_the-war-on-the-bill-of-rights-and-the-gathering-re_9781583226216.jpg" alt="The War on the Bill of Rights and the Gathering Resistance" loading="lazy">
+                            
+                        </div>
+                        
+                            <div class="wing-book-author">Nat Hentoff</div>
+                        
+                        <div class="wing-book-title">The War on the Bill of Rights and the Gathering Resistance</div>
+                        
+                            <div class="wing-book-meta">Seven Stories Press &middot; 2003</div>
+                        
+                    </a>
+                
+                    <a href="/books/monmonier_spying-with-maps-surveillance-technologies-and-the-future-of-privacy_10034/" class="wing-book">
+                        <div class="wing-book-cover">
+                            
+                                <img src="/assets/images/books/monmonier_mark_spying-with-maps-surveillance-technologies-and-the_9780226534275.jpg" alt="Spying with Maps: Surveillance Technologies and the Future of Privacy" loading="lazy">
+                            
+                        </div>
+                        
+                            <div class="wing-book-author">Mark Monmonier</div>
+                        
+                        <div class="wing-book-title">Spying with Maps: Surveillance Technologies and the Future of Privacy</div>
+                        
+                            <div class="wing-book-meta">University of Chicago Press &middot; 2002</div>
+                        
+                    </a>
+                
+                    <a href="/books/electronic-privacy-information-center_cryptography-and-liberty-1999-an-international-survey-of-encryption-policy_10035/" class="wing-book">
+                        <div class="wing-book-cover">
+                            
+                                <img src="/assets/images/books/electronic_privacy_information_center_cryptography-liberty-1999-international-survey-encryption-policy_9781893044036.jpg" alt="Cryptography &amp; Liberty 1999: An International Survey of Encryption Policy" loading="lazy">
+                            
+                        </div>
+                        
+                            <div class="wing-book-author">Electronic Privacy Information Center</div>
+                        
+                        <div class="wing-book-title">Cryptography &amp; Liberty 1999: An International Survey of Encryption Policy</div>
+                        
+                            <div class="wing-book-meta">Electronic Privacy Information Center &middot; 1999</div>
+                        
+                    </a>
+                
+                    <a href="/books/franklin_the-first-amendment-and-the-fourth-estate-communications-law-for-undergraduates_10036/" class="wing-book">
+                        <div class="wing-book-cover">
+                            
+                                <span class="no-cover">No cover</span>
+                            
+                        </div>
+                        
+                            <div class="wing-book-author">Marc A. Franklin</div>
+                        
+                        <div class="wing-book-title">The First Amendment and the Fourth Estate: Communications Law for Undergraduates</div>
+                        
+                            <div class="wing-book-meta">The Foundation Press &middot; 1981</div>
+                        
+                    </a>
+                
+                    <a href="/books/knightmare_secrets-of-a-super-hacker_10037/" class="wing-book">
+                        <div class="wing-book-cover">
+                            
+                                <img src="/assets/images/books/knightmare_secrets-of-a-super-hacker_9781559501064.jpg" alt="Secrets of a Super Hacker" loading="lazy">
+                            
+                        </div>
+                        
+                            <div class="wing-book-author">The Knightmare</div>
+                        
+                        <div class="wing-book-title">Secrets of a Super Hacker</div>
+                        
+                            <div class="wing-book-meta">Loompanics Unlimited &middot; 1994</div>
+                        
+                    </a>
+                
+                    <a href="/books/casey_digital-evidence-and-computer-crime-forensic-science-computers-and-the-internet_10038/" class="wing-book">
+                        <div class="wing-book-cover">
+                            
+                                <img src="/assets/images/books/casey_eoghan_digital-evidence-and-computer-crime_9780121628857.jpg" alt="Digital Evidence and Computer Crime: Forensic Science, Computers and the Internet" loading="lazy">
+                            
+                        </div>
+                        
+                            <div class="wing-book-author">Eoghan Casey</div>
+                        
+                        <div class="wing-book-title">Digital Evidence and Computer Crime: Forensic Science, Computers and the Internet</div>
+                        
+                            <div class="wing-book-meta">Academic Press &middot; 2000</div>
+                        
+                    </a>
+                
+                    <a href="/books/melton_the-spys-guide-office-espionage-how-to-bug-a-meeting-booby-trap-your-briefcase-infiltrate-the-competition-and-more_10039/" class="wing-book">
+                        <div class="wing-book-cover">
+                            
+                                <img src="/assets/images/books/melton_h-keith_the-spys-guide-office-espionage_9781931686600.jpg" alt="The Spy&#39;s Guide: Office Espionage - How to Bug a Meeting, Booby-Trap Your Briefcase, Infiltrate the Competition, and More" loading="lazy">
+                            
+                        </div>
+                        
+                            <div class="wing-book-author">H. Keith Melton, Craig Piligian</div>
+                        
+                        <div class="wing-book-title">The Spy&#39;s Guide: Office Espionage - How to Bug a Meeting, Booby-Trap Your Briefcase, Infiltrate the Competition, and More</div>
+                        
+                            <div class="wing-book-meta">Quirk Books &middot; 2003</div>
+                        
+                    </a>
+                
+                    <a href="/books/hafner_the-well-a-story-of-love-death-and-real-life-in-the-seminal-online-community_10040/" class="wing-book">
+                        <div class="wing-book-cover">
+                            
+                                <img src="/assets/images/books/hafner_katie_the-well_9780786708468.jpg" alt="The Well: A Story of Love, Death &amp; Real Life in the Seminal Online Community" loading="lazy">
+                            
+                        </div>
+                        
+                            <div class="wing-book-author">Katie Hafner</div>
+                        
+                        <div class="wing-book-title">The Well: A Story of Love, Death &amp; Real Life in the Seminal Online Community</div>
+                        
+                            <div class="wing-book-meta">Carroll &amp; Graf Publishers &middot; 2001</div>
+                        
+                    </a>
+                
+            </div>
+        </section>
+        
+
+        
+        <section class="wing-section">
+            <h2>Browse by Subject</h2>
+            <ul class="wing-subjects">
+                
+                    <li>
+                        <a href="/cryptology/collections/codes-and-ciphers.html">Codes and Ciphers<span class="count">24</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/cryptology/collections/cryptography.html">Cryptography<span class="count">19</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/cryptology/collections/military-history.html">Military History<span class="count">16</span></a>
+                    </li>
+                
+            </ul>
+        </section>
+        
+
+    </div>
+</main>
+
+
+
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
+        
+        <p>© 2026 Hudson Street Library · <a href="/identity/" class="text-neutral-600 underline hover:text-neutral-900">Identity</a> · <a href="/colophon.html" class="text-neutral-600 underline hover:text-neutral-900">Colophon</a></p>
+    </div>
+</footer>
+
+<script>
+    // Mobile Menu Toggle Logic
+    const mobileMenuButton = document.querySelector('button.md\\:hidden');
+    const mobileNavMenu = document.getElementById('mobile-nav-menu');
+
+    if (mobileMenuButton && mobileNavMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+            mobileNavMenu.classList.toggle('hidden');
+            mobileNavMenu.classList.toggle('flex');
+            const icon = mobileMenuButton.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            }
+        });
+    }
+
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            if (this.hash) {
+               const targetElement = document.querySelector(this.hash);
+               if (targetElement) {
+                    e.preventDefault();
+                    const headerOffset = document.querySelector('header')?.offsetHeight || 70;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                    if (mobileMenuButton && mobileMenuButton.getAttribute('aria-expanded') === 'true') {
+                         mobileMenuButton.click();
+                    }
+               }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

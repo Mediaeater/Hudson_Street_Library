@@ -1,0 +1,753 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> | Hudson Street Library</title>
+    
+    <link rel="stylesheet" href="/assets/css/tailwind.css">
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="api-catalog" type="application/linkset+json" href="/.well-known/api-catalog">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Hudson Street Library",
+  "url": "https://hudsonstreetlibrary.com",
+  "logo": "https://hudsonstreetlibrary.com/assets/images/logo.png",
+  "description": "A curated collection of photography, art, and design books"
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Cryptography",
+  "url": "https://hudsonstreetlibrary.com/cryptology/collections/cryptography.html",
+  "description": "Every book in the library tagged “Cryptography.”",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Hudson Street Library",
+    "url": "https://hudsonstreetlibrary.com"
+  }
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://hudsonstreetlibrary.com/"
+    }
+  ]
+}
+</script>
+
+</head>
+<body class="min-h-screen bg-neutral-50 text-neutral-900">
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+
+<style>
+    .site-header {
+        font-family: 'Literata', Georgia, serif;
+    }
+    .site-header .site-logo {
+        font-family: 'Crimson Pro', Georgia, serif;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        white-space: nowrap;
+    }
+    /* Book-spines mark (same drawing as the favicon). Inlined with
+       fill: currentColor rather than <img src=favicon.svg> because the
+       SVG file self-inverts to off-white in OS dark mode and would
+       disappear against the white header. */
+    .site-header .logo-mark {
+        width: 1.3em;
+        height: 1.3em;
+        display: block;
+        flex-shrink: 0;
+        fill: currentColor;
+    }
+    .site-header .nav-link {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+        font-weight: 400;
+        letter-spacing: 0.005em;
+    }
+    .site-header .nav-link[aria-current="page"],
+    .site-header .nav-link-active {
+        font-weight: 600;
+    }
+    .site-header #mobile-nav-menu a {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+    }
+
+    /*
+      Mobile menu uses self-contained, component-scoped CSS rather than
+      Tailwind utilities, so its layout can't be broken by global stylesheet
+      changes. This originally fixed an invisible-sliver bug: design-system.css
+      ships an unlayered `* { padding: 0 }` reset that beats Tailwind's layered
+      utilities and collapsed the old icon-only button. The self-contained
+      styling is kept deliberately.
+    */
+    .site-header .menu-toggle { display: none; }
+    .site-header .mobile-nav { display: none; }
+
+    /*
+      Mobile scroll-jitter fix.
+      The header ships as `sticky top-0 bg-white/95 backdrop-blur-sm`. On mobile
+      a sticky bar with backdrop-filter: blur() forces the browser to re-sample
+      and re-blur the pixels scrolling beneath it every frame; on mobile GPUs
+      that readback lags the scroll compositor and the bar (and the text passing
+      under it) shudders. Drop the blur and use an opaque background on small
+      screens — the frosted-glass effect stays desktop-only. The doubled
+      `.site-header.site-header` selector out-specifies the `bg-white/95` and
+      `backdrop-blur-sm` utility classes without needing !important.
+    */
+    @media (max-width: 900px), (hover: none) and (pointer: coarse) {
+        .site-header.site-header {
+            background-color: #ffffff;
+            -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+            /* Promote the sticky bar to its own compositor layer so it isn't
+               re-rasterized against the scrolling content every frame — this
+               is what stops the header (and the text under it) juddering on
+               mobile. Pairs with dropping the backdrop blur above. */
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            will-change: transform;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .site-header .menu-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.45rem 0.7rem;
+            border: 1px solid rgba(0, 49, 0, 0.3);
+            border-radius: 0.5rem;
+            background: #ffffff;
+            color: #003100;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .site-header .menu-toggle:hover { background: #f0f5f0; }
+        .site-header .menu-toggle:focus-visible {
+            outline: 2px solid #003100;
+            outline-offset: 2px;
+        }
+        .site-header .menu-toggle svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+            flex-shrink: 0;
+        }
+        .site-header .menu-toggle .menu-toggle-label {
+            font-family: 'Literata', Georgia, serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .site-header .menu-toggle .icon-close { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-open { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-close { display: block; }
+
+        .site-header .mobile-nav.is-open {
+            display: flex;
+            flex-direction: column;
+        }
+        .site-header .mobile-nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            padding: 0.5rem;
+            z-index: 40;
+        }
+        .site-header .mobile-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            color: #404040;
+            text-decoration: none;
+        }
+        .site-header .mobile-nav a:hover {
+            background: #f0f5f0;
+            color: #002000;
+        }
+    }
+</style>
+
+<header class="site-header sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="site-logo text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                <svg class="logo-mark" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+                    <rect x="38" y="128" width="72" height="318"/>
+                    <rect x="138" y="68" width="76" height="378"/>
+                    <rect x="242" y="100" width="72" height="346"/>
+                    <rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)"/>
+                </svg>
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link ">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Accessions
+                </a>
+                <a href="/discover.html"
+                   class="nav-link ">
+                   Discover
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <!-- Icon + visible "Menu" label so the control is obvious on mobile.
+                 Sizing/visibility come from the unlayered styles above, not
+                 Tailwind utilities (see note in the <style> block). Icons are
+                 inline SVGs so the menu works on pages without an icon font. -->
+            <button class="menu-toggle"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <svg class="icon-open" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg class="icon-close" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+                <span class="menu-toggle-label">Menu</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu" class="mobile-nav" aria-label="Mobile navigation">
+        <a href="/#about">About</a>
+        <a href="/collection-explore.html">Collections</a>
+        <a href="/static-demo/">Search</a>
+        <a href="/#publications">Publications</a>
+        <a href="/news.html">News</a>
+        <a href="/collections/recently_added.html">Accessions</a>
+        <a href="/discover.html">Discover</a>
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const button = document.querySelector('button[aria-controls="mobile-nav-menu"]');
+    const willOpen = !menu.classList.contains('is-open');
+
+    menu.classList.toggle('is-open', willOpen);
+    // Icon swap (hamburger <-> X) is driven by aria-expanded in CSS.
+    if (button) button.setAttribute('aria-expanded', String(willOpen));
+}
+</script>
+
+
+<main>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+        
+        
+        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
+            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Cryptography</h1>
+            <div class="line-divider inline-block"></div>
+            
+                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Cryptography.”</p>
+            
+            
+        </div>
+        
+
+        
+        
+            
+        
+        
+
+        
+            
+                
+                
+<section class="mb-16">
+    <div class="volume-header pl-4 mb-8">
+        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
+        
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        
+            
+<a href="/books/barker_the-history-of-codes-and-ciphers-in-the-united-states-prior-to-world-war-i_10007/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/barker_wayne_g_the-history-of-codes-and-ciphers-in-the-united-sta_9780894120268.jpg" alt="The History of Codes and Ciphers in the United States Prior to World War I" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Wayne G. Barker</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The History of Codes and Ciphers in the United States Prior to World War I</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aegean Park Press &middot; 1978</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/electronic-privacy-information-center_cryptography-and-liberty-1999-an-international-survey-of-encryption-policy_10035/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/electronic_privacy_information_center_cryptography-liberty-1999-international-survey-encryption-policy_9781893044036.jpg" alt="Cryptography &amp; Liberty 1999: An International Survey of Encryption Policy" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Electronic Privacy Information Center</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cryptography &amp; Liberty 1999: An International Survey of Encryption Policy</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Electronic Privacy Information Center &middot; 1999</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/fowler_codes-and-ciphers_10026/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/fowler_mark_codes-ciphers_9780746006757.jpg" alt="Codes &amp; Ciphers" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mark Fowler, Radhi Parekh</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Codes &amp; Ciphers</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Usborne Publishing &middot; 1992</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/friedman_advanced-military-cryptography_10001/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/friedman_william_f_advanced-military-cryptography_9780894120114.jpg" alt="Advanced Military Cryptography" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">William F. Friedman</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Advanced Military Cryptography</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aegean Park Press &middot; 1976</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/friedman_solving-german-codes-in-world-war-i_10006/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/friedman_william_f_solving-german-codes-in-world-war-i_9780894121180.jpg" alt="Solving German Codes in World War I" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">William F. Friedman</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Solving German Codes in World War I</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aegean Park Press &middot; 1977</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/gylden_the-contribution-of-the-cryptographic-bureaus-in-the-world-war_10009/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/gyldn_yves_the-contribution-of-the-cryptographic-bureaus-in-t_9780894120275.jpg" alt="The Contribution of the Cryptographic Bureaus in the World War" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Yves Gyldén</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Contribution of the Cryptographic Bureaus in the World War</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aegean Park Press &middot; 1978</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/hitt_manual-for-the-solution-of-military-ciphers_10002/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/hitt_parker_manual-for-the-solution-of-military-ciphers_9780894120015.jpg" alt="Manual for the Solution of Military Ciphers" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Parker Hitt</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Manual for the Solution of Military Ciphers</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aegean Park Press &middot; 1976</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/johnson_break-the-code-cryptography-for-beginners_10021/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/johnson_bud_break-the-code-cryptography-for-beginners_9780486291468.jpg" alt="Break the Code: Cryptography for Beginners" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Bud Johnson</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Break the Code: Cryptography for Beginners</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Dover Publications &middot; 1997</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/levine_united-states-cryptographic-patents-1861-1989_10018/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/levine_jack_united-states-cryptographic-patents-1861-1989_9780961056018.jpg" alt="United States Cryptographic Patents, 1861-1989" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Levine</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">United States Cryptographic Patents, 1861-1989</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Cryptologia &middot; 1991</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/levitov_solution-of-the-voynich-manuscript-a-liturgical-manual-for-the-endura-rite-of-the-cathari-heresy-the-cult-of-isis_10010/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/levitov_leo_solution-of-the-voynich-manuscript-a-liturgical-ma_9780894121487.jpg" alt="Solution of the Voynich Manuscript: A Liturgical Manual for the Endura Rite of the Cathari Heresy, the Cult of Isis" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Leo Levitov</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Solution of the Voynich Manuscript: A Liturgical Manual for the Endura Rite of the Cathari Heresy, the Cult of Isis</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aegean Park Press &middot; 1987</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/mason_lu-and-clancys-secret-codes_10027/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/mason_adrienne_lu-clancys-secret-codes_9781550745535.jpg" alt="Lu &amp; Clancy&#39;s Secret Codes" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Adrienne Mason</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Lu &amp; Clancy&#39;s Secret Codes</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Kids Can Press &middot; 1999</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/singh_fermats-enigma-the-epic-quest-to-solve-the-worlds-greatest-mathematical-problem_10031/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/singh_simon_fermats-enigma-the-epic-quest-to-solve-the-worlds_9780802713315.jpg" alt="Fermat&#39;s Enigma: The Epic Quest to Solve the World&#39;s Greatest Mathematical Problem" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Simon Singh</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Fermat&#39;s Enigma: The Epic Quest to Solve the World&#39;s Greatest Mathematical Problem</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Walker &amp; Company &middot; 1997</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/weber_masked-dispatches-cryptograms-and-cryptology-in-american-history-1775-1900_10015/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <img src="/assets/images/books/weber_ralph_e_masked-dispatches-cryptograms-and-cryptology-in-am.jpg" alt="Masked Dispatches: Cryptograms and Cryptology in American History, 1775-1900" class="w-full h-full object-cover" loading="lazy">
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ralph E. Weber</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Masked Dispatches: Cryptograms and Cryptology in American History, 1775-1900</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Center for Cryptologic History, National Security Agency &middot; 1993</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/dagapeyeff_codes-and-ciphers_10029/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Alexander D&#39;Agapeyeff</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Codes and Ciphers</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Compass Books / Geoffrey Cumberlege, Oxford University Press &middot; 1949</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/friedman_cryptography-and-cryptanalysis-articles-volume-1_10003/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">William F. Friedman</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cryptography and Cryptanalysis Articles, Volume 1</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aegean Park Press &middot; 1976</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/friedman_cryptography-and-cryptanalysis-articles-volume-2_10004/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">William F. Friedman</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cryptography and Cryptanalysis Articles, Volume 2</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aegean Park Press &middot; 1976</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/friedman_the-riverbank-publications-volume-1_10005/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">William F. Friedman</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Riverbank Publications, Volume 1</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aegean Park Press &middot; 1979</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/lange_treatise-on-cryptography_10008/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">André Lange, E.-A. Soudart</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">Treatise on Cryptography</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aegean Park Press &middot; 1981</p>
+        
+    </div>
+</a>
+
+        
+            
+<a href="/books/na_the-national-cryptologic-museum-activities-book-codes-ciphers-and-puzzles_10017/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
+    <div class="aspect-3/4 bg-gray-100">
+        
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+        
+    </div>
+    <div class="p-3">
+        
+            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">National Cryptologic Museum</p>
+        
+        <p class="text-xs font-medium text-gray-900 line-clamp-2">The National Cryptologic Museum Activities Book: Codes, Ciphers, and Puzzles</p>
+        
+            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Center for Cryptologic History &middot; 1996</p>
+        
+    </div>
+</a>
+
+        
+    </div>
+</section>
+
+            
+        
+    </div>
+</main>
+
+
+
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
+        
+        <p>© 2026 Hudson Street Library · <a href="/identity/" class="text-neutral-600 underline hover:text-neutral-900">Identity</a> · <a href="/colophon.html" class="text-neutral-600 underline hover:text-neutral-900">Colophon</a></p>
+    </div>
+</footer>
+
+<script>
+    // Mobile Menu Toggle Logic
+    const mobileMenuButton = document.querySelector('button.md\\:hidden');
+    const mobileNavMenu = document.getElementById('mobile-nav-menu');
+
+    if (mobileMenuButton && mobileNavMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+            mobileNavMenu.classList.toggle('hidden');
+            mobileNavMenu.classList.toggle('flex');
+            const icon = mobileMenuButton.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            }
+        });
+    }
+
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            if (this.hash) {
+               const targetElement = document.querySelector(this.hash);
+               if (targetElement) {
+                    e.preventDefault();
+                    const headerOffset = document.querySelector('header')?.offsetHeight || 70;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                    if (mobileMenuButton && mobileMenuButton.getAttribute('aria-expanded') === 'true') {
+                         mobileMenuButton.click();
+                    }
+               }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
