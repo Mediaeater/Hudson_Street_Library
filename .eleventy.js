@@ -427,13 +427,20 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addFilter("recentlyCatalogued", function(books, limit) {
     if (!books) return [];
 
-    // Filter for backfill: cataloged_date exists AND is at least 7 days after accession_no
-    // (i.e., not cataloged the same day as acquired)
+    // Filter for backfill: cataloged_date exists AND either there's no
+    // accession_no on record (a catalogued copy with no formal accession
+    // event — e.g. a second copy, or a completed legacy stub) or it's at
+    // least 7 days before cataloged_date (i.e. not cataloged the same day
+    // as acquired).
     const backfillBooks = books.map(b => {
       const accessionDate = parseAccessionDate(b.accession_no);
       const catalogedDate = parseAccessionDate(b.cataloged_date);
 
-      if (!accessionDate || !catalogedDate) return null;
+      if (!catalogedDate) return null;
+
+      if (!accessionDate) {
+        return { ...b, parsedDate: catalogedDate, daysSinceAcquisition: null };
+      }
 
       const daysDiff = Math.abs((catalogedDate - accessionDate) / (1000 * 60 * 60 * 24));
 
