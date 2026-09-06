@@ -10,6 +10,7 @@ const {
   wingForId,
   nextIdForWing,
   fileForIdentifier,
+  renderBooksJson,
   CatalogError,
 } = require('../scripts/utils/catalog');
 
@@ -171,6 +172,38 @@ describe('catalog loader', () => {
       const anIsbn = loadCatalogSync().data.find(b => b.isbn_asin)?.isbn_asin;
       expect(fileForIdentifier(anIsbn).file).to.match(/books\.csv$/);
       expect(fileForIdentifier('nosuchisbn')).to.equal(null);
+    });
+  });
+
+  // /data/books.json. Generated at build time by the eleventy.after hook; it
+  // was a checked-in Nov 2025 snapshot until Sept 2026, which is exactly the
+  // failure these tests exist to prevent recurring.
+  describe('renderBooksJson', () => {
+    it('emits only published wings, and every wing with includeUnpublished', () => {
+      const published = JSON.parse(renderBooksJson(fixture('ok')));
+      expect(published.map(b => b.id)).to.deep.equal(['1', '2']);
+
+      const all = JSON.parse(renderBooksJson({ ...fixture('ok'), includeUnpublished: true }));
+      expect(all.map(b => b.id)).to.deep.equal(['1', '2', '10001', '42']);
+    });
+
+    it('gives every record the 37 columns plus collection, all strings', () => {
+      const rows = JSON.parse(renderBooksJson({ ...fixture('ok'), includeUnpublished: true }));
+      const { columns } = loadCatalogSync(fixture('ok'));
+      for (const row of rows) {
+        expect(Object.keys(row)).to.deep.equal([...columns, 'collection']);
+        expect(Object.values(row).every(v => typeof v === 'string'), row.id).to.equal(true);
+      }
+      expect(rows.find(b => b.id === '10001').collection).to.equal('zz');
+    });
+
+    it('carries the real catalogue with no price and no missing key', () => {
+      const rows = JSON.parse(renderBooksJson());
+      const { data, wings } = loadCatalogSync();
+      const live = new Set(wings.filter(w => w.isDefault || w.live).map(w => w.slug));
+      expect(rows).to.have.length(data.filter(b => live.has(b.collection)).length);
+      expect(rows.filter(b => b.price.trim())).to.have.length(0);
+      expect(rows.filter(b => Object.keys(b).length !== 38)).to.have.length(0);
     });
   });
 });

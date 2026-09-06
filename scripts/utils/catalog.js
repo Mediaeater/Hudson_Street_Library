@@ -394,6 +394,49 @@ function writeMergedCsv(outFile, options = {}) {
     return { file: outFile, bytes: Buffer.byteLength(csv) };
 }
 
+/**
+ * Render the merged catalogue as the public JSON endpoint (/data/books.json,
+ * documented on /api-documentation/ and listed in .well-known/api-catalog).
+ *
+ * One object per row: the 37 catalogue columns as strings, plus `collection`,
+ * the wing the row came from. Pretty-printed, because the endpoint is meant to
+ * be readable by hand as well as by `jq`.
+ *
+ * This used to be a checked-in snapshot under data/ that was passthrough-copied
+ * to the site, so it could only ever go stale — by Sept 2026 it was serving 1586
+ * rows of Nov 2025 data, with cover paths that no longer existed. It is now
+ * generated at build time and has no source file.
+ *
+ * Emits the same rows as renderMergedCsv: the default wing plus any wing whose
+ * `live` flag is set. A wing still being catalogued is not advertised.
+ * @param {{dataDir?: string, includeUnpublished?: boolean}} [options]
+ * @returns {string}
+ */
+function renderBooksJson(options = {}) {
+    const { data, wings, columns } = loadCatalogSync(options);
+    const published = new Set(
+        wings.filter(w => options.includeUnpublished || w.isDefault || w.live).map(w => w.slug)
+    );
+    const keys = [...columns, 'collection'];
+    const rows = data
+        .filter(b => published.has(b.collection))
+        .map(b => Object.fromEntries(keys.map(k => [k, b[k] == null ? '' : String(b[k])])));
+    return JSON.stringify(rows, null, 2) + '\n';
+}
+
+/**
+ * Write renderBooksJson() to disk, creating parent directories.
+ * @param {string} outFile
+ * @param {{dataDir?: string, includeUnpublished?: boolean}} [options]
+ * @returns {{file: string, bytes: number, rows: number}}
+ */
+function writeBooksJson(outFile, options = {}) {
+    const json = renderBooksJson(options);
+    fs.mkdirSync(path.dirname(outFile), { recursive: true });
+    fs.writeFileSync(outFile, json);
+    return { file: outFile, bytes: Buffer.byteLength(json), rows: JSON.parse(json).length };
+}
+
 module.exports = {
     DATA_DIR,
     EXPECTED_COLUMNS,
@@ -410,4 +453,6 @@ module.exports = {
     fileForIdentifier,
     renderMergedCsv,
     writeMergedCsv,
+    renderBooksJson,
+    writeBooksJson,
 };
