@@ -5,6 +5,7 @@ const slugify = require("slugify");
 // eleventy-img 7 is ESM-only; require() returns the namespace, the callable is .default
 const Image = require("@11ty/eleventy-img").default;
 const { loadCatalog, writeMergedCsv, writeBooksJson, loadWings } = require("./scripts/utils/catalog");
+const { resolveCoverPath } = require("./scripts/utils/cover-path");
 
 const { exec } = require("child_process");
 
@@ -521,40 +522,12 @@ module.exports = function(eleventyConfig) {
   });
 
   // --- Generate cover image path from book data ---
-  // Matches the naming convention used by acquire-covers.js
-  eleventyConfig.addFilter("generateCoverPath", function(book) {
-    if (!book) return '/assets/images/placeholder-book.svg';
-
-    // If book already has a valid image_url, use it
-    if (book.image_url &&
-        book.image_url !== 'NULL' &&
-        book.image_url !== '' &&
-        book.image_url !== null &&
-        book.image_url !== 'null') {
-      return book.image_url;
-    }
-
-    // Generate cover path using same logic as acquire-covers.js
-    const authorLast = (book.author_last || 'Unknown').replace(/[^a-zA-Z0-9.-]/g, '_');
-    const title = (book.title || 'Untitled').replace(/[^a-zA-Z0-9.-]/g, '_');
-    const isbn = (book.isbn_asin || '').replace(/[^a-zA-Z0-9.-]/g, '_').replace(/[-\s]/g, '');
-
-    let filename;
-    if (isbn && isbn !== 'NULL' && isbn !== '' && isbn !== 'null') {
-      filename = `${authorLast}_${title}_${isbn}`;
-    } else {
-      filename = `${authorLast}_${title}_NULL`;
-    }
-
-    // Sanitize and truncate
-    const sanitized = filename
-      .replace(/[^a-zA-Z0-9.-]/g, '_')
-      .replace(/_+/g, '_')
-      .replace(/^_|_$/g, '')
-      .substring(0, 100);
-
-      return `/assets/images/books/${sanitized}.jpg`;
-  });
+  // Matches the naming convention used by acquire-covers.js. The convention
+  // itself lives in scripts/utils/cover-path.js, shared with the /data/books.json
+  // generator so the endpoint and the page can't disagree about where a cover is.
+  // Unchanged behaviour: no existence check here, the templates' onerror handler
+  // swaps in the placeholder.
+  eleventyConfig.addFilter("generateCoverPath", resolveCoverPath);
 
   // --- Plain text from an HTML description, for meta tags / JSON-LD ---
   // books.csv descriptions are HTML (<p class="mt-6">, <em>); any text-only

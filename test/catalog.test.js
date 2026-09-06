@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 const { expect } = require('chai');
 const {
@@ -187,11 +188,11 @@ describe('catalog loader', () => {
       expect(all.map(b => b.id)).to.deep.equal(['1', '2', '10001', '42']);
     });
 
-    it('gives every record the 37 columns plus collection, all strings', () => {
+    it('gives every record the 37 columns plus collection and cover_url, all strings', () => {
       const rows = JSON.parse(renderBooksJson({ ...fixture('ok'), includeUnpublished: true }));
       const { columns } = loadCatalogSync(fixture('ok'));
       for (const row of rows) {
-        expect(Object.keys(row)).to.deep.equal([...columns, 'collection']);
+        expect(Object.keys(row)).to.deep.equal([...columns, 'collection', 'cover_url']);
         expect(Object.values(row).every(v => typeof v === 'string'), row.id).to.equal(true);
       }
       expect(rows.find(b => b.id === '10001').collection).to.equal('zz');
@@ -203,7 +204,23 @@ describe('catalog loader', () => {
       const live = new Set(wings.filter(w => w.isDefault || w.live).map(w => w.slug));
       expect(rows).to.have.length(data.filter(b => live.has(b.collection)).length);
       expect(rows.filter(b => b.price.trim())).to.have.length(0);
-      expect(rows.filter(b => Object.keys(b).length !== 38)).to.have.length(0);
+      expect(rows.filter(b => Object.keys(b).length !== 39)).to.have.length(0);
+    });
+
+    // The whole point of cover_url: a consumer can follow it without checking.
+    it('never emits a cover_url that has no file behind it', () => {
+      const rows = JSON.parse(renderBooksJson());
+      const missing = rows
+        .filter(b => b.cover_url)
+        .filter(b => !fs.existsSync(path.join(__dirname, '..', 'src', b.cover_url)));
+      expect(missing.map(b => `${b.id} ${b.cover_url}`)).to.deep.equal([]);
+    });
+
+    it('recovers covers the naming convention holds but image_url never recorded', () => {
+      const rows = JSON.parse(renderBooksJson());
+      const recovered = rows.filter(b => b.cover_url && b.cover_url !== b.image_url);
+      expect(recovered.every(b => !b.image_url), 'image_url is otherwise mirrored verbatim').to.equal(true);
+      expect(recovered.length).to.be.greaterThan(0);
     });
   });
 });
