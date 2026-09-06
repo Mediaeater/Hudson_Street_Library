@@ -262,7 +262,7 @@ function toggleMobileMenu() {
 
   <section class="mb-8">
     <h2 class="text-2xl font-semibold mb-4">Overview</h2>
-    <p class="mb-4">The books collection is an array of book objects, each containing comprehensive bibliographic and physical metadata. Every object carries the same 38 keys, the 37 catalogue columns plus <code class="bg-gray-100 px-1 rounded-sm">collection</code>; all values are strings, and an unrecorded field is an empty string rather than <code class="bg-gray-100 px-1 rounded-sm">null</code>.</p>
+    <p class="mb-4">The books collection is an array of book objects, each containing comprehensive bibliographic and physical metadata. Every object carries the same 39 keys, the 37 catalogue columns plus <code class="bg-gray-100 px-1 rounded-sm">collection</code> and <code class="bg-gray-100 px-1 rounded-sm">cover_url</code>; all values are strings, and an unrecorded field is an empty string rather than <code class="bg-gray-100 px-1 rounded-sm">null</code>.</p>
 
     <h3 class="text-xl font-semibold mb-2">Key Fields</h3>
     <ul class="list-disc pl-6 space-y-2">
@@ -272,7 +272,8 @@ function toggleMobileMenu() {
       <li><code class="bg-gray-100 px-2 py-1 rounded-sm">publisher</code> - Publishing house</li>
       <li><code class="bg-gray-100 px-2 py-1 rounded-sm">publication_year</code> - Year of publication</li>
       <li><code class="bg-gray-100 px-2 py-1 rounded-sm">description</code> - Book description</li>
-      <li><code class="bg-gray-100 px-2 py-1 rounded-sm">image_url</code> - Cover image path (relative URL)</li>
+      <li><code class="bg-gray-100 px-2 py-1 rounded-sm">image_url</code> - Cover image path as recorded in the catalogue, which may be blank even where a cover exists</li>
+      <li><code class="bg-gray-100 px-2 py-1 rounded-sm">cover_url</code> - Site-root-relative path to the cover, checked against the published files: it always resolves, and is empty only when the library holds no cover for the book. Prefer this to <code class="bg-gray-100 px-1 rounded-sm">image_url</code> when you want the picture</li>
       <li><code class="bg-gray-100 px-2 py-1 rounded-sm">collection_grouping</code> - Thematic collection membership</li>
       <li><code class="bg-gray-100 px-2 py-1 rounded-sm">tags</code> - Comma-separated subject tags</li>
       <li><code class="bg-gray-100 px-2 py-1 rounded-sm">collection</code> - The wing the record belongs to (<code class="bg-gray-100 px-1 rounded-sm">art</code>, <code class="bg-gray-100 px-1 rounded-sm">cryptology</code>, <code class="bg-gray-100 px-1 rounded-sm">hacking</code>)</li>
