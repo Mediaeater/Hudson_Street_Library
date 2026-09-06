@@ -216,11 +216,17 @@ describe('catalog loader', () => {
       expect(missing.map(b => `${b.id} ${b.cover_url}`)).to.deep.equal([]);
     });
 
-    it('recovers covers the naming convention holds but image_url never recorded', () => {
+    // The 54 rows this used to recover were backfilled into image_url on
+    // 2026-09-06, so the recovery set is empty today and that is the healthy
+    // state. What must hold either way: cover_url only ever *adds* a cover,
+    // never contradicts a recorded one. The recovery mechanism itself is
+    // exercised against a fixture in cover-path.test.js.
+    it('never contradicts a recorded image_url', () => {
       const rows = JSON.parse(renderBooksJson());
-      const recovered = rows.filter(b => b.cover_url && b.cover_url !== b.image_url);
-      expect(recovered.every(b => !b.image_url), 'image_url is otherwise mirrored verbatim').to.equal(true);
-      expect(recovered.length).to.be.greaterThan(0);
+      const contradicted = rows
+        .filter(b => b.image_url && b.cover_url && b.cover_url !== b.image_url)
+        .map(b => `${b.id}: ${b.image_url} -> ${b.cover_url}`);
+      expect(contradicted).to.deep.equal([]);
     });
   });
 });
