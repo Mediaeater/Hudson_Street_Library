@@ -1,21 +1,26 @@
 /**
  * Where a book's cover actually lives.
  *
- * Two different questions, answered separately, because the site and the public
- * JSON endpoint want different answers:
+ * Three questions, answered separately, because the convention, the site and
+ * the public JSON endpoint want different answers:
  *
- *   resolveCoverPath()  what the page puts in <img src> — the catalogue's
- *                       image_url when it has one, otherwise the filename the
- *                       naming convention says the cover would have. It does
- *                       NOT check the file is there; the templates carry an
- *                       onerror handler that swaps in the placeholder.
+ *   resolveCoverPath()  where the cover would be, by the naming convention —
+ *                       image_url when the row has one, else the derived path.
+ *                       No existence check. This is the convention, not a
+ *                       promise about the filesystem.
  *   existingCoverPath() a path guaranteed to resolve, or '' when the library
  *                       holds no cover for the book. /data/books.json uses this
  *                       so a consumer never gets handed a 404.
+ *   coverSrc()          what a page puts in <img src>: the existing path, or
+ *                       the placeholder. The generateCoverPath filter in
+ *                       .eleventy.js is this. Before Sept 2026 the filter was
+ *                       resolveCoverPath, which meant 744 book pages emitted a
+ *                       src that 404ed and relied on the templates' onerror to
+ *                       swap the placeholder in — a request and a flash of
+ *                       broken image per cover the library doesn't hold.
  *
- * The convention itself (acquire-covers.js, and the generateCoverPath filter in
- * .eleventy.js, which now calls in here) lives in derivedCoverPath so the two
- * cannot drift apart.
+ * The convention itself (the acquire-covers scripts write files by it) lives in
+ * derivedCoverPath so the three cannot drift apart.
  */
 const fs = require('fs');
 const path = require('path');
@@ -59,8 +64,8 @@ function derivedCoverPath(book) {
 }
 
 /**
- * The cover path a page renders: image_url if the row has one, else the
- * conventional path. No existence check — see the module comment.
+ * Where the convention says the cover is: image_url if the row has one, else
+ * the derived path. No existence check — see the module comment.
  * @param {Object} book
  * @returns {string}
  */
@@ -99,10 +104,34 @@ function existingCoverPath(book, options = {}) {
     return coverFileExists(derived, srcDir) ? derived : '';
 }
 
+/**
+ * The value a page puts in <img src>: a cover that is on disk, or the
+ * placeholder. Never a path that 404s.
+ * @param {Object} book
+ * @param {{srcDir?: string}} [options]
+ * @returns {string}
+ */
+function coverSrc(book, options = {}) {
+    return existingCoverPath(book, options) || PLACEHOLDER;
+}
+
+/**
+ * Does the library hold a cover for this book? The templates use it to fade
+ * the placeholder, which is what the onerror handler used to do.
+ * @param {Object} book
+ * @param {{srcDir?: string}} [options]
+ * @returns {boolean}
+ */
+function hasCover(book, options = {}) {
+    return Boolean(existingCoverPath(book, options));
+}
+
 module.exports = {
     PLACEHOLDER,
     derivedCoverPath,
     resolveCoverPath,
     coverFileExists,
     existingCoverPath,
+    coverSrc,
+    hasCover,
 };

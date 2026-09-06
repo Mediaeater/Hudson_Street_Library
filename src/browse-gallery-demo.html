@@ -87,6 +87,7 @@ permalink: /browse-gallery-demo/index.html
                 <img src="{{ coverPath }}"
                      alt="{{ book.title }} by {{ book.author_full_name }}"
                      loading="lazy"
+                     {% if not (book | hasCover) %}style="opacity: 0.3;"{% endif %}
                      onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
             </div>
             <div class="gallery-book-title">{{ book.title }}</div>

@@ -424,6 +424,7 @@
         <img src="{{ coverPath }}"
              alt="{{ book.title }} by {{ book.author_full_name }}"
              class="cover-image"
+             {% if not (book | hasCover) %}style="opacity: 0.3;"{% endif %}
              onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
     </div>
 
@@ -662,6 +663,7 @@
                      alt="{{ otherBook.title }}"
                      class="related-book-cover"
                      loading="lazy"
+                     {% if not (otherBook | hasCover) %}style="opacity: 0.3;"{% endif %}
                      onerror="this.onerror=null; this.src='/assets/images/placeholder-book.svg'; this.style.opacity='0.3';">
                 <span class="related-book-title">{{ otherBook.title }}</span>
                 {% if otherBook.publication_year %}
