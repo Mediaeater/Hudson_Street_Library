@@ -5,7 +5,7 @@ const slugify = require("slugify");
 // eleventy-img 7 is ESM-only; require() returns the namespace, the callable is .default
 const Image = require("@11ty/eleventy-img").default;
 const { loadCatalog, writeMergedCsv, writeBooksJson, loadWings } = require("./scripts/utils/catalog");
-const { resolveCoverPath } = require("./scripts/utils/cover-path");
+const { coverSrc, hasCover } = require("./scripts/utils/cover-path");
 
 const { exec } = require("child_process");
 
@@ -521,13 +521,16 @@ module.exports = function(eleventyConfig) {
     return Number.isFinite(num) ? num.toLocaleString('en-US') : n;
   });
 
-  // --- Generate cover image path from book data ---
-  // Matches the naming convention used by acquire-covers.js. The convention
-  // itself lives in scripts/utils/cover-path.js, shared with the /data/books.json
-  // generator so the endpoint and the page can't disagree about where a cover is.
-  // Unchanged behaviour: no existence check here, the templates' onerror handler
-  // swaps in the placeholder.
-  eleventyConfig.addFilter("generateCoverPath", resolveCoverPath);
+  // --- Cover image src, and whether the library actually holds one ---
+  // Both live in scripts/utils/cover-path.js, shared with the /data/books.json
+  // generator so the endpoint and the page can't disagree about where a cover
+  // is. generateCoverPath is existence-checked: it returns the placeholder
+  // rather than a path that 404s (744 rows had no cover as of Sept 2026, and
+  // every one of them used to emit a broken request before the templates'
+  // onerror could swap the placeholder in). hasCover lets a template style the
+  // placeholder, which is what that onerror handler used to do on arrival.
+  eleventyConfig.addFilter("generateCoverPath", coverSrc);
+  eleventyConfig.addFilter("hasCover", hasCover);
 
   // --- Plain text from an HTML description, for meta tags / JSON-LD ---
   // books.csv descriptions are HTML (<p class="mt-6">, <em>); any text-only

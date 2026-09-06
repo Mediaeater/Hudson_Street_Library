@@ -8,11 +8,14 @@ const {
   resolveCoverPath,
   coverFileExists,
   existingCoverPath,
+  coverSrc,
+  hasCover,
 } = require('../scripts/utils/cover-path');
 
 // The naming convention these tests pin is shared by three things that must
-// agree: acquire-covers.js writes files by it, the generateCoverPath filter
-// renders <img src> from it, and /data/books.json resolves cover_url with it.
+// agree: the acquire-covers scripts write files by it, the generateCoverPath
+// filter renders <img src> from it, and /data/books.json resolves cover_url
+// with it.
 describe('cover-path', () => {
   describe('derivedCoverPath', () => {
     it('builds {author_last}_{title}_{isbn}.jpg', () => {
@@ -88,6 +91,57 @@ describe('cover-path', () => {
     it('refuses a path that would climb out of src/', () => {
       expect(coverFileExists('/../../etc/passwd', srcDir)).to.equal(false);
       expect(coverFileExists('/assets/images/books/../books/recorded.jpg', srcDir)).to.equal(true);
+    });
+  });
+
+  // What the generateCoverPath filter is. Before Sept 2026 the filter was
+  // resolveCoverPath, so a book with no cover emitted a src that 404ed and the
+  // templates' onerror swapped the placeholder in after the failed request.
+  describe('coverSrc / hasCover (what the filter is)', () => {
+    let srcDir;
+    const held = { author_last: 'Frere', title: 'Jones', isbn_asin: '123' };
+    const absent = { author_last: 'Nobody', title: 'Nothing', isbn_asin: '999' };
+
+    before(() => {
+      srcDir = fs.mkdtempSync(path.join(os.tmpdir(), 'hsl-cover-src-'));
+      fs.mkdirSync(path.join(srcDir, 'assets/images/books'), { recursive: true });
+      fs.writeFileSync(path.join(srcDir, 'assets/images/books/Frere_Jones_123.jpg'), 'x');
+    });
+    after(() => fs.rmSync(srcDir, { recursive: true, force: true }));
+
+    it('serves the cover the library holds', () => {
+      expect(coverSrc(held, { srcDir })).to.equal('/assets/images/books/Frere_Jones_123.jpg');
+      expect(hasCover(held, { srcDir })).to.equal(true);
+    });
+
+    it('serves the placeholder instead of a path that would 404', () => {
+      expect(coverSrc(absent, { srcDir })).to.equal(PLACEHOLDER);
+      expect(hasCover(absent, { srcDir })).to.equal(false);
+      // The old behaviour, kept as a pure function: what the convention says.
+      expect(resolveCoverPath(absent)).to.equal('/assets/images/books/Nobody_Nothing_999.jpg');
+    });
+
+    it('ignores an image_url with nothing behind it', () => {
+      const stale = { ...absent, image_url: '/assets/images/books/deleted.jpg' };
+      expect(coverSrc(stale, { srcDir })).to.equal(PLACEHOLDER);
+    });
+
+    it('handles no book at all', () => {
+      expect(coverSrc(null)).to.equal(PLACEHOLDER);
+      expect(hasCover(null)).to.equal(false);
+    });
+  });
+
+  // The site's own catalogue: after the Sept 2026 backfill, every recorded
+  // image_url has a file behind it, so the filter serves image_url verbatim.
+  describe('the real catalogue', () => {
+    const { loadCatalogSync } = require('../scripts/utils/catalog');
+
+    it('has no image_url pointing at a file that is not there', () => {
+      const broken = loadCatalogSync().data
+        .filter(b => b.image_url && !coverFileExists(b.image_url))
+        .map(b => `${b.id} ${b.image_url}`);
+      expect(broken).to.deep.equal([]);
     });
   });
 });
