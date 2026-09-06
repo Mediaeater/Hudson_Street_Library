@@ -30,6 +30,7 @@ const path = require('path');
 const { parse } = require('csv-parse/sync');
 const CSVHandler = require('./csv-handler');
 const { validateSchema } = require('./validate-schema');
+const { existingCoverPath } = require('./cover-path');
 
 const ROOT = path.join(__dirname, '..', '..');
 const DATA_DIR = path.join(ROOT, 'src', '_data');
@@ -398,9 +399,19 @@ function writeMergedCsv(outFile, options = {}) {
  * Render the merged catalogue as the public JSON endpoint (/data/books.json,
  * documented on /api-documentation/ and listed in .well-known/api-catalog).
  *
- * One object per row: the 37 catalogue columns as strings, plus `collection`,
- * the wing the row came from. Pretty-printed, because the endpoint is meant to
- * be readable by hand as well as by `jq`.
+ * One object per row: the 37 catalogue columns as strings, plus two derived
+ * keys — `collection`, the wing the row came from, and `cover_url`, a cover
+ * path that is known to resolve. Pretty-printed, because the endpoint is meant
+ * to be readable by hand as well as by `jq`.
+ *
+ * `image_url` stays a verbatim mirror of the column, so the endpoint still
+ * reports the catalogue as catalogued. But the column is blank on 799 rows and
+ * the site still shows covers for 55 of them, because the templates fall back
+ * to the filename the naming convention implies — a consumer reading image_url
+ * alone would conclude those books have no cover, and would have to fetch every
+ * other path to find out which ones 404. `cover_url` answers that: image_url if
+ * a file is actually there, else the conventional path if THAT is there, else
+ * empty. Never a broken URL, never a false negative.
  *
  * This used to be a checked-in snapshot under data/ that was passthrough-copied
  * to the site, so it could only ever go stale — by Sept 2026 it was serving 1586
@@ -413,14 +424,20 @@ function writeMergedCsv(outFile, options = {}) {
  * @returns {string}
  */
 function renderBooksJson(options = {}) {
+    const dataDir = options.dataDir || DATA_DIR;
     const { data, wings, columns } = loadCatalogSync(options);
     const published = new Set(
         wings.filter(w => options.includeUnpublished || w.isDefault || w.live).map(w => w.slug)
     );
     const keys = [...columns, 'collection'];
+    // Cover files sit under src/assets; the data dir is src/_data.
+    const srcDir = options.srcDir || path.dirname(dataDir);
     const rows = data
         .filter(b => published.has(b.collection))
-        .map(b => Object.fromEntries(keys.map(k => [k, b[k] == null ? '' : String(b[k])])));
+        .map(b => ({
+            ...Object.fromEntries(keys.map(k => [k, b[k] == null ? '' : String(b[k])])),
+            cover_url: existingCoverPath(b, { srcDir }),
+        }));
     return JSON.stringify(rows, null, 2) + '\n';
 }
 
