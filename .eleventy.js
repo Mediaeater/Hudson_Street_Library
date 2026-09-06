@@ -4,7 +4,7 @@ const path = require("path");
 const slugify = require("slugify");
 // eleventy-img 7 is ESM-only; require() returns the namespace, the callable is .default
 const Image = require("@11ty/eleventy-img").default;
-const { loadCatalog, writeMergedCsv, loadWings } = require("./scripts/utils/catalog");
+const { loadCatalog, writeMergedCsv, writeBooksJson, loadWings } = require("./scripts/utils/catalog");
 
 const { exec } = require("child_process");
 
@@ -709,8 +709,17 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.on("eleventy.after", ({ dir }) => {
     const out = writeMergedCsv(path.join(dir.output, "cms", "data", "catalog.csv"));
     console.log(`--- catalog: wrote ${path.relative(__dirname, out.file)} (${out.bytes} bytes)`);
+    // /data/books.json — the public JSON endpoint documented on
+    // /api-documentation/ and listed in .well-known/api-catalog. Generated here
+    // for the same reason catalog.csv is: it was a checked-in snapshot copied
+    // out of data/, and by Sept 2026 it was serving 1586 rows of Nov 2025 data
+    // with cover paths that no longer existed. There is no source file now.
+    const json = writeBooksJson(path.join(dir.output, "data", "books.json"));
+    console.log(`--- catalog: wrote ${path.relative(__dirname, json.file)} (${json.rows} rows, ${json.bytes} bytes)`);
   });
   eleventyConfig.addPassthroughCopy({"src/_data/news.json": "cms/data/news.json"});
+  // Working files that predate the generated endpoints. books.json is NOT here:
+  // see the eleventy.after hook above.
   eleventyConfig.addPassthroughCopy({"data": "data"});
 
   // Favicon files
