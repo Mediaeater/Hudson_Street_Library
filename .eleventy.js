@@ -720,6 +720,8 @@ module.exports = function(eleventyConfig) {
   // placeholders ([BOOK TITLE], [IMAGE_PATH]) to production, and the READMEs
   // are developer notes. Nothing links to any of them.
   eleventyConfig.ignores.add("src/books/templates/**");
+  // book1.html is an unfilled "Book Detail" scaffold (news-pipeline generalDir), not a book.
+  eleventyConfig.ignores.add("src/books/general/book1.html");
   // Identity sources: the brand-guide artboards are inlined into /identity/
   // by the brandPlate shortcode and should not build as standalone pages.
   eleventyConfig.ignores.add("src/identity/brand-guide/**");
