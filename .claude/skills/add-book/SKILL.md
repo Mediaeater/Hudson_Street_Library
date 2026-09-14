@@ -34,6 +34,29 @@ user_invocable: true
 
 ## CRITICAL RULES
 
+### ALWAYS Use Research-Asst Skill - Never Manual JSON
+**When adding books, ALWAYS invoke `/research-asst` and let it complete.** Never manually create `book_data_{slug}.json` files.
+- Invoke `/research-asst <url or title>`
+- Wait for it to produce the JSON and cover
+- Then proceed with ingestion using that output
+- Do NOT manually author JSON files - this bypasses validation and causes errors
+
+### Publisher URL Must Be Specific Product Page
+**`publisher_url` must point to the SPECIFIC product/publication page, NOT:**
+- ❌ Publisher homepage (e.g., `https://prototype.world`)
+- ❌ Cover image CDN URL (e.g., `https://cdn.shopify.com/...jpg`)
+- ❌ Distributor page (unless it's the only source)
+- ✅ Actual product page (e.g., `https://prototype.world/products/issue-zero`)
+
+Verify this field in the JSON before ingestion.
+
+### Cover Image Quality Standards
+**Use the highest quality cover available from the publisher's own site:**
+- Check the publisher's product page first for official high-res images
+- Use image URLs that require headers/referrer if needed (curl with `-H "Referer: <publisher-site>"`)
+- Avoid thumbnails, previews, or low-resolution versions
+- Verify downloaded file is actual image data, not HTML
+
 ### Never Include Prices
 **The `price` field must ALWAYS be empty.** Never add price information to book records, even if found in metadata sources. This is a strict policy.
 
