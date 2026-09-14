@@ -7,7 +7,7 @@ Each collection has a JSON file at `src/_data/collections/<slug>.json`.
 - `slug` — URL slug (must match filename)
 - `title` — display name
 - `description` — intro paragraph shown above grid
-- `matchBy` — object with ONE of: `{ "collection_grouping": "Purple Magazine" }`, `{ "authorLast": "Prince" }`, `{ "titleContains": "Apartamento" }`, `{ "titleRegex": "^Purple (Fashion|Magazine)" }` (case-insensitive), or `{ "keywords": ["wombat","portfolio"] }`
+- `matchBy` — object with ONE of: `{ "collection_grouping": "Purple Magazine" }`, `{ "tag": "Queer Culture" }` (exact match against the comma-split tag list; a string or an array of aliases), `{ "authorLast": "Prince" }`, `{ "titleContains": "Apartamento" }`, `{ "titleRegex": "^Purple (Fashion|Magazine)" }` (case-insensitive), or `{ "keywords": ["wombat","portfolio"] }`
 
 ## Optional fields
 
@@ -15,6 +15,10 @@ Each collection has a JSON file at `src/_data/collections/<slug>.json`.
 - `sections` — ordered array; when absent, one unsectioned grid is rendered
 - `sortBy` — `"issueNumberDesc"` | `"publicationYearDesc"` | `"titleAsc"` | `"accessionDesc"`
 - `heroImage` — override the auto-picked cover
+- `allWings` — `true` to match books from every wing, not just the config's own
+  (curated configs are scoped to the art wing unless `wing` says otherwise). The
+  page still publishes under the config's wing namespace. Used by `ephemera`,
+  whose tag spans the art wing and the Ephemera wing.
 
 ## Section object
 

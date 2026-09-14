@@ -55,8 +55,12 @@ module.exports = function() {
   const liveCurated = curated.filter(cfg => cfg.wing !== defaultWing || !hasStaticPage(cfg.slug));
 
   // The permalink is part of the config so collections.njk stays wing-agnostic.
+  // `scope` is what the template filters books by: the config's wing, or every
+  // wing when the config declares allWings (the page still publishes under the
+  // config's own wing namespace).
   const withPermalink = cfg => ({
     ...cfg,
+    scope: cfg.allWings ? '*' : cfg.wing,
     permalink: cfg.wing === defaultWing
       ? `collections/${cfg.slug}.html`
       : `${cfg.wing}/collections/${cfg.slug}.html`,

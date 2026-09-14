@@ -33,7 +33,7 @@ module.exports = function() {
     return {
       ...entry,
       bookCount: cfg
-        ? books.filter(b => b.collection === (cfg.wing || defaultWing) && matchesCollection(b, cfg)).length
+        ? books.filter(b => (cfg.allWings || b.collection === (cfg.wing || defaultWing)) && matchesCollection(b, cfg)).length
         : entry.bookCount,
     };
   });

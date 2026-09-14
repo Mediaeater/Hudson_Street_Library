@@ -65,7 +65,7 @@ permalink: "{{ collectionConfig.permalink }}"
         </div>
         {% endif %}
 
-        {% set matched = books | inWing(collectionConfig.wing) | booksInCollection(collectionConfig) | sortBooks(collectionConfig.sortBy) %}
+        {% set matched = books | inWing(collectionConfig.scope or collectionConfig.wing) | booksInCollection(collectionConfig) | sortBooks(collectionConfig.sortBy) %}
         {% if collectionConfig.coversFirst %}
             {% set matched = matched | coversFirst %}
         {% endif %}
