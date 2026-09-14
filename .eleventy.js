@@ -201,6 +201,9 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addFilter("inWing", function(books, slug) {
     if (!Array.isArray(books)) return [];
     if (slug === '*') return books; // a config with allWings spans the whole catalogue
+    // An array names several wings: the art Recently Added page reads
+    // ['art', 'ephemera'] so new ephemera objects surface beside new books.
+    if (Array.isArray(slug)) return books.filter(b => slug.includes(b.collection));
     const wing = slug || DEFAULT_WING;
     return books.filter(b => b.collection === wing);
   });
