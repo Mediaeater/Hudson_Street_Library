@@ -200,6 +200,7 @@ module.exports = function(eleventyConfig) {
   const DEFAULT_WING = loadWings().find(w => w.isDefault).slug;
   eleventyConfig.addFilter("inWing", function(books, slug) {
     if (!Array.isArray(books)) return [];
+    if (slug === '*') return books; // a config with allWings spans the whole catalogue
     const wing = slug || DEFAULT_WING;
     return books.filter(b => b.collection === wing);
   });
