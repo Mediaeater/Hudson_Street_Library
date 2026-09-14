@@ -6,6 +6,9 @@
 
 const THRESHOLD = 15;
 
+const { EXCLUSIVE_TAGS } = require('./collection-matcher');
+const EXCLUSIVE = new Set(EXCLUSIVE_TAGS.map(t => t.toLowerCase()));
+
 // alias (lowercase) -> canonical display name. Merges near-duplicate tags
 // without touching books.csv. A book tagged with any variant appears in the
 // canonical collection.
@@ -45,9 +48,12 @@ function buildTagCollections(books, options = {}) {
 
   books.forEach(book => {
     const seen = new Set();
-    (book.tags || '').split(',').forEach(raw => {
-      const tag = raw.trim();
-      if (!tag) return;
+    const tags = (book.tags || '').split(',').map(t => t.trim()).filter(Boolean);
+    // An exclusive tag (see collection-matcher) claims the book: it joins only
+    // that tag's group, so other tags neither count it toward the threshold
+    // nor list it. Keeps bookCount in step with what the page renders.
+    const owned = tags.filter(t => EXCLUSIVE.has(t.toLowerCase()));
+    (owned.length ? owned : tags).forEach(tag => {
       const canonicalDisplay = aliases[tag.toLowerCase()] || tag;
       const key = canonicalDisplay.toLowerCase();
       if (!groups.has(key)) {

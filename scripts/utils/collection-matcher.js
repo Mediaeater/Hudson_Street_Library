@@ -1,5 +1,30 @@
+// Tags that own their books outright. A book carrying one of these appears in
+// that tag's collection and in no other subject collection (tag, grouping or
+// keyword driven, curated or auto-generated). Collections that name a specific
+// title or author (BUTT, Purple, Richard Prince) are identity pages, not
+// subject pages, and are not affected. Rule set 2026-09-13: a book tagged
+// Queer Culture shows only in the Queer Culture collection.
+const EXCLUSIVE_TAGS = ['Queer Culture'];
+
+const SUBJECT_RULES = ['tag', 'collection_grouping', 'keywords'];
+
+function splitTags(book) {
+  return (book.tags || '').split(',').map(t => t.trim().toLowerCase()).filter(Boolean);
+}
+
+// True when the book carries an exclusive tag that this config does not name.
+function claimedElsewhere(book, rule) {
+  if (!SUBJECT_RULES.some(k => rule[k])) return false;
+  const bookTags = splitTags(book);
+  const owned = EXCLUSIVE_TAGS.map(t => t.toLowerCase()).filter(t => bookTags.includes(t));
+  if (!owned.length) return false;
+  const wanted = (Array.isArray(rule.tag) ? rule.tag : rule.tag ? [rule.tag] : []).map(t => t.toLowerCase());
+  return !owned.some(t => wanted.includes(t));
+}
+
 function matchesCollection(book, config) {
   const rule = config.matchBy || {};
+  if (claimedElsewhere(book, rule)) return false;
   if (rule.collection_grouping) {
     return (book.collection_grouping || '').trim() === rule.collection_grouping;
   }
@@ -8,7 +33,7 @@ function matchesCollection(book, config) {
     // sweeps in wrong books ("Art" would match "Appropriation Art").
     // Accepts a string or an array of variants (tag aliases).
     const wanted = (Array.isArray(rule.tag) ? rule.tag : [rule.tag]).map(t => t.toLowerCase());
-    const bookTags = (book.tags || '').split(',').map(t => t.trim().toLowerCase());
+    const bookTags = splitTags(book);
     return wanted.some(w => bookTags.includes(w));
   }
   if (rule.authorLast) {
@@ -44,4 +69,4 @@ function assignSection(book, config) {
   return 'Other';
 }
 
-module.exports = { matchesCollection, assignSection };
+module.exports = { matchesCollection, assignSection, EXCLUSIVE_TAGS };

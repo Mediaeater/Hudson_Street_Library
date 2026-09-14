@@ -130,6 +130,20 @@ describe('tag-collections', () => {
     });
   });
 
+  describe('exclusive tags', () => {
+    it('counts a Queer Culture book only toward Queer Culture', () => {
+      const books = [
+        book(1, 'Photography, Queer Culture'),
+        book(2, 'Photography, Queer Culture'),
+        book(3, 'Photography'),
+      ];
+      const out = buildTagCollections(books, { threshold: 1, aliases: {} });
+      const byTitle = Object.fromEntries(out.map(c => [c.title, c]));
+      expect(byTitle['Queer Culture'].bookCount).to.equal(2);
+      expect(byTitle['Photography'].bookCount).to.equal(1);
+    });
+  });
+
   describe('slugifyTag', () => {
     it('lowercases and hyphenates', () => {
       expect(slugifyTag('New York City')).to.equal('new-york-city');

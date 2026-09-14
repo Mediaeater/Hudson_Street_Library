@@ -56,6 +56,35 @@ describe('collection-matcher', () => {
       const config = { matchBy: { titleRegex: '^Purple' } };
       expect(matchesCollection(book, config)).to.be.false;
     });
+    describe('exclusive tags (a Queer Culture book shows only in Queer Culture)', () => {
+      const queer = { tags: 'Photography, Queer Culture, Magazines', collection_grouping: 'Magazines', title: 'BUTT Magazine #3', author_last: 'Jonkers', description: 'gay magazine' };
+
+      it('matches the exclusive tag\'s own collection', () => {
+        expect(matchesCollection(queer, { matchBy: { tag: 'Queer Culture' } })).to.be.true;
+        expect(matchesCollection(queer, { matchBy: { tag: ['queer culture', 'LGBTQ'] } })).to.be.true;
+      });
+
+      it('is excluded from every other tag collection', () => {
+        expect(matchesCollection(queer, { matchBy: { tag: 'Photography' } })).to.be.false;
+        expect(matchesCollection(queer, { matchBy: { tag: ['Magazines'] } })).to.be.false;
+      });
+
+      it('is excluded from grouping and keyword collections', () => {
+        expect(matchesCollection(queer, { matchBy: { collection_grouping: 'Magazines' } })).to.be.false;
+        expect(matchesCollection(queer, { matchBy: { keywords: ['gay'] } })).to.be.false;
+      });
+
+      it('still matches identity collections (title, author)', () => {
+        expect(matchesCollection(queer, { matchBy: { titleRegex: '^BUTT Magazine' } })).to.be.true;
+        expect(matchesCollection(queer, { matchBy: { titleContains: 'butt' } })).to.be.true;
+        expect(matchesCollection(queer, { matchBy: { authorLast: 'Jonkers' } })).to.be.true;
+      });
+
+      it('leaves books without the exclusive tag alone', () => {
+        const plain = { tags: 'Photography, Magazines' };
+        expect(matchesCollection(plain, { matchBy: { tag: 'Photography' } })).to.be.true;
+      });
+    });
   });
 
   describe('assignSection', () => {
