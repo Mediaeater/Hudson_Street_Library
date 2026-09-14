@@ -32,3 +32,13 @@ Each collection has a JSON file at `src/_data/collections/<slug>.json`.
 
 A book lands in the first section whose `filter` matches. Books that match no
 section fall into an implicit trailing `"Other"` section.
+
+## Exclusive tags
+
+`EXCLUSIVE_TAGS` in `scripts/utils/collection-matcher.js` (currently `Queer Culture`)
+lists tags that claim their books outright. A book carrying one appears in that tag's
+collection and in no other *subject* collection, whether curated (`matchBy.tag`,
+`collection_grouping`, `keywords`) or auto-generated from a tag. It still appears in
+identity collections that name a title or author (`titleRegex`, `titleContains`,
+`authorLast`), such as the BUTT page. The auto tag tier applies the same rule when it
+counts books toward the threshold, so a tag's `bookCount` matches what its page renders.
