@@ -140,6 +140,8 @@ node scripts/add-book-from-text.js --json book_data_{slug}.json --yes
 
 This maps the JSON to CSV columns, downloads/links the cover, validates structure, and adds the row with the next sequential ID. It **appends only the new row** (via `CSVHandler.appendBook`), so the file isn't rewritten — the diff is exactly one added line, no whole-file re-quoting churn. `--yes` skips the confirmation prompt so the ingest runs non-interactively; drop it if you want to review the parsed record and confirm by hand.
 
+After a validated add, the script moves `book_data_{slug}.json` and `research_log_{slug}.txt` out of the project root into `research-archive/`, which is tracked: they are the row's provenance, and nothing reads them again. Commit them with the book. If a later step needs the JSON, read it from there.
+
 **Which wing it lands in.** The catalogue is several CSVs, one per wing (`src/_data/wings.json`), and each wing owns an id block. An art or photography book needs nothing — it goes to the default wing, `books.csv`, exactly as before. Anything else names its wing:
 
 ```bash
@@ -215,7 +217,7 @@ npm run build
 
 # 6. Commit, then push. A github-actions backup bot commits after each push,
 #    so a plain push is usually rejected (remote ahead) — rebase and retry.
-git add src/_data/books.csv src/assets/images/books/   # or src/_data/catalog/<wing>.csv
+git add src/_data/books.csv src/assets/images/books/ research-archive/   # or src/_data/catalog/<wing>.csv
 git commit -m "Add: [Book Title]"
 git pull --rebase origin main && git push
 ```
