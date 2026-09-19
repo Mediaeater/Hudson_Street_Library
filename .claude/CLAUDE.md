@@ -23,7 +23,6 @@
   `loadCatalogSync`), which stamps `collection` from the file and throws on a
   duplicate id, an out-of-block id, or a bad column count. Never read
   `books.csv` directly from `_data` modules or `.eleventy.js`.
-- Plan and decisions: `plans/collections-expansion/plan.md`.
 
 **Every catalogue CSV must have exactly 37 columns per row:**
 (`id` … `cataloged_date`. Verified 8 Aug 2026 by strict parse — every row has 37
