@@ -829,6 +829,8 @@ async function processBookFromJSON(jsonPath) {
         process.exit(1);
       }
 
+      archiveResearchFiles(jsonPath);
+
       console.log('🔨 Next Steps:');
       console.log(`  1. Review book details in ${target}`);
       console.log('  2. Run: npm test');
@@ -857,6 +859,33 @@ async function processBookFromJSON(jsonPath) {
     console.error('Error:', error.message);
     console.error(error.stack);
     process.exit(1);
+  }
+}
+
+/**
+ * Move an ingested research-asst JSON, and its `research_log_{slug}.txt`
+ * sibling, into `research-archive/`. Nothing reads them after ingest, so left
+ * in the project root they pile up untracked; archived and committed they are
+ * the provenance record for the row. A failure here never fails the add.
+ */
+function archiveResearchFiles(jsonPath) {
+  const archiveDir = path.join(__dirname, '..', 'research-archive');
+  const base = path.basename(jsonPath);
+  const files = [jsonPath];
+  const slug = base.match(/^book_data_(.+)\.json$/);
+  if (slug) {
+    const logPath = path.join(path.dirname(jsonPath), `research_log_${slug[1]}.txt`);
+    if (fs.existsSync(logPath)) files.push(logPath);
+  }
+
+  try {
+    fs.mkdirSync(archiveDir, { recursive: true });
+    for (const src of files) {
+      fs.renameSync(src, path.join(archiveDir, path.basename(src)));
+    }
+    console.log(`🗄  Research files archived to research-archive/ (${base})\n`);
+  } catch (error) {
+    console.warn(`⚠️  Could not archive ${base}: ${error.message}\n`);
   }
 }
 
