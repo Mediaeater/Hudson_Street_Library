@@ -106,6 +106,15 @@ const onPage = (html, book) => markers(book).some(m => html.includes(m));
     if (!built(r.to)) fail(`redirect ${r.from} points at a page that does not exist: ${r.to}`);
   }
 
+  // Book pages link a tag to its collection page by computed URL (tagPages.js).
+  console.log('Tag links on book pages land on a built collection page:');
+  const tagPages = require('../src/_data/tagPages.js')();
+  for (const [wing, map] of Object.entries(tagPages)) {
+    for (const [tag, url] of Object.entries(map)) {
+      if (!built(url)) fail(`tag "${tag}" (${wing}) links to a page that does not exist: ${url}`);
+    }
+  }
+
   const catCount = (cat.match(/View Details/g) || []).length;
   const addedCount = (added.match(/View Details/g) || []).length;
   console.log('---');
