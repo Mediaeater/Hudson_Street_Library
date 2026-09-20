@@ -93,6 +93,19 @@ const onPage = (html, book) => markers(book).some(m => html.includes(m));
     if (l === 'recent' && !href.includes('recently_added')) fail(`nav label "${label.trim()}" links to ${href}`);
   }
 
+  // A stub whose target has moved again is a redirect into a 404: the visitor
+  // and Google both land nowhere (Ackermann, id 9, renamed twice — Sep 2026).
+  console.log('Redirect stubs exist and land on a built page:');
+  const redirects = require('../src/_data/redirects.json');
+  const built = url => {
+    const p = path.join(SITE, url.replace(/^\//, ''));
+    return fs.existsSync(url.endsWith('/') ? path.join(p, 'index.html') : p);
+  };
+  for (const r of redirects) {
+    if (!built(r.out)) fail(`redirect stub not built: ${r.out}`);
+    if (!built(r.to)) fail(`redirect ${r.from} points at a page that does not exist: ${r.to}`);
+  }
+
   const catCount = (cat.match(/View Details/g) || []).length;
   const addedCount = (added.match(/View Details/g) || []).length;
   console.log('---');
