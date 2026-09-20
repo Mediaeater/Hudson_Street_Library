@@ -636,7 +636,11 @@
             {% for tag in tag_list %}
             {% set cleanTag = tag.trim() %}
             {% if cleanTag and cleanTag.length <= 60 and cleanTag.indexOf('http') === -1 and cleanTag.indexOf(';') === -1 %}
-            <a href="/aggregate-view/?filter=tag&value={{ cleanTag | urlencode }}" class="tag">{{ cleanTag }}</a>
+            {# A tag with its own collection page links there; the rest fall back to the JS search, nofollow so the query URLs stay out of the crawl (see tagPages.js). #}
+            {% set tagPage = (tagPages[book.collection] or {})[cleanTag | lower] %}
+            {% if tagPage %}<a href="{{ tagPage }}" class="tag">{{ cleanTag }}</a>
+            {% else %}<a href="/aggregate-view/?filter=tag&value={{ cleanTag | urlencode }}" class="tag" rel="nofollow">{{ cleanTag }}</a>
+            {% endif %}
             {% endif %}
             {% endfor %}
         </div>
@@ -675,7 +679,7 @@
         </div>
         {% if totalByAuthor > 12 %}
         {% set curatedAuthorPage = authorCollectionPages[book.author_last] %}
-        <a href="{% if curatedAuthorPage %}{{ curatedAuthorPage }}{% else %}/static-demo/?author={{ book.author_last | urlencode }}{% endif %}" class="view-all-link">
+        <a href="{% if curatedAuthorPage %}{{ curatedAuthorPage }}{% else %}/static-demo/?author={{ book.author_last | urlencode }}{% endif %}" class="view-all-link"{% if not curatedAuthorPage %} rel="nofollow"{% endif %}>
             View all {{ totalByAuthor }} books by {{ book.author_full_name }} →
         </a>
         {% endif %}

@@ -4,5 +4,9 @@ eleventyExcludeFromCollections: true
 ---
 User-agent: *
 Allow: /
+# Search pages render client-side from a query string; every variant
+# canonicalises to the bare URL, so crawling them only spends budget.
+Disallow: /aggregate-view/?
+Disallow: /static-demo/?
 
 Sitemap: {{ site.url }}/sitemap.xml
