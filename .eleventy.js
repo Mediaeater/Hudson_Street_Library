@@ -5,7 +5,8 @@ const slugify = require("slugify");
 // eleventy-img 7 is ESM-only; require() returns the namespace, the callable is .default
 const Image = require("@11ty/eleventy-img").default;
 const { loadCatalog, writeMergedCsv, writeBooksJson, loadWings } = require("./scripts/utils/catalog");
-const { coverSrc, hasCover } = require("./scripts/utils/cover-path");
+const { coverSrc, hasCover, existingCoverPath } = require("./scripts/utils/cover-path");
+const { verifiedRowDates } = require("./scripts/utils/row-dates");
 
 const { exec } = require("child_process");
 
@@ -137,6 +138,16 @@ module.exports = function(eleventyConfig) {
     const held = data.length - rows.length;
     if (held) console.log(`--- catalog: ${held} row(s) held back from sitemaps — wing not live`);
     return rows;
+  });
+
+  // { id: 'YYYY-MM-DD' }: when each row's fields last changed, for sitemap
+  // <lastmod>. Read from data/row-dates.json (kept by the pre-commit hook);
+  // a row whose fingerprint doesn't match is left out rather than misdated.
+  eleventyConfig.addGlobalData("rowDates", async () => {
+    const { files } = await loadCatalog();
+    const dates = verifiedRowDates(files.map(f => f.file));
+    console.log(`--- sitemap: ${Object.keys(dates).length} row(s) with a verified lastmod`);
+    return dates;
   });
 
   // --- Add Slugify Filter ---
@@ -535,6 +546,12 @@ module.exports = function(eleventyConfig) {
   // placeholder, which is what that onerror handler used to do on arrival.
   eleventyConfig.addFilter("generateCoverPath", coverSrc);
   eleventyConfig.addFilter("hasCover", hasCover);
+  // For the image sitemap: the cover path, or '' when the library holds none.
+  eleventyConfig.addFilter("coverFile", book => existingCoverPath(book));
+  // A URL made safe for an XML text node: percent-encoded, & escaped.
+  // The news.json date of the article at `url`, or '' when none links to it.
+  eleventyConfig.addFilter("newsDate", (news, url) => ((news || []).find(n => n.link === url) || {}).date || "");
+  eleventyConfig.addFilter("xmlUrl", url => encodeURI(String(url)).replace(/&/g, "&amp;"));
 
   // --- Plain text from an HTML description, for meta tags / JSON-LD ---
   // books.csv descriptions are HTML (<p class="mt-6">, <em>); any text-only

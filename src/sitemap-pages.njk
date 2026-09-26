@@ -3,41 +3,30 @@ permalink: /sitemap-pages.xml
 eleventyExcludeFromCollections: true
 ---
 <?xml version="1.0" encoding="UTF-8"?>
+{#- Standalone pages are listed by hand: the site also builds redirect stubs,
+    demos and internal references that must stay out. News articles and
+    magazine issues are picked up from collections.all by URL, so a new one
+    lands here without an edit. An article's lastmod is its news.json date. #}
+{%- set standalone = [
+  "/", "/collection-explore.html", "/static-demo/", "/tags/",
+  "/news.html", "/identity/", "/identity/stationery/", "/colophon.html",
+  "/newspapers/the-manipulator.html"
+] %}
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{%- for url in standalone %}
   <url>
-    <loc>{{ site.url }}/</loc>
-    <changefreq>monthly</changefreq>
+    <loc>{{ site.url }}{{ url }}</loc>
   </url>
+{%- endfor %}
+{%- for p in collections.all | sort(false, false, "url") %}
+{%- if p.url and (p.url.startsWith('/news/') or p.url.startsWith('/books/magazines/')) %}
   <url>
-    <loc>{{ site.url }}/collection-explore.html</loc>
-    <changefreq>monthly</changefreq>
+    <loc>{{ site.url }}{{ p.url }}</loc>
+{%- set lastmod = news | newsDate(p.url) %}
+{%- if lastmod %}
+    <lastmod>{{ lastmod }}</lastmod>
+{%- endif %}
   </url>
-  <url>
-    <loc>{{ site.url }}/news.html</loc>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>{{ site.url }}/news/finding-fred/</loc>
-    <changefreq>yearly</changefreq>
-  </url>
-  <url>
-    <loc>{{ site.url }}/news/library-of-libraries/</loc>
-    <changefreq>yearly</changefreq>
-  </url>
-  <url>
-    <loc>{{ site.url }}/news/conveyor-belt-books-ai-bulk-orders/</loc>
-    <changefreq>yearly</changefreq>
-  </url>
-  <url>
-    <loc>{{ site.url }}/identity/</loc>
-    <changefreq>yearly</changefreq>
-  </url>
-  <url>
-    <loc>{{ site.url }}/identity/stationery/</loc>
-    <changefreq>yearly</changefreq>
-  </url>
-  <url>
-    <loc>{{ site.url }}/static-demo/</loc>
-    <changefreq>monthly</changefreq>
-  </url>
+{%- endif %}
+{%- endfor %}
 </urlset>
