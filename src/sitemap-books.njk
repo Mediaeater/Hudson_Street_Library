@@ -3,11 +3,23 @@ permalink: /sitemap-books.xml
 eleventyExcludeFromCollections: true
 ---
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{#- lastmod is the date the row's fields last changed (data/row-dates.json,
+    kept by the pre-commit hook); a row without a verified date gets none
+    rather than a guess. The cover is listed only when the file exists. #}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 {%- for book in publishedBooks %}
+{%- set lastmod = rowDates[book.id] %}
+{%- set cover = book | coverFile %}
   <url>
     <loc>{{ site.url }}/books/{{ book.author_last | slugify }}_{{ book.title | slugify }}_{{ book.id }}/</loc>
-    <changefreq>monthly</changefreq>
+{%- if lastmod %}
+    <lastmod>{{ lastmod }}</lastmod>
+{%- endif %}
+{%- if cover %}
+    <image:image>
+      <image:loc>{{ site.url }}{{ cover | xmlUrl }}</image:loc>
+    </image:image>
+{%- endif %}
   </url>
 {%- endfor %}
 </urlset>

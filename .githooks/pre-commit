@@ -28,6 +28,11 @@ if git diff --cached --name-only | grep -qE '^src/_data/(books\.csv|catalog/[^/]
 
   # Book count must never decrease (see scripts/check-book-count-monotonic.js)
   node scripts/check-book-count-monotonic.js || exit 1
+
+  # Date the rows this commit changes, for the sitemap's <lastmod>. Reads the
+  # working tree; a row staged differently from it just goes undated at build.
+  node scripts/update-row-dates.js || exit 1
+  git add data/row-dates.json
 fi
 
 # Design system invariants — one green, one header. Source-level only, so it
