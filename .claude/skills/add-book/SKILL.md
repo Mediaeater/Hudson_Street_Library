@@ -1,364 +1,303 @@
 ---
 name: add-book
 description: Use when the user says "add book", "add to Hudson Street Library", or "add to the collection", or shares a publisher URL for a new book, zine, or photobook to catalog.
-user_invocable: true
+user-invocable: true
 ---
 
 # Add Book to Hudson Street Library
 
-**Use this skill to add new books to the Hudson Street Library collection.**
+`add-book` is the **orchestrator**. It does not research. It hands research to the
+`research-asst` skill, checks the JSON that comes back, ingests it, verifies what landed,
+and ships the commit.
 
 ## Quick Reference
 
 | Step | Action | Tool |
 |------|--------|------|
-| 1 | Parse input (title / author / URL / ISBN) | — |
-| 2 | Research → invoke `/research-asst` → `book_data_{slug}.json` + cover | Skill |
-| 3 | Ingest → `node scripts/add-book-from-text.js --json book_data_{slug}.json --yes` | Bash |
-| 4 | CSV validation (runs automatically) | — |
-| 5 | Verify cover + enriched fields landed, then commit | Bash |
+| 1 | Parse input (title / author / URL / ISBN), pick the wing | — |
+| 2 | Research: invoke `research-asst` → `book_data_{slug}.json` + cover | Skill |
+| 3 | Check the JSON before it is ingested | Read |
+| 4 | Ingest once: `node scripts/add-book-from-text.js --json book_data_{slug}.json --wing <slug> --yes` | Bash |
+| 5 | Verify the ingest output, the cover, and the description | Bash, Read |
+| 6 | Test, build, `verify-views`, commit, push | Bash |
+
+Run every command from the project root, `~/Projects/Hudson_Street_Library`. Run the
+commands yourself; do not hand them to the user.
 
 ## When to Use
 
-- User asks to add a book to the collection
-- User mentions adding a new book, zine, magazine, or publication
-- User provides book details (title, author, publisher info)
-- User shares a publisher URL for a book
+- The user asks to add a book, zine, magazine, poster, or other publication
+- The user shares a publisher URL, an ISBN, or book details for a new item
 
 ## When NOT to Use
 
-- **Editing an existing record** — edit the CSV row directly, or re-run `/research-asst` for that one title. This skill is for *new* acquisitions.
-- **Research only, no catalog** — use `/research-asst` on its own; it stops at the JSON.
-- **Bulk re-fetch of the whole collection** — that's a maintenance script, not a per-book add.
-- **Any project other than Hudson Street Library** — paths, CSV schema, and cover dirs are specific to `~/Projects/Hudson_Street_Library`.
+- **Editing an existing record.** Use `node scripts/set-book-fields.js` (see *Editing a row after ingest*), or re-run `research-asst` for that title.
+- **Research only.** Use `research-asst` on its own; it stops at the JSON.
+- **A shop screenshot or a list of titles the user has not confirmed.** Catalogue only titles the user named or linked one by one. Restate the list and wait for a yes.
+- **Any project other than Hudson Street Library.**
 
-## CRITICAL RULES
+## Rules
 
-### ALWAYS Use Research-Asst Skill - Never Manual JSON
-**When adding books, ALWAYS invoke `/research-asst` and let it complete.** Never manually create `book_data_{slug}.json` files.
-- Invoke `/research-asst <url or title>`
-- Wait for it to produce the JSON and cover
-- Then proceed with ingestion using that output
-- Do NOT manually author JSON files - this bypasses validation and causes errors
-
-### Publisher URL Must Be Specific Product Page
-**`publisher_url` must point to the SPECIFIC product/publication page, NOT:**
-- ❌ Publisher homepage (e.g., `https://prototype.world`)
-- ❌ Cover image CDN URL (e.g., `https://cdn.shopify.com/...jpg`)
-- ❌ Distributor page (unless it's the only source)
-- ✅ Actual product page (e.g., `https://prototype.world/products/issue-zero`)
-
-Verify this field in the JSON before ingestion.
-
-### Cover Image Quality Standards
-**Use the highest quality cover available from the publisher's own site:**
-- Check the publisher's product page first for official high-res images
-- Use image URLs that require headers/referrer if needed (curl with `-H "Referer: <publisher-site>"`)
-- Avoid thumbnails, previews, or low-resolution versions
-- Verify downloaded file is actual image data, not HTML
-
-### Never Include Prices
-**The `price` field must ALWAYS be empty.** Never add price information to book records, even if found in metadata sources. This is a strict policy.
-
-### Tag Formatting Requirements
-Tags MUST be comma-separated (e.g., `"Art, Photography, Zines"`):
-- Templates use `book.tags.split(',')` to parse tags
-- **Wrong:** `"Art; Photography; Zines"` (semicolons render as single tag)
-- **Correct:** `"Art, Photography, Zines"` (comma-separated)
-- Keep each tag short, descriptive, and properly capitalized
-
-### Preserve All User Metadata
-When user provides book details, capture EVERYTHING valuable:
-- Related URLs (exhibition pages, reviews, related works)
-- OCLC numbers, LCC classifications
-- Exhibition dates, context, background
-- Designer, editor, contributor names
-- Detailed notes or descriptions
-
-Don't discard information because it doesn't fit an obvious field. Put it in notes rather than losing it.
-
-## Overview
-
-`add-book` is the **orchestrator** for adding a book. It does not research books itself —
-it delegates the research step to the `research-asst` skill (the canonical multi-source
-research stage), then ingests the resulting JSON into the collection: writes the CSV row,
-validates structure, handles the cover image, and confirms the enriched fields landed.
-
-Flow: parse input → `/research-asst` → `book_data_{slug}.json` → ingest with `--json` →
-validate → cover → verify.
+| Rule | Detail |
+|------|--------|
+| Research goes through `research-asst` | Never hand-write `book_data_{slug}.json`. A thin record means re-run research, not patch the CSV. |
+| `publisher_url` is the book's own page | Not the publisher homepage, not an image or CDN URL, not a distributor unless it is the only source. |
+| Cover comes from the publisher's page | The featured product image, highest resolution offered. Send a `Referer` header if the host requires one. Confirm the file is image data, not HTML. |
+| No prices | `price` stays empty. The ingest does not map it and `set-book-fields.js` refuses it. Keep price out of `notes` and `description` too. |
+| Tags are comma-separated in the CSV | `"Art, Photography, Zines"`. The template splits on `,`; semicolons render as one tag. In the JSON, `tags` is an array and the ingest joins it. |
+| Keep all user metadata | Exhibition context, OCLC, related URLs, designer, editor. If no column fits, it goes in `notes`. Price is the one exception. |
+| One add at a time | The id is computed at ingest. Parallel ingests collide. Research can run in parallel; ingest is serial. |
 
 ## Process
 
-### 1. Parse Input
+### 1. Parse input and pick the wing
 
-Extract book information from user's text:
-```
-Author: Title
-Publisher, Year | Binding | Pages | Details
-https://publisher-url.com/product-page
-```
+Take whatever the user gave: `Author: Title`, publisher and year, a URL, an ISBN. Do not
+ask for details that research can find.
 
-Supports flexible formats:
-- "Author: Title" or just "Title"
-- Publisher name and year (extracts 4-digit years)
-- Binding type detection (hardcover, softcover, paperback)
-- Page count extraction ("X pages")
-- Automatic URL detection for publisher websites
+The catalogue is one CSV per wing, declared in `src/_data/wings.json`. Art and photography
+go to the default wing, `art` (`books.csv`). Read `wings.json` for the current slugs and
+pick one now. Step 4 passes it explicitly, so the script default never decides.
 
-### 2. Research (delegated to research-asst)
+### 2. Research
 
-Do not research the book here. Invoke the **`research-asst`** skill (via the Skill tool /
-the `/research-asst` slash command — a skill invocation, not a shell command) with the
-parsed input (ISBN, title + author, or publisher URL):
+Invoke the `research-asst` skill with the parsed input. It writes, in the project root:
 
-```
-/research-asst <input>
-```
+- `book_data_{slug}.json`, the structured record
+- `research_log_{slug}.txt`, source provenance
+- the cover, in `src/assets/images/books/`
 
-It runs the full multi-source pipeline (LOC, WorldCat, publisher site, art distributors,
-artist/exhibition research) and produces, in the current directory:
-- `book_data_{slug}.json` — the structured record
-- `research_log_{slug}.txt` — source provenance
-- the cover image in `src/assets/images/books/`
+`research-asst` owns the research method and the JSON schema
+(`.claude/skills/research-asst/references/json-schema.md`). It stops at the JSON. Ingest
+happens here, once.
 
-The research method, distributor list, and JSON schema are the single source of truth in
-`skills/research-asst/SKILL.md`. Don't restate them here.
+### 3. Check the JSON before ingest
 
-research-asst ends by offering to add the book itself — **decline that offer**. add-book
-owns ingestion (step 3) so the ID, validation, and cover flow stay in one place. Only the
-JSON + cover are needed from research-asst.
+Read `book_data_{slug}.json`. The ingest copies these fields as written, so a fault here
+becomes a fault in the row.
 
-### 3. Ingest the JSON
+| Field | Must be | If wrong |
+|-------|---------|----------|
+| `research_log` | an object with a `sources_checked` array | the ingest crashes on `.join` |
+| `authors[0].last` / `.first` | set explicitly (mononym: `last` only) | the fallback split gets "Sun Yanchu" and "van der …" wrong, and the slug and cover filename follow it |
+| `authors[].name` | set on every author | `author_full_name` comes out blank |
+| `title` / `subtitle` | full display title in `title`; `subtitle` only if it is a true subtitle | the ingest writes `title: subtitle`, so an edition or series tag there lands in the title |
+| `publisher` | `{name, url}` with `url` the book's own page. A string `publisher` needs a top-level `publisher_url`. | see Rules |
+| `tags` | an array of strings | a string crashes the join |
+| `cover_image.local_path` | starts with `/assets/images/books/`, and the file exists under `src/` | copied to `image_url` verbatim; no leading slash means a 404. With only `cover_image.url` set, the ingest downloads the cover itself. |
+| `description.extended` | present, `<p>` paragraphs, framing sentence first | the short `main` ships instead |
+| `height_cm` / `width_cm` / `depth_cm` | numbers when known, absent when not | the ingest never parses the `dimensions` string. Never invent a measurement. |
+| `id` | absent | ids are assigned at ingest |
 
-Feed the record produced by research-asst into the collection. The `{slug}` is
-`{artist_last}_{title-kebab}_{next_id}`; research-asst prints the exact name, or find it
-with `ls book_data_*.json` in the current directory.
+This is the last cheap point to fix a record. If a field is wrong or thin, re-run
+`research-asst` now, before ingest. Do not edit the JSON to invent data. If the book needs
+a column the ingest does not map (see the mapping table in the reference) and its wing is
+`hacking` or `media-theory`, read *Editing a row after ingest* first: those files cannot
+be edited yet.
 
-```bash
-node scripts/add-book-from-text.js --json book_data_{slug}.json --yes
-```
+### 4. Ingest
 
-This maps the JSON to CSV columns, downloads/links the cover, validates structure, and adds the row with the next sequential ID. It **appends only the new row** (via `CSVHandler.appendBook`), so the file isn't rewritten — the diff is exactly one added line, no whole-file re-quoting churn. `--yes` skips the confirmation prompt so the ingest runs non-interactively; drop it if you want to review the parsed record and confirm by hand.
-
-After a validated add, the script moves `book_data_{slug}.json` and `research_log_{slug}.txt` out of the project root into `research-archive/`, which is tracked: they are the row's provenance, and nothing reads them again. Commit them with the book. If a later step needs the JSON, read it from there.
-
-**Which wing it lands in.** The catalogue is several CSVs, one per wing (`src/_data/wings.json`), and each wing owns an id block. An art or photography book needs nothing — it goes to the default wing, `books.csv`, exactly as before. Anything else names its wing:
+Run this once, with the wing chosen in step 1:
 
 ```bash
-node scripts/add-book-from-text.js --json book_data_{slug}.json --wing cryptology --yes
+node scripts/add-book-from-text.js --json book_data_{slug}.json --wing <slug> --yes
 ```
 
-`--wing` beats a `"wing"` field in the JSON record, which beats the default. The wing decides the target file, the id, and how the row is dated (its `intake` mode — see checklist item 4) — a first cryptology book takes 10001, not one past the art catalogue's maximum — and the ingest prints the resolved wing and file before it writes. An unknown slug is an error, never a silent fallback to `books.csv`. The duplicate guard reads the **whole** catalogue, so a book already filed in one wing is flagged when you try to add it to another.
+`--wing` beats a `"wing"` field in the JSON, which beats the default. The ingest:
 
-### 4. Automatic Validation
+1. checks the whole catalogue for a duplicate (ISBN, or title + surname)
+2. downloads the cover only when `cover_image.url` is set and `local_path` is not
+3. appends one row with the next free id in the wing's block (`CSVHandler.appendBook`, so the diff is one added line)
+4. runs `scripts/validate-csv-robust.js` (the same check as `npm run test:csv`) and exits 1 on failure
+5. moves the JSON and research log into `research-archive/`, which is tracked
 
-After adding to CSV, automatically runs:
-- `validate-csv-structure.js`. Ensures correct column count.
-- Exits with error if validation fails
-- Prevents column misalignment issues
+**The ingest is not transactional.** The row is appended before validation runs, so a
+nonzero exit does not mean nothing changed. After any failure or interruption, do not
+re-run. Run `git status` and `git diff --stat`, and establish three things: whether the
+row is in the CSV, whether the cover is on disk, and whether the JSON is in the root or in
+`research-archive/`. If the row is there, carry on from step 5 with that row. If
+validation failed, read the error to see whether it names the new row or older data, and
+report it. See *Undoing an add* to back out.
 
-### 5. Cover Image Generation
+### 5. Verify what landed
 
-Generates filename following the strict convention in `references/add-book-reference.md`.
+Read the ingest output first. It prints everything needed for the first pass.
 
-## Usage
+| Output line | Check |
+|-------------|-------|
+| `Wing:` | the intended wing and file |
+| `ID:` | inside that wing's id block |
+| `Author sort:` | `last` is the true surname |
+| `Intake:` | matches how the library got the book (see *Intake dating*) |
+| `Description looks thin` warning | if present, fix it per *Fixing a description that landed thin* |
+| `ISBN checksum looks invalid` warning | if present, check the ISBN against the publisher page |
+| `CSV validation passed` | present |
 
-All script invocations run from the project root:
+Then the cover:
 
 ```bash
-cd ~/Projects/Hudson_Street_Library
+ls -lh src/assets/images/books/<filename>.jpg && file src/assets/images/books/<filename>.jpg
 ```
 
-### Primary: ingest a research-asst record (default)
+- `file` reports `JPEG image data`. Size is typically 50KB–500KB. Under 2KB is a failed download.
+- The filename follows the convention in `references/add-book-reference.md`, with no trailing space.
+- Look at the image with Read. A cover runs edge to edge with no frame, border, or shadow.
+- If it is a product shot, run `python3 scripts/auto-crop-covers.py --input <path> --overwrite`, then look again. The script prints success even when it leaves a shadowed or non-white background in place. When that happens, crop by hand.
+- If `file` reports PNG or WebP, convert it (`sips -s format jpeg <in> --out <out>.jpg`). Renaming the extension is not conversion.
+- If no cover was found, tell the user the path to drop one at, and ask whether to hold the push or ship without it.
+
+Then the description. Read the row's `description` and confirm it:
+
+- leads with a framing sentence that stands alone (it is also the Recently Added snippet, cut at ~280 characters)
+- summarises the book: contents, approach, publication or exhibition context
+- gives artist and other-works context when the artist has a body of work
+- runs ~800–1300 characters as `<p>` paragraphs, the later ones `<p class="mt-6">`
+
+`artist_bio` and `exhibition_context` have no columns; their substance belongs in
+`description`.
 
 ```bash
-node scripts/add-book-from-text.js --json book_data_{slug}.json --yes
+node scripts/deslop-descriptions.js <id>
 ```
 
-This is the documented path — research happens in `research-asst`, ingestion happens here.
+Exit 0 is clean, 1 means tics found. Publisher blurbs are the usual source.
 
-### Fallback: text modes (no research-asst)
+**Fixing a description that landed thin or with tics.** The row exists now, so a new
+ingest would add a second book. For tics, rewrite the sentence plainly (do not reword
+around the regex). For a thin description, re-run `research-asst` and take
+`description.extended` from the new JSON. Either way, write the corrected text to the
+existing id with `set-book-fields.js <id> --json fields.json --overwrite`, re-run the
+scan, and move the new JSON and log into `research-archive/` over the old ones. Never
+ingest the replacement JSON.
 
-The script also has built-in API search for when you already have the details or research-asst isn't available. These do their own lightweight metadata lookup:
+### 6. Ship
 
 ```bash
-node scripts/add-book-from-text.js --interactive            # paste a description
-node scripts/add-book-from-text.js --file books-to-add.txt  # batch
-node scripts/add-book-from-text.js --text $'Author: Title\nPublisher, Year'
-```
+npm test && npm run build && node scripts/verify-views.js
 
-Paste format for `--interactive`:
-```
-Roe Ethridge: In the Beginning
-Loose Joints Publishing, 2026 | Three volume set
-https://loosejoints.biz/products/in-the-beginning
-```
-
-## Complete Workflow
-
-**Step 1 — Research** is a Skill invocation, not a shell command: invoke `/research-asst <input>`.
-It writes `book_data_{slug}.json` and the cover. Then run the rest from the project root:
-
-```bash
-cd ~/Projects/Hudson_Street_Library
-
-# 2. Ingest the JSON (CSV validation runs automatically)
-node scripts/add-book-from-text.js --json book_data_{slug}.json --yes
-
-# 3. Cover: verify it exists; auto-crop product-shot trim if needed
-python3 scripts/auto-crop-covers.py --input src/assets/images/books/[filename].jpg --overwrite
-# If no cover was found, ask the user to add it at the path above
-
-# 4. Run full test suite
-npm test
-
-# 5. Build site
-npm run build
-
-# 6. Commit, then push. A github-actions backup bot commits after each push,
-#    so a plain push is usually rejected (remote ahead) — rebase and retry.
-git add src/_data/books.csv src/assets/images/books/ research-archive/   # or src/_data/catalog/<wing>.csv
-git commit -m "Add: [Book Title]"
+git status --short
+git add <wing csv> src/assets/images/books/<filename>.jpg \
+  research-archive/book_data_{slug}.json research-archive/research_log_{slug}.txt
+git diff --cached --stat
+git commit -m "books: add <Surname>, <Title> (id <N>)"
 git pull --rebase origin main && git push
 ```
 
-## What Gets Auto-Filled
+Stop at the first failing check. Stage only this book's files, plus
+`src/_data/redirects.json` if a rename touched it. `git diff --cached --stat` shows one
+CSV with one added line, one cover, and two archive files; anything else is someone
+else's work and stays out of the commit.
 
-**From research-asst's JSON (mapped by `--json` ingest — put it all in the JSON):**
-- ISBN, publisher + publisher_url, publication year, page count, binding/format
-- Description (research-asst's `description.extended`, falling back to `main`)
-- Tags (JSON array → comma-separated), language
-- `height_cm` / `width_cm` / `depth_cm`, `weight_g` — supply cm **explicitly**; the ingest never parses the `dimensions` string, because publishers list H×W and W×H inconsistently
-- `edition` → edition_printrun, `signed` (bool) → is_signed_inscribed
-- `designer` / `editor` (or a `contributors[]` entry whose `role` matches design/editor), remaining `contributors[]` → contributors column
-- `collection_grouping`, `classification`, `notes`
-- `artist_url` (from `authors[0].url` — which research-asst sets to the artist's **official site**, not a gallery/museum — else `artist_links[0].url`), cover image
+`verify-views.js` reads the built site. It checks that the row is on the right Recently
+page, that every `image_url` exists on disk, and that redirects resolve. Do not report the
+add as done until it passes.
 
-**Always auto-generated:**
-- ID (next free id in the target wing's block)
-- Intake date, per the wing's `intake` mode in `wings.json` (today as YYYY-MM-DD):
-  `acquired` (the default) writes `accession_no`; `catalogued` writes `cataloged_date`
-  and leaves `accession_no` empty. The ingest prints the `Intake:` line it chose.
-- Location ("Hudson Street Library, NYC")
-- Cover filename (following convention)
+A backup bot commits to `main` after each push, so the rebase is expected, and its
+commits touch only `csv-backups/`. If the rebase brings in anything else or conflicts,
+re-run the three checks before pushing. Push without asking. After the deploy, confirm the book page and cover load on the live site (the
+`deploy-status` skill covers a push that does not go live).
 
-**Rich records are one-shot.** Because the fields above all map from the JSON, a complete
-research-asst record — dimensions, designer, edition, signed, weight, grouping, notes and
-all — lands in a single `--json --yes` run. Author the full JSON; don't split it into a
-base add plus manual patching.
+## What the Ingest Maps
 
-**Manual entry (only the few columns the ingest doesn't map):**
-- `bisac`, `lcc`, `num_images`, `featured`, `custom_page_url`
-- Add these with a surgical one-row edit (see the *Enriching unmapped columns* gotcha), never a whole-file `CSVHandler.write`.
+The full JSON-to-column table is in `references/add-book-reference.md`.
 
-**Never auto-filled (policy):**
-- Price (must always be empty)
+- **Generated:** id, intake date, location, cover filename (when the ingest downloads it).
+- **Not mapped:** `bisac`, `lcc`, `featured`, `custom_page_url`. Set these after ingest with `set-book-fields.js`.
+- **Never set:** `price`.
 
-## CSV Error Prevention
+Get every mapped field right in the JSON before ingest. Edits after ingest are for
+unmapped columns, intake exceptions, and corrections found in step 5. They are not a
+substitute for complete research.
 
-The ingest writes structurally-correct rows (37 columns, proper escaping, auto-backup) and validates immediately. Your only job: never hand-edit the CSV via bash/heredoc — use the surgical Node approach (see the *Enriching unmapped columns* gotcha), and run `node scripts/validate-csv-structure.js` after any manual edit.
+## Editing a Row After Ingest
+
+```bash
+node scripts/set-book-fields.js <id> --json fields.json --dry-run
+node scripts/set-book-fields.js <id> --json fields.json [--overwrite]
+npm run test:csv
+```
+
+`fields.json` is one object of `column: value`. The script finds the row in any wing,
+changes only the named cells, and leaves a one-line diff. Write `fields.json` in the
+session scratchpad, not the repo.
+
+| It refuses | Why |
+|------------|-----|
+| a cell that already has a value | pass `--overwrite` to replace it |
+| `price`, `id` | policy; ids are fixed by wing block |
+| an unknown column, a missing id | typo guard |
+| a file that does not round-trip byte-for-byte | an edit would rewrite other rows. `hacking.csv` and `media-theory.csv` are in this state as of 2026-09-27. Stop and tell the user; do not force it with another writer. |
+
+Do not use `CSVHandler.write` for a one-row edit (it re-quotes every row), and do not
+hand-edit a CSV with a heredoc or a text editor.
+
+**Changing `author_last` or `title` moves the book's URL**, which is
+`/books/{author_last}_{title}_{id}/`. Note the old URL before the edit. If the row has
+already been pushed, add a stub to `src/_data/redirects.json` (shape and example in the
+reference) and repoint any older stub for the same id. GitHub Pages has no server
+redirects, so the stub is the only thing that keeps the old URL alive. `verify-views.js` catches a stub with a dead target; it cannot catch a missing
+stub. The cover filename does not follow the rename, which is fine as long as `image_url`
+still matches the file on disk.
+
+## Undoing an Add
+
+No script deletes a row, and `set-book-fields.js` cannot change an id or move a row
+between wings.
+
+| State | Action |
+|-------|--------|
+| Not committed, and the add is the only change to that CSV (`git diff --stat` shows one added line) | `git restore <wing csv>`, delete the new cover, move the JSON and log from `research-archive/` back to the root. Then fix the cause and ingest again. |
+| Not committed, other uncommitted changes in the same CSV | Stop. Report the row id and the file to the user. |
+| Committed or pushed | Stop. Report the row id. The page is or will be live at an id-bearing URL, so removal is the user's call. |
+
+## Intake Dating
+
+| Case | `accession_no` | `cataloged_date` | Appears on |
+|------|----------------|------------------|------------|
+| Acquisition: the book just arrived | today | empty | Recently Added |
+| Catalogue add: owned for a while, entered now | empty | today | Recently Catalogued |
+
+Each wing sets its mode with `intake` in `wings.json`: `acquired` is the default (art),
+`catalogued` is declared on wings being entered off the shelves. The ingest applies it and
+prints the `Intake:` line.
+
+Patch only when one book runs against its wing's mode. Move the date to the other column
+with `set-book-fields.js --overwrite`. Both columns take `YYYY-MM-DD`; a season string
+("Fall 2025") hides the row from both Recently pages.
 
 ## Gotchas
 
-- **Book added twice.** research-asst ends by offering to ingest the JSON itself. Decline that offer — add-book owns ingestion, so the ID, validation, and cover flow stay in one place. (Since 2026-07-31 the duplicate guard below catches an accidental second ingest anyway.)
-- **`--json` ingest fails with "file not found".** The script resolves paths relative to CWD. Run it from `~/Projects/Hudson_Street_Library` and pass the `book_data_{slug}.json` path research-asst wrote (current dir), not an absolute guess.
-- **Thin or empty JSON from research-asst.** Don't patch the CSV by hand. Re-run `/research-asst` for that title — it owns the multi-source research and produces a complete record.
-- **Cover looks like a product shot (white border / trim).** research-asst downloads the cover but doesn't always crop it. Run `python3 scripts/auto-crop-covers.py --input <path> --overwrite` after ingest.
-- **Wrong or colliding ID.** The ID is computed at ingest time from the target wing's own rows — one past that wing's highest id, inside its block. Don't run two adds in parallel, and don't pre-write an ID into the JSON. A row whose id falls outside its wing's block fails the build, so a hand-written id is worse than useless.
-- **Enriching unmapped columns (`bisac`/`lcc`/`num_images`/`featured`/`custom_page_url`).** After the add, edit the row surgically — never `CSVHandler.write` (it re-quotes every empty field and churns all ~1800 rows). Raw-parse with `csv-parse/sync` (arrays, `relax_column_count:true` only — not `CSVHandler.read`, whose `trim`/auto-correct mutate other rows), change just the target cells, then `csv-stringify/sync` the whole array with `{ header:false, quoted:true, quoted_empty:false }` and match the trailing newline. This round-trips byte-for-byte (verified on the full file, incl. multi-line description fields), so `git diff` shows only the cells you touched. Confirm `git diff --numstat` and `npm run test:csv`. **Reading a row back to verify: `CSVHandler.read` is now safe for this.** It used to render `; ` as ` `, making correctly-punctuated fields look like run-ons — that was `sanitizeCSVField` stripping every `;` and `|` from all fields as (misplaced) formula-injection defence. Fixed Aug 7 2026 (`4f859711f`): the quote-prefix already neutralizes the real DDE vector, so punctuation in non-formula fields is left alone. Semicolons now round-trip through read *and* write.
-- **Author sort keys + string publisher: FIXED in the ingest (2026-07-31).** The `--json` ingest now honors explicit `last`/`first` on `authors[0]` (research-asst supplies them — see its Critical Rules); without them it falls back to a heuristic split (last token → `author_last`; a mononym lands in `author_last` so the page slug works). The heuristic still can't detect family-name-first order ("Sun Yanchu") or particles ("van der …") — those need the explicit fields. Also fixed: a string-shaped `publisher` ("Mack" instead of `{name, url}`) no longer drops the field, though the object form is still preferred (a bare string has no `publisher_url`). The ingest prints `Author sort: last=… first=…` in its details block — check it there, not by re-opening the CSV.
-- **Re-running the `--json` ingest: duplicate guard since 2026-07-31.** The ingest is still not idempotent, but it now checks the whole catalogue first — every wing, not just the target file — and a row matching on ISBN (or title + surname) triggers a warning listing the existing row and an `Add anyway? (y/n)` prompt that appears **even with `--yes`**; a scripted run with no interactive stdin aborts (exit 1, nothing appended, no orphan cover). Don't lean on the guard as a workflow — inspect the earlier run's output instead of re-running — and answer `y` only for a genuine second copy or new edition. If a duplicate somehow lands, delete the row surgically per the *Enriching unmapped columns* method.
-- **Subtitle + co-authors: FIXED in the ingest (2026-07-30).** The `--json` ingest now folds `subtitle` into `title` (colon-joined — there is still no subtitle column) and joins **all** `authors[].name` into `author_full_name` (authors[0] alone supplies the first/last sort keys). No upstream workaround or post-ingest patch needed; still verify both landed in the checklist below.
+- **Duplicate prompt appears despite `--yes`.** The guard matched an existing row on ISBN or title + surname, in any wing. A run with no interactive stdin aborts with exit 1 and appends nothing. Read the listed row and compare ISBN, edition, and year. Usually the book is already catalogued or the ISBN in the JSON is wrong. If it is a real second copy or a new edition, tell the user what matched and let them run the ingest in a terminal and answer the prompt (`! node scripts/add-book-from-text.js ...`). Do not pipe an answer into the prompt, and do not change metadata to slip past the guard.
+- **Ingest crashes on `.join`.** `research_log` is a string or a bare array. It must be `{"sources_checked": [...]}`.
+- **"File not found" on `--json`.** Paths resolve from the CWD. Run from the project root.
+- **JSON is gone after ingest.** It moved to `research-archive/`. Read it there, and commit it with the book.
+- **Title reads "X: Expanded Edition" or repeats itself.** `subtitle` held an edition or a paraphrase. Fix the row with `set-book-fields.js --overwrite`, and mind the URL change above.
+- **Cover 404s on the book page.** `image_url` lacks the leading slash, or does not match the filename on disk. `verify-views.js` reports the second case.
+- **Auto-crop reported success, border still there.** It fails on drop shadows and non-white grounds. Check the corners of the result.
+- **Row landed in `books.csv` instead of a wing.** `--wing` was omitted and the JSON had no `wing`. Ids are fixed by wing block, so the row cannot be moved by editing. Follow *Undoing an add*, then ingest with the right `--wing`.
 
-## Post-Add Verification Checklist
+## Batch Adds
 
-After adding a book, verify:
+1. Confirm the final list with the user and wait for an explicit go. A partial answer is not a go.
+2. Research can run as parallel background Agents, one per title. Brief each with the path to `research-asst`'s `references/json-schema.md`. Report once when all finish, not per agent.
+3. Take the books one at a time through steps 3 to 5: check the JSON, ingest, verify the output, cover, and description. Never run two ingests at once. If a book fails a check that cannot be fixed, leave it out and carry on with the rest.
+4. Run the step 6 checks once, after the last book passes step 5. Commit per book, staging each book's own files, then push once.
 
-1. **Cover image exists and is a valid JPEG**
-   ```bash
-   ls -lh src/assets/images/books/[expected_filename].jpg && file src/assets/images/books/[expected_filename].jpg
-   ```
-   - Check file size (50KB-500KB typical); confirm `file` reports `JPEG image data`
-   - Verify no trailing spaces in filename
-   - Ask user to add if missing
-   - `image_url` in the CSV row must start with `/` (`/assets/images/books/...`). A missing leading slash breaks relative path resolution and 404s the book page; this was fixed repeatedly (71f110f21, e852e74da).
-   - Filename follows `{author_last}_{author_first}_{title}_{isbn}.jpg`: all lowercase, underscores for spaces, no special characters (details in `references/add-book-reference.md`). Manual files must match exactly.
-   - If `image_url` is empty but the file exists at the conventional path, set the path by hand (surgical row edit, see *Enriching unmapped columns*).
-   - After deploy, confirm the cover renders on the live site.
+## Fallback: Text Modes
 
-2. **CSV record is complete** (the ingest silently drops some fields — verify them)
-   - ISBN present (if available); tags comma-separated; no price; all user metadata captured
-   - **`title`** carries the subtitle (colon-joined) and **`author_full_name`** lists **all** artists — the ingest maps both automatically since 2026-07-30 (see Gotchas); confirm they landed
-   - **`author_last`** is the true surname — read the `Author sort:` line in the ingest output; if it's wrong, patch the row surgically (*Enriching unmapped columns* method — never re-run the ingest)
-   - **`artist_url`** is the artist's **official site**, not a gallery/museum, when one exists (see research-asst Critical Rules)
-
-3. **CSV validation passed**
-   - Script runs automatically after adding
-   - Check output shows: `CSV validation passed`
-
-4. **Intake dating fits how the library got the book**
-
-   Two cases, and the wing usually decides which:
-   - **Acquisition** — the book just arrived. `accession_no` = today, `cataloged_date` empty. It belongs at the top of Recently Added.
-   - **Catalogue add** — a book the library has owned for a while, now entering the digital catalogue. `cataloged_date` = today and `accession_no` stays **empty**, so it lands on Recently Catalogued instead of jumping the queue on Recently Added.
-
-   The `intake` field in `src/_data/wings.json` sets this per wing: `"acquired"` is the
-   default (art), `"catalogued"` is declared on cryptology, whose whole wing is being
-   entered off the shelves. The ingest applies it on write and prints the `Intake:` line —
-   check that line rather than re-opening the CSV. **No post-add patch is needed for a
-   `catalogued` wing.**
-
-   Patch only when a single book runs against its wing's mode (a genuinely new acquisition
-   into a `catalogued` wing, or an old book into an `acquired` one): move the date to the
-   other column surgically, per the *Enriching unmapped columns* gotcha. Format is
-   `YYYY-MM-DD` in both columns; a season string ("Fall 2025") hides the row from **both**
-   Recently pages.
-
-## Notes for Claude
-
-### Execution Rules (CRITICAL)
-
-**Always execute the script directly**. Never tell the user to run it themselves:
-- **DO:** `cd ~/Projects/Hudson_Street_Library && node scripts/add-book-from-text.js --json book_data_{slug}.json --yes`
-- **DON'T:** "You'll need to run this command..." or "Start a new session from..."
-- If current directory is wrong, `cd` to the project directory first
-- Don't ask for permission to use WebFetch, Bash, or Read tools. Just use them.
-- Don't stop at permission requests. The add-book workflow requires these tools.
-
-**For batch additions** (multiple books):
-1. Run `/research-asst` for each title to produce its JSON
-2. Ingest each with `--json`, or use `--file books-to-add.txt` for the text fallback
-3. Don't suggest interactive mode when batch is clearly intended
-
-**For URL-only input** (e.g., `https://www.steidl.de/Books/...`):
-1. Pass the URL straight to `/research-asst` — it resolves author/title and researches
-2. Ingest the resulting JSON
-3. Don't ask user for details that can be researched
-
-## Book Page Enrichment (Post-Addition)
-
-The book page's `description` is ingested from research-asst's `description.extended` (it falls back to the short `main`). After ingest, read the CSV `description` and confirm it is a properly authored page, not a thin stub. It must:
-
-- **lead with a top-line framing/review sentence** — what the work is and why it matters; this line also becomes the Recently-Added snippet, so it has to stand alone;
-- give a **proper summary** of the book (contents, approach, publication/exhibition context);
-- include **artist + other-works context** when the artist has a body of work;
-- run **~800–1300 chars** as `<p>` paragraphs (framing line first, then `<p class="mt-6">`; never a single blob), matching existing entries.
-
-`artist_bio` and `exhibition_context` are **not** separate CSV columns — their substance must be folded into `description`. If what landed is the short `main` (thin, no framing, no artist context), re-run `/research-asst` for that title rather than hand-writing prose here.
-
-**De-slop the description that landed.** research-asst scans before emitting; this confirms
-it on the row as stored, and catches descriptions written or patched by hand:
+Use these only when the user asks for them. They skip `research-asst` and the step 3
+check, use the script's own lightweight lookup, and produce thinner records. If
+`research-asst` fails, report the failure instead of falling back silently. Steps 5 and 6
+still apply.
 
 ```bash
-node scripts/deslop-descriptions.js <id>          # the row you just added
-node scripts/deslop-descriptions.js --all         # whole catalogue (149 rows had hits, 2026-08-29)
+node scripts/add-book-from-text.js --text $'Author: Title\nPublisher, Year'
+node scripts/add-book-from-text.js --file books-to-add.txt
 ```
 
-Exit 0 is clean, 1 means tics found. Fix by rewriting the sentence, then re-run — never by
-rewording around the regex. Publisher blurbs are the usual source: copying one in brings
-its "boasts", "breathtaking" and dash-tails with it.
+`--interactive` (`npm run add`) is for the user at a terminal. Never drive it through stdin.
 
 ## Reference Files
 
-- `references/add-book-reference.md`: cover-image naming convention, troubleshooting, implementation / file-map.
+- `references/add-book-reference.md`: JSON-to-column mapping, cover filename convention, redirect stub shape, troubleshooting, file map.
 - `references/rubric.md`: quality rubric used to evaluate this skill.
