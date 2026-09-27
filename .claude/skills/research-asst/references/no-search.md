@@ -1,238 +1,246 @@
 # research-asst — Researching without WebSearch
 
-`WebSearch` is capped at **200 calls per session** (~100 rows of book research). When it
-refuses, research is *not* over. `WebFetch`, `curl` and public JSON APIs are **not capped**.
+`WebSearch` is capped at **200 calls per session** (about 100 rows of book research).
+`WebFetch`, `curl` and public JSON APIs are **not capped**. So when search runs out,
+research is not over.
 
-> Search buys **discovery** — learning which host holds the record. Once you know the
+> **Search buys discovery** — learning which host holds the record. Once you know the
 > host, go straight at it.
 
-That reframing is the whole technique. It also means: **spend search on the unknown
-publisher, not on facts a known publisher's own page already lists.** Of fourteen rows
-deferred when the budget ran out on 2026-08-27, eight were closed with zero searches. The
-six that stayed deferred were the ones whose *publisher was unknown* — and once the
-AbeBooks rung below was added, one of those six fell too (id 762, Mizutani *Hanon* →
-Amana, 9784865872941). Assume a row is reachable until the whole ladder has missed it.
+Spend search only on the *unknown publisher*, never on facts a known publisher's page
+already lists. Assume every row is reachable until the whole ladder below has missed it.
 
-## Decide first: do you actually need search?
+---
+
+## Hard rules
+
+1. **A supplied link is fetched before anything else, no exceptions.** If the input
+   contains a URL, that URL is rank 1 on the ladder below — not a suggestion to weigh
+   against search. `WebFetch` it before running `lookup-book.js`, before any `WebSearch`,
+   before checking whether it's "the right" page. It's the user's own link; they gave it to
+   you specifically to save you the discovery step search exists for. Only fall through to
+   rung 2+ if that fetch is missing a Required field — never because a search "might be
+   faster" or turn up something better.
+2. **Never guess.** Don't infer a publisher from a design resemblance or a distributor's
+   stock listing. If nothing names it, defer the row (see *When to stop*).
+3. **Never copy prices.** Every AbeBooks record carries `offers.price`, and booksellers mix
+   price language into descriptions. None of it enters any field.
+4. **Verify title *and* author** before believing any fuzzy-matching source. A match on
+   only one of the two is a miss.
+5. **Watermarked covers don't ship.** Set `cover_image` to null and note "cover to be
+   photographed".
+
+---
+
+## Triage: do you need search at all?
 
 | What you have | Next move |
 |---|---|
-| Publisher name or URL | Fetch the publisher site directly — index-grep for the slug (below) |
-| ISBN | OpenLibrary `api/books`, then the publisher |
-| Artist name only | Artist's own site — usually a complete bibliography |
-| Title + author, no publisher, no ISBN | **AbeBooks keyword search** (below) — it resolves most of these to an exact ISBN + publisher; OpenLibrary `search.json` second |
-| Nothing works | Defer the row with what is known and what is missing — never guess |
+| A supplied link | Fetch it first — it may already hold every field |
+| Publisher name or URL | Publisher site directly — [index-grep](#publisher-sites) for the book |
+| ISBN | `scripts/lookup-book.js --isbn …`, then the publisher site |
+| Artist name only | The [artist's own site](#artist-sites) — usually a full bibliography |
+| Title + author only | `scripts/lookup-book.js "full title author"` (AbeBooks first) |
+| Nothing works | Defer — record what is known and what is missing |
 
-Never spend a search on a fact the publisher page will list anyway.
+---
 
-## The uncapped stack
+## The ladder
 
-**AbeBooks — the highest-yield first stop, and it needs no key.** Its search-results HTML
-embeds a `schema.org` `ItemList` of `Book` records: exact title, `isbn`, `publisher.name`,
-`author.name`, `bookFormat`, and an `image` cover URL. It indexes small-press art
-photobooks that OpenLibrary has never heard of.
+Ranked by hit rate on **art and photobooks**, which differs from trade books — a
+photobook shop outranks a general index here. All reachable without search.
+
+| # | Host | How to reach it | Best for |
+|---|---|---|---|
+| 1 | Supplied link | Fetch it as given | Whatever the row already points at — always read it first |
+| 2 | Publisher's own site | Index-grep, WordPress / Shopify APIs | Every core field at once — the best record when reachable |
+| 3 | AbeBooks | `servlet/SearchResults?kn=…` → JSON-LD | Title + author with no publisher; anything with an ISBN |
+| 4 | Artist's own site | `{name}.com`, `/books`, `/publications` | Complete bibliography; settles attribution |
+| 5 | ARTBOOK / D.A.P. | `artbook.com/{isbn13}.html` | US-distributed art books; works when the publisher is behind Cloudflare |
+| 6 | Photobookstore (UK) | Shopify `suggest.json` | Broadest photobook stock; `vendor` = publisher |
+| 7 | OpenLibrary | `search.json`, `api/books`, covers | Trade and museum titles; edition disambiguation |
+| 8 | Printed Matter | `curl` + browser UA (403s to WebFetch) | Artists' books and zines nothing else indexes |
+| 9 | Mack / Twelve / Loose Joints / Setanta / Deadbeat / TBW | Shopify `suggest.json` | Their own imprints, in depth |
+| 10 | IDEA Books | `ideabooks.nl` — `/media/` CDN serves covers to plain `curl` | European art-book distribution |
+| 11 | Walther König | `buchhandlung-walther-koenig.de` | German / European exhibition catalogues |
+
+**Below the line**, only when all of these miss: WorldCat, LOC SRU (thin for post-2020 small
+press), Google Books (see warning below).
+
+`scripts/lookup-book.js` chains AbeBooks with its fallbacks in one call. The copy in
+`plans/stub-fill/lookup.js` is identical but gitignored — cite and maintain `scripts/`.
+
+---
+
+## Source notes
+
+### AbeBooks — best discovery source, no key
+
+Search-results HTML embeds a `schema.org` `ItemList` of `Book` records: title, `isbn`,
+`publisher.name`, `author.name`, `bookFormat`, `image`. It indexes small-press photobooks
+OpenLibrary has never heard of.
 
 ```bash
 curl -s -A 'Mozilla/5.0' 'https://www.abebooks.com/servlet/SearchResults?kn=mizutani+hanon' \
   | grep -o '{"@context":"https://schema.org","@type":"ItemList".*}]}'
 ```
 
-Two rules, both non-negotiable:
-
-- **Verify the title *and* the author before believing it.** AbeBooks fuzzy-matches and
-  never returns empty: on a true miss it answers with five confidently-formatted,
-  completely unrelated books (`Aaron McElroy Sweet` → children's personalised storybooks).
-  A result that matches on only one of the two is a miss.
-- **Never copy `offers.price`.** Every record carries one. Pricing must not enter any field.
+- **It never returns empty.** On a true miss it gives five confident, unrelated books
+  (`Aaron McElroy Sweet` → personalised children's storybooks). Cross-check a suspicious
+  hit on a Shopify shop, which reports "0 results" honestly.
 - **Match the payload, not the script tag.** Attribute order varies, so a strict
-  `<script type="application/ld\+json">` regex finds nothing on a page that has two of
-  them. Anchor on `"@type":"ItemList"`, as the grep above does.
+  `<script type="application/ld\+json">` regex misses pages with two such tags. Anchor on
+  `"@type":"ItemList"`.
+- **Pass the full title**, colon and subtitle included. Truncating at the colon dropped
+  the hit rate on the test set from 11/14 to 9/14.
 
-**Query shaping matters more than it looks.** Pass the *full* title, colon and subtitle
-included. Truncating at the colon dropped the ladder's hit rate on a fourteen-row test set
-from 11/14 to 9/14.
+### Publisher sites
 
-`scripts/lookup-book.js` runs this rung plus the two below in one call:
-
-```bash
-node scripts/lookup-book.js "mizutani hanon"        # or: --isbn 9784865872941
-```
-
-(`plans/stub-fill/lookup.js` is the same tool, but `plans/` is gitignored — cite and
-maintain the tracked copy in `scripts/`.)
-
-Measured against fourteen rows already filled by hand, the ladder recovered the *exact
-same ISBN* for eleven of them (79%) with zero WebSearch calls.
-
-**OpenLibrary** — no key, no cap, generous rate limit.
-
-```bash
-# title/author lookup — returns publisher, year, ISBNs, pages
-curl -s 'https://openlibrary.org/search.json?q=miserachs+barcelona&fields=title,author_name,publisher,publish_year,isbn,number_of_pages_median&limit=5'
-# ISBN lookup — returns contributors with roles, subjects, pagination, cover URLs
-curl -s 'https://openlibrary.org/api/books?bibkeys=ISBN:9781588397256&jscmd=data&format=json'
-```
-
-Good for trade- and museum-published titles. Thin to empty for small-press art photobooks.
-It distinguishes editions well — the two *Miserachs Barcelona* editions come back as
-separate records with separate ISBNs and page counts.
-
-**OpenLibrary covers — always append `?default=false`.** Without it a missing cover
-returns **HTTP 200 and a 43-byte 1×1 GIF**, which every naive check treats as success.
-With it: `404` when absent, `302` to the real image when present.
-
-```bash
-curl -sL -o cover.jpg -w '%{http_code}\n' 'https://covers.openlibrary.org/b/isbn/{isbn13}-L.jpg?default=false'
-```
-
-**WordPress publishers** (most museums and small presses) expose a REST API:
-
-```
-/wp-json/wp/v2/search?search={title}      # cross-post-type; the fastest way in
-/wp-json/wp/v2/pages?search={title}
-/wp-json/wp/v2/product?search={title}     # WooCommerce shops
-/wp-json/wp/v2/media?search={slug}        # full-size cover URLs
-```
-
-Not universal, and not complete where it exists: MACBA's returns 404/HTML, and IMA's
-`/wp-json/wp/v2/search` returns `[]` for a title its own `?s=` page renders. Check the
-status and content-type before parsing; fall back to fetching the HTML page and reading
-`og:image` / `og:description`. An `og:image` path often dates the record when nothing else
-will — `/uploads/2016/07/exhibition-hanon_og-1200x630.jpg` puts *Hanon* at July 2016.
-
-**Site-internal search is just a URL.** `?s=` on WordPress, `/search?q=` on shops. That is
-discovery without WebSearch, as long as you can name the host.
-
-**Shopify shops** (Mack, and most independent photobook shops) expose:
-
-```bash
-# URL-encode the brackets, or the shell eats them and you get an empty body
-curl -s 'https://mackbooks.co.uk/search/suggest.json?q=moriyama&resources%5Btype%5D=product&resources%5Blimit%5D=5'
-curl -s 'https://{shop}/products/{handle}.json'   # full product record incl. images
-```
-
-`vendor` in the response is the publisher — often the one fact you were missing. Hosts
-verified to answer `suggest.json`: **`www.photobookstore.co.uk`** (broadest stock, try it
-first), `mackbooks.co.uk`, `twelve-books.com`, `loosejoints.biz`, `www.setantabooks.com`,
-`deadbeatclub.com`, `tbwbooks.com`, `shop.photoeye.com`. Unlike AbeBooks these answer a
-real "0 results" honestly, so use one to sanity-check a suspicious AbeBooks hit.
-Confirmed *not* Shopify, don't bother: dashwoodbooks
-(429 bot check), nieves.ch, aperture.org, steidl.de, ideabooks.nl, chosecommune.com,
-void.photo.
-
-**Google Books is unreliable and lies about it.** It returns errors inside an
-**HTTP-200-looking JSON body**, and once the daily project quota is gone every call is
-`429` with `"Quota exceeded for quota metric 'Queries'"`. Check the HTTP status *and*
-`j.error`, never just `j.items`. Treat it as a last resort, not a first stop.
-
-## The ten places to try, in order
-
-All fetchable without a search. Rank is by hit rate on art and photobooks, which is not
-the same as on trade books — a general-purpose index sits below a photobook shop here.
-
-| # | Host | Reach it by | Best for |
-|---|---|---|---|
-| 1 | AbeBooks | `abebooks.com/servlet/SearchResults?kn=…` → JSON-LD | Anything with an ISBN. Title+author only, no publisher |
-| 2 | The publisher's own site | Constructed URL, then index-grep | Every core field at once — always the best record when reachable |
-| 3 | The artist's own site | `{name}.com`, `/books`, `/publications` | Complete bibliography; settles attribution disputes |
-| 4 | ARTBOOK / D.A.P. | `artbook.com/{isbn13}.html` | US-distributed art books; works when the publisher is Cloudflared |
-| 5 | Photobookstore (UK) | Shopify `suggest.json` | Broadest photobook stock; `vendor` gives you the publisher |
-| 6 | OpenLibrary | `search.json`, `api/books`, `covers` | Trade and museum titles; edition disambiguation; covers |
-| 7 | Printed Matter | `printedmatter.org` — **`curl` + browser UA, 403s to WebFetch** | Artists' books and zines nothing else indexes |
-| 8 | Mack / Twelve / Loose Joints / Setanta / Deadbeat / TBW | Shopify `suggest.json` | Their own imprints, in depth |
-| 9 | IDEA Books | `ideabooks.nl` — `/media/` CDN serves covers to plain `curl` | European art-book distribution |
-| 10 | Walther König | `buchhandlung-walther-koenig.de` | German/European exhibition catalogues |
-
-Below the line, and only when the above miss: WorldCat, LOC SRU (thin for post-2020
-small-press), and Google Books (see its warning above). Dashwood Books is *not* on this
-list — it 429s every automated request.
-
-## Index-grep instead of guessing slugs
-
-Do not construct a product URL from the title. Fetch the publisher's **index / catalogue
-page**, grep it for real hrefs, then fetch the one that matches.
+**Index-grep, don't guess slugs.** Fetch the catalogue / "all books" page, grep it for
+real hrefs, fetch the match. No visible index? Try `/sitemap.xml` and `/sitemap_index.xml`.
 
 ```bash
 curl -s -A 'Mozilla/5.0' https://www.akionagasawa.com/en/publishing/ \
   | grep -oE 'href="[^"]*/shop/books/[^"]*"' | sort -u | grep -i record
 ```
 
-Akio Nagasawa's *Record No. 26* is `…/record-no-26/`; *No. 34* is `…/record-no34/`, with
-no hyphen. No amount of pattern-guessing finds that; one index fetch does. The same trick
-works on any publisher's "all books" / "catalogue" / sitemap page — try
-`/sitemap.xml` and `/sitemap_index.xml` when there is no visible index.
+Akio Nagasawa's *Record No. 26* lives at `…/record-no-26/`; *No. 34* at `…/record-no34/`.
+No pattern predicts that; one index fetch finds it.
 
-## Prefer the artist's own site to a bookseller
+**Site search is just a URL** — `?s=` on WordPress, `/search?q=` on shops.
 
-An artist's site is often a **complete bibliography** — publisher, year, page count,
-edition size, binding, per title — authored by the person who made the books. It is also
-the authority on what is *theirs*: *Bomba* was filed in the collection under Jason
-Nocito, and its absence from Nocito's own bibliography plus its presence on
-thomasprior.com settled the attribution. Booksellers, by contrast, sit behind bot checks
-(Dashwood Books returns `429` with a "Checking your browser…" interstitial) and mix in
-price language you must not copy.
+**WordPress** (most museums and small presses):
 
-The limit: plenty of artist sites are image-only. thomasprior.com's *Bomba* page is a bare
-carousel of `wp-content/uploads` JPEGs, and its `wp-json` record has an empty
-`content.rendered` — no publisher is recoverable there at any price. Read the page, then
-move on rather than re-fetching it in different ways.
+```
+/wp-json/wp/v2/search?search={title}      # cross-post-type; fastest way in
+/wp-json/wp/v2/pages?search={title}
+/wp-json/wp/v2/product?search={title}     # WooCommerce
+/wp-json/wp/v2/media?search={slug}        # full-size cover URLs
+```
 
-## Blocked hosts and their ways around
+Neither universal nor complete: MACBA returns 404/HTML; IMA's `/search` returns `[]` for
+a title its own `?s=` page renders. Check status and content-type before parsing, and fall
+back to the HTML page's `og:image` / `og:description`. An `og:image` path can date a
+record when nothing else does — `/uploads/2016/07/exhibition-hanon_og-1200x630.jpg` puts
+*Hanon* at July 2016.
+
+**Shopify** (Mack and most independent photobook shops):
+
+```bash
+# Brackets MUST be URL-encoded, or the shell eats them and you get an empty body
+curl -s 'https://mackbooks.co.uk/search/suggest.json?q=moriyama&resources%5Btype%5D=product&resources%5Blimit%5D=5'
+curl -s 'https://{shop}/products/{handle}.json'   # full record incl. images
+```
+
+`vendor` is the publisher — often the one missing fact.
+
+- Verified to answer: **`www.photobookstore.co.uk`** (try first), `mackbooks.co.uk`,
+  `twelve-books.com`, `loosejoints.biz`, `www.setantabooks.com`, `deadbeatclub.com`,
+  `tbwbooks.com`, `shop.photoeye.com`.
+- Confirmed *not* Shopify: dashwoodbooks, nieves.ch, aperture.org, steidl.de,
+  ideabooks.nl, chosecommune.com, void.photo.
+
+### Artist sites
+
+Often a complete bibliography — publisher, year, pages, edition size, binding — written by
+the maker, and the authority on attribution. *Bomba* was filed under Jason Nocito; its
+absence from his bibliography and presence on thomasprior.com settled it.
+
+The limit: many are image-only. thomasprior.com's *Bomba* page is a bare carousel and its
+`wp-json` `content.rendered` is empty. Read the page once, then move on.
+
+### OpenLibrary — no key, no cap
+
+```bash
+# title/author → publisher, year, ISBNs, pages
+curl -s 'https://openlibrary.org/search.json?q=miserachs+barcelona&fields=title,author_name,publisher,publish_year,isbn,number_of_pages_median&limit=5'
+# ISBN → contributors with roles, subjects, pagination, covers
+curl -s 'https://openlibrary.org/api/books?bibkeys=ISBN:9781588397256&jscmd=data&format=json'
+```
+
+Good for trade and museum titles, thin for small-press photobooks. Separates editions well
+(the two *Miserachs Barcelona* editions come back with distinct ISBNs and page counts).
+
+### Google Books — last resort
+
+Returns errors inside **HTTP-200-looking JSON**. Once the daily quota is gone, every call
+is `429` with `"Quota exceeded for quota metric 'Queries'"`. Check the status *and*
+`j.error`, never just `j.items`.
+
+---
+
+## Blocked hosts
 
 | Symptom | Move |
 |---|---|
 | `403` to WebFetch | `curl` with a browser `User-Agent` (Printed Matter) |
-| `429` + browser interstitial | Skip the host — artist site or OpenLibrary instead (Dashwood) |
-| `429` on repeat fetches | Space out same-host calls; the Met's `met-publications` throttles fast |
-| Cloudflare CAPTCHA on everything | Static assets often still serve: try `/wp-content/uploads/…` directly |
-| Domain looks wrong (parked template) | The imprint is gone — stop, don't scrape the squatter (ceibaeditions.com; akinabooks.com now serves an Indonesian retail template) |
-| Empty body from a Shopify `suggest.json` | The brackets weren't URL-encoded — `%5Btype%5D`, not `[type]` |
-| Confident results, all irrelevant | AbeBooks fuzzy-matched. Re-check author *and* title; cross-check on a Shopify shop |
+| `429` + "Checking your browser…" | Skip the host (Dashwood Books) — artist site or OpenLibrary instead |
+| `429` on repeat fetches | Space out same-host calls (the Met's `met-publications` throttles fast) |
+| Cloudflare CAPTCHA everywhere | Static assets often still serve — try `/wp-content/uploads/…` directly |
+| Parked or unrelated template | The imprint is gone; don't scrape the squatter (ceibaeditions.com; akinabooks.com) |
+| Empty body from `suggest.json` | Brackets not encoded — `%5Btype%5D`, not `[type]` |
+| Confident, irrelevant results | AbeBooks fuzzy-matched — re-check title and author; cross-check on Shopify |
 
-## Matching a cover to the right volume
+---
 
-When a series reuses one cover design in different colourways — Nocito's three *Pud*
-books are identical but for cloth and foil colour — filenames and alt text lie. **Hash
-the candidate images against the ones on each volume's own detail page:**
+## Covers
+
+**OpenLibrary — always append `?default=false`.** Without it a missing cover returns
+HTTP 200 and a 43-byte 1×1 GIF. With it: `404` when absent, `302` to the image when present.
 
 ```bash
-curl -s -o cand.jpg '{image-url}' && md5 -q cand.jpg
+curl -sL -o cover.jpg -w '%{http_code}\n' 'https://covers.openlibrary.org/b/isbn/{isbn13}-L.jpg?default=false'
 ```
 
-Match by digest, then install. Applies to any variant/edition ambiguity, not just series.
-
-## When the only cover you can find is watermarked
-
-Booksellers who photograph their own stock — **Le Plac'Art (`placartphoto.com`) and
-`josefchladek.com` are the two you will hit most** — stamp the domain across the image,
-often three times. A watermarked cover does not ship. Set `cover_image` to null and say
-"cover to be photographed" in notes.
-
-Before giving up, try the AbeBooks **ISBN image URL directly**:
+**AbeBooks ISBN image** — different from the JSON-LD `image` field, and often present when
+keyword search finds nothing. 404s honestly. Rescued a watermarked Super Labo title
+(270×353, small but clean).
 
 ```bash
 curl -sL -o cover.jpg -w '%{http_code}\n' 'https://pictures.abebooks.com/isbn/{isbn13}-us.jpg'
 ```
 
-This is *not* what the JSON-LD `image` field returns, and it often exists when a keyword
-search finds nothing — it rescued a watermarked Super Labo title at 270x353, small but
-clean. It 404s honestly when absent.
+**Watermarks.** Le Plac'Art (`placartphoto.com`) and `josefchladek.com` stamp their domain
+across their photos. Try the AbeBooks ISBN image first; otherwise null + "cover to be
+photographed".
 
-**`auto-crop-covers.py` gives up on dark backdrops.** A book shot on near-black reads as
-"already tight" because the padding is not white. Find the real bounds instead:
+**Series and variants.** When volumes share one design in different colourways (Nocito's
+three *Pud* books differ only in cloth and foil), filenames and alt text lie. Hash the
+candidate against each volume's detail-page image and match by digest:
 
-```python
-a = np.array(Image.open(p).convert('RGB')).astype(int)
-mask = a.max(axis=2) > 45          # anything brighter than the backdrop
-cols = np.where(mask.sum(axis=0) > im.height * 0.15)[0]
-rows = np.where(mask.sum(axis=1) > im.width * 0.05)[0]
-im.crop((cols.min(), rows.min(), cols.max()+1, rows.max()+1)).save(p, quality=92)
+```bash
+curl -s -o cand.jpg '{image-url}' && md5 -q cand.jpg
 ```
 
-## When to stop and say so
+**Dark backdrops.** `auto-crop-covers.py` reads a book shot on near-black as "already
+tight". Find the real bounds:
 
-If the missing field is the **publisher** and no rung of the ladder names it — AbeBooks
-included — stop. Record
-the row as deferred with *what is known and what is missing*, and say the budget ran out.
-Never fill a skip list with books that were never actually researched, and never infer a
-publisher from a design resemblance or a distributor's stock listing.
+```python
+import numpy as np
+from PIL import Image
+
+im = Image.open(p).convert('RGB')
+a = np.asarray(im).astype(int)
+mask = a.max(axis=2) > 45                      # brighter than the backdrop
+cols = np.where(mask.sum(axis=0) > im.height * 0.15)[0]
+rows = np.where(mask.sum(axis=1) > im.width * 0.05)[0]
+im.crop((cols.min(), rows.min(), cols.max() + 1, rows.max() + 1)).save(p, quality=92)
+```
+
+---
+
+## When to stop
+
+If the missing field is the **publisher** and no rung names it, stop. Defer the row with
+what is known and what is missing, and say the budget ran out. Never pad a skip list with
+books that weren't actually researched.
+
+---
+
+## Track record
+
+- **2026-08-27:** 14 rows deferred when search ran out. 8 closed with zero searches. The 6
+  left were all unknown-publisher rows; adding the AbeBooks rung closed one more
+  (id 762, Mizutani *Hanon* → Amana, 9784865872941).
+- **Ladder accuracy:** against 14 hand-filled rows, it recovered the exact same ISBN for
+  11 (79%) with zero WebSearch calls.
