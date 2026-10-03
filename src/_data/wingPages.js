@@ -19,7 +19,9 @@ module.exports = function() {
     const wingBooks = books.filter(b => b.collection === wing.slug);
 
     const wingCollections = configs
-      .filter(c => c.wing === wing.slug)
+      // Built-but-unlisted pages (whole-wing terms, twins of another page) stay
+      // off the landing page; the index decides which those are.
+      .filter(c => c.wing === wing.slug && c.listed)
       .map(c => ({
         slug: c.slug,
         title: c.title,

@@ -77,9 +77,9 @@ describe('collections-index', () => {
     it('stamps url, origin, facet and listed on every page', () => {
       index.pages.forEach(p => {
         expect(p.url).to.equal('/' + p.permalink);
-        expect(p.origin).to.be.oneOf(['curated', 'hand']);
+        expect(p.origin).to.be.oneOf(['curated', 'hand', 'hand+derived', 'derived']);
         expect(p).to.have.property('facet');
-        expect(p.listed).to.be.true;
+        expect(p.listed).to.be.a('boolean');
       });
     });
 
@@ -176,6 +176,89 @@ describe('collections-index', () => {
         { slug: 'two', title: 'Two', matchBy: { tag: ['Zines', 'punk'] } },
       ] });
       expect(() => buildIndex(input, noCovers)).to.throw('"one" and "two" both name the tag "punk"');
+    });
+  });
+
+  describe('record terms and listing', () => {
+    const wings = [
+      { slug: 'art', isDefault: true, classifications: ['Photobook'] },
+      { slug: 'cryptology', live: true, classifications: ['Manual'] },
+    ];
+    const by = (first, last) => ({ author_first: first, author_last: last });
+    const many = (n, from, collection, tags, extra) => Array.from({ length: n }, (_, i) => book(from + i, collection, tags, extra));
+    const books = [
+      // A shelf whose books all carry one tag and one author: three pages, one set.
+      ...many(8, 1, 'art', 'Menswear', { collection_grouping: 'Matsuda', ...by('Mitsuhiro', 'Matsuda'), publication_year: '1985', classification: 'Photobook' }),
+      ...many(7, 11, 'art', 'Menswear', { collection_grouping: 'Matsuda', ...by('Mitsuhiro', 'Matsuda'), publication_year: '1985', classification: 'Manual' }),
+      ...many(30, 101, 'art', 'Punk', { publication_year: '1987?' }),
+      ...many(8, 201, 'art', 'Queer Culture', { ...by('Peter', 'Hujar'), publication_year: '1985', classification: 'Photobook' }),
+      ...many(8, 301, 'art', '', by('Richard', 'Prince')),
+      ...many(15, 401, 'cryptology', 'Ciphers', { classification: 'Manual' }),
+      book(450, 'cryptology', '', { classification: 'Photobook' }),
+    ];
+    const index = buildIndex({
+      books,
+      wings,
+      curated: [
+        { slug: 'matsuda', title: 'Matsuda Catalogues', matchBy: { collection_grouping: 'Matsuda' } },
+        { slug: 'queer-culture', title: 'Queer Culture', matchBy: { tag: 'Queer Culture' } },
+      ],
+      staticSlugs: ['richard-prince'],
+      redirects: [],
+    }, noCovers);
+    const page = url => index.pageByUrl.get(url);
+
+    it('builds decade, person and form pages beside the hand tags', () => {
+      expect(page('/collections/published-1980s.html')).to.include({ origin: 'derived', facet: 'published', bookCount: 15 });
+      expect(page('/collections/mitsuhiro-matsuda.html')).to.include({ origin: 'derived', facet: 'person', bookCount: 15 });
+      expect(page('/collections/menswear.html')).to.include({ origin: 'hand', bookCount: 15 });
+    });
+
+    it('reads a classification against the book\'s own wing', () => {
+      // Eight Matsuda books are Photobook; the Hujar books are claimed by Queer Culture.
+      expect(index.pageByUrl.has('/collections/photobook.html')).to.be.false;
+      expect(index.pageByUrl.has('/collections/manual.html')).to.be.false;
+      expect(page('/cryptology/collections/manual.html').bookIds).to.not.include('450');
+    });
+
+    it('keeps an exclusive book on its person page and off decade and form pages', () => {
+      expect(page('/collections/peter-hujar.html').bookIds).to.include('201');
+      expect(page('/collections/published-1980s.html').bookIds).to.not.include('201');
+      expect(index.tagTier.get('art').find(c => c.slug === 'photobook')).to.be.undefined;
+    });
+
+    it('generates no person page for a slug a static page owns', () => {
+      expect(index.pageByUrl.has('/collections/richard-prince.html')).to.be.false;
+      expect(index.tagTargets.art.has('richard-prince')).to.be.false;
+    });
+
+    it('gives a record page a link target holding every member', () => {
+      expect([...index.tagTargets.art.get('published-1980s').ids]).to.deep.equal(page('/collections/published-1980s.html').bookIds);
+    });
+
+    it('builds but does not list a page with the same books as a higher-ranked one', () => {
+      const curated = { title: 'Matsuda Catalogues', url: '/collections/matsuda.html' };
+      ['/collections/menswear.html', '/collections/mitsuhiro-matsuda.html', '/collections/published-1980s.html'].forEach(url => {
+        expect(page(url).listed, url).to.be.false;
+        expect(page(url).sameAs, url).to.deep.equal(curated);
+      });
+      expect(page('/collections/matsuda.html').listed).to.be.true;
+      expect(page('/collections/matsuda.html')).to.not.have.property('sameAs');
+    });
+
+    it('builds but does not list a generated page covering 90% of its wing', () => {
+      // 15 of cryptology's 16 books.
+      ['/cryptology/collections/ciphers.html', '/cryptology/collections/manual.html'].forEach(url => {
+        expect(page(url)).to.include({ listed: false, unlistedReason: 'whole-wing' });
+        expect(page(url)).to.not.have.property('sameAs');
+      });
+    });
+
+    it('lists everything else, curated pages always', () => {
+      expect(page('/collections/punk.html').listed).to.be.true;
+      expect(page('/collections/peter-hujar.html').listed).to.be.false; // same eight books as Queer Culture
+      expect(page('/collections/queer-culture.html').listed).to.be.true;
+      index.pages.filter(p => p.origin === 'curated').forEach(p => expect(p.listed, p.url).to.be.true);
     });
   });
 
