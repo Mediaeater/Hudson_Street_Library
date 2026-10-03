@@ -14,14 +14,17 @@ permalink: /collection-explore.html
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
 <style>
+    /*
+      Written in the site's own language, the same idiom as src/wings.njk; read
+      the DESIGN note there before changing anything here. design-system.css
+      loads after Tailwind and its reset and `p` rule (65ch cap, auto margins)
+      beat utilities, so spacing and type are declared in this block.
+    */
     :root {
         --color-ink: #0A0A0A;
         --color-paper: #F8F7F4;
-        --color-vellum: #EEEDE8;
         --color-brown: #8B7355;
-        --color-red: #C8102E;
         --color-border: rgba(10, 10, 10, 0.12);
     }
 
@@ -36,552 +39,263 @@ permalink: /collection-explore.html
         color: var(--color-ink);
         font-family: 'Literata', Georgia, serif;
         line-height: 1.5;
-        overflow-x: hidden;
-        position: relative;
     }
 
-    /* Subtle paper texture */
-    body::before {
-        content: '';
-        /* Was position: fixed — a fixed full-viewport overlay repaints on
-           every scroll frame and contributes to mobile scroll jitter.
-           `absolute` (body is now position: relative) scrolls the texture
-           with the document; visually identical. */
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0.03;
-        background-image:
-            repeating-linear-gradient(0deg, transparent, transparent 2px, var(--color-ink) 2px, var(--color-ink) 3px);
-        pointer-events: none;
-        z-index: 1;
-    }
-
-    .page-wrapper {
-        position: relative;
-        z-index: 2;
-    }
-
-    /* Massive Editorial Header */
-    .hero-section {
-        padding: 8rem 2rem 4rem;
-        max-width: 1600px;
+    .explore-page {
+        max-width: 1200px;
         margin: 0 auto;
-        border-bottom: 3px solid var(--color-ink);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .hero-title {
+        padding: 5rem 2rem 6rem;
         font-family: 'Literata', Georgia, serif;
-        font-size: clamp(4rem, 12vw, 11rem);
-        font-weight: 700;
-        line-height: 0.9;
-        letter-spacing: -0.03em;
-        margin-bottom: 1.5rem;
-        text-transform: uppercase;
-        animation: slideInDown 1s cubic-bezier(0.16, 1, 0.3, 1);
+        color: var(--color-ink);
     }
 
-    .hero-subtitle {
-        font-family: 'Archivo Narrow', sans-serif;
-        font-size: clamp(0.875rem, 1.5vw, 1.125rem);
-        font-weight: 400;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        color: var(--color-brown);
-        margin-bottom: 3rem;
-        animation: fadeIn 1s 0.3s both;
+    .explore-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
     }
 
-    .hero-description {
-        max-width: 52ch;
-        font-size: clamp(1.125rem, 2vw, 1.5rem);
-        line-height: 1.6;
-        font-weight: 300;
-        animation: fadeIn 1s 0.5s both;
-    }
-
-    /* Filter Bar - Editorial Style */
-    .filter-bar {
-        padding: 2rem;
-        max-width: 1600px;
-        margin: 0 auto 4rem;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1.5rem;
-        align-items: center;
-        justify-content: space-between;
-        border-bottom: 1px solid var(--color-border);
-        animation: fadeIn 1s 0.7s both;
-    }
-
-    .filter-group {
-        display: flex;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-    }
-
-    .filter-label {
+    .explore-eyebrow {
         font-family: 'Archivo Narrow', sans-serif;
         font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    /* Tailwind's base layer colours headings; every heading here says ink. */
+    .explore-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .explore-intro {
+        font-size: clamp(1.0625rem, 2vw, 1.25rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .explore-count {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
         letter-spacing: 0.15em;
         text-transform: uppercase;
         color: var(--color-brown);
-        padding: 0.5rem 0;
-        align-self: center;
+        margin-top: 1.75rem;
     }
 
-    .filter-btn {
-        font-family: 'Archivo Narrow', sans-serif;
-        font-size: 0.875rem;
-        padding: 0.75rem 1.5rem;
-        background: transparent;
-        border: 1px solid var(--color-border);
-        color: var(--color-ink);
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-
-    .filter-btn:hover {
-        background: var(--color-ink);
-        color: var(--color-paper);
-        border-color: var(--color-ink);
-        transform: translateY(-2px);
-    }
-
-    .filter-btn.active {
-        background: var(--color-ink);
-        color: var(--color-paper);
-        border-color: var(--color-ink);
-    }
-
-    .recent-link {
-        font-family: 'Archivo Narrow', sans-serif;
-        font-size: 0.875rem;
-        padding: 0.75rem 1.5rem;
-        background: var(--color-red);
-        color: var(--color-paper);
-        text-decoration: none;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        border: 1px solid var(--color-red);
-    }
-
-    .recent-link:hover {
-        background: transparent;
-        color: var(--color-red);
-        transform: translateY(-2px);
-    }
-
-    .tags-link {
-        font-family: 'Archivo Narrow', sans-serif;
-        font-size: 0.875rem;
-        padding: 0.75rem 1.5rem;
-        background: var(--color-brown);
-        color: var(--color-paper);
-        text-decoration: none;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        border: 1px solid var(--color-brown);
-    }
-
-    .tags-link:hover {
-        background: transparent;
-        color: var(--color-brown);
-        transform: translateY(-2px);
-    }
-
-    .filter-links {
+    /* Text links, not buttons: a hairline underline that darkens on hover. */
+    .explore-links {
         display: flex;
-        gap: 0.75rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.75rem 2.5rem;
+        margin-top: 1.25rem;
     }
 
-    /* Collections Masonry Grid */
-    .collections-container {
-        max-width: 1600px;
-        margin: 0 auto;
-        padding: 2rem;
+    .explore-links a {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
     }
 
-    .collections-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 2rem;
-        animation: fadeIn 1s 0.9s both;
+    .explore-links a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .explore-section { margin-bottom: 4.5rem; }
+    .explore-section:last-child { margin-bottom: 0; }
+
+    .explore-section > h2 {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
     }
 
-    /* Featured collections span 2 columns */
-    .collection-card.featured {
-        grid-column: span 2;
+    /* A facet: a list of names with counts, set as text. */
+    .explore-terms {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem 2.5rem;
+        margin: 0;
+        padding: 0;
     }
 
-    .collection-card {
-        position: relative;
-        background: white;
-        border: 1px solid var(--color-border);
+    .explore-terms a {
+        text-decoration: none;
+        color: var(--color-ink);
+        font-size: 1.0625rem;
+        transition: color 0.3s ease;
+    }
+
+    .explore-terms a:hover { color: var(--color-brown); }
+
+    .explore-terms .count {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        color: var(--color-brown);
+        margin-left: 0.4rem;
+    }
+
+    /* Curated: hairline-separated rows, not cards. */
+    .explore-curated-item {
+        display: flex;
+        gap: 1.5rem;
+        align-items: flex-start;
+        padding: 1.5rem 0;
+        border-bottom: 1px solid var(--color-border);
+        text-decoration: none;
+        color: var(--color-ink);
+    }
+
+    .explore-curated-item:first-child { padding-top: 0; }
+
+    .explore-curated-thumb {
+        width: 72px;
+        flex-shrink: 0;
+        aspect-ratio: 3 / 4;
         overflow: hidden;
-        cursor: pointer;
-        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        animation: cardSlideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+        box-shadow: 0 2px 10px rgba(10, 10, 10, 0.12);
     }
 
-    .collection-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 60px rgba(10, 10, 10, 0.15);
-        border-color: var(--color-ink);
-    }
-
-    .collection-image-wrapper {
-        position: relative;
-        aspect-ratio: 4/3;
-        overflow: hidden;
-        background: var(--color-vellum);
-    }
-
-    .collection-image {
+    .explore-curated-thumb img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        display: block;
     }
 
-    .collection-card:hover .collection-image {
-        transform: scale(1.08);
-    }
-
-    .collection-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to top, rgba(10, 10, 10, 0.9) 0%, transparent 60%);
-        opacity: 0;
-        transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        display: flex;
-        align-items: flex-end;
-        padding: 2rem;
-    }
-
-    .collection-card:hover .collection-overlay {
-        opacity: 1;
-    }
-
-    .collection-overlay-text {
-        color: var(--color-paper);
-        font-size: 0.875rem;
-        line-height: 1.6;
-        transform: translateY(10px);
-        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
-    }
-
-    .collection-card:hover .collection-overlay-text {
-        transform: translateY(0);
-    }
-
-    /* Category badge */
-    .collection-category {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        font-family: 'Archivo Narrow', sans-serif;
-        font-size: 0.625rem;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        background: white;
-        color: var(--color-ink);
-        padding: 0.375rem 0.75rem;
-        border: 1px solid var(--color-border);
-        z-index: 2;
-        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .collection-card:hover .collection-category {
-        background: var(--color-ink);
-        color: var(--color-paper);
-        border-color: var(--color-ink);
-    }
-
-    .collection-info {
-        padding: 1.5rem;
-        background: white;
-    }
-
-    .collection-number {
-        font-family: 'Archivo Narrow', sans-serif;
-        font-size: 0.75rem;
-        letter-spacing: 0.15em;
-        color: var(--color-brown);
-        margin-bottom: 0.5rem;
-        text-transform: uppercase;
-    }
-
-    .collection-name {
+    .explore-curated-item h3 {
         font-family: 'Literata', Georgia, serif;
-        font-size: 1.75rem;
-        font-weight: 600;
-        line-height: 1.2;
+        font-size: 1.25rem;
+        font-weight: 700;
+        line-height: 1.3;
+        color: var(--color-ink);
         margin-bottom: 0.5rem;
         transition: color 0.3s ease;
     }
 
-    .collection-card:hover .collection-name {
-        color: var(--color-brown);
-    }
+    .explore-curated-item:hover h3 { color: var(--color-brown); }
 
-    .collection-description {
+    .explore-curated-item p {
         font-size: 0.9375rem;
-        line-height: 1.5;
-        color: rgba(10, 10, 10, 0.7);
-        margin-bottom: 1rem;
+        line-height: 1.6;
+        font-weight: 300;
+        /* design-system.css caps every p at 65ch and centers it. */
+        max-width: none;
+        margin-left: 0;
+        margin-right: 0;
     }
 
-    .collection-count {
-        font-family: 'Archivo Narrow', sans-serif;
-        font-size: 0.75rem;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: var(--color-brown);
-    }
-
-    /* Placeholder styles for collections without images */
-    .collection-placeholder {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem;
-        text-align: center;
-    }
-
-    .collection-placeholder-text {
-        font-family: 'Literata', Georgia, serif;
-        font-size: 1.5rem;
-        font-weight: 600;
-        line-height: 1.2;
-    }
-
-    .fashion-bg { background: linear-gradient(135deg, #f5f3f0, #e8e6e1); }
-    .photography-bg { background: linear-gradient(135deg, #e8eef5, #d6dfe8); }
-    .art-bg { background: linear-gradient(135deg, #f5e8e8, #e8d6d6); }
-    .ephemera-bg { background: linear-gradient(135deg, #e8f2f5, #d6e5e8); }
-    .magazines-bg { background: linear-gradient(135deg, #f5e8f2, #e8d6e5); }
-    .subject-bg { background: linear-gradient(135deg, color-mix(in srgb, #034706 5%, white), color-mix(in srgb, #034706 12%, white)); }
-
-    /* Loading State */
-    .loading-indicator {
-        text-align: center;
-        padding: 4rem 2rem;
-        display: none;
-    }
-
-    .loading-indicator.active {
+    .explore-curated-count {
         display: block;
-    }
-
-    .loading-spinner {
-        width: 48px;
-        height: 48px;
-        border: 2px solid var(--color-border);
-        border-top-color: var(--color-ink);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin: 0 auto 1rem;
-    }
-
-    .loading-text {
+        margin-top: 0.75rem;
         font-family: 'Archivo Narrow', sans-serif;
-        font-size: 0.875rem;
-        letter-spacing: 0.1em;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
         text-transform: uppercase;
         color: var(--color-brown);
     }
 
-    /* Animations */
-    @keyframes slideInDown {
-        from {
-            opacity: 0;
-            transform: translateY(-40px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-        to {
-            opacity: 1;
-        }
-    }
-
-    @keyframes cardSlideIn {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
-
-    /* Responsive */
     @media (max-width: 768px) {
-        .hero-section {
-            padding: 4rem 1.5rem 3rem;
-        }
-
-        .filter-bar {
-            padding: 1.5rem;
-            gap: 1rem;
-        }
-
-        .collections-container {
-            padding: 1.5rem;
-        }
-
-        .collections-grid {
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-        }
-
-        .collection-card.featured {
-            grid-column: span 1;
-        }
+        .explore-page { padding: 3rem 1.5rem 4rem; }
+        .explore-masthead { margin-bottom: 3.5rem; }
     }
-
-    @media (min-width: 769px) and (max-width: 1024px) {
-        .collections-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
-    /* Stagger animation delays for cards */
-    .collection-card:nth-child(1) { animation-delay: 0s; }
-    .collection-card:nth-child(2) { animation-delay: 0.05s; }
-    .collection-card:nth-child(3) { animation-delay: 0.1s; }
-    .collection-card:nth-child(4) { animation-delay: 0.15s; }
-    .collection-card:nth-child(5) { animation-delay: 0.2s; }
-    .collection-card:nth-child(6) { animation-delay: 0.25s; }
-    .collection-card:nth-child(7) { animation-delay: 0.3s; }
-    .collection-card:nth-child(8) { animation-delay: 0.35s; }
 </style>
 </head>
 <body>
 
-<div class="page-wrapper">
-    {% set currentPage = 'collections' %}
-    {% include "components/site-header.njk" %}
+{% set currentPage = 'collections' %}
+{% include "components/site-header.njk" %}
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="hero-subtitle">Thematic Archives</div>
-        <h1 class="hero-title">Collections</h1>
-        <p class="hero-description">
-            Curated groupings of visual culture—rare publications, ephemera, and significant bodies of work
-            from photographers, artists, and fashion houses that define our holdings.
-        </p>
-    </section>
+{#
+  One section per facet from the index's listings for the art wing, then the
+  curated collections. A term a curated config owns (Queer Culture under
+  Themes) is listed in its facet and again in the curated section; both link to
+  the one page. Other wings list their own collections on their landing pages.
+#}
+<main>
+    <div class="explore-page">
 
-    <!-- Filter Bar -->
-    <div class="filter-bar">
-        <div class="filter-group">
-            <span class="filter-label">Filter:</span>
-            <button class="filter-btn active" data-category="all">All</button>
-            <button class="filter-btn" data-category="subject">Subjects</button>
-            <button class="filter-btn" data-category="fashion">Fashion</button>
-            <button class="filter-btn" data-category="photography">Photography</button>
-            <button class="filter-btn" data-category="magazines">Magazines</button>
-            <button class="filter-btn" data-category="art">Art</button>
-            <button class="filter-btn" data-category="ephemera">Ephemera</button>
+        <div class="explore-masthead">
+            <div class="explore-eyebrow">Hudson Street Library</div>
+            <h1 class="explore-title">Collections</h1>
+            <p class="explore-intro">
+                Every collection in the art and photography wing, listed by theme, medium, genre,
+                format, place, era, person, series and decade of publication. The collections
+                put together by hand come last.
+            </p>
+            <div class="explore-count">{{ exploreListings.pageCount | commafy }} collections</div>
+            <div class="explore-links">
+                <a href="/tags/">All tags A-Z</a>
+                <a href="/collections/recently_added.html">Recently added</a>
+            </div>
         </div>
-        <div class="filter-links">
-            <a href="/tags/" class="tags-link">
-                <i class="fas fa-tag"></i>
-                Browse by Subject
-            </a>
-            <a href="collections/recently_added.html" class="recent-link">
-                <i class="fas fa-clock"></i>
-                Recent
-            </a>
-        </div>
+
+        {% for group in exploreListings.groups %}
+        <section class="explore-section">
+            <h2>{{ group.label }}</h2>
+            {% if group.facet == 'curated' %}
+            <div class="explore-curated">
+                {% for c in group.items %}
+                    <a href="{{ c.url }}" class="explore-curated-item">
+                        {% if c.image %}
+                            <div class="explore-curated-thumb">
+                                <img src="{{ c.image }}" alt="" loading="lazy">
+                            </div>
+                        {% endif %}
+                        <div>
+                            <h3>{{ c.name }}</h3>
+                            {% if c.description %}<p>{{ c.description }}</p>{% endif %}
+                            {# The two hand-built pages carry no count. #}
+                            {% if c.count is defined %}
+                                <span class="explore-curated-count">{{ c.count | commafy }} {% if c.count == 1 %}book{% else %}books{% endif %}</span>
+                            {% endif %}
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <ul class="explore-terms">
+                {% for c in group.items %}
+                    <li>
+                        <a href="{{ c.url }}">{{ c.name }}<span class="count">{{ c.count | commafy }}</span></a>
+                    </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </section>
+        {% endfor %}
+
     </div>
-
-    <!-- Collections Grid (rendered at build from exploreCollections) -->
-    <div class="collections-container">
-        <div id="collections-grid" class="collections-grid">
-            {% for collection in exploreCollections %}
-            <a href="{{ collection.path }}"
-               class="collection-card{% if collection.featured %} featured{% endif %}"
-               data-category="{{ collection.category }}">
-                <div class="collection-image-wrapper">
-                    {% if collection.image %}
-                    <img src="{{ collection.image }}"
-                         alt="{{ collection.name }}"
-                         class="collection-image"
-                         loading="lazy">
-                    {% endif %}
-                    <div class="collection-placeholder {{ collection.category }}-bg">
-                        <div class="collection-placeholder-text">{{ collection.name }}</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">{{ collection.description }}</div>
-                    </div>
-                    {% if collection.category %}<div class="collection-category">{{ collection.category }}</div>{% endif %}
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot {% if loop.index < 10 %}00{% elif loop.index < 100 %}0{% endif %}{{ loop.index }}</div>
-                    <h2 class="collection-name">{{ collection.name }}</h2>
-                    <p class="collection-description">{{ collection.description }}</p>
-                    {% if collection.bookCount is defined %}<div class="collection-count">{{ collection.bookCount }} Items</div>{% endif %}
-                </div>
-            </a>
-            {% endfor %}
-        </div>
-    </div>
-</div>
+</main>
 
 {% include "components/site-footer.njk" %}
-
-<script>
-    // Cards are rendered at build time; the buttons just show/hide them.
-    document.addEventListener('DOMContentLoaded', () => {
-        const filterButtons = document.querySelectorAll('.filter-btn');
-        const cards = document.querySelectorAll('.collection-card');
-
-        filterButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-
-                const category = button.dataset.category;
-                cards.forEach(card => {
-                    card.style.display =
-                        (category === 'all' || card.dataset.category === category) ? '' : 'none';
-                });
-            });
-        });
-    });
-</script>
 
 </body>
 </html>

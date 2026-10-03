@@ -54,8 +54,6 @@ const SEMANTIC = {
   '#d1fae5': 'status-available bg',
   '#065f46': 'status-available text',
   '#f0f5f0': 'header hover tint',
-  '#e8f2f5': 'collection-explore tint',
-  '#d6e5e8': 'collection-explore tint',
 };
 
 const ALLOWED = new Set([...Object.keys(BRAND), ...Object.keys(SEMANTIC)]);

@@ -11,7 +11,7 @@ const { getIndex } = require('../../scripts/utils/collections-index');
 // and itemCount are resolved once here rather than in two templates.
 module.exports = function() {
   const books = loadCatalogSync().data;
-  const configs = getIndex().pages;
+  const { pages: configs, listings } = getIndex();
 
   const wings = loadWings().filter(w => !w.isDefault && w.live);
 
@@ -39,6 +39,13 @@ module.exports = function() {
       .map(t => byTitle.get(String(t).toLowerCase()))
       .filter(Boolean);
     const featuredSlugs = new Set(featured.map(c => c.slug));
+    const featuredUrls = new Set(featured.map(c => c.url));
+
+    // The landing page's sections: the index's listings for this wing, one
+    // group per facet. A featured collection already has its row above them.
+    const facets = listings[wing.slug]
+      .map(g => ({ ...g, items: g.items.filter(i => !featuredUrls.has(i.url)) }))
+      .filter(g => g.items.length);
 
     return {
       ...wing,
@@ -46,6 +53,8 @@ module.exports = function() {
       permalink: `${wing.slug}/index.html`,
       itemCount: wingBooks.length,
       featured,
+      facets,
+      // Flat list of the same pages, for the sitemap.
       collections: wingCollections.filter(c => !featuredSlugs.has(c.slug)),
     };
   });
