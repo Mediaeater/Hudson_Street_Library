@@ -7,6 +7,7 @@
  * touches book data, templates, or filters:
  *
  *   npm run build && node scripts/verify-views.js
+ *   node scripts/verify-views.js <dir>     a build written with --output=<dir>
  *
  * Matches books by page slug (not title) to survive duplicate titles,
  * and reads the built HTML (not the templates) so it checks what a
@@ -17,7 +18,8 @@ const fs = require('fs');
 const path = require('path');
 const CSVHandler = require('./utils/csv-handler.js');
 
-const SITE = path.join(__dirname, '..', '_site');
+// The build to check: an argument, SITE_DIR, or the repo's _site.
+const SITE = path.resolve(process.argv[2] || process.env.SITE_DIR || path.join(__dirname, '..', '_site'));
 const BACKFILL_DAYS = 7; // must match recentlyCatalogued filter in .eleventy.js
 
 function parseDate(s) {
@@ -115,20 +117,27 @@ const onPage = (html, book) => markers(book).some(m => html.includes(m));
     }
   }
 
-  // A tag links to a collection only when that collection lists the book.
+  // A tag links to a collection only when that collection lists the book. Read
+  // from the built page: the index already promises it, the template might not.
   console.log('Tag links on book pages land on a page that lists the book:');
-  const { getIndex, tagUrl } = require('./utils/collections-index');
+  const { tagUrl } = require('./utils/collections-index');
   const { loadCatalogSync } = require('./utils/catalog');
-  const { pageByUrl } = getIndex();
+  const htmlByUrl = new Map();
+  const htmlOf = url => {
+    if (!htmlByUrl.has(url)) {
+      htmlByUrl.set(url, built(url) ? fs.readFileSync(path.join(SITE, url.replace(/^\//, '')), 'utf8') : null);
+    }
+    return htmlByUrl.get(url);
+  };
   for (const book of loadCatalogSync().data) {
     for (const tag of (book.tags || '').split(',').map(t => t.trim()).filter(Boolean)) {
       const url = tagUrl(tag, book);
       if (!url) continue;
-      const page = pageByUrl.get(url);
-      if (!page || !page.bookIds.includes(book.id)) {
-        fail(`book ${book.id} tag "${tag}" links to ${url}, which does not list it`);
-      } else if (!built(url)) {
+      const html = htmlOf(url);
+      if (html === null) {
         fail(`book ${book.id} tag "${tag}" links to a page that does not exist: ${url}`);
+      } else if (!onPage(html, book)) {
+        fail(`book ${book.id} tag "${tag}" links to ${url}, which does not list it`);
       }
     }
   }

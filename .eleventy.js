@@ -729,15 +729,18 @@ module.exports = function(eleventyConfig) {
   // and .well-known/api-catalog); the client-rendered catalog pages fetch the
   // merged, collection-stamped cms/data/catalog.csv written below.
   eleventyConfig.addPassthroughCopy({"src/_data/books.csv": "cms/data/books.csv"});
-  eleventyConfig.on("eleventy.after", ({ dir }) => {
-    const out = writeMergedCsv(path.join(dir.output, "cms", "data", "catalog.csv"));
+  // directories.output is the real output dir, --output included; dir.output
+  // is the configured one.
+  eleventyConfig.on("eleventy.after", ({ dir, directories }) => {
+    const outDir = (directories && directories.output) || dir.output;
+    const out = writeMergedCsv(path.join(outDir, "cms", "data", "catalog.csv"));
     console.log(`--- catalog: wrote ${path.relative(__dirname, out.file)} (${out.bytes} bytes)`);
     // /data/books.json — the public JSON endpoint documented on
     // /api-documentation/ and listed in .well-known/api-catalog. Generated here
     // for the same reason catalog.csv is: it was a checked-in snapshot copied
     // out of data/, and by Sept 2026 it was serving 1586 rows of Nov 2025 data
     // with cover paths that no longer existed. There is no source file now.
-    const json = writeBooksJson(path.join(dir.output, "data", "books.json"));
+    const json = writeBooksJson(path.join(outDir, "data", "books.json"));
     console.log(`--- catalog: wrote ${path.relative(__dirname, json.file)} (${json.rows} rows, ${json.bytes} bytes)`);
   });
   eleventyConfig.addPassthroughCopy({"src/_data/news.json": "cms/data/news.json"});
