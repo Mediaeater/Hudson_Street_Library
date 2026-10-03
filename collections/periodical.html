@@ -8,7 +8,7 @@
     <link rel="canonical" href="https://hudsonstreetlibrary.com/collections/periodical.html">
 
     
-    <meta name="description" content="Every book in the library tagged “Periodical.”">
+    <meta name="description" content="Books in the library catalogued as Periodical, by classification or by tag.">
     
     <link rel="stylesheet" href="/assets/css/tailwind.css">
     <link rel="stylesheet" href="/assets/css/design-system.css">
@@ -36,7 +36,7 @@
   "@type": "CollectionPage",
   "name": "Periodical",
   "url": "https://hudsonstreetlibrary.com/collections/periodical.html",
-  "description": "Every book in the library tagged “Periodical.”",
+  "description": "Books in the library catalogued as Periodical, by classification or by tag.",
   "isPartOf": {
     "@type": "WebSite",
     "name": "Hudson Street Library",
@@ -311,1085 +311,2273 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+    
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Periodical</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Periodical.”</p>
+            <div class="collection-eyebrow">Formats
+            </div>
+            <h1 class="collection-title">Periodical</h1>
+            
+                <p class="collection-description">Books in the library catalogued as Periodical, by classification or by tag.</p>
+            
+            <div class="collection-count">116 books</div>
+            
+            
+                <div class="collection-source">From the catalogue record and tags</div>
+            
             
             
         </div>
-        
 
-        
-        
-            
-        
         
 
         
             
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
-        
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<section class="collection-section">
+    
+    <div class="collection-books">
         
             
-<a href="/books/afm_afm-issue-2-mind-games_1590/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/afm_afm-issue-1-pursuits-of-happiness_1591/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/afm/afm-issue-2.jpg" alt="AFM Issue 2: Mind Games" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">A Fucking Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">AFM Issue 2: Mind Games</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Feeld &middot; 2024</p>
+            <img src="/assets/images/magazines/afm/afm-issue-1.jpg" alt="AFM Issue 1: Pursuits of Happiness" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">A Fucking Magazine</div>
+    
+    <div class="collection-book-title">AFM Issue 1: Pursuits of Happiness</div>
+    
+        <div class="collection-book-meta">Feeld &middot; 2024</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-10_1466/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/afm_afm-issue-2-mind-games_1590/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-10.jpg" alt="Apartamento Issue 10" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 10</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2012</p>
+            <img src="/assets/images/magazines/afm/afm-issue-2.jpg" alt="AFM Issue 2: Mind Games" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">A Fucking Magazine</div>
+    
+    <div class="collection-book-title">AFM Issue 2: Mind Games</div>
+    
+        <div class="collection-book-meta">Feeld &middot; 2024</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-11_1467/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-10_1466/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-11.jpg" alt="Apartamento Issue 11" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 11</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2013</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-10.jpg" alt="Apartamento Issue 10" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 10</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-12_1468/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-11_1467/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-12.jpg" alt="Apartamento Issue 12" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 12</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2013</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-11.jpg" alt="Apartamento Issue 11" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 11</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-13_1469/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-12_1468/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-13.jpg" alt="Apartamento Issue 13" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 13</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2014</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-12.jpg" alt="Apartamento Issue 12" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 12</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-14_1470/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-13_1469/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-14.jpg" alt="Apartamento Issue 14" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 14</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2014</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-13.jpg" alt="Apartamento Issue 13" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 13</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-15_1471/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-14_1470/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-15.jpg" alt="Apartamento Issue 15" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 15</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2015</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-14.jpg" alt="Apartamento Issue 14" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 14</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-16_1472/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-15_1471/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-16.jpg" alt="Apartamento Issue 16" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 16</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2015</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-15.jpg" alt="Apartamento Issue 15" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 15</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-17_1473/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-16_1472/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-17.jpg" alt="Apartamento Issue 17" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 17</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2016</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-16.jpg" alt="Apartamento Issue 16" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 16</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-18_1474/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-17_1473/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-18.jpg" alt="Apartamento Issue 18" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 18</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2016</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-17.jpg" alt="Apartamento Issue 17" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 17</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-19_1475/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-18_1474/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-19.jpg" alt="Apartamento Issue 19" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 19</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2017</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-18.jpg" alt="Apartamento Issue 18" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 18</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-20_1476/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-19_1475/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-20.jpg" alt="Apartamento Issue 20" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 20</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2017</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-19.jpg" alt="Apartamento Issue 19" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 19</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-21_1477/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-20_1476/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-21.jpg" alt="Apartamento Issue 21" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 21</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2018</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-20.jpg" alt="Apartamento Issue 20" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 20</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-22_1478/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-21_1477/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-22.jpg" alt="Apartamento Issue 22" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 22</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2018</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-21.jpg" alt="Apartamento Issue 21" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 21</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2018</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-23_1479/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-22_1478/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-23.jpg" alt="Apartamento Issue 23" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 23</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2019</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-22.jpg" alt="Apartamento Issue 22" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 22</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2018</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-24_1480/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-23_1479/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-24.jpg" alt="Apartamento Issue 24" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 24</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2019</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-23.jpg" alt="Apartamento Issue 23" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 23</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2019</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-25_1481/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-24_1480/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-25.jpg" alt="Apartamento Issue 25" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 25</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2020</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-24.jpg" alt="Apartamento Issue 24" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 24</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2019</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-26_1482/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-25_1481/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-26.jpg" alt="Apartamento Issue 26" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 26</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2020</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-25.jpg" alt="Apartamento Issue 25" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 25</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2020</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-27_1483/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-26_1482/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-27.jpg" alt="Apartamento Issue 27" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 27</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2021</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-26.jpg" alt="Apartamento Issue 26" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 26</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2020</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-28_1484/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-27_1483/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-28.jpg" alt="Apartamento Issue 28" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 28</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2021</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-27.jpg" alt="Apartamento Issue 27" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 27</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2021</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-29_1485/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-28_1484/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-29.jpg" alt="Apartamento Issue 29" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 29</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2022</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-28.jpg" alt="Apartamento Issue 28" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 28</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2021</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-3_1459/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-29_1485/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-3.jpg" alt="Apartamento Issue 3" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 3</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2009</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-29.jpg" alt="Apartamento Issue 29" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 29</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2022</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-30_1486/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-3_1459/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-30.jpg" alt="Apartamento Issue 30" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 30</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2022</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-3.jpg" alt="Apartamento Issue 3" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 3</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-31_1487/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-30_1486/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-31.jpg" alt="Apartamento Issue 31" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 31</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2023</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-30.jpg" alt="Apartamento Issue 30" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 30</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2022</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-32_1488/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-31_1487/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-32.jpg" alt="Apartamento Issue 32" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 32</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2023</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-31.jpg" alt="Apartamento Issue 31" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 31</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2023</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-33_1489/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-32_1488/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-33.jpg" alt="Apartamento Issue 33" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 33</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2024</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-32.jpg" alt="Apartamento Issue 32" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 32</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2023</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-34_1490/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-33_1489/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-34.jpg" alt="Apartamento Issue 34" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 34</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2024</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-33.jpg" alt="Apartamento Issue 33" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 33</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2024</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-35_1491/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-34_1490/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-35.jpg" alt="Apartamento Issue 35" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 35</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2025</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-34.jpg" alt="Apartamento Issue 34" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 34</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2024</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-36_1492/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-35_1491/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-36.jpg" alt="Apartamento Issue 36" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 36</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2025</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-35.jpg" alt="Apartamento Issue 35" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 35</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-4_1460/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-36_1492/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-4.jpg" alt="Apartamento Issue 4" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 4</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2009</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-36.jpg" alt="Apartamento Issue 36" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 36</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-5_1461/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-4_1460/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-5.jpg" alt="Apartamento Issue 5" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 5</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2010</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-4.jpg" alt="Apartamento Issue 4" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 4</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-6_1462/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-5_1461/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-6.jpg" alt="Apartamento Issue 6" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 6</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2010</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-5.jpg" alt="Apartamento Issue 5" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 5</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-7_1463/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-6_1462/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-7.jpg" alt="Apartamento Issue 7" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 7</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2011</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-6.jpg" alt="Apartamento Issue 6" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 6</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-8_1464/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-7_1463/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-8.jpg" alt="Apartamento Issue 8" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 8</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2011</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-7.jpg" alt="Apartamento Issue 7" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 7</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/apartamento_apartamento-issue-9_1465/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-8_1464/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/apartamento/apartamento-9.jpg" alt="Apartamento Issue 9" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Apartamento Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Apartamento Issue 9</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Apartamento Publishing &middot; 2012</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-8.jpg" alt="Apartamento Issue 8" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 8</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/arbus_magazine-work_54/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/apartamento_apartamento-issue-9_1465/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/arbus_diane_diane_arbus_magazine_work_9780893812331.jpg" alt="Magazine Work" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Diane Arbus</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Magazine Work</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aperture &middot; 2005</p>
+            <img src="/assets/images/magazines/apartamento/apartamento-9.jpg" alt="Apartamento Issue 9" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Apartamento Magazine</div>
+    
+    <div class="collection-book-title">Apartamento Issue 9</div>
+    
+        <div class="collection-book-meta">Apartamento Publishing &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/bjork_another-magazine-bjork_1504/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/arbus_magazine-work_54/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/music-books/another-magazine-bjork.jpg" alt="AnOther Magazine - Bjork" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Dazed Media</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">AnOther Magazine - Bjork</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Dazed Media &middot; 2010</p>
+            <img src="/assets/images/books/arbus_diane_diane_arbus_magazine_work_9780893812331.jpg" alt="Magazine Work" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Diane Arbus</div>
+    
+    <div class="collection-book-title">Magazine Work</div>
+    
+        <div class="collection-book-meta">Aperture &middot; 2005</div>
+    
 </a>
 
         
             
-<a href="/books/matheu_creem-americas-only-rock-n-roll-magazine_1510/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/bjork_another-magazine-bjork_1504/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/music-books/creem-magazine.jpg" alt="CREEM: America&#39;s Only Rock &#39;N&#39; Roll Magazine" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Matheu Robert</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">CREEM: America&#39;s Only Rock &#39;N&#39; Roll Magazine</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Collins Design &middot; 2007</p>
+            <img src="/assets/images/music-books/another-magazine-bjork.jpg" alt="AnOther Magazine - Bjork" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Dazed Media</div>
+    
+    <div class="collection-book-title">AnOther Magazine - Bjork</div>
+    
+        <div class="collection-book-meta">Dazed Media &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/penn_sex-magazine-1-10-2012-2015_2118/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/calder_cahiers-dart-calder-in-france-la-revue-no-1-2015-39th-year_1988/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/penn_asher_sex_magazine_1_10_9781576877821.jpg" alt="Sex Magazine #1–10: 2012–2015" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Asher Penn</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Sex Magazine #1–10: 2012–2015</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">powerHouse Books &middot; 2016</p>
+            <img src="/assets/images/books/Alexander_Calder_Cahiers_dArt_Calder_in_France_La_Revue_No_1_2015_3_9782851171818.jpg" alt="Cahiers d&#39;Art: Calder in France: La Revue No. 1, 2015 (39th Year)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Alexander Calder</div>
+    
+    <div class="collection-book-title">Cahiers d&#39;Art: Calder in France: La Revue No. 1, 2015 (39th Year)</div>
+    
+        <div class="collection-book-meta">Cahiers d&#39;Art &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/record-culture-magazine_record-culture-magazine-issue-11_1825/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/kim_puss-puss-issue-5_589/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Record_Culture_Magazine_Issue_11_9772711992004.jpg" alt="Record Culture Magazine Issue 11" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Record Culture Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record Culture Magazine Issue 11</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Record Creative Limited &middot; 2026</p>
+            <img src="/assets/images/books/kim_sandy_puss_puss_589.jpg" alt="Puss Puss Issue 5" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Sandy Kim</div>
+    
+    <div class="collection-book-title">Puss Puss Issue 5</div>
+    
+        <div class="collection-book-meta">Puss Puss &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/slanted_slanted-magazine-46cairo_1849/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matheu_creem-americas-only-rock-n-roll-magazine_1510/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/slanted/slanted-46-cairo.jpg" alt="Slanted Magazine #46—Cairo" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Slanted Publishers</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Slanted Magazine #46—Cairo</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Slanted Publishers &middot; 2025</p>
+            <img src="/assets/images/music-books/creem-magazine.jpg" alt="CREEM: America&#39;s Only Rock &#39;N&#39; Roll Magazine" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Matheu Robert</div>
+    
+    <div class="collection-book-title">CREEM: America&#39;s Only Rock &#39;N&#39; Roll Magazine</div>
+    
+        <div class="collection-book-meta">Collins Design &middot; 2007</div>
+    
 </a>
 
         
             
-<a href="/books/engstrom_revoir_325/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/mcwhirter_public_436/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">JH Engstrom</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Revoir</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Journal &middot; 2016</p>
+            <img src="/assets/images/books/mcwhirter_alex_public_9780692095645.jpg" alt="Public" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Alex McWhirter</div>
+    
+    <div class="collection-book-title">Public</div>
+    
+        <div class="collection-book-meta">McWhirter Studio &middot; 2018</div>
+    
 </a>
 
         
             
-<a href="/books/jacobs_journal-drawings_542/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/moriyama_record-no-26_774/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Henri Jacobs</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Journal Drawings</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Roma Publications &middot; 2013</p>
+            <img src="/assets/images/books/moriyama_daido_record_no_26_774.jpg" alt="Record No. 26" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Daido Moriyama</div>
+    
+    <div class="collection-book-title">Record No. 26</div>
+    
+        <div class="collection-book-meta">Akio Nagasawa Publishing &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/record-culture_record-culture-issue-1_1493/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/moriyama_record-no-31_773/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Record Culture Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record Culture Issue 1</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Record Culture &middot; 2016</p>
+            <img src="/assets/images/books/moriyama_daido_record_no_31_773.jpg" alt="Record No. 31" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Daido Moriyama</div>
+    
+    <div class="collection-book-title">Record No. 31</div>
+    
+        <div class="collection-book-meta">Akio Nagasawa Publishing &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/record-culture_record-culture-issue-10_1502/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/moriyama_record-no-34_771/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Record Culture Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record Culture Issue 10</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Record Culture &middot; 2022</p>
+            <img src="/assets/images/books/moriyama_daido_record_no_34_771.jpg" alt="Record No. 34" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Daido Moriyama</div>
+    
+    <div class="collection-book-title">Record No. 34</div>
+    
+        <div class="collection-book-meta">Akio Nagasawa Publishing &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/record-culture_record-culture-issue-2_1494/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/penn_sex-magazine-1-10-2012-2015_2118/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Record Culture Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record Culture Issue 2</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Record Culture &middot; 2017</p>
+            <img src="/assets/images/books/penn_asher_sex_magazine_1_10_9781576877821.jpg" alt="Sex Magazine #1–10: 2012–2015" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Asher Penn</div>
+    
+    <div class="collection-book-title">Sex Magazine #1–10: 2012–2015</div>
+    
+        <div class="collection-book-meta">powerHouse Books &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/record-culture_record-culture-issue-3_1495/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/provoke_provoke-complete-reprint-of-3-volumes_927/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Record Culture Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record Culture Issue 3</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Record Culture &middot; 2017</p>
+            <img src="/assets/images/books/provoke_provoke-complete-reprint-of-3-volumes_927.jpg" alt="Provoke: Complete Reprint of 3 Volumes" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Provoke</div>
+    
+    <div class="collection-book-title">Provoke: Complete Reprint of 3 Volumes</div>
+    
+        <div class="collection-book-meta">Nitesha &middot; 2023</div>
+    
 </a>
 
         
             
-<a href="/books/record-culture_record-culture-issue-4_1496/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/provoke_provoke-complete-reprint-of-3-volumes_2332/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Record Culture Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record Culture Issue 4</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Record Culture &middot; 2018</p>
+            <img src="/assets/images/books/provoke_provoke-complete-reprint-of-3-volumes_927.jpg" alt="Provoke: Complete Reprint of 3 Volumes" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Provoke</div>
+    
+    <div class="collection-book-title">Provoke: Complete Reprint of 3 Volumes</div>
+    
+        <div class="collection-book-meta">Nitesha &middot; 2023</div>
+    
 </a>
 
         
             
-<a href="/books/record-culture_record-culture-issue-5_1497/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-1-volume-iii_1594/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Record Culture Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record Culture Issue 5</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Record Culture &middot; 2018</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-01.jpg" alt="Purple Fashion Magazine Issue 1 (Volume III)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 1 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2004</div>
+    
 </a>
 
         
             
-<a href="/books/record-culture_record-culture-issue-6_1498/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-10-volume-iii_1603/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Record Culture Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record Culture Issue 6</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Record Culture &middot; 2019</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-10.jpg" alt="Purple Fashion Magazine Issue 10 (Volume III)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 10 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2008</div>
+    
 </a>
 
         
             
-<a href="/books/record-culture_record-culture-issue-7_1499/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-11-volume-iii_1604/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Record Culture Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record Culture Issue 7</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Record Culture &middot; 2020</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-11.jpg" alt="Purple Fashion Magazine Issue 11 (Volume III)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 11 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/record-culture_record-culture-issue-8_1500/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-12-volume-iii_1605/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Record Culture Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record Culture Issue 8</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Record Culture &middot; 2020</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-12.jpg" alt="Purple Fashion Magazine Issue 12 (Volume III)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 12 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/record-culture_record-culture-issue-9_1501/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-13-volume-iii_1606/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Record Culture Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record Culture Issue 9</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Record Culture &middot; 2021</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-13.jpg" alt="Purple Fashion Magazine Issue 13 (Volume III)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 13 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/roettinger_slash-a-punk-magazine-from-los-angeles-1977-1980_1426/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-14-volume-iii_1607/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">J.C. Gabel and Brian Roettinger</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Slash: A Punk Magazine from Los Angeles: 1977-1980</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Hat &amp; Beard Press &middot; 2016</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-14.jpg" alt="Purple Fashion Magazine Issue 14 (Volume III)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 14 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/spears_love-journal-2015_1091/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-15-volume-iii_1608/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mike Spears</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Love Journal 2015</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-15.jpg" alt="Purple Fashion Magazine Issue 15 (Volume III)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 15 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2011</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-16-volume-iii_1609/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-16.jpg" alt="Purple Fashion Magazine Issue 16 (Volume III)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 16 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2011</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-17-volume-iii_1610/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-17.jpg" alt="Purple Fashion Magazine Issue 17 (Volume III)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 17 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2012</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-18-volume-iii_1611/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-18.jpg" alt="Purple Fashion Magazine Issue 18 (Volume III)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 18 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2012</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-19-volume-iii_1612/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-19.jpg" alt="Purple Fashion Magazine Issue 19 (Volume III)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 19 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2013</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-2-volume-iii_1595/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-02.jpg" alt="Purple Fashion Magazine Issue 2 (Volume III)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 2 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2004</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-20-volume-iii_1613/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-20.jpg" alt="Purple Fashion Magazine Issue 20 (Volume III)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 20 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2013</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-21-volume-iii_1614/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-21.jpg" alt="Purple Fashion Magazine Issue 21 (Volume III)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 21 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2014</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-22-volume-iii_1615/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-22.jpg" alt="Purple Fashion Magazine Issue 22 (Volume III)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 22 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2014</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-23-volume-iii_1616/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-23.jpg" alt="Purple Fashion Magazine Issue 23 (Volume III)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 23 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2015</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-24-volume-iii_1617/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-24.jpg" alt="Purple Fashion Magazine Issue 24 (Volume III)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 24 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2015</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-25-volume-iii_1618/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-25.jpg" alt="Purple Fashion Magazine Issue 25 (Volume III)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 25 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2016</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-26-volume-iii_1619/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-26.jpg" alt="Purple Fashion Magazine Issue 26 (Volume III)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 26 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2016</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-27-volume-iii_1620/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-27.jpg" alt="Purple Fashion Magazine Issue 27 (Volume III)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 27 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2017</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-28-25yrs-anniversary-volume-iv_1621/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-28-25yrs.jpg" alt="Purple Fashion Magazine Issue 28: 25YRS Anniversary (Volume IV)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 28: 25YRS Anniversary (Volume IV)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2017</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-29-purple-76-index-volume-iv_1622/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-29-index.jpg" alt="Purple Fashion Magazine Issue 29: Purple 76 Index (Volume IV)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 29: Purple 76 Index (Volume IV)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2018</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-3-volume-iii_1596/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-03.jpg" alt="Purple Fashion Magazine Issue 3 (Volume III)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 3 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2005</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-30-the-los-angeles-issue-volume-iv_1623/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-30-la.jpg" alt="Purple Fashion Magazine Issue 30: The Los Angeles Issue (Volume IV)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 30: The Los Angeles Issue (Volume IV)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2018</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-31-the-paris-issue-volume-iv_1624/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-31-paris.jpg" alt="Purple Fashion Magazine Issue 31: The Paris Issue (Volume IV)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 31: The Paris Issue (Volume IV)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2019</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-32-the-cosmos-issue-volume-iv_1625/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-32-cosmos.jpg" alt="Purple Fashion Magazine Issue 32: The Cosmos Issue (Volume IV)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 32: The Cosmos Issue (Volume IV)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2019</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-33-the-brain-issue-volume-iv_1626/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-33-brain.jpg" alt="Purple Fashion Magazine Issue 33: The Brain Issue (Volume IV)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 33: The Brain Issue (Volume IV)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2020</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-4-volume-iii_1597/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-04.jpg" alt="Purple Fashion Magazine Issue 4 (Volume III)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 4 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2005</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-5-volume-iii_1598/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-05.jpg" alt="Purple Fashion Magazine Issue 5 (Volume III)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 5 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2006</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-6-volume-iii_1599/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-06.jpg" alt="Purple Fashion Magazine Issue 6 (Volume III)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 6 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2006</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-7-volume-iii_1600/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-07.jpg" alt="Purple Fashion Magazine Issue 7 (Volume III)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 7 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2007</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-8-volume-iii_1601/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-08.jpg" alt="Purple Fashion Magazine Issue 8 (Volume III)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 8 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2007</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-9-volume-iii_1602/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-09.jpg" alt="Purple Fashion Magazine Issue 9 (Volume III)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 9 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2008</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-magazine-issue-34-the-love-issue_1784/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-34-love.jpg" alt="Purple Magazine Issue 34: The Love Issue" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Magazine Issue 34: The Love Issue</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2020</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-magazine-issue-35-the-island-issue_1785/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-35-island.jpg" alt="Purple Magazine Issue 35: The Island Issue" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Magazine Issue 35: The Island Issue</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2021</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-magazine-issue-36-the-mexico-issue_1786/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-36-mexico.jpg" alt="Purple Magazine Issue 36: The Mexico Issue" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Magazine Issue 36: The Mexico Issue</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2021</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-magazine-issue-37-the-future-issue_1787/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-37-future.jpg" alt="Purple Magazine Issue 37: The Future Issue" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Magazine Issue 37: The Future Issue</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2022</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-magazine-issue-38-the-30yrs-issue_1788/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-38-30yrs.jpg" alt="Purple Magazine Issue 38: The 30YRS Issue" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Magazine Issue 38: The 30YRS Issue</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2022</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-magazine-issue-39-the-new-york-issue_1789/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-39-ny.jpg" alt="Purple Magazine Issue 39: The New York Issue" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Magazine Issue 39: The New York Issue</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2023</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-magazine-issue-40-the-revolutions-issue_1790/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-40-revolutions.jpg" alt="Purple Magazine Issue 40: The Revolutions Issue" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Magazine Issue 40: The Revolutions Issue</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2023</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-magazine-issue-41-the-essence-of-fashion-issue_1791/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-41-fashion.jpg" alt="Purple Magazine Issue 41: The Essence of Fashion Issue" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Magazine Issue 41: The Essence of Fashion Issue</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2024</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-magazine-issue-42-the-magic-issue_1792/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-42-magic.jpg" alt="Purple Magazine Issue 42: The Magic Issue" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Magazine Issue 42: The Magic Issue</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2024</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-magazine-issue-43-the-tokyo-diary-issue_1793/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-43-tokyo.jpg" alt="Purple Magazine Issue 43: The Tokyo Diary Issue" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Magazine Issue 43: The Tokyo Diary Issue</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2025</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-magazine-issue-44-the-analog-issue_1794/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-44-analog.jpg" alt="Purple Magazine Issue 44: The Analog Issue" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Magazine Issue 44: The Analog Issue</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2025</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-magazine-issue-45-the-new-glamour-issue_1795/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-45-glamour.jpg" alt="Purple Magazine Issue 45: The New Glamour Issue" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Magazine Issue 45: The New Glamour Issue</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2026</div>
+    
+</a>
+
+        
+            
+<a href="/books/record-culture-magazine_record-culture-magazine-issue-11_1825/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/Record_Culture_Magazine_Issue_11_9772711992004.jpg" alt="Record Culture Magazine Issue 11" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Record Culture Magazine</div>
+    
+    <div class="collection-book-title">Record Culture Magazine Issue 11</div>
+    
+        <div class="collection-book-meta">Record Creative Limited &middot; 2026</div>
+    
+</a>
+
+        
+            
+<a href="/books/slanted_slanted-magazine-46cairo_1849/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/slanted/slanted-46-cairo.jpg" alt="Slanted Magazine #46—Cairo" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Slanted Publishers</div>
+    
+    <div class="collection-book-title">Slanted Magazine #46—Cairo</div>
+    
+        <div class="collection-book-meta">Slanted Publishers &middot; 2025</div>
+    
+</a>
+
+        
+            
+<a href="/books/va_lets-panic-no-3_1086/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/na_va_lets_panic_no_3_1086.jpg" alt="Let&#39;s Panic No. 3" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">NA VA</div>
+    
+    <div class="collection-book-title">Let&#39;s Panic No. 3</div>
+    
+        <div class="collection-book-meta">Let&#39;s Panic Magazine</div>
+    
+</a>
+
+        
+            
+<a href="/books/va_print-issue-two_545/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/na_va_print_issue_two_545.jpg" alt="PRINT / Issue Two" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">NA VA</div>
+    
+    <div class="collection-book-title">PRINT / Issue Two</div>
+    
+        <div class="collection-book-meta">PRINT &middot; 2017</div>
+    
+</a>
+
+        
+            
+<a href="/books/engstrom_revoir_325/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">JH Engstrom</div>
+    
+    <div class="collection-book-title">Revoir</div>
+    
+        <div class="collection-book-meta">Journal &middot; 2016</div>
+    
+</a>
+
+        
+            
+<a href="/books/jacobs_journal-drawings_542/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">Henri Jacobs</div>
+    
+    <div class="collection-book-title">Journal Drawings</div>
+    
+        <div class="collection-book-meta">Roma Publications &middot; 2013</div>
+    
+</a>
+
+        
+            
+<a href="/books/moriyama_record-no-32_772/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">Daido Moriyama</div>
+    
+    <div class="collection-book-title">Record No. 32</div>
+    
+        <div class="collection-book-meta">Akio Nagasawa Publishing &middot; 2016</div>
+    
+</a>
+
+        
+            
+<a href="/books/purple-magazine_purple-issue-5-volume-ii_1593/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Issue 5 (Volume II)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2000</div>
+    
+</a>
+
+        
+            
+<a href="/books/record-culture_record-culture-issue-1_1493/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">Record Culture Magazine</div>
+    
+    <div class="collection-book-title">Record Culture Issue 1</div>
+    
+        <div class="collection-book-meta">Record Culture &middot; 2016</div>
+    
+</a>
+
+        
+            
+<a href="/books/record-culture_record-culture-issue-10_1502/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">Record Culture Magazine</div>
+    
+    <div class="collection-book-title">Record Culture Issue 10</div>
+    
+        <div class="collection-book-meta">Record Culture &middot; 2022</div>
+    
+</a>
+
+        
+            
+<a href="/books/record-culture_record-culture-issue-2_1494/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">Record Culture Magazine</div>
+    
+    <div class="collection-book-title">Record Culture Issue 2</div>
+    
+        <div class="collection-book-meta">Record Culture &middot; 2017</div>
+    
+</a>
+
+        
+            
+<a href="/books/record-culture_record-culture-issue-3_1495/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">Record Culture Magazine</div>
+    
+    <div class="collection-book-title">Record Culture Issue 3</div>
+    
+        <div class="collection-book-meta">Record Culture &middot; 2017</div>
+    
+</a>
+
+        
+            
+<a href="/books/record-culture_record-culture-issue-4_1496/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">Record Culture Magazine</div>
+    
+    <div class="collection-book-title">Record Culture Issue 4</div>
+    
+        <div class="collection-book-meta">Record Culture &middot; 2018</div>
+    
+</a>
+
+        
+            
+<a href="/books/record-culture_record-culture-issue-5_1497/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">Record Culture Magazine</div>
+    
+    <div class="collection-book-title">Record Culture Issue 5</div>
+    
+        <div class="collection-book-meta">Record Culture &middot; 2018</div>
+    
+</a>
+
+        
+            
+<a href="/books/record-culture_record-culture-issue-6_1498/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">Record Culture Magazine</div>
+    
+    <div class="collection-book-title">Record Culture Issue 6</div>
+    
+        <div class="collection-book-meta">Record Culture &middot; 2019</div>
+    
+</a>
+
+        
+            
+<a href="/books/record-culture_record-culture-issue-7_1499/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">Record Culture Magazine</div>
+    
+    <div class="collection-book-title">Record Culture Issue 7</div>
+    
+        <div class="collection-book-meta">Record Culture &middot; 2020</div>
+    
+</a>
+
+        
+            
+<a href="/books/record-culture_record-culture-issue-8_1500/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">Record Culture Magazine</div>
+    
+    <div class="collection-book-title">Record Culture Issue 8</div>
+    
+        <div class="collection-book-meta">Record Culture &middot; 2020</div>
+    
+</a>
+
+        
+            
+<a href="/books/record-culture_record-culture-issue-9_1501/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">Record Culture Magazine</div>
+    
+    <div class="collection-book-title">Record Culture Issue 9</div>
+    
+        <div class="collection-book-meta">Record Culture &middot; 2021</div>
+    
+</a>
+
+        
+            
+<a href="/books/roettinger_slash-a-punk-magazine-from-los-angeles-1977-1980_1426/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">J.C. Gabel and Brian Roettinger</div>
+    
+    <div class="collection-book-title">Slash: A Punk Magazine from Los Angeles: 1977-1980</div>
+    
+        <div class="collection-book-meta">Hat &amp; Beard Press &middot; 2016</div>
+    
+</a>
+
+        
+            
+<a href="/books/snow_purple-book_1542/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">Max Snow</div>
+    
+    <div class="collection-book-title">Purple Book</div>
+    
+        <div class="collection-book-meta">Purple Books &middot; 2013</div>
+    
+</a>
+
+        
+            
+<a href="/books/snow_you-cant-drink-it-if-its-frozen_1530/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">Dash Snow</div>
+    
+    <div class="collection-book-title">You Can&#39;t Drink It If It&#39;s Frozen</div>
+    
+        <div class="collection-book-meta">Purple Books &middot; 2007</div>
+    
+</a>
+
+        
+            
+<a href="/books/spears_love-journal-2015_1091/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">Mike Spears</div>
+    
+    <div class="collection-book-title">Love Journal 2015</div>
+    
+</a>
+
+        
+            
+<a href="/books/trillo_rockoco-imagenes-del-pop-rock-madrileno-en-los-80_1180/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">Miguel Trillo</div>
+    
+    <div class="collection-book-title">Rockocó: imágenes del pop-rock madrileño en los 80</div>
+    
+        <div class="collection-book-meta">La Fonoteca &middot; 2017</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 

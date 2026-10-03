@@ -311,1334 +311,1457 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+    
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Culture</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Culture.”</p>
+            <div class="collection-eyebrow">Themes
+            </div>
+            <h1 class="collection-title">Culture</h1>
+            
+                <p class="collection-description">Every book in the library tagged “Culture.”</p>
+            
+            <div class="collection-count">68 books</div>
+            
+            
             
             
         </div>
-        
 
-        
-        
-            
-        
         
 
         
             
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
+<section class="collection-section">
+    
+    <div class="collection-books">
         
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        
             
-<a href="/books/dorig_home-heim-fur-obsolete-medien-home-for-obsolete-media_2104/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/dorig_raffael_h_o_m_e_home_for_obsolete_media_9783856169497.jpg" alt="H.o.Me.: Heim für obsolete Medien / Home for Obsolete Media" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
+<a href="/books/dorig_home-heim-fur-obsolete-medien-home-for-obsolete-media_2104/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Raffael Dörig, Flo Kaufmann</p>
+            <img src="/assets/images/books/dorig_raffael_h_o_m_e_home_for_obsolete_media_9783856169497.jpg" alt="H.o.Me.: Heim für obsolete Medien / Home for Obsolete Media" loading="lazy">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">H.o.Me.: Heim für obsolete Medien / Home for Obsolete Media</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Christoph Merian Verlag &middot; 2021</p>
-        
     </div>
+    
+        <div class="collection-book-author">Raffael Dörig, Flo Kaufmann</div>
+    
+    <div class="collection-book-title">H.o.Me.: Heim für obsolete Medien / Home for Obsolete Media</div>
+    
+        <div class="collection-book-meta">Christoph Merian Verlag &middot; 2021</div>
+    
 </a>
 
         
             
-<a href="/books/ganz_graffiti-world-street-art-from-five-continents_2080/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/ganz_nicholas_graffiti_world_9780810949799.jpg" alt="Graffiti World: Street Art from Five Continents" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
+<a href="/books/ganz_graffiti-world-street-art-from-five-continents_2080/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Nicholas Ganz</p>
+            <img src="/assets/images/books/ganz_nicholas_graffiti_world_9780810949799.jpg" alt="Graffiti World: Street Art from Five Continents" loading="lazy">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Graffiti World: Street Art from Five Continents</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Harry N. Abrams &middot; 2004</p>
-        
     </div>
+    
+        <div class="collection-book-author">Nicholas Ganz</div>
+    
+    <div class="collection-book-title">Graffiti World: Street Art from Five Continents</div>
+    
+        <div class="collection-book-meta">Harry N. Abrams &middot; 2004</div>
+    
 </a>
 
         
             
-<a href="/books/king_red-star-over-russia-a-visual-history-of-the-soviet-union-from-the-revolution-to-the-death-of-stalin_2099/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/king_david_red_star_over_russia_9780810982796.jpg" alt="Red Star Over Russia: A Visual History of the Soviet Union from the Revolution to the Death of Stalin" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">David King</p>
+<a href="/books/king_red-star-over-russia-a-visual-history-of-the-soviet-union-from-the-revolution-to-the-death-of-stalin_2099/" class="collection-book">
+    <div class="collection-book-cover">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Red Star Over Russia: A Visual History of the Soviet Union from the Revolution to the Death of Stalin</p>
+            <img src="/assets/images/books/king_david_red_star_over_russia_9780810982796.jpg" alt="Red Star Over Russia: A Visual History of the Soviet Union from the Revolution to the Death of Stalin" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Abrams &middot; 2009</p>
-        
     </div>
+    
+        <div class="collection-book-author">David King</div>
+    
+    <div class="collection-book-title">Red Star Over Russia: A Visual History of the Soviet Union from the Revolution to the Death of Stalin</div>
+    
+        <div class="collection-book-meta">Abrams &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/lupano_fashion-at-the-time-of-fascism-italian-modernist-lifestyle-1922-1943_2101/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/lupano_mario_fashion_at_the_time_of_fascism_9788862080514.jpg" alt="Fashion at the Time of Fascism: Italian Modernist Lifestyle 1922–1943" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mario Lupano, Alessandra Vaccari</p>
+<a href="/books/lupano_fashion-at-the-time-of-fascism-italian-modernist-lifestyle-1922-1943_2101/" class="collection-book">
+    <div class="collection-book-cover">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Fashion at the Time of Fascism: Italian Modernist Lifestyle 1922–1943</p>
+            <img src="/assets/images/books/lupano_mario_fashion_at_the_time_of_fascism_9788862080514.jpg" alt="Fashion at the Time of Fascism: Italian Modernist Lifestyle 1922–1943" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Damiani &middot; 2009</p>
-        
     </div>
+    
+        <div class="collection-book-author">Mario Lupano, Alessandra Vaccari</div>
+    
+    <div class="collection-book-title">Fashion at the Time of Fascism: Italian Modernist Lifestyle 1922–1943</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/mcconnell_sex-drugs-and-magick_726/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/mcconnell_gareth_sex_drugs_and_magick_726.jpg" alt="Sex, Drugs and Magick" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Gareth McConnell</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Sex, Drugs and Magick</p>
+<a href="/books/mcconnell_sex-drugs-and-magick_726/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Sorika &middot; 2014</p>
+            <img src="/assets/images/books/mcconnell_gareth_sex_drugs_and_magick_726.jpg" alt="Sex, Drugs and Magick" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Gareth McConnell</div>
+    
+    <div class="collection-book-title">Sex, Drugs and Magick</div>
+    
+        <div class="collection-book-meta">Sorika &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/mckimm_prototype-issue-0_2358/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/mckimm_prototype-issue-0_2358/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/mckimm_alastair_prototype-issue-0_2358.jpg" alt="PROTOTYPE ISSUE 0" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/mckimm_alastair_prototype-issue-0_2358.jpg" alt="PROTOTYPE ISSUE 0" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Alastair McKimm</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">PROTOTYPE ISSUE 0</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">IDEA / PROTOTYPE &middot; 2026</p>
-        
-    </div>
+    
+        <div class="collection-book-author">Alastair McKimm</div>
+    
+    <div class="collection-book-title">PROTOTYPE ISSUE 0</div>
+    
+        <div class="collection-book-meta">IDEA / PROTOTYPE &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/metzger_berlin-the-twenties_2090/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/metzger_berlin-the-twenties_2090/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/metzger_rainer_berlin_the_twenties_9780810993297.jpg" alt="Berlin: The Twenties" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/metzger_rainer_berlin_the_twenties_9780810993297.jpg" alt="Berlin: The Twenties" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Rainer Metzger</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Berlin: The Twenties</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Abrams &middot; 2007</p>
-        
-    </div>
+    
+        <div class="collection-book-author">Rainer Metzger</div>
+    
+    <div class="collection-book-title">Berlin: The Twenties</div>
+    
+        <div class="collection-book-meta">Abrams &middot; 2007</div>
+    
 </a>
 
         
             
-<a href="/books/penn_sex-magazine-1-10-2012-2015_2118/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/penn_asher_sex_magazine_1_10_9781576877821.jpg" alt="Sex Magazine #1–10: 2012–2015" class="w-full h-full object-cover" loading="lazy">
+<a href="/books/penn_sex-magazine-1-10-2012-2015_2118/" class="collection-book">
+    <div class="collection-book-cover">
         
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Asher Penn</p>
+            <img src="/assets/images/books/penn_asher_sex_magazine_1_10_9781576877821.jpg" alt="Sex Magazine #1–10: 2012–2015" loading="lazy">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Sex Magazine #1–10: 2012–2015</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">powerHouse Books &middot; 2016</p>
-        
     </div>
+    
+        <div class="collection-book-author">Asher Penn</div>
+    
+    <div class="collection-book-title">Sex Magazine #1–10: 2012–2015</div>
+    
+        <div class="collection-book-meta">powerHouse Books &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/powers_the-art-of-getting-over-graffiti-at-the-millennium_2084/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/powers_stephen_the_art_of_getting_over_graffiti_at_the_millennium_9780312206307.jpg" alt="The Art of Getting Over: Graffiti at the Millennium" class="w-full h-full object-cover" loading="lazy">
+<a href="/books/powers_the-art-of-getting-over-graffiti-at-the-millennium_2084/" class="collection-book">
+    <div class="collection-book-cover">
         
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Stephen Powers</p>
+            <img src="/assets/images/books/powers_stephen_the_art_of_getting_over_graffiti_at_the_millennium_9780312206307.jpg" alt="The Art of Getting Over: Graffiti at the Millennium" loading="lazy">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Art of Getting Over: Graffiti at the Millennium</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">St. Martin&#39;s Press &middot; 1999</p>
-        
     </div>
+    
+        <div class="collection-book-author">Stephen Powers</div>
+    
+    <div class="collection-book-title">The Art of Getting Over: Graffiti at the Millennium</div>
+    
+        <div class="collection-book-meta">St. Martin&#39;s Press &middot; 1999</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-1-volume-iii_1594/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-01.jpg" alt="Purple Fashion Magazine Issue 1 (Volume III)" class="w-full h-full object-cover" loading="lazy">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-1-volume-iii_1594/" class="collection-book">
+    <div class="collection-book-cover">
         
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-01.jpg" alt="Purple Fashion Magazine Issue 1 (Volume III)" loading="lazy">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 1 (Volume III)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2004</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 1 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2004</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-10-volume-iii_1603/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-10.jpg" alt="Purple Fashion Magazine Issue 10 (Volume III)" class="w-full h-full object-cover" loading="lazy">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-10-volume-iii_1603/" class="collection-book">
+    <div class="collection-book-cover">
         
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 10 (Volume III)</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-10.jpg" alt="Purple Fashion Magazine Issue 10 (Volume III)" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2008</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 10 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2008</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-11-volume-iii_1604/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-11.jpg" alt="Purple Fashion Magazine Issue 11 (Volume III)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-11-volume-iii_1604/" class="collection-book">
+    <div class="collection-book-cover">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 11 (Volume III)</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-11.jpg" alt="Purple Fashion Magazine Issue 11 (Volume III)" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2009</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 11 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-12-volume-iii_1605/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-12.jpg" alt="Purple Fashion Magazine Issue 12 (Volume III)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 12 (Volume III)</p>
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-12-volume-iii_1605/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2009</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-12.jpg" alt="Purple Fashion Magazine Issue 12 (Volume III)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 12 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-13-volume-iii_1606/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-13.jpg" alt="Purple Fashion Magazine Issue 13 (Volume III)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-13-volume-iii_1606/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-13.jpg" alt="Purple Fashion Magazine Issue 13 (Volume III)" loading="lazy">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 13 (Volume III)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2010</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 13 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-14-volume-iii_1607/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-14.jpg" alt="Purple Fashion Magazine Issue 14 (Volume III)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-14-volume-iii_1607/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-14.jpg" alt="Purple Fashion Magazine Issue 14 (Volume III)" loading="lazy">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 14 (Volume III)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2010</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 14 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-15-volume-iii_1608/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-15.jpg" alt="Purple Fashion Magazine Issue 15 (Volume III)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-15-volume-iii_1608/" class="collection-book">
+    <div class="collection-book-cover">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 15 (Volume III)</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-15.jpg" alt="Purple Fashion Magazine Issue 15 (Volume III)" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2011</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 15 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-16-volume-iii_1609/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-16.jpg" alt="Purple Fashion Magazine Issue 16 (Volume III)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-16-volume-iii_1609/" class="collection-book">
+    <div class="collection-book-cover">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 16 (Volume III)</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-16.jpg" alt="Purple Fashion Magazine Issue 16 (Volume III)" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2011</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 16 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-17-volume-iii_1610/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-17.jpg" alt="Purple Fashion Magazine Issue 17 (Volume III)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-17-volume-iii_1610/" class="collection-book">
+    <div class="collection-book-cover">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 17 (Volume III)</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-17.jpg" alt="Purple Fashion Magazine Issue 17 (Volume III)" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2012</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 17 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-18-volume-iii_1611/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-18.jpg" alt="Purple Fashion Magazine Issue 18 (Volume III)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-18-volume-iii_1611/" class="collection-book">
+    <div class="collection-book-cover">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 18 (Volume III)</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-18.jpg" alt="Purple Fashion Magazine Issue 18 (Volume III)" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2012</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 18 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-19-volume-iii_1612/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-19.jpg" alt="Purple Fashion Magazine Issue 19 (Volume III)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 19 (Volume III)</p>
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-19-volume-iii_1612/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2013</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-19.jpg" alt="Purple Fashion Magazine Issue 19 (Volume III)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 19 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-2-volume-iii_1595/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-2-volume-iii_1595/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-02.jpg" alt="Purple Fashion Magazine Issue 2 (Volume III)" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-02.jpg" alt="Purple Fashion Magazine Issue 2 (Volume III)" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 2 (Volume III)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2004</p>
-        
-    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 2 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2004</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-20-volume-iii_1613/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-20-volume-iii_1613/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-20.jpg" alt="Purple Fashion Magazine Issue 20 (Volume III)" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-20.jpg" alt="Purple Fashion Magazine Issue 20 (Volume III)" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 20 (Volume III)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2013</p>
-        
-    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 20 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-21-volume-iii_1614/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-21.jpg" alt="Purple Fashion Magazine Issue 21 (Volume III)" class="w-full h-full object-cover" loading="lazy">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-21-volume-iii_1614/" class="collection-book">
+    <div class="collection-book-cover">
         
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-21.jpg" alt="Purple Fashion Magazine Issue 21 (Volume III)" loading="lazy">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 21 (Volume III)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2014</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 21 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-22-volume-iii_1615/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-22.jpg" alt="Purple Fashion Magazine Issue 22 (Volume III)" class="w-full h-full object-cover" loading="lazy">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-22-volume-iii_1615/" class="collection-book">
+    <div class="collection-book-cover">
         
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 22 (Volume III)</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-22.jpg" alt="Purple Fashion Magazine Issue 22 (Volume III)" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2014</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 22 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-23-volume-iii_1616/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-23.jpg" alt="Purple Fashion Magazine Issue 23 (Volume III)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-23-volume-iii_1616/" class="collection-book">
+    <div class="collection-book-cover">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 23 (Volume III)</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-23.jpg" alt="Purple Fashion Magazine Issue 23 (Volume III)" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2015</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 23 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-24-volume-iii_1617/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-24.jpg" alt="Purple Fashion Magazine Issue 24 (Volume III)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 24 (Volume III)</p>
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-24-volume-iii_1617/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2015</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-24.jpg" alt="Purple Fashion Magazine Issue 24 (Volume III)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 24 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-25-volume-iii_1618/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-25.jpg" alt="Purple Fashion Magazine Issue 25 (Volume III)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-25-volume-iii_1618/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-25.jpg" alt="Purple Fashion Magazine Issue 25 (Volume III)" loading="lazy">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 25 (Volume III)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2016</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 25 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-26-volume-iii_1619/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-26.jpg" alt="Purple Fashion Magazine Issue 26 (Volume III)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-26-volume-iii_1619/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-26.jpg" alt="Purple Fashion Magazine Issue 26 (Volume III)" loading="lazy">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 26 (Volume III)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2016</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 26 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-27-volume-iii_1620/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-27.jpg" alt="Purple Fashion Magazine Issue 27 (Volume III)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-27-volume-iii_1620/" class="collection-book">
+    <div class="collection-book-cover">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 27 (Volume III)</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-27.jpg" alt="Purple Fashion Magazine Issue 27 (Volume III)" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2017</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 27 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-28-25yrs-anniversary-volume-iv_1621/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-28-25yrs.jpg" alt="Purple Fashion Magazine Issue 28: 25YRS Anniversary (Volume IV)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-28-25yrs-anniversary-volume-iv_1621/" class="collection-book">
+    <div class="collection-book-cover">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 28: 25YRS Anniversary (Volume IV)</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-28-25yrs.jpg" alt="Purple Fashion Magazine Issue 28: 25YRS Anniversary (Volume IV)" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2017</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 28: 25YRS Anniversary (Volume IV)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-29-purple-76-index-volume-iv_1622/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-29-index.jpg" alt="Purple Fashion Magazine Issue 29: Purple 76 Index (Volume IV)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 29: Purple 76 Index (Volume IV)</p>
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-29-purple-76-index-volume-iv_1622/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2018</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-29-index.jpg" alt="Purple Fashion Magazine Issue 29: Purple 76 Index (Volume IV)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 29: Purple 76 Index (Volume IV)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2018</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-3-volume-iii_1596/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-3-volume-iii_1596/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-03.jpg" alt="Purple Fashion Magazine Issue 3 (Volume III)" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-03.jpg" alt="Purple Fashion Magazine Issue 3 (Volume III)" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 3 (Volume III)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2005</p>
-        
-    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 3 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2005</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-30-the-los-angeles-issue-volume-iv_1623/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-30-the-los-angeles-issue-volume-iv_1623/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-30-la.jpg" alt="Purple Fashion Magazine Issue 30: The Los Angeles Issue (Volume IV)" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-30-la.jpg" alt="Purple Fashion Magazine Issue 30: The Los Angeles Issue (Volume IV)" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 30: The Los Angeles Issue (Volume IV)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2018</p>
-        
-    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 30: The Los Angeles Issue (Volume IV)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2018</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-31-the-paris-issue-volume-iv_1624/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-31-paris.jpg" alt="Purple Fashion Magazine Issue 31: The Paris Issue (Volume IV)" class="w-full h-full object-cover" loading="lazy">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-31-the-paris-issue-volume-iv_1624/" class="collection-book">
+    <div class="collection-book-cover">
         
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-31-paris.jpg" alt="Purple Fashion Magazine Issue 31: The Paris Issue (Volume IV)" loading="lazy">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 31: The Paris Issue (Volume IV)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2019</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 31: The Paris Issue (Volume IV)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2019</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-32-the-cosmos-issue-volume-iv_1625/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-32-cosmos.jpg" alt="Purple Fashion Magazine Issue 32: The Cosmos Issue (Volume IV)" class="w-full h-full object-cover" loading="lazy">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-32-the-cosmos-issue-volume-iv_1625/" class="collection-book">
+    <div class="collection-book-cover">
         
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-32-cosmos.jpg" alt="Purple Fashion Magazine Issue 32: The Cosmos Issue (Volume IV)" loading="lazy">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 32: The Cosmos Issue (Volume IV)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2019</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 32: The Cosmos Issue (Volume IV)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2019</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-33-the-brain-issue-volume-iv_1626/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-33-brain.jpg" alt="Purple Fashion Magazine Issue 33: The Brain Issue (Volume IV)" class="w-full h-full object-cover" loading="lazy">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-33-the-brain-issue-volume-iv_1626/" class="collection-book">
+    <div class="collection-book-cover">
         
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-33-brain.jpg" alt="Purple Fashion Magazine Issue 33: The Brain Issue (Volume IV)" loading="lazy">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 33: The Brain Issue (Volume IV)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2020</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 33: The Brain Issue (Volume IV)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2020</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-4-volume-iii_1597/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-04.jpg" alt="Purple Fashion Magazine Issue 4 (Volume III)" class="w-full h-full object-cover" loading="lazy">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-4-volume-iii_1597/" class="collection-book">
+    <div class="collection-book-cover">
         
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 4 (Volume III)</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-04.jpg" alt="Purple Fashion Magazine Issue 4 (Volume III)" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2005</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 4 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2005</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-5-volume-iii_1598/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-05.jpg" alt="Purple Fashion Magazine Issue 5 (Volume III)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-5-volume-iii_1598/" class="collection-book">
+    <div class="collection-book-cover">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 5 (Volume III)</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-05.jpg" alt="Purple Fashion Magazine Issue 5 (Volume III)" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2006</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 5 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2006</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-6-volume-iii_1599/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-06.jpg" alt="Purple Fashion Magazine Issue 6 (Volume III)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 6 (Volume III)</p>
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-6-volume-iii_1599/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2006</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-06.jpg" alt="Purple Fashion Magazine Issue 6 (Volume III)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 6 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2006</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-7-volume-iii_1600/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-07.jpg" alt="Purple Fashion Magazine Issue 7 (Volume III)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-7-volume-iii_1600/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-07.jpg" alt="Purple Fashion Magazine Issue 7 (Volume III)" loading="lazy">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 7 (Volume III)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2007</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 7 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2007</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-8-volume-iii_1601/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-08.jpg" alt="Purple Fashion Magazine Issue 8 (Volume III)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-8-volume-iii_1601/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-08.jpg" alt="Purple Fashion Magazine Issue 8 (Volume III)" loading="lazy">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 8 (Volume III)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2007</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 8 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2007</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-fashion-magazine-issue-9-volume-iii_1602/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-09.jpg" alt="Purple Fashion Magazine Issue 9 (Volume III)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+<a href="/books/purple-magazine_purple-fashion-magazine-issue-9-volume-iii_1602/" class="collection-book">
+    <div class="collection-book-cover">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Fashion Magazine Issue 9 (Volume III)</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-09.jpg" alt="Purple Fashion Magazine Issue 9 (Volume III)" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2008</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Fashion Magazine Issue 9 (Volume III)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2008</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-magazine-issue-34-the-love-issue_1784/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-34-love.jpg" alt="Purple Magazine Issue 34: The Love Issue" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+<a href="/books/purple-magazine_purple-magazine-issue-34-the-love-issue_1784/" class="collection-book">
+    <div class="collection-book-cover">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Magazine Issue 34: The Love Issue</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-34-love.jpg" alt="Purple Magazine Issue 34: The Love Issue" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2020</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Magazine Issue 34: The Love Issue</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2020</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-magazine-issue-35-the-island-issue_1785/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-35-island.jpg" alt="Purple Magazine Issue 35: The Island Issue" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Magazine Issue 35: The Island Issue</p>
+<a href="/books/purple-magazine_purple-magazine-issue-35-the-island-issue_1785/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2021</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-35-island.jpg" alt="Purple Magazine Issue 35: The Island Issue" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Magazine Issue 35: The Island Issue</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2021</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-magazine-issue-36-the-mexico-issue_1786/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/purple-magazine_purple-magazine-issue-36-the-mexico-issue_1786/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-36-mexico.jpg" alt="Purple Magazine Issue 36: The Mexico Issue" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-36-mexico.jpg" alt="Purple Magazine Issue 36: The Mexico Issue" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Magazine Issue 36: The Mexico Issue</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2021</p>
-        
-    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Magazine Issue 36: The Mexico Issue</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2021</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-magazine-issue-37-the-future-issue_1787/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/purple-magazine_purple-magazine-issue-37-the-future-issue_1787/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-37-future.jpg" alt="Purple Magazine Issue 37: The Future Issue" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-37-future.jpg" alt="Purple Magazine Issue 37: The Future Issue" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Magazine Issue 37: The Future Issue</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2022</p>
-        
-    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Magazine Issue 37: The Future Issue</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2022</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-magazine-issue-38-the-30yrs-issue_1788/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-38-30yrs.jpg" alt="Purple Magazine Issue 38: The 30YRS Issue" class="w-full h-full object-cover" loading="lazy">
+<a href="/books/purple-magazine_purple-magazine-issue-38-the-30yrs-issue_1788/" class="collection-book">
+    <div class="collection-book-cover">
         
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-38-30yrs.jpg" alt="Purple Magazine Issue 38: The 30YRS Issue" loading="lazy">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Magazine Issue 38: The 30YRS Issue</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2022</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Magazine Issue 38: The 30YRS Issue</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2022</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-magazine-issue-39-the-new-york-issue_1789/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-39-ny.jpg" alt="Purple Magazine Issue 39: The New York Issue" class="w-full h-full object-cover" loading="lazy">
+<a href="/books/purple-magazine_purple-magazine-issue-39-the-new-york-issue_1789/" class="collection-book">
+    <div class="collection-book-cover">
         
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Magazine Issue 39: The New York Issue</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-39-ny.jpg" alt="Purple Magazine Issue 39: The New York Issue" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2023</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Magazine Issue 39: The New York Issue</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2023</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-magazine-issue-40-the-revolutions-issue_1790/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-40-revolutions.jpg" alt="Purple Magazine Issue 40: The Revolutions Issue" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+<a href="/books/purple-magazine_purple-magazine-issue-40-the-revolutions-issue_1790/" class="collection-book">
+    <div class="collection-book-cover">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Magazine Issue 40: The Revolutions Issue</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-40-revolutions.jpg" alt="Purple Magazine Issue 40: The Revolutions Issue" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2023</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Magazine Issue 40: The Revolutions Issue</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2023</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-magazine-issue-41-the-essence-of-fashion-issue_1791/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-41-fashion.jpg" alt="Purple Magazine Issue 41: The Essence of Fashion Issue" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Magazine Issue 41: The Essence of Fashion Issue</p>
+<a href="/books/purple-magazine_purple-magazine-issue-41-the-essence-of-fashion-issue_1791/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2024</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-41-fashion.jpg" alt="Purple Magazine Issue 41: The Essence of Fashion Issue" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Magazine Issue 41: The Essence of Fashion Issue</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2024</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-magazine-issue-42-the-magic-issue_1792/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-42-magic.jpg" alt="Purple Magazine Issue 42: The Magic Issue" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
+<a href="/books/purple-magazine_purple-magazine-issue-42-the-magic-issue_1792/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-42-magic.jpg" alt="Purple Magazine Issue 42: The Magic Issue" loading="lazy">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Magazine Issue 42: The Magic Issue</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2024</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Magazine Issue 42: The Magic Issue</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2024</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-magazine-issue-43-the-tokyo-diary-issue_1793/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-43-tokyo.jpg" alt="Purple Magazine Issue 43: The Tokyo Diary Issue" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
+<a href="/books/purple-magazine_purple-magazine-issue-43-the-tokyo-diary-issue_1793/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-43-tokyo.jpg" alt="Purple Magazine Issue 43: The Tokyo Diary Issue" loading="lazy">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Magazine Issue 43: The Tokyo Diary Issue</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2025</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Magazine Issue 43: The Tokyo Diary Issue</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-magazine-issue-44-the-analog-issue_1794/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-44-analog.jpg" alt="Purple Magazine Issue 44: The Analog Issue" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
+<a href="/books/purple-magazine_purple-magazine-issue-44-the-analog-issue_1794/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-44-analog.jpg" alt="Purple Magazine Issue 44: The Analog Issue" loading="lazy">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Magazine Issue 44: The Analog Issue</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2025</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Magazine Issue 44: The Analog Issue</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-magazine-issue-45-the-new-glamour-issue_1795/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/purple-magazine/covers/purple-45-glamour.jpg" alt="Purple Magazine Issue 45: The New Glamour Issue" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
+<a href="/books/purple-magazine_purple-magazine-issue-45-the-new-glamour-issue_1795/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
+            <img src="/assets/images/magazines/purple-magazine/covers/purple-45-glamour.jpg" alt="Purple Magazine Issue 45: The New Glamour Issue" loading="lazy">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Magazine Issue 45: The New Glamour Issue</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2026</p>
-        
     </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Magazine Issue 45: The New Glamour Issue</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/record-culture-magazine_record-culture-magazine-issue-11_1825/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/Record_Culture_Magazine_Issue_11_9772711992004.jpg" alt="Record Culture Magazine Issue 11" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Record Culture Magazine</p>
+<a href="/books/record-culture-magazine_record-culture-magazine-issue-11_1825/" class="collection-book">
+    <div class="collection-book-cover">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record Culture Magazine Issue 11</p>
+            <img src="/assets/images/books/Record_Culture_Magazine_Issue_11_9772711992004.jpg" alt="Record Culture Magazine Issue 11" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Record Creative Limited &middot; 2026</p>
-        
     </div>
+    
+        <div class="collection-book-author">Record Culture Magazine</div>
+    
+    <div class="collection-book-title">Record Culture Magazine Issue 11</div>
+    
+        <div class="collection-book-meta">Record Creative Limited &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/sardon_the-stampographer_2107/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/sardon_vincent_the_stampographer_9781938221163.jpg" alt="The Stampographer" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Vincent Sardon</p>
+<a href="/books/sardon_the-stampographer_2107/" class="collection-book">
+    <div class="collection-book-cover">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Stampographer</p>
+            <img src="/assets/images/books/sardon_vincent_the_stampographer_9781938221163.jpg" alt="The Stampographer" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Siglio Press &middot; 2017</p>
-        
     </div>
+    
+        <div class="collection-book-author">Vincent Sardon</div>
+    
+    <div class="collection-book-title">The Stampographer</div>
+    
+        <div class="collection-book-meta">Siglio Press &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/tondini_limage-obscene-the-obscene-image-parisian-hospital-break-room-graffiti_2115/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/tondini_gilles_limage_obscene_the_obscene_image_9780981960074.jpg" alt="L&#39;Image Obscène / The Obscene Image: Parisian Hospital Break Room Graffiti" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Gilles Tondini, Marie L. Bouchon</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">L&#39;Image Obscène / The Obscene Image: Parisian Hospital Break Room Graffiti</p>
+<a href="/books/tondini_limage-obscene-the-obscene-image-parisian-hospital-break-room-graffiti_2115/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Mark Batty Publisher &middot; 2010</p>
+            <img src="/assets/images/books/tondini_gilles_limage_obscene_the_obscene_image_9780981960074.jpg" alt="L&#39;Image Obscène / The Obscene Image: Parisian Hospital Break Room Graffiti" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Gilles Tondini, Marie L. Bouchon</div>
+    
+    <div class="collection-book-title">L&#39;Image Obscène / The Obscene Image: Parisian Hospital Break Room Graffiti</div>
+    
+        <div class="collection-book-meta">Mark Batty Publisher &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/purple-magazine_purple-issue-5-volume-ii_1593/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/purple-magazine_purple-issue-5-volume-ii_1593/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+            <span class="no-cover">No cover</span>
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Purple Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Purple Issue 5 (Volume II)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Purple &middot; 2000</p>
-        
-    </div>
+    
+        <div class="collection-book-author">Purple Magazine</div>
+    
+    <div class="collection-book-title">Purple Issue 5 (Volume II)</div>
+    
+        <div class="collection-book-meta">Purple &middot; 2000</div>
+    
 </a>
 
         
             
-<a href="/books/record-culture_record-culture-issue-1_1493/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/record-culture_record-culture-issue-1_1493/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+            <span class="no-cover">No cover</span>
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Record Culture Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record Culture Issue 1</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Record Culture &middot; 2016</p>
-        
-    </div>
+    
+        <div class="collection-book-author">Record Culture Magazine</div>
+    
+    <div class="collection-book-title">Record Culture Issue 1</div>
+    
+        <div class="collection-book-meta">Record Culture &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/record-culture_record-culture-issue-10_1502/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+<a href="/books/record-culture_record-culture-issue-10_1502/" class="collection-book">
+    <div class="collection-book-cover">
         
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Record Culture Magazine</p>
+            <span class="no-cover">No cover</span>
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record Culture Issue 10</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Record Culture &middot; 2022</p>
-        
     </div>
+    
+        <div class="collection-book-author">Record Culture Magazine</div>
+    
+    <div class="collection-book-title">Record Culture Issue 10</div>
+    
+        <div class="collection-book-meta">Record Culture &middot; 2022</div>
+    
 </a>
 
         
             
-<a href="/books/record-culture_record-culture-issue-2_1494/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+<a href="/books/record-culture_record-culture-issue-2_1494/" class="collection-book">
+    <div class="collection-book-cover">
         
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Record Culture Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record Culture Issue 2</p>
+            <span class="no-cover">No cover</span>
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Record Culture &middot; 2017</p>
-        
     </div>
+    
+        <div class="collection-book-author">Record Culture Magazine</div>
+    
+    <div class="collection-book-title">Record Culture Issue 2</div>
+    
+        <div class="collection-book-meta">Record Culture &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/record-culture_record-culture-issue-3_1495/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Record Culture Magazine</p>
+<a href="/books/record-culture_record-culture-issue-3_1495/" class="collection-book">
+    <div class="collection-book-cover">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record Culture Issue 3</p>
+            <span class="no-cover">No cover</span>
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Record Culture &middot; 2017</p>
-        
     </div>
+    
+        <div class="collection-book-author">Record Culture Magazine</div>
+    
+    <div class="collection-book-title">Record Culture Issue 3</div>
+    
+        <div class="collection-book-meta">Record Culture &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/record-culture_record-culture-issue-4_1496/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Record Culture Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record Culture Issue 4</p>
+<a href="/books/record-culture_record-culture-issue-4_1496/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Record Culture &middot; 2018</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Record Culture Magazine</div>
+    
+    <div class="collection-book-title">Record Culture Issue 4</div>
+    
+        <div class="collection-book-meta">Record Culture &middot; 2018</div>
+    
 </a>
 
         
             
-<a href="/books/record-culture_record-culture-issue-5_1497/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
+<a href="/books/record-culture_record-culture-issue-5_1497/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Record Culture Magazine</p>
+            <span class="no-cover">No cover</span>
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record Culture Issue 5</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Record Culture &middot; 2018</p>
-        
     </div>
+    
+        <div class="collection-book-author">Record Culture Magazine</div>
+    
+    <div class="collection-book-title">Record Culture Issue 5</div>
+    
+        <div class="collection-book-meta">Record Culture &middot; 2018</div>
+    
 </a>
 
         
             
-<a href="/books/record-culture_record-culture-issue-6_1498/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
+<a href="/books/record-culture_record-culture-issue-6_1498/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Record Culture Magazine</p>
+            <span class="no-cover">No cover</span>
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record Culture Issue 6</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Record Culture &middot; 2019</p>
-        
     </div>
+    
+        <div class="collection-book-author">Record Culture Magazine</div>
+    
+    <div class="collection-book-title">Record Culture Issue 6</div>
+    
+        <div class="collection-book-meta">Record Culture &middot; 2019</div>
+    
 </a>
 
         
             
-<a href="/books/record-culture_record-culture-issue-7_1499/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Record Culture Magazine</p>
+<a href="/books/record-culture_record-culture-issue-7_1499/" class="collection-book">
+    <div class="collection-book-cover">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record Culture Issue 7</p>
+            <span class="no-cover">No cover</span>
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Record Culture &middot; 2020</p>
-        
     </div>
+    
+        <div class="collection-book-author">Record Culture Magazine</div>
+    
+    <div class="collection-book-title">Record Culture Issue 7</div>
+    
+        <div class="collection-book-meta">Record Culture &middot; 2020</div>
+    
 </a>
 
         
             
-<a href="/books/record-culture_record-culture-issue-8_1500/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Record Culture Magazine</p>
+<a href="/books/record-culture_record-culture-issue-8_1500/" class="collection-book">
+    <div class="collection-book-cover">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record Culture Issue 8</p>
+            <span class="no-cover">No cover</span>
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Record Culture &middot; 2020</p>
-        
     </div>
+    
+        <div class="collection-book-author">Record Culture Magazine</div>
+    
+    <div class="collection-book-title">Record Culture Issue 8</div>
+    
+        <div class="collection-book-meta">Record Culture &middot; 2020</div>
+    
 </a>
 
         
             
-<a href="/books/record-culture_record-culture-issue-9_1501/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Record Culture Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record Culture Issue 9</p>
+<a href="/books/record-culture_record-culture-issue-9_1501/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Record Culture &middot; 2021</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Record Culture Magazine</div>
+    
+    <div class="collection-book-title">Record Culture Issue 9</div>
+    
+        <div class="collection-book-meta">Record Culture &middot; 2021</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 

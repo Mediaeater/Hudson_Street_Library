@@ -311,745 +311,930 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+    
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Self-Published</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Self-Published.”</p>
+            <div class="collection-eyebrow">Formats
+            </div>
+            <h1 class="collection-title">Self-Published</h1>
+            
+                <p class="collection-description">Every book in the library tagged “Self-Published.”</p>
+            
+            <div class="collection-count">37 books</div>
+            
+            
             
             
         </div>
-        
 
-        
-        
-            
-        
         
 
         
             
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
-        
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<section class="collection-section">
+    
+    <div class="collection-books">
         
             
-<a href="/books/anders_podmoskovye_2142/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/anders_podmoskovye_2142/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/anders_pascal_podmoskovye_9782918837138.jpg" alt="Podmoskovye" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Pascal Anders</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Podmoskovye</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self-published &middot; 2015</p>
+            <img src="/assets/images/books/anders_pascal_podmoskovye_9782918837138.jpg" alt="Podmoskovye" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Pascal Anders</div>
+    
+    <div class="collection-book-title">Podmoskovye</div>
+    
+        <div class="collection-book-meta">Self-published &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/borruso_data_1889/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/borruso_data_1889/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/borruso_matt_data_2019.jpg" alt="DATA" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Matt Borruso</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">DATA</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Visible Publications &middot; 2019</p>
+            <img src="/assets/images/books/borruso_matt_data_2019.jpg" alt="DATA" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Matt Borruso</div>
+    
+    <div class="collection-book-title">DATA</div>
+    
+        <div class="collection-book-meta">Visible Publications &middot; 2019</div>
+    
 </a>
 
         
             
-<a href="/books/borruso_negative-space_1888/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/borruso_negative-space_1888/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/borruso_matt_negative_space_2010.jpg" alt="Negative Space" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Matt Borruso</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Negative Space</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Visible Publications &middot; 2010</p>
+            <img src="/assets/images/books/borruso_matt_negative_space_2010.jpg" alt="Negative Space" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Matt Borruso</div>
+    
+    <div class="collection-book-title">Negative Space</div>
+    
+        <div class="collection-book-meta">Visible Publications &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/borruso_the-luxury-of-rigor_1896/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/borruso_the-luxury-of-rigor_1896/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/borruso_matt_the_luxury_of_rigor_2013.jpg" alt="The Luxury of Rigor" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Matt Borruso</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Luxury of Rigor</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Visible Publications &middot; 2013</p>
+            <img src="/assets/images/books/borruso_matt_the_luxury_of_rigor_2013.jpg" alt="The Luxury of Rigor" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Matt Borruso</div>
+    
+    <div class="collection-book-title">The Luxury of Rigor</div>
+    
+        <div class="collection-book-meta">Visible Publications &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/briner_briner-hauser_2346/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/briner_briner-hauser_2346/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/briner_timothy_briner-hauser.jpg" alt="Briner Hauser" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Timothy Briner, Thomas Hauser</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Briner Hauser</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">S U N &middot; 2014</p>
+            <img src="/assets/images/books/briner_timothy_briner-hauser.jpg" alt="Briner Hauser" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Timothy Briner, Thomas Hauser</div>
+    
+    <div class="collection-book-title">Briner Hauser</div>
+    
+        <div class="collection-book-meta">S U N &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/bush_a-treatise-on-the-camera-obscured_2159/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/bush_a-treatise-on-the-camera-obscured_2159/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/bush_lewis_a-treatise-on-the-camera-obscured.jpg" alt="A Treatise on the Camera Obscured" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Lewis Bush</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">A Treatise on the Camera Obscured</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self-published &middot; 2014</p>
+            <img src="/assets/images/books/bush_lewis_a-treatise-on-the-camera-obscured.jpg" alt="A Treatise on the Camera Obscured" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Lewis Bush</div>
+    
+    <div class="collection-book-title">A Treatise on the Camera Obscured</div>
+    
+        <div class="collection-book-meta">Self-published &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/champassak_my-freedom_218/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/champassak_my-freedom_218/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/champassak_tiane_doan_na_my_freedom_218.jpg" alt="My Freedom" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tiane Doan na Champassak</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">My Freedom</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Siam&#39;s Guy Books &middot; 2016</p>
+            <img src="/assets/images/books/champassak_tiane_doan_na_my_freedom_218.jpg" alt="My Freedom" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Tiane Doan na Champassak</div>
+    
+    <div class="collection-book-title">My Freedom</div>
+    
+        <div class="collection-book-meta">Siam&#39;s Guy Books &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/drme_fin_1895/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/drme_fin_1895/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/drme_fin_2019.jpg" alt="FIN?" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">DR.ME (Ryan Doyle &amp; Mark Edwards)</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">FIN?</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self-published (DR.ME) &middot; 2019</p>
+            <img src="/assets/images/books/drme_fin_2019.jpg" alt="FIN?" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">DR.ME (Ryan Doyle &amp; Mark Edwards)</div>
+    
+    <div class="collection-book-title">FIN?</div>
+    
+        <div class="collection-book-meta">Self-published (DR.ME) &middot; 2019</div>
+    
 </a>
 
         
             
-<a href="/books/gershon_photourist_2147/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/gershon_photourist_2147/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/gershon_andy_photourist_9780990531210.jpg" alt="Photourist" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Andy Gershon</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Photourist</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Daniel 13 (self-published) &middot; 2015</p>
+            <img src="/assets/images/books/gershon_andy_photourist_9780990531210.jpg" alt="Photourist" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Andy Gershon</div>
+    
+    <div class="collection-book-title">Photourist</div>
+    
+        <div class="collection-book-meta">Daniel 13 (self-published) &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/haser_cosmic-surgery_1882/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/haser_cosmic-surgery_1882/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/haser_alma_cosmic_surgery_9781526202970.jpg" alt="Cosmic Surgery" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Alma Haser</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cosmic Surgery</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self published &middot; 2016</p>
+            <img src="/assets/images/books/haser_alma_cosmic_surgery_9781526202970.jpg" alt="Cosmic Surgery" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Alma Haser</div>
+    
+    <div class="collection-book-title">Cosmic Surgery</div>
+    
+        <div class="collection-book-meta">Self published &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/henner_dutch-landscapes_2184/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/henner_dutch-landscapes_2184/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/henner_mishka_dutch_landscapes.jpg" alt="Dutch Landscapes" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mishka Henner</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Dutch Landscapes</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self published &middot; 2011</p>
+            <img src="/assets/images/books/henner_mishka_dutch_landscapes.jpg" alt="Dutch Landscapes" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Mishka Henner</div>
+    
+    <div class="collection-book-title">Dutch Landscapes</div>
+    
+        <div class="collection-book-meta">Self published &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/henner_fifty-one-us-military-outposts_2193/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/henner_fifty-one-us-military-outposts_2193/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/henner_mishka_fifty_one_us_military_outposts.jpg" alt="Fifty-One US Military Outposts" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mishka Henner</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Fifty-One US Military Outposts</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self-published &middot; 2010</p>
+            <img src="/assets/images/books/henner_mishka_fifty_one_us_military_outposts.jpg" alt="Fifty-One US Military Outposts" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Mishka Henner</div>
+    
+    <div class="collection-book-title">Fifty-One US Military Outposts</div>
+    
+        <div class="collection-book-meta">Self-published &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/henner_no-mans-land_2185/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/henner_no-mans-land_2185/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/henner_mishka_no_mans_land.jpg" alt="No Man&#39;s Land" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mishka Henner</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">No Man&#39;s Land</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self published &middot; 2011</p>
+            <img src="/assets/images/books/henner_mishka_no_mans_land.jpg" alt="No Man&#39;s Land" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Mishka Henner</div>
+    
+    <div class="collection-book-title">No Man&#39;s Land</div>
+    
+        <div class="collection-book-meta">Self published &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/henner_source-code_2177/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/henner_source-code_2177/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/henner_mishka_source-code.jpg" alt="Source Code" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mishka Henner</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Source Code</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self-published &middot; 2013</p>
+            <img src="/assets/images/books/henner_mishka_source-code.jpg" alt="Source Code" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Mishka Henner</div>
+    
+    <div class="collection-book-title">Source Code</div>
+    
+        <div class="collection-book-meta">Self-published &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/johnstone_briney-breezes_553/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/johnstone_briney-breezes_553/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/johnstone_charles_briney_breezes_9780984978199.jpg" alt="Briney Breezes" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Charles Johnstone</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Briney Breezes</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Sun Editions &middot; 2015</p>
+            <img src="/assets/images/books/johnstone_charles_briney_breezes_9780984978199.jpg" alt="Briney Breezes" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Charles Johnstone</div>
+    
+    <div class="collection-book-title">Briney Breezes</div>
+    
+        <div class="collection-book-meta">Sun Editions &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/konrath_tupsu-v1_2344/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/konrath_tupsu-v1_2344/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/konrath_andreas-laszlo_tupsu-v1.jpg" alt="Tupsu (V1)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Andreas Laszlo Konrath</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tupsu (V1)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Pau Wau Publications &middot; 2017</p>
+            <img src="/assets/images/books/konrath_andreas-laszlo_tupsu-v1.jpg" alt="Tupsu (V1)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Andreas Laszlo Konrath</div>
+    
+    <div class="collection-book-title">Tupsu (V1)</div>
+    
+        <div class="collection-book-meta">Pau Wau Publications &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/mcelroy_sweet_728/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/mcelroy_sweet_728/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/mcelroy_aaron_sweet_728.jpg" alt="Sweet" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Aaron McElroy</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Sweet</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">S_U_N &middot; 2015</p>
+            <img src="/assets/images/books/mcelroy_aaron_sweet_728.jpg" alt="Sweet" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Aaron McElroy</div>
+    
+    <div class="collection-book-title">Sweet</div>
+    
+        <div class="collection-book-meta">S_U_N &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/mcelroy_the-devil-may-care_2343/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/mcelroy_the-devil-may-care_2343/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/mcelroy_aaron_the-devil-may-care.jpg" alt="The Devil May Care" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Aaron McElroy</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Devil May Care</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">S_U_N &middot; 2014</p>
+            <img src="/assets/images/books/mcelroy_aaron_the-devil-may-care.jpg" alt="The Devil May Care" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Aaron McElroy</div>
+    
+    <div class="collection-book-title">The Devil May Care</div>
+    
+        <div class="collection-book-meta">S_U_N &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/naz_identity-zine_2160/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/naz_identity-zine_2160/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/naz_dave_identity-zine.jpg" alt="Identity Zine" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Dave Naz</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Identity Zine</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self-published &middot; 2014</p>
+            <img src="/assets/images/books/naz_dave_identity-zine.jpg" alt="Identity Zine" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Dave Naz</div>
+    
+    <div class="collection-book-title">Identity Zine</div>
+    
+        <div class="collection-book-meta">Self-published &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/phillips_mother-nature-mother-creature_873/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/phillips_mother-nature-mother-creature_873/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/phillips_brad_mother_nature_mother_creature_9780992085469.jpg" alt="Mother Nature Mother Creature" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Brad Phillips</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Mother Nature Mother Creature</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Perish Publishing &middot; 2014</p>
+            <img src="/assets/images/books/phillips_brad_mother_nature_mother_creature_9780992085469.jpg" alt="Mother Nature Mother Creature" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Brad Phillips</div>
+    
+    <div class="collection-book-title">Mother Nature Mother Creature</div>
+    
+        <div class="collection-book-meta">Perish Publishing &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/postpostpost_postpostpost-vol-ii-real_2357/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/postpostpost_postpostpost-vol-ii-real_2357/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/postpostpost_postpostpost_vol-ii-real_2357.jpg" alt="POSTPOSTPOST Vol. II: Real" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">POSTPOSTPOST</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">POSTPOSTPOST Vol. II: Real</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">POSTPOSTPOST &middot; 2026</p>
+            <img src="/assets/images/books/postpostpost_postpostpost_vol-ii-real_2357.jpg" alt="POSTPOSTPOST Vol. II: Real" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">POSTPOSTPOST</div>
+    
+    <div class="collection-book-title">POSTPOSTPOST Vol. II: Real</div>
+    
+        <div class="collection-book-meta">POSTPOSTPOST &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/presha_lovers_2137/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/presha_lovers_2137/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/presha_corey_lovers.jpg" alt="Lovers" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Corey Presha</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Lovers</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">S_U_N &middot; 2013</p>
+            <img src="/assets/images/books/presha_corey_lovers.jpg" alt="Lovers" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Corey Presha</div>
+    
+    <div class="collection-book-title">Lovers</div>
+    
+        <div class="collection-book-meta">S_U_N &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/prior_bomba_811/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/prior_bomba_811/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/prior_thomas_bomba_811.jpg" alt="Bomba" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Thomas Prior</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Bomba</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self-published &middot; 2016</p>
+            <img src="/assets/images/books/prior_thomas_bomba_811.jpg" alt="Bomba" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Thomas Prior</div>
+    
+    <div class="collection-book-title">Bomba</div>
+    
+        <div class="collection-book-meta">Self-published &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/rothen_snow-and-rose-and-other-tales_2292/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/rothen_snow-and-rose-and-other-tales_2292/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/rothen_marianna_snow-and-rose-other-tales.jpg" alt="Snow and Rose &amp; Other Tales" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Marianna Rothen</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Snow and Rose &amp; Other Tales</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Marianna Rothen</p>
+            <img src="/assets/images/books/rothen_marianna_snow-and-rose-other-tales.jpg" alt="Snow and Rose &amp; Other Tales" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Marianna Rothen</div>
+    
+    <div class="collection-book-title">Snow and Rose &amp; Other Tales</div>
+    
+        <div class="collection-book-meta">Marianna Rothen</div>
+    
 </a>
 
         
             
-<a href="/books/samaha_stereotypes-vol-005_1922/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/samaha_stereotypes-vol-005_1922/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/samaha_lucien_stereotypes_vol_005_2022.jpg" alt="Stereotypes Vol. 005" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Lucien Samaha</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Stereotypes Vol. 005</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self-published &middot; 2022</p>
+            <img src="/assets/images/books/samaha_lucien_stereotypes_vol_005_2022.jpg" alt="Stereotypes Vol. 005" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Lucien Samaha</div>
+    
+    <div class="collection-book-title">Stereotypes Vol. 005</div>
+    
+        <div class="collection-book-meta">Self-published &middot; 2022</div>
+    
 </a>
 
         
             
-<a href="/books/steiner_sisters-1-the-archive-issue_1748/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/steiner_sisters-1-the-archive-issue_1748/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/steiner_danko_and_ana_sisters_1_the_archive_issue.jpg" alt="SISTERS #1: The Archive Issue" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Danko Steiner and Ana Steiner</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">SISTERS #1: The Archive Issue</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self-published &middot; 2025</p>
+            <img src="/assets/images/books/steiner_danko_and_ana_sisters_1_the_archive_issue.jpg" alt="SISTERS #1: The Archive Issue" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Danko Steiner and Ana Steiner</div>
+    
+    <div class="collection-book-title">SISTERS #1: The Archive Issue</div>
+    
+        <div class="collection-book-meta">Self-published &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/steiner_sisters-issue-2_1747/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/steiner_sisters-issue-2_1747/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/steiner_danko_and_ana_sisters_issue_2.jpg" alt="SISTERS Issue 2" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Danko Steiner and Ana Steiner</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">SISTERS Issue 2</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self-published &middot; 2025</p>
+            <img src="/assets/images/books/steiner_danko_and_ana_sisters_issue_2.jpg" alt="SISTERS Issue 2" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Danko Steiner and Ana Steiner</div>
+    
+    <div class="collection-book-title">SISTERS Issue 2</div>
+    
+        <div class="collection-book-meta">Self-published &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/sullivan_forest-hills_2303/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/sullivan_forest-hills_2303/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/sullivan_bill_forest-hills_9798218957032.jpg" alt="Forest Hills" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Bill Sullivan</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Forest Hills</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">S U N &middot; 2023</p>
+            <img src="/assets/images/books/sullivan_bill_forest-hills_9798218957032.jpg" alt="Forest Hills" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Bill Sullivan</div>
+    
+    <div class="collection-book-title">Forest Hills</div>
+    
+        <div class="collection-book-meta">S U N &middot; 2023</div>
+    
 </a>
 
         
             
-<a href="/books/sullivan_permanent-fun_2345/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/sullivan_permanent-fun_2345/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/sullivan_bill_permanent-fun.jpg" alt="Permanent Fun" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Bill Sullivan</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Permanent Fun</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">S U N &middot; 2017</p>
+            <img src="/assets/images/books/sullivan_bill_permanent-fun.jpg" alt="Permanent Fun" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Bill Sullivan</div>
+    
+    <div class="collection-book-title">Permanent Fun</div>
+    
+        <div class="collection-book-meta">S U N &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/tan_you-see-me-i-see-you_2179/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/tan_you-see-me-i-see-you_2179/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/tan_audrey_you-see-me-i-see-you_978-981-07-9611-2.jpg" alt="You See Me, I See You" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Audrey Tan</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">You See Me, I See You</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self-published &middot; 2014</p>
+            <img src="/assets/images/books/tan_audrey_you-see-me-i-see-you_978-981-07-9611-2.jpg" alt="You See Me, I See You" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Audrey Tan</div>
+    
+    <div class="collection-book-title">You See Me, I See You</div>
+    
+        <div class="collection-book-meta">Self-published &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/tanini_h-said-he-loved-us_2165/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/tanini_h-said-he-loved-us_2165/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/tanini_tommaso_h-said-he-loved-us.jpg" alt="H. said he loved us" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tommaso Tanini</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">H. said he loved us</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Discipula Editions &middot; 2014</p>
+            <img src="/assets/images/books/tanini_tommaso_h-said-he-loved-us.jpg" alt="H. said he loved us" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Tommaso Tanini</div>
+    
+    <div class="collection-book-title">H. said he loved us</div>
+    
+        <div class="collection-book-meta">Discipula Editions &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/ustymenko_fear-of-disappearance_2140/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/ustymenko_fear-of-disappearance_2140/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/ustymenko_mariya_fear-of-disappearance.jpg" alt="Fear of Disappearance" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mariya Ustymenko</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Fear of Disappearance</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Akina Factory &middot; 2015</p>
+            <img src="/assets/images/books/ustymenko_mariya_fear-of-disappearance.jpg" alt="Fear of Disappearance" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Mariya Ustymenko</div>
+    
+    <div class="collection-book-title">Fear of Disappearance</div>
+    
+        <div class="collection-book-meta">Akina Factory &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/va_you-can-count-on-me_729/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/va_you-can-count-on-me_729/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/na_va_you_can_count_on_me_729.jpg" alt="You Can Count On Me" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">NA VA</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">You Can Count On Me</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">205-A &middot; 2014</p>
+            <img src="/assets/images/books/na_va_you_can_count_on_me_729.jpg" alt="You Can Count On Me" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">NA VA</div>
+    
+    <div class="collection-book-title">You Can Count On Me</div>
+    
+        <div class="collection-book-meta">205-A &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/van-der-weijde_home-is-where-the-dog-is_2384/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/van-der-weijde_home-is-where-the-dog-is_2384/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/van_der_weijde_erik_home_is_where_the_dog_is_9789491047060.jpg" alt="Home Is Where the Dog Is" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Erik van der Weijde</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Home Is Where the Dog Is</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">4478zine &middot; 2014</p>
+            <img src="/assets/images/books/van_der_weijde_erik_home_is_where_the_dog_is_9789491047060.jpg" alt="Home Is Where the Dog Is" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Erik van der Weijde</div>
+    
+    <div class="collection-book-title">Home Is Where the Dog Is</div>
+    
+        <div class="collection-book-meta">4478zine &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/van-der-weijde_privacy-settings_2180/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/van-der-weijde_privacy-settings_2180/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/van_der_weijde_erik_privacy-settings_978-94-91047-02-2.jpg" alt="Privacy Settings" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Erik van der Weijde</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Privacy Settings</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">4478zine &middot; 2013</p>
+            <img src="/assets/images/books/van_der_weijde_erik_privacy-settings_978-94-91047-02-2.jpg" alt="Privacy Settings" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Erik van der Weijde</div>
+    
+    <div class="collection-book-title">Privacy Settings</div>
+    
+        <div class="collection-book-meta">4478zine &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/wilcox_getting-to-know-my-neighbors_2182/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/wilcox_getting-to-know-my-neighbors_2182/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/wilcox_joseph_getting-to-know-my-neighbors.jpg" alt="Getting to Know My Neighbors" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Joseph Wilcox</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Getting to Know My Neighbors</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self-published &middot; 2013</p>
+            <img src="/assets/images/books/wilcox_joseph_getting-to-know-my-neighbors.jpg" alt="Getting to Know My Neighbors" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Joseph Wilcox</div>
+    
+    <div class="collection-book-title">Getting to Know My Neighbors</div>
+    
+        <div class="collection-book-meta">Self-published &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/nave_on-your-knees-please_790/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/nave_on-your-knees-please_790/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Raquel Nave</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">On Your Knees, Please.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self-published &middot; 2015</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Raquel Nave</div>
+    
+    <div class="collection-book-title">On Your Knees, Please.</div>
+    
+        <div class="collection-book-meta">Self-published &middot; 2015</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 

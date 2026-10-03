@@ -1175,8 +1175,11 @@ class BookSearch {
 
             if (this.filters.tag) {
                 if (!book.tags || book.tags === 'NULL') return false;
-                const bookTags = book.tags.split(',').map(t => t.trim());
-                if (!bookTags.includes(this.filters.tag)) return false;
+                // Whole-tag match, case-insensitive: links arrive with the
+                // display casing, the catalogue holds several.
+                const want = this.filters.tag.trim().toLowerCase();
+                const bookTags = book.tags.split(',').map(t => t.trim().toLowerCase());
+                if (!bookTags.includes(want)) return false;
             }
 
             if (this.filters.cover) {

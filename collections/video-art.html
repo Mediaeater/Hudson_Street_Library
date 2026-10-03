@@ -311,346 +311,624 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+    
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Video Art</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Video Art.”</p>
+            <div class="collection-eyebrow">Mediums
+            </div>
+            <h1 class="collection-title">Video Art</h1>
+            
+                <p class="collection-description">Every book in the library tagged “Video Art.”</p>
+            
+            <div class="collection-count">19 books</div>
+            
+            
             
             
         </div>
-        
 
-        
-        
-            
-        
         
 
         
             
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
-        
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<section class="collection-section">
+    
+    <div class="collection-books">
         
             
-<a href="/books/cheng_forking-at-perfection_1992/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/cheng_forking-at-perfection_1992/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Ian_Cheng_Forking_at_Perfection_9783037644713.jpg" alt="Forking at Perfection" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ian Cheng</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Forking at Perfection</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">JRP|Ringier &middot; 2016</p>
+            <img src="/assets/images/books/Ian_Cheng_Forking_at_Perfection_9783037644713.jpg" alt="Forking at Perfection" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Ian Cheng</div>
+    
+    <div class="collection-book-title">Forking at Perfection</div>
+    
+        <div class="collection-book-meta">JRP|Ringier &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/da-corte_slow-graffiti_2004/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/dagata_odysseia_2415/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Alex_Da_Corte_Slow_Graffiti_9783955763811.jpg" alt="Slow Graffiti" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Alex Da Corte</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Slow Graffiti</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Secession, Vienna / Revolver Publishing &middot; 2017</p>
+            <img src="/assets/images/books/d_agata_antoine_odysseia_9791092265057.jpg" alt="Odysseia" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Antoine D&#39;Agata</div>
+    
+    <div class="collection-book-title">Odysseia</div>
+    
+        <div class="collection-book-meta">André Frère Éditions &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/da-corte_mr-remember_1834/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/da-corte_mr-remember_1834/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/da_corte_alex_mr_remember_9788793659575.jpg" alt="Mr. Remember" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Alex DA Corte</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Mr. Remember</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Louisiana Museum of Modern Art &middot; 2022</p>
+            <img src="/assets/images/books/da_corte_alex_mr_remember_9788793659575.jpg" alt="Mr. Remember" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Alex Da Corte</div>
+    
+    <div class="collection-book-title">Mr. Remember</div>
+    
+        <div class="collection-book-meta">Louisiana Museum of Modern Art &middot; 2022</div>
+    
 </a>
 
         
             
-<a href="/books/dzama_marcel-dzama-puppets-pawns-and-prophets_2012/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/da-corte_slow-graffiti_2004/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Marcel_Dzama_Marcel_Dzama_Puppets_Pawns_and_Prophets_9783775737326.jpg" alt="Marcel Dzama: Puppets, Pawns, and Prophets" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Marcel Dzama</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Marcel Dzama: Puppets, Pawns, and Prophets</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">David Zwirner / Hatje Cantz &middot; 2013</p>
+            <img src="/assets/images/books/Alex_Da_Corte_Slow_Graffiti_9783955763811.jpg" alt="Slow Graffiti" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Alex Da Corte</div>
+    
+    <div class="collection-book-title">Slow Graffiti</div>
+    
+        <div class="collection-book-meta">Secession, Vienna / Revolver Publishing &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/export_valie-export-zeit-und-gegenzeit-time-and-countertime_2100/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/dzama_marcel-dzama-puppets-pawns-and-prophets_2012/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/export_valie_zeit_und_gegenzeit_time_and_countertime_9783865608741.jpg" alt="VALIE EXPORT: Zeit und Gegenzeit / Time and Countertime" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">VALIE EXPORT</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">VALIE EXPORT: Zeit und Gegenzeit / Time and Countertime</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Verlag der Buchhandlung Walther König &middot; 2010</p>
+            <img src="/assets/images/books/Marcel_Dzama_Marcel_Dzama_Puppets_Pawns_and_Prophets_9783775737326.jpg" alt="Marcel Dzama: Puppets, Pawns, and Prophets" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Marcel Dzama</div>
+    
+    <div class="collection-book-title">Marcel Dzama: Puppets, Pawns, and Prophets</div>
+    
+        <div class="collection-book-meta">David Zwirner / Hatje Cantz &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/marclay_christian-marclay-cities_2356/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/export_valie-export-zeit-und-gegenzeit-time-and-countertime_2100/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/marclay_christian_cities_9783777447872.jpg" alt="Christian Marclay: Cities" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Christian Marclay</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Christian Marclay: Cities</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Hirmer Publishers &middot; 2026</p>
+            <img src="/assets/images/books/export_valie_zeit_und_gegenzeit_time_and_countertime_9783865608741.jpg" alt="VALIE EXPORT: Zeit und Gegenzeit / Time and Countertime" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">VALIE EXPORT</div>
+    
+    <div class="collection-book-title">VALIE EXPORT: Zeit und Gegenzeit / Time and Countertime</div>
+    
+        <div class="collection-book-meta">Verlag der Buchhandlung Walther König &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/oberender_the-new-infinity-visuelle-kunst-und-musik-in-planetarien-visual-art-and-music-in-planetariums_2103/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/marclay_christian-marclay-cities_2356/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/oberender_thomas_the_new_infinity_9783960986645.jpg" alt="The New Infinity: Visuelle Kunst und Musik in Planetarien / Visual Art and Music in Planetariums" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Thomas Oberender</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The New Infinity: Visuelle Kunst und Musik in Planetarien / Visual Art and Music in Planetariums</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Verlag der Buchhandlung Walther König &middot; 2019</p>
+            <img src="/assets/images/books/marclay_christian_cities_9783777447872.jpg" alt="Christian Marclay: Cities" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Christian Marclay</div>
+    
+    <div class="collection-book-title">Christian Marclay: Cities</div>
+    
+        <div class="collection-book-meta">Hirmer Publishers &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/paik_nam-june-paik_2025/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/oberender_the-new-infinity-visuelle-kunst-und-musik-in-planetarien-visual-art-and-music-in-planetariums_2103/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Nam_June_Paik_Nam_June_Paik_9783791359533.jpg" alt="Nam June Paik" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Nam June Paik</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nam June Paik</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tate Publishing / DelMonico Books · Prestel &middot; 2019</p>
+            <img src="/assets/images/books/oberender_thomas_the_new_infinity_9783960986645.jpg" alt="The New Infinity: Visuelle Kunst und Musik in Planetarien / Visual Art and Music in Planetariums" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Thomas Oberender</div>
+    
+    <div class="collection-book-title">The New Infinity: Visuelle Kunst und Musik in Planetarien / Visual Art and Music in Planetariums</div>
+    
+        <div class="collection-book-meta">Verlag der Buchhandlung Walther König &middot; 2019</div>
+    
 </a>
 
         
             
-<a href="/books/paik_nam-june-paik-global-groove-2004_2026/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/paik_nam-june-paik_2025/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Nam_June_Paik_Nam_June_Paik_Global_Groove_2004_9780892073108.jpg" alt="Nam June Paik: Global Groove 2004" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Nam June Paik</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nam June Paik: Global Groove 2004</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Guggenheim Museum Publications &middot; 2004</p>
+            <img src="/assets/images/books/Nam_June_Paik_Nam_June_Paik_9783791359533.jpg" alt="Nam June Paik" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Nam June Paik</div>
+    
+    <div class="collection-book-title">Nam June Paik</div>
+    
+        <div class="collection-book-meta">Tate Publishing / DelMonico Books · Prestel &middot; 2019</div>
+    
 </a>
 
         
             
-<a href="/books/paik_nam-june-paik-global-visionary_2028/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/paik_nam-june-paik-global-groove-2004_2026/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Nam_June_Paik_Nam_June_Paik_Global_Visionary_9781907804205.jpg" alt="Nam June Paik: Global Visionary" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Nam June Paik</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nam June Paik: Global Visionary</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Smithsonian American Art Museum / D Giles Limited &middot; 2012</p>
+            <img src="/assets/images/books/Nam_June_Paik_Nam_June_Paik_Global_Groove_2004_9780892073108.jpg" alt="Nam June Paik: Global Groove 2004" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Nam June Paik</div>
+    
+    <div class="collection-book-title">Nam June Paik: Global Groove 2004</div>
+    
+        <div class="collection-book-meta">Guggenheim Museum Publications &middot; 2004</div>
+    
 </a>
 
         
             
-<a href="/books/paik_nam-june-paik-the-late-style_2023/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/paik_nam-june-paik-global-visionary_2028/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Nam_June_Paik_Nam_June_Paik_The_Late_Style_9780847847662.jpg" alt="Nam June Paik: The Late Style" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Nam June Paik</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nam June Paik: The Late Style</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian &middot; 2015</p>
+            <img src="/assets/images/books/Nam_June_Paik_Nam_June_Paik_Global_Visionary_9781907804205.jpg" alt="Nam June Paik: Global Visionary" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Nam June Paik</div>
+    
+    <div class="collection-book-title">Nam June Paik: Global Visionary</div>
+    
+        <div class="collection-book-meta">Smithsonian American Art Museum / D Giles Limited &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/paik_paiks-virtual-archive-time-change-and-materiality-in-media-art_2024/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/paik_nam-june-paik-the-late-style_2023/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Nam_June_Paik_Paiks_Virtual_Archive_Time_Change_and_Materiality__9780520288904.jpg" alt="Paik&#39;s Virtual Archive: Time, Change, and Materiality in Media Art" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Nam June Paik</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Paik&#39;s Virtual Archive: Time, Change, and Materiality in Media Art</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">University of California Press &middot; 2017</p>
+            <img src="/assets/images/books/Nam_June_Paik_Nam_June_Paik_The_Late_Style_9780847847662.jpg" alt="Nam June Paik: The Late Style" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Nam June Paik</div>
+    
+    <div class="collection-book-title">Nam June Paik: The Late Style</div>
+    
+        <div class="collection-book-meta">Gagosian &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/paik_we-are-in-open-circuits-writings-by-nam-june-paik_2027/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/paik_paiks-virtual-archive-time-change-and-materiality-in-media-art_2024/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Nam_June_Paik_We_Are_in_Open_Circuits_Writings_by_Nam_June_Paik_9780262039802.jpg" alt="We Are in Open Circuits: Writings by Nam June Paik" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Nam June Paik</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">We Are in Open Circuits: Writings by Nam June Paik</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The MIT Press &middot; 2019</p>
+            <img src="/assets/images/books/Nam_June_Paik_Paiks_Virtual_Archive_Time_Change_and_Materiality__9780520288904.jpg" alt="Paik&#39;s Virtual Archive: Time, Change, and Materiality in Media Art" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Nam June Paik</div>
+    
+    <div class="collection-book-title">Paik&#39;s Virtual Archive: Time, Change, and Materiality in Media Art</div>
+    
+        <div class="collection-book-meta">University of California Press &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/rist_elixir-the-video-organism-of-pipilotti-rist_967/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/paik_we-are-in-open-circuits-writings-by-nam-june-paik_2027/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/rist_pipilotti_elixir_the_video_organism_of_pipilotti_rist_9789069182377.jpg" alt="Elixir: The Video Organism of Pipilotti Rist" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Pipilotti Rist</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Elixir: The Video Organism of Pipilotti Rist</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Museum Boijmans van Beuningen &middot; 2009</p>
+            <img src="/assets/images/books/Nam_June_Paik_We_Are_in_Open_Circuits_Writings_by_Nam_June_Paik_9780262039802.jpg" alt="We Are in Open Circuits: Writings by Nam June Paik" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Nam June Paik</div>
+    
+    <div class="collection-book-title">We Are in Open Circuits: Writings by Nam June Paik</div>
+    
+        <div class="collection-book-meta">The MIT Press &middot; 2019</div>
+    
 </a>
 
         
             
-<a href="/books/scher_always-there_1023/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/rist_elixir-the-video-organism-of-pipilotti-rist_967/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/scher_julia_always_there_9780971119376.jpg" alt="Always there" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Julia Scher</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Always there</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Sternberg Press &middot; 2002</p>
+            <img src="/assets/images/books/rist_pipilotti_elixir_the_video_organism_of_pipilotti_rist_9789069182377.jpg" alt="Elixir: The Video Organism of Pipilotti Rist" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Pipilotti Rist</div>
+    
+    <div class="collection-book-title">Elixir: The Video Organism of Pipilotti Rist</div>
+    
+        <div class="collection-book-meta">Museum Boijmans van Beuningen &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/rafman_jon-rafman_2058/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/scher_always-there_1023/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jon Rafman</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Jon Rafman</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Zabludowicz Collection &middot; 2015</p>
+            <img src="/assets/images/books/scher_julia_always_there_9780971119376.jpg" alt="Always there" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Julia Scher</div>
+    
+    <div class="collection-book-title">Always there</div>
+    
+        <div class="collection-book-meta">Sternberg Press &middot; 2002</div>
+    
+</a>
+
+        
+            
+<a href="/books/van-der-put_soon_1207/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/covers/9789493146372.jpg" alt="Soon" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Emma van der Put</div>
+    
+    <div class="collection-book-title">Soon</div>
+    
+        <div class="collection-book-meta">APE (Art Paper Editions) &middot; 2020</div>
+    
+</a>
+
+        
+            
+<a href="/books/walker_a-black-hole-is-everything-a-star-longs-to-be_1226/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/Walker_A_Black_Hole_Is_Everything_a_Star_Longs_to_Be_9783037645574.jpg" alt="A Black Hole Is Everything a Star Longs to Be" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Kara Walker</div>
+    
+    <div class="collection-book-title">A Black Hole Is Everything a Star Longs to Be</div>
+    
+        <div class="collection-book-meta">JRPEditions &middot; 2021</div>
+    
+</a>
+
+        
+            
+<a href="/books/rafman_jon-rafman_2058/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">Jon Rafman</div>
+    
+    <div class="collection-book-title">Jon Rafman</div>
+    
+        <div class="collection-book-meta">Zabludowicz Collection &middot; 2015</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 

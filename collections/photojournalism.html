@@ -311,384 +311,607 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+    
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Photojournalism</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Photojournalism.”</p>
+            <div class="collection-eyebrow">Genres
+            </div>
+            <h1 class="collection-title">Photojournalism</h1>
+            
+                <p class="collection-description">Every book in the library tagged “Photojournalism.”</p>
+            
+            <div class="collection-count">18 books</div>
+            
+            
             
             
         </div>
-        
 
-        
-        
-            
-        
         
 
         
             
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
-        
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<section class="collection-section">
+    
+    <div class="collection-books">
         
             
-<a href="/books/abbe_shooting-stalin-the-wonderful-years-of-photographer-james-abbe_2096/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/abbe_shooting-stalin-the-wonderful-years-of-photographer-james-abbe_2096/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/abbe_james_shooting_stalin_9783865210432.jpg" alt="Shooting Stalin: The &#39;Wonderful&#39; Years of Photographer James Abbe" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">James Abbe</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Shooting Stalin: The &#39;Wonderful&#39; Years of Photographer James Abbe</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl / Museum Ludwig &middot; 2004</p>
+            <img src="/assets/images/books/abbe_james_shooting_stalin_9783865210432.jpg" alt="Shooting Stalin: The &#39;Wonderful&#39; Years of Photographer James Abbe" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">James Abbe</div>
+    
+    <div class="collection-book-title">Shooting Stalin: The &#39;Wonderful&#39; Years of Photographer James Abbe</div>
+    
+        <div class="collection-book-meta">Steidl / Museum Ludwig &middot; 2004</div>
+    
 </a>
 
         
             
-<a href="/books/anderson_index_1826/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/anderson_index_1826/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Christopher_Anderson_Index.jpg" alt="Index" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Christopher Anderson</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Index</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">STANLEY/BARKER &middot; 2026</p>
+            <img src="/assets/images/books/Christopher_Anderson_Index.jpg" alt="Index" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Christopher Anderson</div>
+    
+    <div class="collection-book-title">Index</div>
+    
+        <div class="collection-book-meta">STANLEY/BARKER &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/barnard_hyenas-of-the-battlefield-machines-in-the-garden_2413/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/barnard_hyenas-of-the-battlefield-machines-in-the-garden_2413/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/barnard_lisa_hyenas_of_the_battlefield_machines_in_the_garden_9780957427297.jpg" alt="Hyenas of the Battlefield, Machines in the Garden" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Lisa Barnard</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Hyenas of the Battlefield, Machines in the Garden</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">GOST Books &middot; 2015</p>
+            <img src="/assets/images/books/barnard_lisa_hyenas_of_the_battlefield_machines_in_the_garden_9780957427297.jpg" alt="Hyenas of the Battlefield, Machines in the Garden" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Lisa Barnard</div>
+    
+    <div class="collection-book-title">Hyenas of the Battlefield, Machines in the Garden</div>
+    
+        <div class="collection-book-meta">GOST Books &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/frizot_vu-the-story-of-a-magazine_2086/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/frizot_vu-the-story-of-a-magazine_2086/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/frizot_michel_vu_the_story_of_a_magazine_9780500543832.jpg" alt="VU: The Story of a Magazine" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Michel Frizot</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">VU: The Story of a Magazine</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Thames &amp; Hudson &middot; 2009</p>
+            <img src="/assets/images/books/frizot_michel_vu_the_story_of_a_magazine_9780500543832.jpg" alt="VU: The Story of a Magazine" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Michel Frizot</div>
+    
+    <div class="collection-book-title">VU: The Story of a Magazine</div>
+    
+        <div class="collection-book-meta">Thames &amp; Hudson &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/haas_color-correction_2240/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/haas_color-correction_2240/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/haas_ernst_color-correction_9783958290563.jpg" alt="Color Correction" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ernst Haas</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Color Correction</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl &middot; 2011</p>
+            <img src="/assets/images/books/haas_ernst_color-correction_9783958290563.jpg" alt="Color Correction" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Ernst Haas</div>
+    
+    <div class="collection-book-title">Color Correction</div>
+    
+        <div class="collection-book-meta">Steidl &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/lederman_flashpoint-protest-photography-in-print-1950-present_2225/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/lederman_flashpoint-protest-photography-in-print-1950-present_2225/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/lederman_russet_flashpoint-protest-photography-in-print-1950-prese_9798218459505.jpg" alt="Flashpoint! Protest Photography in Print, 1950-Present" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Russet Lederman, Olga Yatskevich</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Flashpoint! Protest Photography in Print, 1950-Present</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">10x10 Photobooks &middot; 2024</p>
+            <img src="/assets/images/books/lederman_russet_flashpoint-protest-photography-in-print-1950-prese_9798218459505.jpg" alt="Flashpoint! Protest Photography in Print, 1950-Present" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Russet Lederman, Olga Yatskevich</div>
+    
+    <div class="collection-book-title">Flashpoint! Protest Photography in Print, 1950-Present</div>
+    
+        <div class="collection-book-meta">10x10 Photobooks &middot; 2024</div>
+    
 </a>
 
         
             
-<a href="/books/metinides_101-tragedies-of-enrique-metinides_1844/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/metinides_101-tragedies-of-enrique-metinides_1844/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Metinides_101_Tragedies_of_Enrique_Metinides_9781597112093.jpg" alt="101 Tragedies of Enrique Metinides" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Enrique Metinides ed. Trisha Ziff</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">101 Tragedies of Enrique Metinides</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aperture &middot; 2012</p>
+            <img src="/assets/images/books/Metinides_101_Tragedies_of_Enrique_Metinides_9781597112093.jpg" alt="101 Tragedies of Enrique Metinides" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Enrique Metinides ed. Trisha Ziff</div>
+    
+    <div class="collection-book-title">101 Tragedies of Enrique Metinides</div>
+    
+        <div class="collection-book-meta">Aperture &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/metinides_series_746/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/metinides_series_746/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Metinides_Series_9783981510508.jpg" alt="Series" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Enrique Metinides ed. Misha Kominek text by Véronique Ricardoni</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Series</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Kominek Books &middot; 2011</p>
+            <img src="/assets/images/books/Metinides_Series_9783981510508.jpg" alt="Series" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Enrique Metinides ed. Misha Kominek text by Véronique Ricardoni</div>
+    
+    <div class="collection-book-title">Series</div>
+    
+        <div class="collection-book-meta">Kominek Books &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/parks_born-black-a-personal-report-on-the-decade-of-black-revolt-1960-1970_1934/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/parks_born-black-a-personal-report-on-the-decade-of-black-revolt-1960-1970_1934/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/parks_gordon_born_black_9783969992289.jpg" alt="Born Black: A Personal Report on the Decade of Black Revolt 1960–1970" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Gordon Parks</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Born Black: A Personal Report on the Decade of Black Revolt 1960–1970</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl / The Gordon Parks Foundation &middot; 2024</p>
+            <img src="/assets/images/books/parks_gordon_born_black_9783969992289.jpg" alt="Born Black: A Personal Report on the Decade of Black Revolt 1960–1970" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Gordon Parks</div>
+    
+    <div class="collection-book-title">Born Black: A Personal Report on the Decade of Black Revolt 1960–1970</div>
+    
+        <div class="collection-book-meta">Steidl / The Gordon Parks Foundation &middot; 2024</div>
+    
 </a>
 
         
             
-<a href="/books/parks_gordon-parks-stokely-carmichael-and-black-power_1931/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/parks_gordon-parks-stokely-carmichael-and-black-power_1931/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/parks_gordon_stokely_carmichael_and_black_power_9783969990940.jpg" alt="Gordon Parks: Stokely Carmichael and Black Power" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Gordon Parks</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Gordon Parks: Stokely Carmichael and Black Power</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl / The Gordon Parks Foundation / Museum of Fine Arts, Houston &middot; 2022</p>
+            <img src="/assets/images/books/parks_gordon_stokely_carmichael_and_black_power_9783969990940.jpg" alt="Gordon Parks: Stokely Carmichael and Black Power" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Gordon Parks</div>
+    
+    <div class="collection-book-title">Gordon Parks: Stokely Carmichael and Black Power</div>
+    
+        <div class="collection-book-meta">Steidl / The Gordon Parks Foundation / Museum of Fine Arts, Houston &middot; 2022</div>
+    
 </a>
 
         
             
-<a href="/books/ryan_the-new-york-times-magazine-photographs_2269/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/ryan_the-new-york-times-magazine-photographs_2269/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/ryan_kathy_the-new-york-times-magazine-photographs_9781597111461.jpg" alt="The New York Times Magazine Photographs" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Kathy Ryan</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The New York Times Magazine Photographs</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aperture &middot; 2011</p>
+            <img src="/assets/images/books/ryan_kathy_the-new-york-times-magazine-photographs_9781597111461.jpg" alt="The New York Times Magazine Photographs" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Kathy Ryan</div>
+    
+    <div class="collection-book-title">The New York Times Magazine Photographs</div>
+    
+        <div class="collection-book-meta">Aperture &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/saman_discordia_1008/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/saman_discordia_1008/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/saman_moises_discordia_9780692618233.jpg" alt="Discordia" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Moises Saman</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Discordia</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self-published &middot; 2016</p>
+            <img src="/assets/images/books/saman_moises_discordia_9780692618233.jpg" alt="Discordia" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Moises Saman</div>
+    
+    <div class="collection-book-title">Discordia</div>
+    
+        <div class="collection-book-meta">Self-published &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/spinatsch_temporary-discomfort-chapter-i-v_1092/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/spinatsch_temporary-discomfort-chapter-i-v_1092/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/spinatsch_jules_temporary_discomfort_9783037780473.jpg" alt="Temporary Discomfort: Chapter I-V" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jules Spinatsch</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Temporary Discomfort: Chapter I-V</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Lars Muller Publishers &middot; 2005</p>
+            <img src="/assets/images/books/spinatsch_jules_temporary_discomfort_9783037780473.jpg" alt="Temporary Discomfort: Chapter I-V" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Jules Spinatsch</div>
+    
+    <div class="collection-book-title">Temporary Discomfort: Chapter I-V</div>
+    
+        <div class="collection-book-meta">Lars Muller Publishers &middot; 2005</div>
+    
 </a>
 
         
             
-<a href="/books/van-houtryve_behind-the-curtains_2189/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/van-houtryve_behind-the-curtains_2189/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/van_houtryve_tomas_behind_the_curtains_9782916355658.jpg" alt="Behind the Curtains" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tomas van Houtryve</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Behind the Curtains</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Editions Intervalles &middot; 2012</p>
+            <img src="/assets/images/books/van_houtryve_tomas_behind_the_curtains_9782916355658.jpg" alt="Behind the Curtains" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Tomas van Houtryve</div>
+    
+    <div class="collection-book-title">Behind the Curtains</div>
+    
+        <div class="collection-book-meta">Editions Intervalles &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/weegee_naked-city_2322/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/weegee_naked-city_2322/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/weegee_naked-city_9780306812040.jpg" alt="Naked City" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Weegee</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Naked City</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Da Capo Press &middot; 2002</p>
+            <img src="/assets/images/books/weegee_naked-city_9780306812040.jpg" alt="Naked City" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Weegee</div>
+    
+    <div class="collection-book-title">Naked City</div>
+    
+        <div class="collection-book-meta">Da Capo Press &middot; 2002</div>
+    
 </a>
 
         
             
-<a href="/books/weegee_weegees-new-york-photographs-1935-1960_2323/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/weegee_weegees-new-york-photographs-1935-1960_2323/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/weegee_weegees-new-york-photographs-1935-1960_9780394538754.jpg" alt="Weegee&#39;s New York: Photographs 1935-1960" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Weegee</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Weegee&#39;s New York: Photographs 1935-1960</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Schirmer/Mosel / Grove Press &middot; 1984</p>
+            <img src="/assets/images/books/weegee_weegees-new-york-photographs-1935-1960_9780394538754.jpg" alt="Weegee&#39;s New York: Photographs 1935-1960" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Weegee</div>
+    
+    <div class="collection-book-title">Weegee&#39;s New York: Photographs 1935-1960</div>
+    
+        <div class="collection-book-meta">Schirmer/Mosel / Grove Press &middot; 1984</div>
+    
 </a>
 
         
             
-<a href="/books/asselin_monsanto-a-photographic-investigation_65/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/asselin_monsanto-a-photographic-investigation_65/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mathieu Asselin</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Monsanto: A Photographic Investigation</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Verlag Kettler &middot; 2017</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mathieu Asselin</div>
+    
+    <div class="collection-book-title">Monsanto: A Photographic Investigation</div>
+    
+        <div class="collection-book-meta">Verlag Kettler &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/cartier-bresson-rene-burriraymond_magnum-analog-recovery_207/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/cartier-bresson-rene-burriraymond_magnum-analog-recovery_207/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Henri Cartier-Bresson, René Burri,Raymond</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Magnum Analog Recovery</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">LeBAL &middot; 2017</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Henri Cartier-Bresson, René Burri,Raymond</div>
+    
+    <div class="collection-book-title">Magnum Analog Recovery</div>
+    
+        <div class="collection-book-meta">LeBAL &middot; 2017</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 

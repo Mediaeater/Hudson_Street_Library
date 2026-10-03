@@ -311,344 +311,571 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+    
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Reference</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Reference.”</p>
+            <div class="collection-eyebrow">Formats
+            </div>
+            <h1 class="collection-title">Reference</h1>
+            
+                <p class="collection-description">Every book in the library tagged “Reference.”</p>
+            
+            <div class="collection-count">16 books</div>
+            
+            
             
             
         </div>
-        
 
-        
-        
-            
-        
         
 
         
             
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
-        
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<section class="collection-section">
+    
+    <div class="collection-books">
         
             
-<a href="/books/azuma_encyclopedia-of-flowers-iii-english-and-japanese-edition_74/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/azuma_encyclopedia-of-flowers-iii-english-and-japanese-edition_74/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/azuma_makoto_encyclopedia_of_flowers_iii_english_and_japanese_edition_9784861525711.jpg" alt="Encyclopedia of Flowers III (English and Japanese Edition)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Makoto Azuma</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Encyclopedia of Flowers III (English and Japanese Edition)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Seigensha Art Publishing &middot; 2016</p>
+            <img src="/assets/images/books/azuma_makoto_encyclopedia_of_flowers_iii_english_and_japanese_edition_9784861525711.jpg" alt="Encyclopedia of Flowers III (English and Japanese Edition)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Makoto Azuma</div>
+    
+    <div class="collection-book-title">Encyclopedia of Flowers III (English and Japanese Edition)</div>
+    
+        <div class="collection-book-meta">Seigensha Art Publishing &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/azuma_encyclopedia-of-flowers-part-2-makoto-azuma-shunsuke-shiinoki_73/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/azuma_encyclopedia-of-flowers-part-2-makoto-azuma-shunsuke-shiinoki_73/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/azuma_makoto_encyclopedia_of_flowers_part_2_makoto_azuma_shunsuke_shiinok_9784861524769.jpg" alt="Encyclopedia Of Flowers Part 2 - Makoto Azuma  Shunsuke Shiinoki" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Makoto Azuma</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Encyclopedia Of Flowers Part 2 - Makoto Azuma  Shunsuke Shiinoki</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Seigensha Art Publishing &middot; 2015</p>
+            <img src="/assets/images/books/azuma_makoto_encyclopedia_of_flowers_part_2_makoto_azuma_shunsuke_shiinok_9784861524769.jpg" alt="Encyclopedia Of Flowers Part 2 - Makoto Azuma  Shunsuke Shiinoki" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Makoto Azuma</div>
+    
+    <div class="collection-book-title">Encyclopedia Of Flowers Part 2 - Makoto Azuma  Shunsuke Shiinoki</div>
+    
+        <div class="collection-book-meta">Seigensha Art Publishing &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/azuma_encyclopedia-of-flowers-flower-works-by-makoto-azuma-photographed-by-shunsuke-shiinoki_72/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/azuma_encyclopedia-of-flowers-flower-works-by-makoto-azuma-photographed-by-shunsuke-shiinoki_72/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/azuma_makoto_encyclopedia_of_flowers_flower_works_by_makoto_azuma_photographed_by_shun_9783037783139.jpg" alt="Encyclopedia of Flowers: Flower Works by Makoto Azuma photographed by Shunsuke Shiinoki" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Makoto Azuma</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Encyclopedia of Flowers: Flower Works by Makoto Azuma photographed by Shunsuke Shiinoki</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Lars Muller Publishers &middot; 2012</p>
+            <img src="/assets/images/books/azuma_makoto_encyclopedia_of_flowers_flower_works_by_makoto_azuma_photographed_by_shun_9783037783139.jpg" alt="Encyclopedia of Flowers: Flower Works by Makoto Azuma photographed by Shunsuke Shiinoki" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Makoto Azuma</div>
+    
+    <div class="collection-book-title">Encyclopedia of Flowers: Flower Works by Makoto Azuma photographed by Shunsuke Shiinoki</div>
+    
+        <div class="collection-book-meta">Lars Muller Publishers &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/desjardin_the-book-on-books-on-artists-books_1741/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/desjardin_the-book-on-books-on-artists-books_1741/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Arnaud_Desjardin_The_Book_on_Books_on_Artists_Books.jpg" alt="The Book on Books on Artists Books" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Arnaud Desjardin</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Book on Books on Artists Books</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Everyday Press &middot; 2026</p>
+            <img src="/assets/images/books/Arnaud_Desjardin_The_Book_on_Books_on_Artists_Books.jpg" alt="The Book on Books on Artists Books" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Arnaud Desjardin</div>
+    
+    <div class="collection-book-title">The Book on Books on Artists Books</div>
+    
+        <div class="collection-book-meta">The Everyday Press &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/ghuneim_surveillance-index-edition-one_2390/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/ghuneim_surveillance-index-edition-one_2390/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/ghuneim_mark_surveillance_index_edition_one_2017.jpg" alt="Surveillance Index: Edition One" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mark Ghuneim</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Surveillance Index: Edition One</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self-published &middot; 2017</p>
+            <img src="/assets/images/books/ghuneim_mark_surveillance_index_edition_one_2017.jpg" alt="Surveillance Index: Edition One" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Mark Ghuneim</div>
+    
+    <div class="collection-book-title">Surveillance Index: Edition One</div>
+    
+        <div class="collection-book-meta">Self-published &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/heiting_czech-and-slovak-photo-publications-1918-1989_2243/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/heiting_czech-and-slovak-photo-publications-1918-1989_2243/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/heiting_manfred_czech-and-slovak-photo-publications-1918-1989_9783958294974.jpg" alt="Czech and Slovak Photo Publications 1918-1989" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Manfred Heiting</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Czech and Slovak Photo Publications 1918-1989</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl &middot; 2018</p>
+            <img src="/assets/images/books/heiting_manfred_czech-and-slovak-photo-publications-1918-1989_9783958294974.jpg" alt="Czech and Slovak Photo Publications 1918-1989" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Manfred Heiting</div>
+    
+    <div class="collection-book-title">Czech and Slovak Photo Publications 1918-1989</div>
+    
+        <div class="collection-book-meta">Steidl &middot; 2018</div>
+    
 </a>
 
         
             
-<a href="/books/prince_bibliotheque-dun-amateur-1981-2014_1555/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/prince_bibliotheque-dun-amateur-1981-2014_1555/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Prince_Bibliotheque_1981_2014.jpg" alt="Bibliothèque d’un Amateur 1981-2014" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Bibliothèque d’un Amateur 1981-2014</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Viaindustriae Editions / &amp;: christophe daviet-thery &middot; 2014</p>
+            <img src="/assets/images/books/Prince_Bibliotheque_1981_2014.jpg" alt="Bibliothèque d’un Amateur 1981-2014" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Richard Prince</div>
+    
+    <div class="collection-book-title">Bibliothèque d’un Amateur 1981-2014</div>
+    
+        <div class="collection-book-meta">Viaindustriae Editions / &amp;: christophe daviet-thery &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/galofaro_an-atlas-of-imagination_421/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/galofaro_an-atlas-of-imagination_421/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Luca Galofaro</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">An Atlas of Imagination</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Damdi &middot; 2015</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Luca Galofaro</div>
+    
+    <div class="collection-book-title">An Atlas of Imagination</div>
+    
+        <div class="collection-book-meta">Damdi &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/makoto_the-encyclopedia-of-flowers_661/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/makoto_the-encyclopedia-of-flowers_661/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Azuma Makoto</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Encyclopedia of Flowers</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Seigensha Art Publishing &middot; 2011</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Azuma Makoto</div>
+    
+    <div class="collection-book-title">The Encyclopedia of Flowers</div>
+    
+        <div class="collection-book-meta">Seigensha Art Publishing &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/makoto_the-encyclopedia-of-flowers-ii_662/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/makoto_the-encyclopedia-of-flowers-ii_662/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Azuma Makoto</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Encyclopedia of Flowers II</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Seigensha Art Publishing &middot; 2015</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Azuma Makoto</div>
+    
+    <div class="collection-book-title">The Encyclopedia of Flowers II</div>
+    
+        <div class="collection-book-meta">Seigensha Art Publishing &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/makoto_the-encyclopedia-of-flowers-iii_663/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/makoto_the-encyclopedia-of-flowers-iii_663/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Azuma Makoto</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Encyclopedia of Flowers III</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Seigensha Art Publishing &middot; 2016</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Azuma Makoto</div>
+    
+    <div class="collection-book-title">The Encyclopedia of Flowers III</div>
+    
+        <div class="collection-book-meta">Seigensha Art Publishing &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/makoto_the-encyclopedia-of-flowers-iv_664/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/makoto_the-encyclopedia-of-flowers-iv_664/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Azuma Makoto</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Encyclopedia of Flowers IV</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Seigensha Art Publishing &middot; 2019</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Azuma Makoto</div>
+    
+    <div class="collection-book-title">The Encyclopedia of Flowers IV</div>
+    
+        <div class="collection-book-meta">Seigensha Art Publishing &middot; 2019</div>
+    
 </a>
 
         
             
-<a href="/books/richter_atlas_961/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/richter_atlas_961/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Gerhard Richter</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Atlas</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Gerhard Richter</div>
+    
+    <div class="collection-book-title">Atlas</div>
+    
 </a>
 
         
             
-<a href="/books/suter_parallel-encyclopedia_1113/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/suter_parallel-encyclopedia_1113/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Batia Suter</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Parallel Encyclopedia</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Roma Publication &middot; 2007</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Batia Suter</div>
+    
+    <div class="collection-book-title">Parallel Encyclopedia</div>
+    
+        <div class="collection-book-meta">Roma Publication &middot; 2007</div>
+    
 </a>
 
         
             
-<a href="/books/suter_parallel-encyclopedia-1_1116/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/suter_parallel-encyclopedia-1_1116/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Batia Suter</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Parallel Encyclopedia #1</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Roma Publications &middot; 2021</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Batia Suter</div>
+    
+    <div class="collection-book-title">Parallel Encyclopedia #1</div>
+    
+        <div class="collection-book-meta">Roma Publications &middot; 2021</div>
+    
 </a>
 
         
             
-<a href="/books/suter_parallel-encyclopedia-2_1115/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/suter_parallel-encyclopedia-2_1115/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Batia Suter</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Parallel Encyclopedia #2</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Roma Publications &middot; 2016</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Batia Suter</div>
+    
+    <div class="collection-book-title">Parallel Encyclopedia #2</div>
+    
+        <div class="collection-book-meta">Roma Publications &middot; 2016</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 

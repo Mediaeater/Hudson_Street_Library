@@ -59,8 +59,8 @@
     {
       "@type": "ListItem",
       "position": 2,
-      "name": "Collections",
-      "item": "https://hudsonstreetlibrary.com/collection-explore.html"
+      "name": "Cryptology",
+      "item": "https://hudsonstreetlibrary.com/cryptology/"
     },
     {
       "@type": "ListItem",
@@ -311,479 +311,692 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+    
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Cryptography</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Cryptography.”</p>
+            <div class="collection-eyebrow"><a href="/cryptology/">Cryptology</a> &middot; Themes
+            </div>
+            <h1 class="collection-title">Cryptography</h1>
+            
+                <p class="collection-description">Every book in the library tagged “Cryptography.”</p>
+            
+            <div class="collection-count">23 books</div>
+            
+            
             
             
         </div>
-        
 
-        
-        
-            
-        
         
 
         
             
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
-        
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<section class="collection-section">
+    
+    <div class="collection-books">
         
             
-<a href="/books/barker_the-history-of-codes-and-ciphers-in-the-united-states-prior-to-world-war-i_10007/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/barker_the-history-of-codes-and-ciphers-in-the-united-states-prior-to-world-war-i_10007/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/barker_wayne_g_the-history-of-codes-and-ciphers-in-the-united-sta_9780894120268.jpg" alt="The History of Codes and Ciphers in the United States Prior to World War I" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Wayne G. Barker</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The History of Codes and Ciphers in the United States Prior to World War I</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aegean Park Press &middot; 1978</p>
+            <img src="/assets/images/books/barker_wayne_g_the-history-of-codes-and-ciphers-in-the-united-sta_9780894120268.jpg" alt="The History of Codes and Ciphers in the United States Prior to World War I" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Wayne G. Barker</div>
+    
+    <div class="collection-book-title">The History of Codes and Ciphers in the United States Prior to World War I</div>
+    
+        <div class="collection-book-meta">Aegean Park Press &middot; 1978</div>
+    
 </a>
 
         
             
-<a href="/books/cormen_introduction-to-algorithms_10052/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/cormen_introduction-to-algorithms_10052/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/cormen_thomas_h_introduction-to-algorithms_9780262031417.jpg" alt="Introduction to Algorithms" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Introduction to Algorithms</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The MIT Press &middot; 1990</p>
+            <img src="/assets/images/books/cormen_thomas_h_introduction-to-algorithms_9780262031417.jpg" alt="Introduction to Algorithms" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest</div>
+    
+    <div class="collection-book-title">Introduction to Algorithms</div>
+    
+        <div class="collection-book-meta">The MIT Press &middot; 1990</div>
+    
 </a>
 
         
             
-<a href="/books/dagapeyeff_codes-and-ciphers_10029/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/dagapeyeff_codes-and-ciphers_10029/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/dagapeyeff_alexander_codes-and-ciphers_10029.jpg" alt="Codes and Ciphers" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Alexander D&#39;Agapeyeff</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Codes and Ciphers</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Compass Books / Geoffrey Cumberlege, Oxford University Press &middot; 1949</p>
+            <img src="/assets/images/books/dagapeyeff_alexander_codes-and-ciphers_10029.jpg" alt="Codes and Ciphers" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Alexander D&#39;Agapeyeff</div>
+    
+    <div class="collection-book-title">Codes and Ciphers</div>
+    
+        <div class="collection-book-meta">Compass Books / Geoffrey Cumberlege, Oxford University Press &middot; 1949</div>
+    
 </a>
 
         
             
-<a href="/books/dam_cryptographys-role-in-securing-the-information-society_10047/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/dam_cryptographys-role-in-securing-the-information-society_10047/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/dam_kenneth_w_cryptographys-role-in-securing-the-information-soc_9780309054751.jpg" alt="Cryptography&#39;s Role in Securing the Information Society" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Kenneth W. Dam, Herbert S. Lin</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cryptography&#39;s Role in Securing the Information Society</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">National Academy Press &middot; 1996</p>
+            <img src="/assets/images/books/dam_kenneth_w_cryptographys-role-in-securing-the-information-soc_9780309054751.jpg" alt="Cryptography&#39;s Role in Securing the Information Society" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Kenneth W. Dam, Herbert S. Lin</div>
+    
+    <div class="collection-book-title">Cryptography&#39;s Role in Securing the Information Society</div>
+    
+        <div class="collection-book-meta">National Academy Press &middot; 1996</div>
+    
 </a>
 
         
             
-<a href="/books/electronic-privacy-information-center_cryptography-and-liberty-1999-an-international-survey-of-encryption-policy_10035/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/electronic-privacy-information-center_cryptography-and-liberty-1999-an-international-survey-of-encryption-policy_10035/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/electronic_privacy_information_center_cryptography-liberty-1999-international-survey-encryption-policy_9781893044036.jpg" alt="Cryptography &amp; Liberty 1999: An International Survey of Encryption Policy" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Electronic Privacy Information Center</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cryptography &amp; Liberty 1999: An International Survey of Encryption Policy</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Electronic Privacy Information Center &middot; 1999</p>
+            <img src="/assets/images/books/electronic_privacy_information_center_cryptography-liberty-1999-international-survey-encryption-policy_9781893044036.jpg" alt="Cryptography &amp; Liberty 1999: An International Survey of Encryption Policy" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Electronic Privacy Information Center</div>
+    
+    <div class="collection-book-title">Cryptography &amp; Liberty 1999: An International Survey of Encryption Policy</div>
+    
+        <div class="collection-book-meta">Electronic Privacy Information Center &middot; 1999</div>
+    
 </a>
 
         
             
-<a href="/books/fowler_codes-and-ciphers_10026/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/fowler_codes-and-ciphers_10026/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/fowler_mark_codes-ciphers_9780746006757.jpg" alt="Codes &amp; Ciphers" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mark Fowler, Radhi Parekh</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Codes &amp; Ciphers</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Usborne Publishing &middot; 1992</p>
+            <img src="/assets/images/books/fowler_mark_codes-ciphers_9780746006757.jpg" alt="Codes &amp; Ciphers" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Mark Fowler, Radhi Parekh</div>
+    
+    <div class="collection-book-title">Codes &amp; Ciphers</div>
+    
+        <div class="collection-book-meta">Usborne Publishing &middot; 1992</div>
+    
 </a>
 
         
             
-<a href="/books/friedman_advanced-military-cryptography_10001/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/friedman_advanced-military-cryptography_10001/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/friedman_william_f_advanced-military-cryptography_9780894120114.jpg" alt="Advanced Military Cryptography" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">William F. Friedman</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Advanced Military Cryptography</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aegean Park Press &middot; 1976</p>
+            <img src="/assets/images/books/friedman_william_f_advanced-military-cryptography_9780894120114.jpg" alt="Advanced Military Cryptography" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">William F. Friedman</div>
+    
+    <div class="collection-book-title">Advanced Military Cryptography</div>
+    
+        <div class="collection-book-meta">Aegean Park Press &middot; 1976</div>
+    
 </a>
 
         
             
-<a href="/books/friedman_cryptography-and-cryptanalysis-articles-volume-1_10003/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/friedman_cryptography-and-cryptanalysis-articles-volume-1_10003/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/friedman_william_f_cryptography-and-cryptanalysis-articles-volume-1_9780894120039.jpg" alt="Cryptography and Cryptanalysis Articles, Volume 1" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">William F. Friedman</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cryptography and Cryptanalysis Articles, Volume 1</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aegean Park Press &middot; 1976</p>
+            <img src="/assets/images/books/friedman_william_f_cryptography-and-cryptanalysis-articles-volume-1_9780894120039.jpg" alt="Cryptography and Cryptanalysis Articles, Volume 1" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">William F. Friedman</div>
+    
+    <div class="collection-book-title">Cryptography and Cryptanalysis Articles, Volume 1</div>
+    
+        <div class="collection-book-meta">Aegean Park Press &middot; 1976</div>
+    
 </a>
 
         
             
-<a href="/books/friedman_solving-german-codes-in-world-war-i_10006/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/friedman_solving-german-codes-in-world-war-i_10006/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/friedman_william_f_solving-german-codes-in-world-war-i_9780894121180.jpg" alt="Solving German Codes in World War I" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">William F. Friedman</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Solving German Codes in World War I</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aegean Park Press &middot; 1977</p>
+            <img src="/assets/images/books/friedman_william_f_solving-german-codes-in-world-war-i_9780894121180.jpg" alt="Solving German Codes in World War I" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">William F. Friedman</div>
+    
+    <div class="collection-book-title">Solving German Codes in World War I</div>
+    
+        <div class="collection-book-meta">Aegean Park Press &middot; 1977</div>
+    
 </a>
 
         
             
-<a href="/books/gylden_the-contribution-of-the-cryptographic-bureaus-in-the-world-war_10009/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/gylden_the-contribution-of-the-cryptographic-bureaus-in-the-world-war_10009/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/gyldn_yves_the-contribution-of-the-cryptographic-bureaus-in-t_9780894120275.jpg" alt="The Contribution of the Cryptographic Bureaus in the World War" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Yves Gyldén</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Contribution of the Cryptographic Bureaus in the World War</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aegean Park Press &middot; 1978</p>
+            <img src="/assets/images/books/gyldn_yves_the-contribution-of-the-cryptographic-bureaus-in-t_9780894120275.jpg" alt="The Contribution of the Cryptographic Bureaus in the World War" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Yves Gyldén</div>
+    
+    <div class="collection-book-title">The Contribution of the Cryptographic Bureaus in the World War</div>
+    
+        <div class="collection-book-meta">Aegean Park Press &middot; 1978</div>
+    
 </a>
 
         
             
-<a href="/books/hitt_manual-for-the-solution-of-military-ciphers_10002/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/hitt_manual-for-the-solution-of-military-ciphers_10002/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/hitt_parker_manual-for-the-solution-of-military-ciphers_9780894120015.jpg" alt="Manual for the Solution of Military Ciphers" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Parker Hitt</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Manual for the Solution of Military Ciphers</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aegean Park Press &middot; 1976</p>
+            <img src="/assets/images/books/hitt_parker_manual-for-the-solution-of-military-ciphers_9780894120015.jpg" alt="Manual for the Solution of Military Ciphers" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Parker Hitt</div>
+    
+    <div class="collection-book-title">Manual for the Solution of Military Ciphers</div>
+    
+        <div class="collection-book-meta">Aegean Park Press &middot; 1976</div>
+    
 </a>
 
         
             
-<a href="/books/johnson_break-the-code-cryptography-for-beginners_10021/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/johnson_break-the-code-cryptography-for-beginners_10021/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/johnson_bud_break-the-code-cryptography-for-beginners_9780486291468.jpg" alt="Break the Code: Cryptography for Beginners" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Bud Johnson</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Break the Code: Cryptography for Beginners</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Dover Publications &middot; 1997</p>
+            <img src="/assets/images/books/johnson_bud_break-the-code-cryptography-for-beginners_9780486291468.jpg" alt="Break the Code: Cryptography for Beginners" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Bud Johnson</div>
+    
+    <div class="collection-book-title">Break the Code: Cryptography for Beginners</div>
+    
+        <div class="collection-book-meta">Dover Publications &middot; 1997</div>
+    
 </a>
 
         
             
-<a href="/books/konheim_cryptography-a-primer_10048/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/konheim_cryptography-a-primer_10048/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/konheim_alan_g_cryptography-a-primer_9780471081326.jpg" alt="Cryptography: A Primer" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Alan G. Konheim</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cryptography: A Primer</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">John Wiley &amp; Sons &middot; 1981</p>
+            <img src="/assets/images/books/konheim_alan_g_cryptography-a-primer_9780471081326.jpg" alt="Cryptography: A Primer" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Alan G. Konheim</div>
+    
+    <div class="collection-book-title">Cryptography: A Primer</div>
+    
+        <div class="collection-book-meta">John Wiley &amp; Sons &middot; 1981</div>
+    
 </a>
 
         
             
-<a href="/books/levine_united-states-cryptographic-patents-1861-1989_10018/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/levine_united-states-cryptographic-patents-1861-1989_10018/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/levine_jack_united-states-cryptographic-patents-1861-1989_9780961056018.jpg" alt="United States Cryptographic Patents, 1861-1989" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Levine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">United States Cryptographic Patents, 1861-1989</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Cryptologia &middot; 1991</p>
+            <img src="/assets/images/books/levine_jack_united-states-cryptographic-patents-1861-1989_9780961056018.jpg" alt="United States Cryptographic Patents, 1861-1989" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Jack Levine</div>
+    
+    <div class="collection-book-title">United States Cryptographic Patents, 1861-1989</div>
+    
+        <div class="collection-book-meta">Cryptologia &middot; 1991</div>
+    
 </a>
 
         
             
-<a href="/books/levitov_solution-of-the-voynich-manuscript-a-liturgical-manual-for-the-endura-rite-of-the-cathari-heresy-the-cult-of-isis_10010/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/levitov_solution-of-the-voynich-manuscript-a-liturgical-manual-for-the-endura-rite-of-the-cathari-heresy-the-cult-of-isis_10010/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/levitov_leo_solution-of-the-voynich-manuscript-a-liturgical-ma_9780894121487.jpg" alt="Solution of the Voynich Manuscript: A Liturgical Manual for the Endura Rite of the Cathari Heresy, the Cult of Isis" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Leo Levitov</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Solution of the Voynich Manuscript: A Liturgical Manual for the Endura Rite of the Cathari Heresy, the Cult of Isis</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aegean Park Press &middot; 1987</p>
+            <img src="/assets/images/books/levitov_leo_solution-of-the-voynich-manuscript-a-liturgical-ma_9780894121487.jpg" alt="Solution of the Voynich Manuscript: A Liturgical Manual for the Endura Rite of the Cathari Heresy, the Cult of Isis" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Leo Levitov</div>
+    
+    <div class="collection-book-title">Solution of the Voynich Manuscript: A Liturgical Manual for the Endura Rite of the Cathari Heresy, the Cult of Isis</div>
+    
+        <div class="collection-book-meta">Aegean Park Press &middot; 1987</div>
+    
 </a>
 
         
             
-<a href="/books/mason_lu-and-clancys-secret-codes_10027/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/mason_lu-and-clancys-secret-codes_10027/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/mason_adrienne_lu-clancys-secret-codes_9781550745535.jpg" alt="Lu &amp; Clancy&#39;s Secret Codes" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Adrienne Mason</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Lu &amp; Clancy&#39;s Secret Codes</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Kids Can Press &middot; 1999</p>
+            <img src="/assets/images/books/mason_adrienne_lu-clancys-secret-codes_9781550745535.jpg" alt="Lu &amp; Clancy&#39;s Secret Codes" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Adrienne Mason</div>
+    
+    <div class="collection-book-title">Lu &amp; Clancy&#39;s Secret Codes</div>
+    
+        <div class="collection-book-meta">Kids Can Press &middot; 1999</div>
+    
 </a>
 
         
             
-<a href="/books/singh_fermats-enigma-the-epic-quest-to-solve-the-worlds-greatest-mathematical-problem_10031/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/singh_fermats-enigma-the-epic-quest-to-solve-the-worlds-greatest-mathematical-problem_10031/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/singh_simon_fermats-enigma-the-epic-quest-to-solve-the-worlds_9780802713315.jpg" alt="Fermat&#39;s Enigma: The Epic Quest to Solve the World&#39;s Greatest Mathematical Problem" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Simon Singh</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Fermat&#39;s Enigma: The Epic Quest to Solve the World&#39;s Greatest Mathematical Problem</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Walker &amp; Company &middot; 1997</p>
+            <img src="/assets/images/books/singh_simon_fermats-enigma-the-epic-quest-to-solve-the-worlds_9780802713315.jpg" alt="Fermat&#39;s Enigma: The Epic Quest to Solve the World&#39;s Greatest Mathematical Problem" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Simon Singh</div>
+    
+    <div class="collection-book-title">Fermat&#39;s Enigma: The Epic Quest to Solve the World&#39;s Greatest Mathematical Problem</div>
+    
+        <div class="collection-book-meta">Walker &amp; Company &middot; 1997</div>
+    
 </a>
 
         
             
-<a href="/books/smith_cryptography-the-science-of-secret-writing_10049/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/smith_cryptography-the-science-of-secret-writing_10049/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/smith_laurence_dwight_cryptography-the-science-of-secret-writing.jpg" alt="Cryptography: The Science of Secret Writing" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Laurence Dwight Smith</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cryptography: The Science of Secret Writing</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">W. W. Norton &amp; Company &middot; 1943</p>
+            <img src="/assets/images/books/smith_laurence_dwight_cryptography-the-science-of-secret-writing.jpg" alt="Cryptography: The Science of Secret Writing" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Laurence Dwight Smith</div>
+    
+    <div class="collection-book-title">Cryptography: The Science of Secret Writing</div>
+    
+        <div class="collection-book-meta">W. W. Norton &amp; Company &middot; 1943</div>
+    
 </a>
 
         
             
-<a href="/books/weber_masked-dispatches-cryptograms-and-cryptology-in-american-history-1775-1900_10015/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/weber_masked-dispatches-cryptograms-and-cryptology-in-american-history-1775-1900_10015/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/weber_ralph_e_masked-dispatches-cryptograms-and-cryptology-in-am.jpg" alt="Masked Dispatches: Cryptograms and Cryptology in American History, 1775-1900" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ralph E. Weber</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Masked Dispatches: Cryptograms and Cryptology in American History, 1775-1900</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Center for Cryptologic History, National Security Agency &middot; 1993</p>
+            <img src="/assets/images/books/weber_ralph_e_masked-dispatches-cryptograms-and-cryptology-in-am.jpg" alt="Masked Dispatches: Cryptograms and Cryptology in American History, 1775-1900" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Ralph E. Weber</div>
+    
+    <div class="collection-book-title">Masked Dispatches: Cryptograms and Cryptology in American History, 1775-1900</div>
+    
+        <div class="collection-book-meta">Center for Cryptologic History, National Security Agency &middot; 1993</div>
+    
 </a>
 
         
             
-<a href="/books/friedman_cryptography-and-cryptanalysis-articles-volume-2_10004/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/friedman_cryptography-and-cryptanalysis-articles-volume-2_10004/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">William F. Friedman</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cryptography and Cryptanalysis Articles, Volume 2</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aegean Park Press &middot; 1976</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">William F. Friedman</div>
+    
+    <div class="collection-book-title">Cryptography and Cryptanalysis Articles, Volume 2</div>
+    
+        <div class="collection-book-meta">Aegean Park Press &middot; 1976</div>
+    
 </a>
 
         
             
-<a href="/books/friedman_the-riverbank-publications-volume-1_10005/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/friedman_the-riverbank-publications-volume-1_10005/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">William F. Friedman</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Riverbank Publications, Volume 1</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aegean Park Press &middot; 1979</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">William F. Friedman</div>
+    
+    <div class="collection-book-title">The Riverbank Publications, Volume 1</div>
+    
+        <div class="collection-book-meta">Aegean Park Press &middot; 1979</div>
+    
 </a>
 
         
             
-<a href="/books/lange_treatise-on-cryptography_10008/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/lange_treatise-on-cryptography_10008/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">André Lange, E.-A. Soudart</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Treatise on Cryptography</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aegean Park Press &middot; 1981</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">André Lange, E.-A. Soudart</div>
+    
+    <div class="collection-book-title">Treatise on Cryptography</div>
+    
+        <div class="collection-book-meta">Aegean Park Press &middot; 1981</div>
+    
 </a>
 
         
             
-<a href="/books/na_the-national-cryptologic-museum-activities-book-codes-ciphers-and-puzzles_10017/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/na_the-national-cryptologic-museum-activities-book-codes-ciphers-and-puzzles_10017/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">National Cryptologic Museum</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The National Cryptologic Museum Activities Book: Codes, Ciphers, and Puzzles</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Center for Cryptologic History &middot; 1996</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">National Cryptologic Museum</div>
+    
+    <div class="collection-book-title">The National Cryptologic Museum Activities Book: Codes, Ciphers, and Puzzles</div>
+    
+        <div class="collection-book-meta">Center for Cryptologic History &middot; 1996</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 

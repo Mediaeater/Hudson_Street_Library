@@ -311,441 +311,658 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+    
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Art Book</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Art Book.”</p>
+            <div class="collection-eyebrow">Formats
+            </div>
+            <h1 class="collection-title">Art Book</h1>
+            
+                <p class="collection-description">Every book in the library tagged “Art Book.”</p>
+            
+            <div class="collection-count">21 books</div>
+            
+            
             
             
         </div>
-        
 
-        
-        
-            
-        
         
 
         
             
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
-        
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<section class="collection-section">
+    
+    <div class="collection-books">
         
             
-<a href="/books/de-kooning_a-way-of-living-the-art-of-willem-de-kooning_289/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/de-kooning_a-way-of-living-the-art-of-willem-de-kooning_289/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/de_Kooning_A_Way_of_Living_9780714845814.jpg" alt="A Way of Living: The Art of Willem de Kooning" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Willem de Kooning</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">A Way of Living: The Art of Willem de Kooning</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press &middot; 2014</p>
+            <img src="/assets/images/books/de_Kooning_A_Way_of_Living_9780714845814.jpg" alt="A Way of Living: The Art of Willem de Kooning" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Willem de Kooning</div>
+    
+    <div class="collection-book-title">A Way of Living: The Art of Willem de Kooning</div>
+    
+        <div class="collection-book-meta">Phaidon Press &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/gates_theaster-gates-contemporary-artists_424/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/gates_theaster-gates-contemporary-artists_424/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Gates_Theaster_Gates_Contemporary_Artists_9780714868806.jpg" alt="Theaster Gates (Contemporary Artists)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Theaster Gates</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Theaster Gates (Contemporary Artists)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press &middot; 2015</p>
+            <img src="/assets/images/books/Gates_Theaster_Gates_Contemporary_Artists_9780714868806.jpg" alt="Theaster Gates (Contemporary Artists)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Theaster Gates</div>
+    
+    <div class="collection-book-title">Theaster Gates (Contemporary Artists)</div>
+    
+        <div class="collection-book-meta">Phaidon Press &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/jr_jr-can-art-change-the-world_556/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/jr_jr-can-art-change-the-world_556/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/JR_JR_Can_Art_Change_the_World_9780714869490.jpg" alt="JR: Can Art Change the World?" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">JR</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">JR: Can Art Change the World?</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press &middot; 2015</p>
+            <img src="/assets/images/books/JR_JR_Can_Art_Change_the_World_9780714869490.jpg" alt="JR: Can Art Change the World?" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">JR</div>
+    
+    <div class="collection-book-title">JR: Can Art Change the World?</div>
+    
+        <div class="collection-book-meta">Phaidon Press &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/opie_catherine-opie_823/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/opie_catherine-opie_823/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/covers/9781838662189.jpg" alt="Catherine Opie" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Catherine Opie</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Catherine Opie</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon &middot; 2021</p>
+            <img src="/assets/images/covers/9781838662189.jpg" alt="Catherine Opie" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Catherine Opie</div>
+    
+    <div class="collection-book-title">Catherine Opie</div>
+    
+        <div class="collection-book-meta">Phaidon &middot; 2021</div>
+    
 </a>
 
         
             
-<a href="/books/pendleton_adam-pendleton_841/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/pendleton_adam-pendleton_841/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/pendleton_adam_adam_pendleton_2020.jpg" alt="Adam Pendleton" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Adam Pendleton</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Adam Pendleton</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press &middot; 2020</p>
+            <img src="/assets/images/books/pendleton_adam_adam_pendleton_2020.jpg" alt="Adam Pendleton" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Adam Pendleton</div>
+    
+    <div class="collection-book-title">Adam Pendleton</div>
+    
+        <div class="collection-book-meta">Phaidon Press &middot; 2020</div>
+    
 </a>
 
         
             
-<a href="/books/pettibon_a-pen-of-all-work_846/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/pettibon_a-pen-of-all-work_846/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/covers/9780714873695.jpg" alt="A Pen of All Work" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Raymond Pettibon</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">A Pen of All Work</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press &middot; 2017</p>
+            <img src="/assets/images/covers/9780714873695.jpg" alt="A Pen of All Work" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Raymond Pettibon</div>
+    
+    <div class="collection-book-title">A Pen of All Work</div>
+    
+        <div class="collection-book-meta">Phaidon Press &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/saul_crime-and-punishment_1015/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/saul_crime-and-punishment_1015/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/covers/9781838660796.jpg" alt="Crime and Punishment" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Saul</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Crime and Punishment</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon</p>
+            <img src="/assets/images/covers/9781838660796.jpg" alt="Crime and Punishment" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Peter Saul</div>
+    
+    <div class="collection-book-title">Crime and Punishment</div>
+    
+        <div class="collection-book-meta">Phaidon</div>
+    
 </a>
 
         
             
-<a href="/books/simpson_lorna-simpson_1081/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/simpson_lorna-simpson_1081/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Simpson_Lorna_Simpson_9781838661243.jpg" alt="Lorna Simpson" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Lorna Simpson</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Lorna Simpson</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press</p>
+            <img src="/assets/images/books/Simpson_Lorna_Simpson_9781838661243.jpg" alt="Lorna Simpson" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Lorna Simpson</div>
+    
+    <div class="collection-book-title">Lorna Simpson</div>
+    
+        <div class="collection-book-meta">Phaidon Press</div>
+    
 </a>
 
         
             
-<a href="/books/va_artists-who-make-books_1198/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/va_artists-who-make-books_1198/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/covers/9780714872643.jpg" alt="Artists Who Make Books" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">NA VA</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Artists Who Make Books</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon &middot; 2017</p>
+            <img src="/assets/images/covers/9780714872643.jpg" alt="Artists Who Make Books" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">NA VA</div>
+    
+    <div class="collection-book-title">Artists Who Make Books</div>
+    
+        <div class="collection-book-meta">Phaidon &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/villareal_leo-villareal-coding-light_1355/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/villareal_leo-villareal-coding-light_1355/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Villareal_Leo_Villareal_Coding_Light_9781580936538.jpg" alt="Leo Villareal: Coding Light" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Leo Villareal</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Leo Villareal: Coding Light</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Monacelli Press/Phaidon &middot; 2025</p>
+            <img src="/assets/images/books/Villareal_Leo_Villareal_Coding_Light_9781580936538.jpg" alt="Leo Villareal: Coding Light" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Leo Villareal</div>
+    
+    <div class="collection-book-title">Leo Villareal: Coding Light</div>
+    
+        <div class="collection-book-meta">Monacelli Press/Phaidon &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/warhol_andy-warhol-polaroids_1235/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/warhol_andy-warhol-polaroids_1235/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/covers/9783836569385.jpg" alt="Andy Warhol. Polaroids" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Andy Warhol</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Andy Warhol. Polaroids</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Taschen &middot; 2017</p>
+            <img src="/assets/images/covers/9783836569385.jpg" alt="Andy Warhol. Polaroids" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Andy Warhol</div>
+    
+    <div class="collection-book-title">Andy Warhol. Polaroids</div>
+    
+        <div class="collection-book-meta">Taschen &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/gates_theaster-gates-12-ballads-for-huguenot-house-documenta-by-michael-darling-2012-10-31_426/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/gates_theaster-gates-12-ballads-for-huguenot-house-documenta-by-michael-darling-2012-10-31_426/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Theaster Gates</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Theaster Gates: 12 Ballads for Huguenot House (dOCUMENTA) by Michael Darling (2012-10-31)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Walther König, Köln &middot; 2012</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Theaster Gates</div>
+    
+    <div class="collection-book-title">Theaster Gates: 12 Ballads for Huguenot House (dOCUMENTA) by Michael Darling (2012-10-31)</div>
+    
+        <div class="collection-book-meta">Walther König, Köln &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/lindbergh_a-different-vision-on-fashion-photography_631/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/lindbergh_a-different-vision-on-fashion-photography_631/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Lindbergh</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">A Different Vision on Fashion Photography</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Taschen &middot; 2016</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Peter Lindbergh</div>
+    
+    <div class="collection-book-title">A Different Vision on Fashion Photography</div>
+    
+        <div class="collection-book-meta">Taschen &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/mapplethorpe-nigel-shafran-pierre_mapplethorpe-flora_676/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/mapplethorpe-nigel-shafran-pierre_mapplethorpe-flora_676/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Robert Mapplethorpe, Nigel Shafran, Pierre</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Mapplethorpe Flora</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Robert Mapplethorpe, Nigel Shafran, Pierre</div>
+    
+    <div class="collection-book-title">Mapplethorpe Flora</div>
+    
+        <div class="collection-book-meta">Phaidon Press</div>
+    
 </a>
 
         
             
-<a href="/books/marshall_kerry-james-marshall_694/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/marshall_kerry-james-marshall_694/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Kerry James Marshall</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Kerry James Marshall</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press &middot; 2017</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Kerry James Marshall</div>
+    
+    <div class="collection-book-title">Kerry James Marshall</div>
+    
+        <div class="collection-book-meta">Phaidon Press &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/martin_paintings-writings-remembrances_707/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/martin_paintings-writings-remembrances_707/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Agnus Martin</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Paintings, Writings, Remembrances</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press &middot; 2012</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Agnus Martin</div>
+    
+    <div class="collection-book-title">Paintings, Writings, Remembrances</div>
+    
+        <div class="collection-book-meta">Phaidon Press &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/mccarthy_paul-mccarthy_722/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/mccarthy_paul-mccarthy_722/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Paul McCarthy</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Paul McCarthy</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Paul McCarthy</div>
+    
+    <div class="collection-book-title">Paul McCarthy</div>
+    
+        <div class="collection-book-meta">Phaidon Press</div>
+    
 </a>
 
         
             
-<a href="/books/mott_oh-so-pretty-punk-in-print-1976-19801980_1415/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/mott_oh-so-pretty-punk-in-print-1976-19801980_1415/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Toby Mott</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Oh So Pretty: Punk in Print 1976-19801980</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press &middot; 2016</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Toby Mott</div>
+    
+    <div class="collection-book-title">Oh So Pretty: Punk in Print 1976-19801980</div>
+    
+        <div class="collection-book-meta">Phaidon Press &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/paglan_trevor-paglan_831/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/paglan_trevor-paglan_831/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Trevor Paglan</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Trevor Paglan</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press &middot; 2018</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Trevor Paglan</div>
+    
+    <div class="collection-book-title">Trevor Paglan</div>
+    
+        <div class="collection-book-meta">Phaidon Press &middot; 2018</div>
+    
 </a>
 
         
             
-<a href="/books/pettibon_raymond-pettibon-contemporary-artists_856/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/pettibon_raymond-pettibon-contemporary-artists_856/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Raymond Pettibon</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Raymond Pettibon (Contemporary Artists)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press &middot; 2001</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Raymond Pettibon</div>
+    
+    <div class="collection-book-title">Raymond Pettibon (Contemporary Artists)</div>
+    
+        <div class="collection-book-meta">Phaidon Press &middot; 2001</div>
+    
 </a>
 
         
             
-<a href="/books/sze_sarah-sze-paintings_1438/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/sze_sarah-sze-paintings_1438/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Sarah Sze</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Sarah Sze: Paintings</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon &middot; 2025</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Sarah Sze</div>
+    
+    <div class="collection-book-title">Sarah Sze: Paintings</div>
+    
+        <div class="collection-book-meta">Phaidon &middot; 2025</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 

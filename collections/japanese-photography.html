@@ -311,612 +311,811 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+    
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Japanese Photography</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Japanese Photography.”</p>
+            <div class="collection-eyebrow">Places
+            </div>
+            <h1 class="collection-title">Japanese Photography</h1>
+            
+                <p class="collection-description">Every book in the library tagged “Japanese Photography.”</p>
+            
+            <div class="collection-count">30 books</div>
+            
+            
             
             
         </div>
-        
 
-        
-        
-            
-        
         
 
         
             
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
-        
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<section class="collection-section">
+    
+    <div class="collection-books">
         
             
-<a href="/books/araki_araki-by-araki_46/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/araki_araki-by-araki_46/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/araki_nobuyoshi_araki_by_araki_9783836551120.jpg" alt="Araki by Araki" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Nobuyoshi Araki</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Araki by Araki</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">TASCHEN &middot; 2014</p>
+            <img src="/assets/images/books/araki_nobuyoshi_araki_by_araki_9783836551120.jpg" alt="Araki by Araki" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Nobuyoshi Araki</div>
+    
+    <div class="collection-book-title">Araki by Araki</div>
+    
+        <div class="collection-book-meta">TASCHEN &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/araki_blue-period-last-summer_45/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/araki_blue-period-last-summer_45/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/araki_nobuyoshi_blue_period_last_summer_9780996657419.jpg" alt="Blue Period / Last Summer" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Nobuyoshi Araki</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Blue Period / Last Summer</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Dashwood Books &middot; 2017</p>
+            <img src="/assets/images/books/araki_nobuyoshi_blue_period_last_summer_9780996657419.jpg" alt="Blue Period / Last Summer" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Nobuyoshi Araki</div>
+    
+    <div class="collection-book-title">Blue Period / Last Summer</div>
+    
+        <div class="collection-book-meta">Dashwood Books &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/araki_nobuyoshi-araki-vintage-prints_50/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/araki_nobuyoshi-araki-vintage-prints_50/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/araki_nobuyoshi_nobuyoshi_araki_vintage_prints_50.jpg" alt="Nobuyoshi Araki: Vintage Prints" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Nobuyoshi Araki</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nobuyoshi Araki: Vintage Prints</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Dashwood Books &middot; 2018</p>
+            <img src="/assets/images/books/araki_nobuyoshi_nobuyoshi_araki_vintage_prints_50.jpg" alt="Nobuyoshi Araki: Vintage Prints" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Nobuyoshi Araki</div>
+    
+    <div class="collection-book-title">Nobuyoshi Araki: Vintage Prints</div>
+    
+        <div class="collection-book-meta">Dashwood Books &middot; 2018</div>
+    
 </a>
 
         
             
-<a href="/books/cobayashi_everything1_234/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/cobayashi_everything1_234/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/cobayashi_kenta_everything_1_234.jpg" alt="Everything_1" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Kenta Cobayashi</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Everything_1</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Newfave &middot; 2016</p>
+            <img src="/assets/images/books/cobayashi_kenta_everything_1_234.jpg" alt="Everything_1" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Kenta Cobayashi</div>
+    
+    <div class="collection-book-title">Everything_1</div>
+    
+        <div class="collection-book-meta">Newfave &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/daifu_two-perspectives-on-tokyo_281/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/daifu_two-perspectives-on-tokyo_281/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/daifu_motoyuki_two_perspectives_on_tokyo_281.jpg" alt="Two Perspectives on Tokyo" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Motoyuki Daifu</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Two Perspectives on Tokyo</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Newfave &middot; 2016</p>
+            <img src="/assets/images/books/daifu_motoyuki_two_perspectives_on_tokyo_281.jpg" alt="Two Perspectives on Tokyo" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Motoyuki Daifu</div>
+    
+    <div class="collection-book-title">Two Perspectives on Tokyo</div>
+    
+        <div class="collection-book-meta">Newfave &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/hatakeyama_naoya-hatakeyama-excavating-the-future-city_508/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/hatakeyama_naoya-hatakeyama-excavating-the-future-city_508/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/hatakeyama_naoya_excavating_the_future_city_9781597114325.jpg" alt="Naoya Hatakeyama: Excavating the Future City" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Naoya Hatakeyama</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Naoya Hatakeyama: Excavating the Future City</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aperture &middot; 2018</p>
+            <img src="/assets/images/books/hatakeyama_naoya_excavating_the_future_city_9781597114325.jpg" alt="Naoya Hatakeyama: Excavating the Future City" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Naoya Hatakeyama</div>
+    
+    <div class="collection-book-title">Naoya Hatakeyama: Excavating the Future City</div>
+    
+        <div class="collection-book-meta">Aperture &middot; 2018</div>
+    
 </a>
 
         
             
-<a href="/books/homma_portrait-of-j_1683/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/homma_portrait-of-j_1683/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Homma_Portrait_of_J.jpg" alt="Portrait of J" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Takashi Homma</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Portrait of J</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Dashwood Books, Session Press &middot; 2025</p>
+            <img src="/assets/images/books/Homma_Portrait_of_J.jpg" alt="Portrait of J" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Takashi Homma</div>
+    
+    <div class="collection-book-title">Portrait of J</div>
+    
+        <div class="collection-book-meta">Dashwood Books, Session Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/hosokura_kazan_530/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/hosokura_kazan_530/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Hosokura_Kazan_9784902080414.jpg" alt="Kazan" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mayumi Hosokura</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Kazan</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Artbeat Publishers &middot; 2012</p>
+            <img src="/assets/images/books/Hosokura_Kazan_9784902080414.jpg" alt="Kazan" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Mayumi Hosokura</div>
+    
+    <div class="collection-book-title">Kazan</div>
+    
+        <div class="collection-book-meta">Artbeat Publishers &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/kitai_barricade_2255/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/kitai_barricade_2255/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/kitai_kazuo_barricade_9780615416786.jpg" alt="Barricade" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Kazuo Kitai</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Barricade</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Harper&#39;s Books &middot; 2012</p>
+            <img src="/assets/images/books/kitai_kazuo_barricade_9780615416786.jpg" alt="Barricade" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Kazuo Kitai</div>
+    
+    <div class="collection-book-title">Barricade</div>
+    
+        <div class="collection-book-meta">Harper&#39;s Books &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/matsue_cell_2194/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsue_cell_2194/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/matsue_taiji_cell_9784903545356.jpg" alt="Cell" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Taiji Matsue</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cell</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Akaaka Art Publishing &middot; 2008</p>
+            <img src="/assets/images/books/matsue_taiji_cell_9784903545356.jpg" alt="Cell" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Taiji Matsue</div>
+    
+    <div class="collection-book-title">Cell</div>
+    
+        <div class="collection-book-meta">Akaaka Art Publishing &middot; 2008</div>
+    
 </a>
 
         
             
-<a href="/books/mizutani_hanon_762/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/mizutani_hanon_762/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/mizutani_yoshinori_hanon_9784865872941.jpg" alt="Hanon" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Yoshinori Mizutani</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Hanon</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">amana inc. &middot; 2016</p>
+            <img src="/assets/images/books/mizutani_yoshinori_hanon_9784865872941.jpg" alt="Hanon" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Yoshinori Mizutani</div>
+    
+    <div class="collection-book-title">Hanon</div>
+    
+        <div class="collection-book-meta">amana inc. &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/mizutani_taxi-dirty-book_2170/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/mizutani_taxi-dirty-book_2170/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/mizutani_yoshinori_taxi_dirty_book_9782940409693.jpg" alt="Taxi Dirty Book" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Yoshinori Mizutani</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Taxi Dirty Book</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Boabooks &middot; 2014</p>
+            <img src="/assets/images/books/mizutani_yoshinori_taxi_dirty_book_9782940409693.jpg" alt="Taxi Dirty Book" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Yoshinori Mizutani</div>
+    
+    <div class="collection-book-title">Taxi Dirty Book</div>
+    
+        <div class="collection-book-meta">Boabooks &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/mizutani_tokyo-parrots_763/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/mizutani_tokyo-parrots_763/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/mizutani_yoshinori_tokyo_parrots_9784907519407.jpg" alt="Tokyo Parrots" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Yoshinori Mizutani</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tokyo Parrots</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">amana / IMA Photobooks &middot; 2014</p>
+            <img src="/assets/images/books/mizutani_yoshinori_tokyo_parrots_9784907519407.jpg" alt="Tokyo Parrots" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Yoshinori Mizutani</div>
+    
+    <div class="collection-book-title">Tokyo Parrots</div>
+    
+        <div class="collection-book-meta">amana / IMA Photobooks &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/moriyama_daido-moriyama-mirage_776/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/moriyama_daido-moriyama-mirage_776/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/moriyama_daido_mirage_9784908088131.jpg" alt="Daido Moriyama: Mirage" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Daido Moriyama</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Daido Moriyama: Mirage</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">MMM (Bookshop-M) &middot; 2015</p>
+            <img src="/assets/images/books/moriyama_daido_mirage_9784908088131.jpg" alt="Daido Moriyama: Mirage" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Daido Moriyama</div>
+    
+    <div class="collection-book-title">Daido Moriyama: Mirage</div>
+    
+        <div class="collection-book-meta">MMM (Bookshop-M) &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/moriyama_record-no-26_774/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/moriyama_record-no-26_774/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/moriyama_daido_record_no_26_774.jpg" alt="Record No. 26" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Daido Moriyama</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record No. 26</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Akio Nagasawa Publishing &middot; 2014</p>
+            <img src="/assets/images/books/moriyama_daido_record_no_26_774.jpg" alt="Record No. 26" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Daido Moriyama</div>
+    
+    <div class="collection-book-title">Record No. 26</div>
+    
+        <div class="collection-book-meta">Akio Nagasawa Publishing &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/moriyama_record-no-31_773/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/moriyama_record-no-31_773/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/moriyama_daido_record_no_31_773.jpg" alt="Record No. 31" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Daido Moriyama</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record No. 31</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Akio Nagasawa Publishing &middot; 2016</p>
+            <img src="/assets/images/books/moriyama_daido_record_no_31_773.jpg" alt="Record No. 31" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Daido Moriyama</div>
+    
+    <div class="collection-book-title">Record No. 31</div>
+    
+        <div class="collection-book-meta">Akio Nagasawa Publishing &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/moriyama_record-no-34_771/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/moriyama_record-no-34_771/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/moriyama_daido_record_no_34_771.jpg" alt="Record No. 34" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Daido Moriyama</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record No. 34</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Akio Nagasawa Publishing &middot; 2017</p>
+            <img src="/assets/images/books/moriyama_daido_record_no_34_771.jpg" alt="Record No. 34" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Daido Moriyama</div>
+    
+    <div class="collection-book-title">Record No. 34</div>
+    
+        <div class="collection-book-meta">Akio Nagasawa Publishing &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/onodera_eleventh-finger_822/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/onodera_eleventh-finger_822/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/onodera_yuki_eleventh_finger_9784902080476.jpg" alt="Eleventh Finger" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Yuki Onodera</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Eleventh Finger</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Art Beat Publishers &middot; 2014</p>
+            <img src="/assets/images/books/onodera_yuki_eleventh_finger_9784902080476.jpg" alt="Eleventh Finger" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Yuki Onodera</div>
+    
+    <div class="collection-book-title">Eleventh Finger</div>
+    
+        <div class="collection-book-meta">Art Beat Publishers &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/provoke_provoke-complete-reprint-of-3-volumes_927/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/provoke_provoke-complete-reprint-of-3-volumes_927/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/provoke_provoke-complete-reprint-of-3-volumes_927.jpg" alt="Provoke: Complete Reprint of 3 Volumes" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Provoke</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Provoke: Complete Reprint of 3 Volumes</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nitesha &middot; 2023</p>
+            <img src="/assets/images/books/provoke_provoke-complete-reprint-of-3-volumes_927.jpg" alt="Provoke: Complete Reprint of 3 Volumes" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Provoke</div>
+    
+    <div class="collection-book-title">Provoke: Complete Reprint of 3 Volumes</div>
+    
+        <div class="collection-book-meta">Nitesha &middot; 2023</div>
+    
 </a>
 
         
             
-<a href="/books/provoke_provoke-complete-reprint-of-3-volumes_2332/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/provoke_provoke-complete-reprint-of-3-volumes_2332/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/provoke_provoke-complete-reprint-of-3-volumes_927.jpg" alt="Provoke: Complete Reprint of 3 Volumes" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Provoke</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Provoke: Complete Reprint of 3 Volumes</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nitesha &middot; 2023</p>
+            <img src="/assets/images/books/provoke_provoke-complete-reprint-of-3-volumes_927.jpg" alt="Provoke: Complete Reprint of 3 Volumes" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Provoke</div>
+    
+    <div class="collection-book-title">Provoke: Complete Reprint of 3 Volumes</div>
+    
+        <div class="collection-book-meta">Nitesha &middot; 2023</div>
+    
 </a>
 
         
             
-<a href="/books/shiga_blind-date_1062/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/shiga_blind-date_1062/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/shiga_lieko_blind_date_9788410024496.jpg" alt="Blind Date" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Lieko Shiga</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Blind Date</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">La Fábrica &middot; 2026</p>
+            <img src="/assets/images/books/shiga_lieko_blind_date_9788410024496.jpg" alt="Blind Date" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Lieko Shiga</div>
+    
+    <div class="collection-book-title">Blind Date</div>
+    
+        <div class="collection-book-meta">La Fábrica &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/shinoyama_olele-olala_1065/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/shinoyama_olele-olala_1065/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/shinoyama_kishin_olele_olala_1065.jpg" alt="Olele Olala" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Kishin Shinoyama</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Olele Olala</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Shueisha &middot; 1971</p>
+            <img src="/assets/images/books/shinoyama_kishin_olele_olala_1065.jpg" alt="Olele Olala" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Kishin Shinoyama</div>
+    
+    <div class="collection-book-title">Olele Olala</div>
+    
+        <div class="collection-book-meta">Shueisha &middot; 1971</div>
+    
 </a>
 
         
             
-<a href="/books/yabuki_gengetsu_1275/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/yabuki_gengetsu_1275/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/yabuki_takemi_gengetsu_9784905052807.jpg" alt="Gengetsu" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Takemi Yabuki</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Gengetsu</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Super Labo &middot; 2015</p>
+            <img src="/assets/images/books/yabuki_takemi_gengetsu_9784905052807.jpg" alt="Gengetsu" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Takemi Yabuki</div>
+    
+    <div class="collection-book-title">Gengetsu</div>
+    
+        <div class="collection-book-meta">Super Labo &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/cobayashi_friends-forever_235/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/cobayashi_friends-forever_235/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Kenta Cobayashi</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Friends Forever</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self-published &middot; 2014</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Kenta Cobayashi</div>
+    
+    <div class="collection-book-title">Friends Forever</div>
+    
+        <div class="collection-book-meta">Self-published &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/hosokura_crystal-love-starlight_529/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/hosokura_crystal-love-starlight_529/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mayumi Hosokura</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Crystal Love Starlight</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tycoon Books &middot; 2014</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mayumi Hosokura</div>
+    
+    <div class="collection-book-title">Crystal Love Starlight</div>
+    
+        <div class="collection-book-meta">Tycoon Books &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/ishikawa_bad-ass-and-beautyone-love_539/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/ishikawa_bad-ass-and-beautyone-love_539/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mao Ishikawa</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Bad Ass and Beauty—One Love</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">T&amp;M Projects &middot; 2021</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mao Ishikawa</div>
+    
+    <div class="collection-book-title">Bad Ass and Beauty—One Love</div>
+    
+        <div class="collection-book-meta">T&amp;M Projects &middot; 2021</div>
+    
 </a>
 
         
             
-<a href="/books/moriyama_record-no-32_772/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/moriyama_record-no-32_772/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Daido Moriyama</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Record No. 32</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Akio Nagasawa Publishing &middot; 2016</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Daido Moriyama</div>
+    
+    <div class="collection-book-title">Record No. 32</div>
+    
+        <div class="collection-book-meta">Akio Nagasawa Publishing &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/yamawaki_berlin-deep-in-thought_1276/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/yamawaki_berlin-deep-in-thought_1276/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Toshitsugu Yamawaki</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Berlin / Deep in Thought</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Studio a la page &middot; 2014</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Toshitsugu Yamawaki</div>
+    
+    <div class="collection-book-title">Berlin / Deep in Thought</div>
+    
+        <div class="collection-book-meta">Studio a la page &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/yamawaki_dimension-of-vision_1277/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/yamawaki_dimension-of-vision_1277/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Toshitsugu Yamawaki</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Dimension of Vision</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Studio A La Page &middot; 2011</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Toshitsugu Yamawaki</div>
+    
+    <div class="collection-book-title">Dimension of Vision</div>
+    
+        <div class="collection-book-meta">Studio A La Page &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/yokota_vertigo_1281/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/yokota_vertigo_1281/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Daisuke Yokota</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Vertigo</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Newfave &middot; 2014</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Daisuke Yokota</div>
+    
+    <div class="collection-book-title">Vertigo</div>
+    
+        <div class="collection-book-meta">Newfave &middot; 2014</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 

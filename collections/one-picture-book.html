@@ -311,1047 +311,1200 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">One Picture Book Two</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Nazraeli Press&#39;s celebrated series of limited edition photography books. Each volume is limited to 500 numbered copies and includes a removable, signed, original 5x7 inch print by the artist. Featuring work by masters like Daido Moriyama, Michael Kenna, Todd Hido, Alec Soth, and Carrie Mae Weems.</p>
+            <div class="collection-eyebrow">Collection
+            </div>
+            <h1 class="collection-title">One Picture Book Two</h1>
+            
+                <p class="collection-description">Nazraeli Press&#39;s celebrated series of limited edition photography books. Each volume is limited to 500 numbered copies and includes a removable, signed, original 5x7 inch print by the artist. Featuring work by masters like Daido Moriyama, Michael Kenna, Todd Hido, Alec Soth, and Carrie Mae Weems.</p>
+            
+            <div class="collection-count">53 books</div>
+            
+            
             
             
         </div>
-        
 
-        
-        
         
 
         
             
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
-        
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<section class="collection-section">
+    
+    <div class="collection-books">
         
             
-<a href="/books/solomon_one-picture-book-83-witness_2172/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/solomon_one-picture-book-83-witness_2172/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/solomon_dan_one-picture-book-83-witness_9781590053942.jpg" alt="One Picture Book #83: Witness" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Dan Solomon</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book #83: Witness</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2014</p>
+            <img src="/assets/images/books/solomon_dan_one-picture-book-83-witness_9781590053942.jpg" alt="One Picture Book #83: Witness" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Dan Solomon</div>
+    
+    <div class="collection-book-title">One Picture Book #83: Witness</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/kenna_one-picture-book-two-vol-01-dmz-the-38th-parallel_1353/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/kenna_one-picture-book-two-vol-01-dmz-the-38th-parallel_1353/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/kenna_michael_one_picture_book_two_vol_01_dmz_the_38th_parallel_1353.jpg" alt="One Picture Book Two Vol 01 - DMZ The 38th Parallel" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Michael Kenna</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 01 - DMZ The 38th Parallel</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/kenna_michael_one_picture_book_two_vol_01_dmz_the_38th_parallel_1353.jpg" alt="One Picture Book Two Vol 01 - DMZ The 38th Parallel" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Michael Kenna</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 01 - DMZ The 38th Parallel</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/hahn_one-picture-book-two-vol-02-the-lone-ranger_1352/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/hahn_one-picture-book-two-vol-02-the-lone-ranger_1352/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/hahn_betty_one_picture_book_two_vol_02_the_lone_ranger_1352.jpg" alt="One Picture Book Two Vol 02 - The Lone Ranger" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Betty Hahn</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 02 - The Lone Ranger</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/hahn_betty_one_picture_book_two_vol_02_the_lone_ranger_1352.jpg" alt="One Picture Book Two Vol 02 - The Lone Ranger" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Betty Hahn</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 02 - The Lone Ranger</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/weems_one-picture-book-two-vol-03-monument_1351/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/weems_one-picture-book-two-vol-03-monument_1351/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Weems_One_Picture_Book_Two_Vol_03_-_Monument_9781590054949.jpg" alt="One Picture Book Two Vol 03 - Monument" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Carrie Mae Weems</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 03 - Monument</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/Weems_One_Picture_Book_Two_Vol_03_-_Monument_9781590054949.jpg" alt="One Picture Book Two Vol 03 - Monument" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Carrie Mae Weems</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 03 - Monument</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/mendoza_one-picture-book-two-vol-04-floridadogs_1350/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/mendoza_one-picture-book-two-vol-04-floridadogs_1350/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/mendoza_tony_one_picture_book_two_vol_04_floridadogs_1350.jpg" alt="One Picture Book Two Vol 04 - Floridadogs" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tony Mendoza</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 04 - Floridadogs</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/mendoza_tony_one_picture_book_two_vol_04_floridadogs_1350.jpg" alt="One Picture Book Two Vol 04 - Floridadogs" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Tony Mendoza</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 04 - Floridadogs</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/ruwedel_one-picture-book-two-vol-05-studio-er_1349/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/ruwedel_one-picture-book-two-vol-05-studio-er_1349/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/ruwedel_mark_one_picture_book_two_vol_05_studio_er_1349.jpg" alt="One Picture Book Two Vol 05 - Studio ER" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mark Ruwedel</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 05 - Studio ER</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/ruwedel_mark_one_picture_book_two_vol_05_studio_er_1349.jpg" alt="One Picture Book Two Vol 05 - Studio ER" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Mark Ruwedel</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 05 - Studio ER</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/callis_one-picture-book-two-vol-06-cheap-thrills_1348/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/callis_one-picture-book-two-vol-06-cheap-thrills_1348/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/callis_jo_ann_one_picture_book_two_vol_06_cheap_thrills_1348.jpg" alt="One Picture Book Two Vol 06 - Cheap Thrills" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jo Ann Callis</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 06 - Cheap Thrills</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/callis_jo_ann_one_picture_book_two_vol_06_cheap_thrills_1348.jpg" alt="One Picture Book Two Vol 06 - Cheap Thrills" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Jo Ann Callis</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 06 - Cheap Thrills</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/mulno_one-picture-book-two-vol-07-residential-variations_1347/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/mulno_one-picture-book-two-vol-07-residential-variations_1347/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/mulno_michael_one_picture_book_two_vol_07_residential_variations_1347.jpg" alt="One Picture Book Two Vol 07 - Residential Variations" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Michael Mulno</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 07 - Residential Variations</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/mulno_michael_one_picture_book_two_vol_07_residential_variations_1347.jpg" alt="One Picture Book Two Vol 07 - Residential Variations" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Michael Mulno</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 07 - Residential Variations</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/banning_one-picture-book-two-vol-08-the-sweating-subject_1346/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/banning_one-picture-book-two-vol-08-the-sweating-subject_1346/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/banning_jan_one_picture_book_two_vol_08_the_sweating_subject_1346.jpg" alt="One Picture Book Two Vol 08 - The Sweating Subject" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jan Banning</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 08 - The Sweating Subject</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/banning_jan_one_picture_book_two_vol_08_the_sweating_subject_1346.jpg" alt="One Picture Book Two Vol 08 - The Sweating Subject" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Jan Banning</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 08 - The Sweating Subject</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/zadeh_one-picture-book-two-vol-09-i_1345/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/zadeh_one-picture-book-two-vol-09-i_1345/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/zadeh_susan_a_one_picture_book_two_vol_09_i_1345.jpg" alt="One Picture Book Two Vol 09 - I" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Susan A. Zadeh</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 09 - I</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/zadeh_susan_a_one_picture_book_two_vol_09_i_1345.jpg" alt="One Picture Book Two Vol 09 - I" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Susan A. Zadeh</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 09 - I</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/moriyama_one-picture-book-two-vol-10-daido-moto_1344/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/moriyama_one-picture-book-two-vol-10-daido-moto_1344/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/moriyama_daido_one_picture_book_two_vol_10_daido_moto_1344.jpg" alt="One Picture Book Two Vol 10 - Daido Moto" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Daido Moriyama</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 10 - Daido Moto</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/moriyama_daido_one_picture_book_two_vol_10_daido_moto_1344.jpg" alt="One Picture Book Two Vol 10 - Daido Moto" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Daido Moriyama</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 10 - Daido Moto</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/borensztein_one-picture-book-two-vol-11-tata_1343/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/borensztein_one-picture-book-two-vol-11-tata_1343/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/borensztein_leon_one_picture_book_two_vol_11_tata_1343.jpg" alt="One Picture Book Two Vol 11 - Tata" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Leon Borensztein</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 11 - Tata</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/borensztein_leon_one_picture_book_two_vol_11_tata_1343.jpg" alt="One Picture Book Two Vol 11 - Tata" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Leon Borensztein</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 11 - Tata</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/simmons_one-picture-book-two-vol-12-instant-decorator_1342/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/simmons_one-picture-book-two-vol-12-instant-decorator_1342/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/simmons_laurie_one_picture_book_two_vol_12_instant_decorator_1342.jpg" alt="One Picture Book Two Vol 12 - Instant Decorator" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Laurie Simmons</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 12 - Instant Decorator</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/simmons_laurie_one_picture_book_two_vol_12_instant_decorator_1342.jpg" alt="One Picture Book Two Vol 12 - Instant Decorator" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Laurie Simmons</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 12 - Instant Decorator</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/shibata_one-picture-book-two-vol-13-gas-stations-1982-1986_1341/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/shibata_one-picture-book-two-vol-13-gas-stations-1982-1986_1341/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/shibata_toshio_one_picture_book_two_vol_13_gas_stations_1982_1986_1341.jpg" alt="One Picture Book Two Vol 13 - Gas Stations 1982 1986" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Toshio Shibata</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 13 - Gas Stations 1982 1986</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/shibata_toshio_one_picture_book_two_vol_13_gas_stations_1982_1986_1341.jpg" alt="One Picture Book Two Vol 13 - Gas Stations 1982 1986" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Toshio Shibata</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 13 - Gas Stations 1982 1986</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/sharma_one-picture-book-two-vol-14-darshan_1340/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/sharma_one-picture-book-two-vol-14-darshan_1340/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/sharma_manjari_one_picture_book_two_vol_14_darshan_1340.jpg" alt="One Picture Book Two Vol 14 - Darshan" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Manjari Sharma</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 14 - Darshan</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/sharma_manjari_one_picture_book_two_vol_14_darshan_1340.jpg" alt="One Picture Book Two Vol 14 - Darshan" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Manjari Sharma</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 14 - Darshan</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/izu_one-picture-book-two-vol-15-requiem_1339/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/izu_one-picture-book-two-vol-15-requiem_1339/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/izu_kenro_one_picture_book_two_vol_15_requiem_1339.jpg" alt="One Picture Book Two Vol 15 - Requiem" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Kenro Izu</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 15 - Requiem</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/izu_kenro_one_picture_book_two_vol_15_requiem_1339.jpg" alt="One Picture Book Two Vol 15 - Requiem" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Kenro Izu</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 15 - Requiem</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/steinmetz_one-picture-book-two-vol-16-cats_1338/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/steinmetz_one-picture-book-two-vol-16-cats_1338/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/steinmetz_mark_one_picture_book_two_vol_16_cats_1338.jpg" alt="One Picture Book Two Vol 16 - Cats" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mark Steinmetz</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 16 - Cats</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/steinmetz_mark_one_picture_book_two_vol_16_cats_1338.jpg" alt="One Picture Book Two Vol 16 - Cats" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Mark Steinmetz</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 16 - Cats</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/kenna_one-picture-book-two-vol-17-notre-dame_1337/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/kenna_one-picture-book-two-vol-17-notre-dame_1337/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/kenna_michael_one_picture_book_two_vol_17_notre_dame_1337.jpg" alt="One Picture Book Two Vol 17 - Notre Dame" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Michael Kenna</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 17 - Notre Dame</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/kenna_michael_one_picture_book_two_vol_17_notre_dame_1337.jpg" alt="One Picture Book Two Vol 17 - Notre Dame" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Michael Kenna</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 17 - Notre Dame</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/gibson_one-picture-book-two-vol-18-a-walk-through-a-bamboo-grove_1336/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/gibson_one-picture-book-two-vol-18-a-walk-through-a-bamboo-grove_1336/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/gibson_david_h_one_picture_book_two_vol_18_a_walk_through_a_bamboo_grove_1336.jpg" alt="One Picture Book Two Vol 18 - A Walk Through A Bamboo Grove" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">David H. Gibson</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 18 - A Walk Through A Bamboo Grove</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/gibson_david_h_one_picture_book_two_vol_18_a_walk_through_a_bamboo_grove_1336.jpg" alt="One Picture Book Two Vol 18 - A Walk Through A Bamboo Grove" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">David H. Gibson</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 18 - A Walk Through A Bamboo Grove</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/malley_one-picture-book-two-vol-19-captains-of-the-dead-sea_1335/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/malley_one-picture-book-two-vol-19-captains-of-the-dead-sea_1335/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/malley_alia_one_picture_book_two_vol_19_captains_of_the_dead_sea.jpg" alt="One Picture Book Two Vol 19 - Captains of the Dead Sea" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Alia Malley</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 19 - Captains of the Dead Sea</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/malley_alia_one_picture_book_two_vol_19_captains_of_the_dead_sea.jpg" alt="One Picture Book Two Vol 19 - Captains of the Dead Sea" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Alia Malley</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 19 - Captains of the Dead Sea</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/hido_one-picture-book-two-vol-20-untitled-11856-0820_1334/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/hido_one-picture-book-two-vol-20-untitled-11856-0820_1334/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/hido_todd_one_picture_book_two_vol_20_untitled_11856_0820_1334.jpg" alt="One Picture Book Two Vol 20 - Untitled #11856-0820" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Todd Hido</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 20 - Untitled #11856-0820</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/hido_todd_one_picture_book_two_vol_20_untitled_11856_0820_1334.jpg" alt="One Picture Book Two Vol 20 - Untitled #11856-0820" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Todd Hido</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 20 - Untitled #11856-0820</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/weems_one-picture-book-two-vol-21-africa-gems-and-jewels_1333/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/weems_one-picture-book-two-vol-21-africa-gems-and-jewels_1333/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Weems_One_Picture_Book_Two_Vol_21_-_Africa_Gems_and_Jewels_9781590055465.jpg" alt="One Picture Book Two Vol 21 - Africa Gems and Jewels" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Carrie Mae Weems</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 21 - Africa Gems and Jewels</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/Weems_One_Picture_Book_Two_Vol_21_-_Africa_Gems_and_Jewels_9781590055465.jpg" alt="One Picture Book Two Vol 21 - Africa Gems and Jewels" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Carrie Mae Weems</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 21 - Africa Gems and Jewels</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/templeton_one-picture-book-two-vol-22-auto-hypnosis_1332/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/templeton_one-picture-book-two-vol-22-auto-hypnosis_1332/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/templeton_ed_one_picture_book_two_vol_22_auto_hypnosis_1332.jpg" alt="One Picture Book Two Vol 22 - Auto Hypnosis" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ed Templeton</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 22 - Auto Hypnosis</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/templeton_ed_one_picture_book_two_vol_22_auto_hypnosis_1332.jpg" alt="One Picture Book Two Vol 22 - Auto Hypnosis" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Ed Templeton</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 22 - Auto Hypnosis</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/templeton_one-picture-book-two-vol-23-love-you_1331/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/templeton_one-picture-book-two-vol-23-love-you_1331/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/templeton_deanna_one_picture_book_two_vol_23_love_you_1331.jpg" alt="One Picture Book Two Vol 23 - Love You" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Deanna Templeton</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 23 - Love You</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/templeton_deanna_one_picture_book_two_vol_23_love_you_1331.jpg" alt="One Picture Book Two Vol 23 - Love You" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Deanna Templeton</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 23 - Love You</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/humble_one-picture-book-two-vol-24-pico-boulevard_1330/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/humble_one-picture-book-two-vol-24-pico-boulevard_1330/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/humble_john_one_picture_book_two_vol_24_pico_boulevard_1330.jpg" alt="One Picture Book Two Vol 24 - Pico Boulevard" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Humble</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 24 - Pico Boulevard</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/humble_john_one_picture_book_two_vol_24_pico_boulevard_1330.jpg" alt="One Picture Book Two Vol 24 - Pico Boulevard" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">John Humble</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 24 - Pico Boulevard</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/kawada_one-picture-book-two-vol-25-mask_1329/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/kawada_one-picture-book-two-vol-25-mask_1329/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/kawada_kikuji_one_picture_book_two_vol_25_mask_1329.jpg" alt="One Picture Book Two Vol 25 - Mask" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Kikuji Kawada</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 25 - Mask</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/kawada_kikuji_one_picture_book_two_vol_25_mask_1329.jpg" alt="One Picture Book Two Vol 25 - Mask" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Kikuji Kawada</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 25 - Mask</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/kganye_one-picture-book-two-vol-26-ke-lefa-laka-volume-1_1328/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/kganye_one-picture-book-two-vol-26-ke-lefa-laka-volume-1_1328/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/kganye_lebohang_one_picture_book_two_vol_26_ke_lefa_laka_volume_1_1328.jpg" alt="One Picture Book Two Vol 26 - Ke Lefa Laka Volume 1" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Lebohang Kganye</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 26 - Ke Lefa Laka Volume 1</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/kganye_lebohang_one_picture_book_two_vol_26_ke_lefa_laka_volume_1_1328.jpg" alt="One Picture Book Two Vol 26 - Ke Lefa Laka Volume 1" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Lebohang Kganye</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 26 - Ke Lefa Laka Volume 1</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/kganye_one-picture-book-two-vol-27-ke-lefa-laka-volume-2_1327/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/kganye_one-picture-book-two-vol-27-ke-lefa-laka-volume-2_1327/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/kganye_lebohang_one_picture_book_two_vol_27_ke_lefa_laka_volume_2_1327.jpg" alt="One Picture Book Two Vol 27 - Ke Lefa Laka Volume 2" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Lebohang Kganye</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 27 - Ke Lefa Laka Volume 2</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/kganye_lebohang_one_picture_book_two_vol_27_ke_lefa_laka_volume_2_1327.jpg" alt="One Picture Book Two Vol 27 - Ke Lefa Laka Volume 2" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Lebohang Kganye</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 27 - Ke Lefa Laka Volume 2</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/soth_one-picture-book-two-vol-28-if-you-want-to-ride_1326/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/soth_one-picture-book-two-vol-28-if-you-want-to-ride_1326/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/soth_alec_one_picture_book_two_vol_28_if_you_want_to_ride_1326.jpg" alt="One Picture Book Two Vol 28 - If You Want to Ride" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Alec Soth</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 28 - If You Want to Ride</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/soth_alec_one_picture_book_two_vol_28_if_you_want_to_ride_1326.jpg" alt="One Picture Book Two Vol 28 - If You Want to Ride" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Alec Soth</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 28 - If You Want to Ride</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/monasterio_one-picture-book-two-vol-29-peyote_1325/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/monasterio_one-picture-book-two-vol-29-peyote_1325/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/monasterio_pablo_ortiz_one_picture_book_two_vol_29_peyote_1325.jpg" alt="One Picture Book Two Vol 29 - Peyote" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Pablo Ortiz Monasterio</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 29 - Peyote</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/monasterio_pablo_ortiz_one_picture_book_two_vol_29_peyote_1325.jpg" alt="One Picture Book Two Vol 29 - Peyote" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Pablo Ortiz Monasterio</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 29 - Peyote</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/callis_one-picture-book-two-vol-30-black-sun_1324/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/callis_one-picture-book-two-vol-30-black-sun_1324/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/callis_jo_ann_one_picture_book_two_vol_30_black_sun_1324.jpg" alt="One Picture Book Two Vol 30 - Black Sun" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jo Ann Callis</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 30 - Black Sun</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/callis_jo_ann_one_picture_book_two_vol_30_black_sun_1324.jpg" alt="One Picture Book Two Vol 30 - Black Sun" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Jo Ann Callis</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 30 - Black Sun</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/choumali_one-picture-book-two-vol-31-a-va-aller_1323/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/choumali_one-picture-book-two-vol-31-a-va-aller_1323/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/choumali_joana_one_picture_book_two_vol_31_a_va_aller_1323.jpg" alt="One Picture Book Two Vol 31 - A Va Aller" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Joana Choumali</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 31 - A Va Aller</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/choumali_joana_one_picture_book_two_vol_31_a_va_aller_1323.jpg" alt="One Picture Book Two Vol 31 - A Va Aller" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Joana Choumali</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 31 - A Va Aller</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/steinmetz_one-picture-book-two-vol-32-bent-tree_1322/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/steinmetz_one-picture-book-two-vol-32-bent-tree_1322/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/steinmetz_mark_one_picture_book_two_vol_32_bent_tree_1322.jpg" alt="One Picture Book Two Vol 32 - Bent Tree" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mark Steinmetz</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 32 - Bent Tree</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/steinmetz_mark_one_picture_book_two_vol_32_bent_tree_1322.jpg" alt="One Picture Book Two Vol 32 - Bent Tree" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Mark Steinmetz</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 32 - Bent Tree</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/nikolova_one-picture-book-two-vol-33-elemental-forms_1321/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/nikolova_one-picture-book-two-vol-33-elemental-forms_1321/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/nikolova_nadezda_one_picture_book_two_vol_33_elemental_forms_1321.jpg" alt="One Picture Book Two Vol 33 - Elemental Forms" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Nadezda Nikolova</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 33 - Elemental Forms</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/nikolova_nadezda_one_picture_book_two_vol_33_elemental_forms_1321.jpg" alt="One Picture Book Two Vol 33 - Elemental Forms" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Nadezda Nikolova</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 33 - Elemental Forms</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/hido_one-picture-book-two-vol-34-untitled-2319-b-dmf_1320/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/hido_one-picture-book-two-vol-34-untitled-2319-b-dmf_1320/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/hido_todd_one_picture_book_two_vol_34_untitled_2319_b_dmf_1320.jpg" alt="One Picture Book Two Vol 34 - Untitled #2319-B-DMF" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Todd Hido</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 34 - Untitled #2319-B-DMF</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/hido_todd_one_picture_book_two_vol_34_untitled_2319_b_dmf_1320.jpg" alt="One Picture Book Two Vol 34 - Untitled #2319-B-DMF" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Todd Hido</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 34 - Untitled #2319-B-DMF</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/ehrlich_one-picture-book-two-vol-35-namibia-redux_1319/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/ehrlich_one-picture-book-two-vol-35-namibia-redux_1319/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/ehrlich_richard_one_picture_book_two_vol_35_namibia_redux_1319.jpg" alt="One Picture Book Two Vol 35 - Namibia Redux" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Ehrlich</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 35 - Namibia Redux</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/ehrlich_richard_one_picture_book_two_vol_35_namibia_redux_1319.jpg" alt="One Picture Book Two Vol 35 - Namibia Redux" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Richard Ehrlich</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 35 - Namibia Redux</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/lax_one-picture-book-two-vol-36-taken-by-the-tide_1318/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/lax_one-picture-book-two-vol-36-taken-by-the-tide_1318/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/lax_maria_one_picture_book_two_vol_36_taken_by_the_tide_1318.jpg" alt="One Picture Book Two Vol 36 - Taken by the Tide" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Maria Lax</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 36 - Taken by the Tide</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/lax_maria_one_picture_book_two_vol_36_taken_by_the_tide_1318.jpg" alt="One Picture Book Two Vol 36 - Taken by the Tide" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Maria Lax</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 36 - Taken by the Tide</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/marcuse_one-picture-book-two-vol-37-portent_1317/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/marcuse_one-picture-book-two-vol-37-portent_1317/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/marcuse_tanya_one_picture_book_two_vol_37_portent_1317.jpg" alt="One Picture Book Two Vol 37 - Portent" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tanya Marcuse</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 37 - Portent</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/marcuse_tanya_one_picture_book_two_vol_37_portent_1317.jpg" alt="One Picture Book Two Vol 37 - Portent" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Tanya Marcuse</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 37 - Portent</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/moriyama_one-picture-book-two-vol-38-daido-uno_1316/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/moriyama_one-picture-book-two-vol-38-daido-uno_1316/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/moriyama_daido_one_picture_book_two_vol_38_daido_uno_1316.jpg" alt="One Picture Book Two Vol 38 - Daido Uno" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Daido Moriyama</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 38 - Daido Uno</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/moriyama_daido_one_picture_book_two_vol_38_daido_uno_1316.jpg" alt="One Picture Book Two Vol 38 - Daido Uno" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Daido Moriyama</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 38 - Daido Uno</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/moriyama_one-picture-book-two-vol-39-daido-dos_1315/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/moriyama_one-picture-book-two-vol-39-daido-dos_1315/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/moriyama_daido_one_picture_book_two_vol_39_daido_dos_1315.jpg" alt="One Picture Book Two Vol 39 - Daido Dos" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Daido Moriyama</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 39 - Daido Dos</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/moriyama_daido_one_picture_book_two_vol_39_daido_dos_1315.jpg" alt="One Picture Book Two Vol 39 - Daido Dos" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Daido Moriyama</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 39 - Daido Dos</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/weems_one-picture-book-two-vol-40_1314/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/weems_one-picture-book-two-vol-40_1314/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Weems_One_Picture_Book_Two_Vol_40_9781590055748.jpg" alt="One Picture Book Two Vol 40" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Carrie Mae Weems</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 40</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/Weems_One_Picture_Book_Two_Vol_40_9781590055748.jpg" alt="One Picture Book Two Vol 40" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Carrie Mae Weems</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 40</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/foglia_one-picture-book-two-vol-41-living-on-lava_1313/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/foglia_one-picture-book-two-vol-41-living-on-lava_1313/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/foglia_lucas_one_picture_book_two_vol_41_living_on_lava_1313.jpg" alt="One Picture Book Two Vol 41 - Living on Lava" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Lucas Foglia</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 41 - Living on Lava</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/foglia_lucas_one_picture_book_two_vol_41_living_on_lava_1313.jpg" alt="One Picture Book Two Vol 41 - Living on Lava" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Lucas Foglia</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 41 - Living on Lava</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/plumb_one-picture-book-two-vol-42-lookout-on-highway-74_1312/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/plumb_one-picture-book-two-vol-42-lookout-on-highway-74_1312/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/plumb_mimi_one_picture_book_two_vol_42_lookout_on_highway_74_1312.jpg" alt="One Picture Book Two Vol 42 - Lookout on Highway 74" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mimi Plumb</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 42 - Lookout on Highway 74</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/plumb_mimi_one_picture_book_two_vol_42_lookout_on_highway_74_1312.jpg" alt="One Picture Book Two Vol 42 - Lookout on Highway 74" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Mimi Plumb</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 42 - Lookout on Highway 74</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/dunas_one-picture-book-two-vol-43-highway-61-to-honeyboy_1311/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/dunas_one-picture-book-two-vol-43-highway-61-to-honeyboy_1311/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/dunas_jeff_one_picture_book_two_vol_43_highway_61_to_honeyboy_1311.jpg" alt="One Picture Book Two Vol 43 - Highway 61 to Honeyboy" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jeff Dunas</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 43 - Highway 61 to Honeyboy</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/dunas_jeff_one_picture_book_two_vol_43_highway_61_to_honeyboy_1311.jpg" alt="One Picture Book Two Vol 43 - Highway 61 to Honeyboy" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Jeff Dunas</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 43 - Highway 61 to Honeyboy</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/sohier_one-picture-book-two-vol-44-to-utah-85_1310/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/sohier_one-picture-book-two-vol-44-to-utah-85_1310/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/sohier_sage_one_picture_book_two_vol_44_to_utah_85_1310.jpg" alt="One Picture Book Two Vol 44 - To Utah 85" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Sage Sohier</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 44 - To Utah 85</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/sohier_sage_one_picture_book_two_vol_44_to_utah_85_1310.jpg" alt="One Picture Book Two Vol 44 - To Utah 85" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Sage Sohier</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 44 - To Utah 85</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/zadeh_one-picture-book-two-vol-46-susan-zadeh-toer_1305/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/zadeh_one-picture-book-two-vol-46-susan-zadeh-toer_1305/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/zadeh_susan_one_picture_book_two_vol_46_susan_zadeh_toer_1305.jpg" alt="One Picture Book Two Vol 46 - Susan Zadeh Toer" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Susan Zadeh</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 46 - Susan Zadeh Toer</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/zadeh_susan_one_picture_book_two_vol_46_susan_zadeh_toer_1305.jpg" alt="One Picture Book Two Vol 46 - Susan Zadeh Toer" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Susan Zadeh</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 46 - Susan Zadeh Toer</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/casagrande_one-picture-book-two-vol-47-paperworks_1307/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/casagrande_one-picture-book-two-vol-47-paperworks_1307/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/casagrande_benedetta_one_picture_book_two_vol_47_paperworks_1307.jpg" alt="One Picture Book Two Vol 47 - Paperworks" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Benedetta Casagrande</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 47 - Paperworks</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/casagrande_benedetta_one_picture_book_two_vol_47_paperworks_1307.jpg" alt="One Picture Book Two Vol 47 - Paperworks" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Benedetta Casagrande</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 47 - Paperworks</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/divola_one-picture-book-two-vol-48-italian-cars_1308/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/divola_one-picture-book-two-vol-48-italian-cars_1308/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/divola_john_one_picture_book_two_vol_48_italian_cars_1308.jpg" alt="One Picture Book Two Vol 48 - Italian Cars" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Divola</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 48 - Italian Cars</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/divola_john_one_picture_book_two_vol_48_italian_cars_1308.jpg" alt="One Picture Book Two Vol 48 - Italian Cars" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">John Divola</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 48 - Italian Cars</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/hosoe_one-picture-book-two-vol-48-kimono_1306/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/hosoe_one-picture-book-two-vol-48-kimono_1306/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/hosoe_eikoh_one_picture_book_two_vol_48_kimono_1306.jpg" alt="One Picture Book Two Vol 48 - Kimono" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Eikoh Hosoe</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 48 - Kimono</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/hosoe_eikoh_one_picture_book_two_vol_48_kimono_1306.jpg" alt="One Picture Book Two Vol 48 - Kimono" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Eikoh Hosoe</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 48 - Kimono</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/templeton_one-picture-book-two-vol-49-all-hallows-eve_1746/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/templeton_one-picture-book-two-vol-49-all-hallows-eve_1746/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/templeton_ed_one_picture_book_two_49_all_hallows_eve_9781590056257.jpg" alt="One Picture Book Two Vol 49: All Hallows Eve" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ed Templeton</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 49: All Hallows Eve</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/templeton_ed_one_picture_book_two_49_all_hallows_eve_9781590056257.jpg" alt="One Picture Book Two Vol 49: All Hallows Eve" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Ed Templeton</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 49: All Hallows Eve</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/fitch_one-picture-book-two-vol-50-plywood-signs_1745/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/fitch_one-picture-book-two-vol-50-plywood-signs_1745/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/fitch_steve_one_picture_book_two_50_plywood_signs_9781590056264.jpg" alt="One Picture Book Two Vol 50: Plywood Signs" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Steve Fitch</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 50: Plywood Signs</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/fitch_steve_one_picture_book_two_50_plywood_signs_9781590056264.jpg" alt="One Picture Book Two Vol 50: Plywood Signs" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Steve Fitch</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 50: Plywood Signs</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/ikeda_one-picture-book-two-vol-51-desert-daze_1744/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/ikeda_one-picture-book-two-vol-51-desert-daze_1744/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/ikeda_yoko_one_picture_book_two_51_desert_daze_9781590056271.jpg" alt="One Picture Book Two Vol 51: Desert Daze" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Yoko Ikeda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 51: Desert Daze</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/ikeda_yoko_one_picture_book_two_51_desert_daze_9781590056271.jpg" alt="One Picture Book Two Vol 51: Desert Daze" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Yoko Ikeda</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 51: Desert Daze</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/shibata_one-picture-book-two-vol-52-lone-pine_1743/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/shibata_one-picture-book-two-vol-52-lone-pine_1743/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/shibata_toshio_one_picture_book_two_52_lone_pine_9781590056288.jpg" alt="One Picture Book Two Vol 52: Lone Pine" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Toshio Shibata</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 52: Lone Pine</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/shibata_toshio_one_picture_book_two_52_lone_pine_9781590056288.jpg" alt="One Picture Book Two Vol 52: Lone Pine" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Toshio Shibata</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 52: Lone Pine</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 

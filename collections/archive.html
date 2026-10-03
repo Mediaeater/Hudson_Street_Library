@@ -311,346 +311,709 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+    
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Archive</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Archive.”</p>
+            <div class="collection-eyebrow">Themes
+            </div>
+            <h1 class="collection-title">Archive</h1>
+            
+                <p class="collection-description">Every book in the library tagged “Archive.”</p>
+            
+            <div class="collection-count">24 books</div>
+            
+            
             
             
         </div>
-        
 
-        
-        
-            
-        
         
 
         
             
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
-        
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<section class="collection-section">
+    
+    <div class="collection-books">
         
             
-<a href="/books/archive-of-modern-conflict_a-guide-for-the-protection-of-the-public-in-peacetime_2412/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/archive-of-modern-conflict_a-guide-for-the-protection-of-the-public-in-peacetime_2412/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/archive_of_modern_conflict_a_guide_for_the_protection_of_the_public_in_peacetime_9780992941369.jpg" alt="A Guide for the Protection of the Public in Peacetime" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Archive of Modern Conflict</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">A Guide for the Protection of the Public in Peacetime</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Archive of Modern Conflict (AMC Books) &middot; 2014</p>
+            <img src="/assets/images/books/archive_of_modern_conflict_a_guide_for_the_protection_of_the_public_in_peacetime_9780992941369.jpg" alt="A Guide for the Protection of the Public in Peacetime" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Archive of Modern Conflict</div>
+    
+    <div class="collection-book-title">A Guide for the Protection of the Public in Peacetime</div>
+    
+        <div class="collection-book-meta">Archive of Modern Conflict (AMC Books) &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/mollino_photographs-1934-1973_764/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/coghlan_930-vol-02-concealed-identity-02-transfiguration_1968/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/mollino_carlo_photographs_1934_1973_9788836638987.jpg" alt="Photographs 1934–1973" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Carlo Mollino</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Photographs 1934–1973</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Silvana Editoriale &middot; 2018</p>
+            <img src="/assets/images/books/coghlan_tim_930_vol_02_transfiguration_noisbn.jpg" alt="930 Vol 02: Concealed Identity 02: Transfiguration" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Tim Coghlan</div>
+    
+    <div class="collection-book-title">930 Vol 02: Concealed Identity 02: Transfiguration</div>
+    
+        <div class="collection-book-meta">Knowledge Editions &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/mollino_photographs-1934-1973_2331/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/hassan_tuskegee-airmen_1970/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/mollino_carlo_photographs_1934_1973_9788836638987.jpg" alt="Photographs 1934–1973" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Carlo Mollino</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Photographs 1934–1973</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Silvana Editoriale &middot; 2018</p>
+            <img src="/assets/images/books/hassan_yusuf_tuskegee_airmen_noisbn.jpg" alt="Tuskegee airmen" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Yusuf Hassan</div>
+    
+    <div class="collection-book-title">Tuskegee airmen</div>
+    
+        <div class="collection-book-meta">BlackMass Publishing &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/nussli_withheld-due-to_2435/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/kim_deaf-material_2072/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/nussli_christof_withheld_due_to_9783952471005.jpg" alt="Withheld due to:" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Christof Nüssli</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Withheld due to:</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">cpress &middot; 2016</p>
+            <img src="/assets/images/books/kim_christine_deaf-material_9798991036757.jpg" alt="Deaf Material" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Christine Sun Kim</div>
+    
+    <div class="collection-book-title">Deaf Material</div>
+    
+        <div class="collection-book-meta">Primary Information &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/pam_supertourist_2278/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/lippy_modern-artifacts_2117/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/pam_max_supertourist.jpg" alt="Supertourist" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Max Pam</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Supertourist</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Éditions Bessard &middot; 2013</p>
+            <img src="/assets/images/books/lippy_tod_modern_artifacts_9780989911771.jpg" alt="Modern Artifacts" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Tod Lippy</div>
+    
+    <div class="collection-book-title">Modern Artifacts</div>
+    
+        <div class="collection-book-meta">Esopus Books &middot; 2020</div>
+    
 </a>
 
         
             
-<a href="/books/piller_archiv-peter-piller-materialien-h-irrlaufer_2282/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/mollino_photographs-1934-1973_764/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/piller_peter_archiv-peter-piller-materialien-h-irrlufer_9783905999839.jpg" alt="Archiv Peter Piller: Materialien (H) – Irrläufer" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Piller</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Archiv Peter Piller: Materialien (H) – Irrläufer</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nieves &middot; 2017</p>
+            <img src="/assets/images/books/mollino_carlo_photographs_1934_1973_9788836638987.jpg" alt="Photographs 1934–1973" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Carlo Mollino</div>
+    
+    <div class="collection-book-title">Photographs 1934–1973</div>
+    
+        <div class="collection-book-meta">Silvana Editoriale &middot; 2018</div>
+    
 </a>
 
         
             
-<a href="/books/prince_bibliotheque-dun-amateur_926/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/mollino_photographs-1934-1973_2331/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Prince_Bibliotheque_d_un_Amateur.jpg" alt="Bibliothèque d’un Amateur" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Bibliothèque d’un Amateur</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Viaindustriae / Les presses du réel &middot; 2022</p>
+            <img src="/assets/images/books/mollino_carlo_photographs_1934_1973_9788836638987.jpg" alt="Photographs 1934–1973" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Carlo Mollino</div>
+    
+    <div class="collection-book-title">Photographs 1934–1973</div>
+    
+        <div class="collection-book-meta">Silvana Editoriale &middot; 2018</div>
+    
 </a>
 
         
             
-<a href="/books/rozsa_miklos-klaus-rozsa_2162/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/nussli_withheld-due-to_2435/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/rozsa_miklos-klaus_miklos-klaus-rozsa_9783944669427.jpg" alt="Miklós Klaus Rózsa" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Miklós Klaus Rózsa</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Miklós Klaus Rózsa</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Spector Books &middot; 2014</p>
+            <img src="/assets/images/books/nussli_christof_withheld_due_to_9783952471005.jpg" alt="Withheld due to:" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Christof Nüssli</div>
+    
+    <div class="collection-book-title">Withheld due to:</div>
+    
+        <div class="collection-book-meta">cpress &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/ruppersberg_allen-ruppersberg-sourcebook-reanimating-the-20th-century_2039/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/pam_supertourist_2278/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Allen_Ruppersberg_Allen_Ruppersberg_Sourcebook_Reanimating_the_20th__9780916365844.jpg" alt="Allen Ruppersberg Sourcebook: Reanimating the 20th Century" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Allen Ruppersberg</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Allen Ruppersberg Sourcebook: Reanimating the 20th Century</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Independent Curators International &middot; 2014</p>
+            <img src="/assets/images/books/pam_max_supertourist.jpg" alt="Supertourist" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Max Pam</div>
+    
+    <div class="collection-book-title">Supertourist</div>
+    
+        <div class="collection-book-meta">Éditions Bessard &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/scarville_passports_1806/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/piller_archiv-peter-piller-materialien-h-irrlaufer_2282/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Keisha_Scarville_Passports.jpg" alt="Passports" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Keisha Scarville</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Passports</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">MACK &middot; 2026</p>
+            <img src="/assets/images/books/piller_peter_archiv-peter-piller-materialien-h-irrlufer_9783905999839.jpg" alt="Archiv Peter Piller: Materialien (H) – Irrläufer" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Peter Piller</div>
+    
+    <div class="collection-book-title">Archiv Peter Piller: Materialien (H) – Irrläufer</div>
+    
+        <div class="collection-book-meta">Nieves &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/schmuch_script-of-demolition_1843/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/pomini_ntsotwbh-never-take-shortcuts-on-the-way-back-home_2150/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Schmuch_Script_of_Demolition_9783944669281.jpg" alt="Script of Demolition" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Alina Schmuch</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Script of Demolition</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Spector Books &middot; 2014</p>
+            <img src="/assets/images/books/pomini_benedetta_ntsotwbh_9788894031973.jpg" alt="NTSOTWBH (Never Take Shortcuts On The Way Back Home)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Benedetta Pomini</div>
+    
+    <div class="collection-book-title">NTSOTWBH (Never Take Shortcuts On The Way Back Home)</div>
+    
+        <div class="collection-book-meta">Skinnerboox &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/steffens_the-family-acid_2347/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/prince_bibliotheque-dun-amateur_926/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/steffens_roger_the-family-acid_9780984978175.jpg" alt="The Family Acid" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Roger Steffens</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Family Acid</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">S U N &middot; 2015</p>
+            <img src="/assets/images/books/Prince_Bibliotheque_d_un_Amateur.jpg" alt="Bibliothèque d’un Amateur" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Richard Prince</div>
+    
+    <div class="collection-book-title">Bibliothèque d’un Amateur</div>
+    
+        <div class="collection-book-meta">Viaindustriae / Les presses du réel &middot; 2022</div>
+    
 </a>
 
         
             
-<a href="/books/troost_frido-troost-an-educational-archive-of-2863-slides_1181/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/rimaz_unusual-view-of-unknown-subjects_1928/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/troost_frido_frido-troost-an-educational-archive-of-2863-slides_9789493146396.jpg" alt="Frido Troost An Educational Archive of 2863 Slides" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Frido Troost</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Frido Troost An Educational Archive of 2863 Slides</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">APE (Art Paper Editions) &middot; 2020</p>
+            <img src="/assets/images/books/rimaz_simon_unusual_view_of_unknown_subjects_9789462261693.jpg" alt="Unusual View of Unknown Subjects" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Simon Rimaz</div>
+    
+    <div class="collection-book-title">Unusual View of Unknown Subjects</div>
+    
+        <div class="collection-book-meta">Lecturis &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/troost_frido-troost-an-educational-archive-of-2863-slides_2336/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/rozsa_miklos-klaus-rozsa_2162/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/troost_frido_frido-troost-an-educational-archive-of-2863-slides_9789493146396.jpg" alt="Frido Troost An Educational Archive of 2863 Slides" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Frido Troost</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Frido Troost An Educational Archive of 2863 Slides</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">APE (Art Paper Editions) &middot; 2020</p>
+            <img src="/assets/images/books/rozsa_miklos-klaus_miklos-klaus-rozsa_9783944669427.jpg" alt="Miklós Klaus Rózsa" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Miklós Klaus Rózsa</div>
+    
+    <div class="collection-book-title">Miklós Klaus Rózsa</div>
+    
+        <div class="collection-book-meta">Spector Books &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/viver_revelations-iconographie-de-la-salpetriere-paris-1875-1918_1842/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/ruppersberg_allen-ruppersberg-sourcebook-reanimating-the-20th-century_2039/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Viver_Revelations_Iconographie_de_la_Salpetriere_9788416282456.jpg" alt="Révélations: Iconographie de la Salpêtrière, Paris 1875–1918" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Javier Viver (ed.)</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Révélations: Iconographie de la Salpêtrière, Paris 1875–1918</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">RM Editorial &middot; 2015</p>
+            <img src="/assets/images/books/Allen_Ruppersberg_Allen_Ruppersberg_Sourcebook_Reanimating_the_20th__9780916365844.jpg" alt="Allen Ruppersberg Sourcebook: Reanimating the 20th Century" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Allen Ruppersberg</div>
+    
+    <div class="collection-book-title">Allen Ruppersberg Sourcebook: Reanimating the 20th Century</div>
+    
+        <div class="collection-book-meta">Independent Curators International &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/campany_gasoline_198/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/scarville_passports_1806/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">David Campany</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Gasoline</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">MACK &middot; 2008</p>
+            <img src="/assets/images/books/Keisha_Scarville_Passports.jpg" alt="Passports" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Keisha Scarville</div>
+    
+    <div class="collection-book-title">Passports</div>
+    
+        <div class="collection-book-meta">MACK &middot; 2026</div>
+    
+</a>
+
+        
+            
+<a href="/books/schmuch_script-of-demolition_1843/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/Schmuch_Script_of_Demolition_9783944669281.jpg" alt="Script of Demolition" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Alina Schmuch</div>
+    
+    <div class="collection-book-title">Script of Demolition</div>
+    
+        <div class="collection-book-meta">Spector Books &middot; 2014</div>
+    
+</a>
+
+        
+            
+<a href="/books/solomon_one-picture-book-83-witness_2172/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/solomon_dan_one-picture-book-83-witness_9781590053942.jpg" alt="One Picture Book #83: Witness" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Dan Solomon</div>
+    
+    <div class="collection-book-title">One Picture Book #83: Witness</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2014</div>
+    
+</a>
+
+        
+            
+<a href="/books/steffens_the-family-acid_2347/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/steffens_roger_the-family-acid_9780984978175.jpg" alt="The Family Acid" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Roger Steffens</div>
+    
+    <div class="collection-book-title">The Family Acid</div>
+    
+        <div class="collection-book-meta">S U N &middot; 2015</div>
+    
+</a>
+
+        
+            
+<a href="/books/steiner_sisters-1-the-archive-issue_1748/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/steiner_danko_and_ana_sisters_1_the_archive_issue.jpg" alt="SISTERS #1: The Archive Issue" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Danko Steiner and Ana Steiner</div>
+    
+    <div class="collection-book-title">SISTERS #1: The Archive Issue</div>
+    
+        <div class="collection-book-meta">Self-published &middot; 2025</div>
+    
+</a>
+
+        
+            
+<a href="/books/troost_frido-troost-an-educational-archive-of-2863-slides_1181/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/troost_frido_frido-troost-an-educational-archive-of-2863-slides_9789493146396.jpg" alt="Frido Troost An Educational Archive of 2863 Slides" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Frido Troost</div>
+    
+    <div class="collection-book-title">Frido Troost An Educational Archive of 2863 Slides</div>
+    
+        <div class="collection-book-meta">APE (Art Paper Editions) &middot; 2020</div>
+    
+</a>
+
+        
+            
+<a href="/books/troost_frido-troost-an-educational-archive-of-2863-slides_2336/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/troost_frido_frido-troost-an-educational-archive-of-2863-slides_9789493146396.jpg" alt="Frido Troost An Educational Archive of 2863 Slides" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Frido Troost</div>
+    
+    <div class="collection-book-title">Frido Troost An Educational Archive of 2863 Slides</div>
+    
+        <div class="collection-book-meta">APE (Art Paper Editions) &middot; 2020</div>
+    
+</a>
+
+        
+            
+<a href="/books/viver_revelations-iconographie-de-la-salpetriere-paris-1875-1918_1842/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/Viver_Revelations_Iconographie_de_la_Salpetriere_9788416282456.jpg" alt="Révélations: Iconographie de la Salpêtrière, Paris 1875–1918" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Javier Viver (ed.)</div>
+    
+    <div class="collection-book-title">Révélations: Iconographie de la Salpêtrière, Paris 1875–1918</div>
+    
+        <div class="collection-book-meta">RM Editorial &middot; 2015</div>
+    
+</a>
+
+        
+            
+<a href="/books/campany_gasoline_198/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">David Campany</div>
+    
+    <div class="collection-book-title">Gasoline</div>
+    
+        <div class="collection-book-meta">MACK &middot; 2008</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 

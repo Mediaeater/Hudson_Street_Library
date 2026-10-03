@@ -311,2702 +311,2681 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+    
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Queer Culture</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Queer photography, artists&#39; books, zines, and visual culture from the collection — physique photography and its archives, the West Side piers, Fire Island, drag and nightlife, erotica, appropriation, and queer art history. A growing collection.</p>
+            <div class="collection-eyebrow">Collection
+            </div>
+            <h1 class="collection-title">Queer Culture</h1>
+            
+                <p class="collection-description">Queer photography, artists&#39; books, zines, and visual culture from the collection — physique photography and its archives, the West Side piers, Fire Island, drag and nightlife, erotica, appropriation, and queer art history. A growing collection.</p>
+            
+            <div class="collection-count">140 books</div>
+            
+            
             
             
         </div>
-        
-
-        
-        
-            
-        
-        
-
-        
-            
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
-        
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        
-            
-<a href="/books/sepuya_shoot_1689/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/Sepuya_Shoot_9798991036771.jpg" alt="Shoot" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Paul Mpagi Sepuya</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Shoot</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Primary Information &middot; 2026</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/fierce-pussy_fierce-pussy_1779/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/fierce_pussy_fierce_pussy_9798991036795.jpg" alt="fierce pussy" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">fierce pussy</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">fierce pussy</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Primary Information &middot; 2026</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/hujar_hujarcontact_1797/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/Peter_Hujar_HujarContact.jpg" alt="Hujar:Contact" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Hujar</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Hujar:Contact</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">MACK / Morgan Library &amp; Museum &middot; 2026</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/mateos_cruising-pavilion-architecture-dissident-sex-and-cruising-cultures_1810/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/Unknown_Cruising_Pavilion.jpg" alt="Cruising Pavilion: Architecture, Dissident Sex and Cruising Cultures" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Pierre-Alexandre Mateos &amp; Charles Teyssou (eds.)</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cruising Pavilion: Architecture, Dissident Sex and Cruising Cultures</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Spector Books &middot; 2026</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/dempsey_fire-island-art-100-years_1961/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/dempsey_fire_island_art_100_years_9781580936712.jpg" alt="Fire Island Art: 100 Years" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Dempsey</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Fire Island Art: 100 Years</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Monacelli &middot; 2026</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/schorr_writing-a-letter-akerman-ballet-act-1_1972/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/schorr_collier_writing_a_letter_akerman_ballet_act_1_9798993181127.jpg" alt="Writing a Letter: Akerman Ballet, Act 1" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Collier Schorr</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Writing a Letter: Akerman Ballet, Act 1</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Song Cave &middot; 2026</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/campbell_naes-02-he-believes-in-beauty_2403/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/campbell_liam_naes_02_he_believes_in_beauty_2026.jpg" alt="NÆS 02: He Believes in Beauty" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Liam Campbell</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">NÆS 02: He Believes in Beauty</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Elska Magazine &middot; 2026</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/gribbon_jenna-gribbon-the-honeymoon-show_455/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/gribbon_jenna_jenna_gribbon_the_honeymoon_show_9798218342876.jpg" alt="Jenna Gribbon: The Honeymoon Show!" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jenna Gribbon</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Jenna Gribbon: The Honeymoon Show!</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Lévy Gorvy Dayan &middot; 2025</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/thek_stay-away-from-nothing_1309/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/queer/thek-hujar-stay-away-from-nothing.jpg" alt="Stay away from nothing" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Paul Thek and Peter Hujar</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Stay away from nothing</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Primary Information &middot; 2025</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/wojnarowicz_david-wojnarowicz-arthur-rimbaud-in-new-york_1356/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/Wojnarowicz_David_Wojnarowicz_Arthur_Rimbaud_in_New_York_9788857254067.jpg" alt="David Wojnarowicz: Arthur Rimbaud in New York" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">David Wojnarowicz</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">David Wojnarowicz: Arthur Rimbaud in New York</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Skira &middot; 2025</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/butt_butt-magazine-36_1726/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/butt/butt-36.jpg" alt="BUTT Magazine #36" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #36</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2025</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/butt_butt-magazine-37_1727/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/butt/butt-37.jpg" alt="BUTT Magazine #37" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #37</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2025</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/mcknight_posthume_1749/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/mcknight_mark_armijo_posthume_9781942953746.jpg" alt="Posthume" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mark Armijo McKnight</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Posthume</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">TBW Books &middot; 2025</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/aletti_physique_1943/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/aletti_vince_physique_9781915743879.jpg" alt="Physique" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Vince Aletti</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Physique</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">SPBH Editions &middot; 2025</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/aletti_physique-naughty-edition_1967/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/aletti_vince_physique_naughty_edition_9781917651059.jpg" alt="Physique (Naughty Edition)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Vince Aletti</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Physique (Naughty Edition)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">SPBH Editions &middot; 2025</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/fratino_satura_1969/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/fratino_louis_satura_9788867496563.jpg" alt="Satura" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Louis Fratino</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Satura</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Mousse Publishing &middot; 2025</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/gran-fury_gran-fury-art-is-not-enough_2391/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/gran_fury_gran_fury_art_is_not_enough_9786557770504.jpg" alt="Gran Fury: Art Is Not Enough" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Gran Fury</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Gran Fury: Art Is Not Enough</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Museu de Arte de São Paulo Assis Chateaubriand (MASP) / KMEC Books &middot; 2025</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/slanted_slanted-magazine-45sex_1589/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/slanted/slanted-45-sex.jpg" alt="Slanted Magazine #45—Sex" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Slanted Publishers</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Slanted Magazine #45—Sex</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Slanted Publishers &middot; 2024</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/gonzalez-torres_felix-gonzalez-torres-always-to-return_1592/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/gonzalez-torres_always-to-return/Felix Gonzalez-Torres-Always to Return.jpg" alt="Felix Gonzalez-Torres: Always to Return" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Felix Gonzalez-Torres</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Felix Gonzalez-Torres: Always to Return</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Radius Books &middot; 2024</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/butt_butt-magazine-34_1724/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/butt/butt-34.jpg" alt="BUTT Magazine #34" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #34</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2024</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/butt_butt-magazine-35_1725/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/butt/butt-35.jpg" alt="BUTT Magazine #35" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #35</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2024</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/hujar_portraits-in-life-and-death_1798/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/Peter_Hujar_Portraits_in_Life_and_Death.jpg" alt="Portraits in Life and Death" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Hujar</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Portraits in Life and Death</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Liveright Publishing Corporation &middot; 2024</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/schneider_peter-hujar-behind-the-camera-and-in-the-darkroom_1801/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/Gary_Schneider_Peter_Hujar_Behind_the_Camera_and_In_the_Darkroom.jpg" alt="Peter Hujar: Behind the Camera and In the Darkroom" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Gary Schneider</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Peter Hujar: Behind the Camera and In the Darkroom</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BookCrave Books &middot; 2024</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/mcgough_alphabet_1945/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/mcgough_peter_alphabet_9781961883062.jpg" alt="Alphabet" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter McGough</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Alphabet</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Karma &middot; 2024</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/de-sana_salvation_1960/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/de_sana_jimmy_salvation_9798988573630.jpg" alt="Salvation" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jimmy De Sana</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Salvation</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Primary Information &middot; 2024</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/labruce_the-revolution-is-my-boyfriend_2393/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/labruce_bruce_the_revolution_is_my_boyfriend_2024.jpg" alt="The Revolution Is My Boyfriend" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Bruce LaBruce</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Revolution Is My Boyfriend</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Baron &middot; 2024</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/butt_butt-magazine-31_1721/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/butt/butt-31.jpg" alt="BUTT Magazine #31" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #31</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2023</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/butt_butt-magazine-32_1722/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/butt/butt-32.jpg" alt="BUTT Magazine #32" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #32</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2023</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/butt_butt-magazine-33_1723/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/butt/butt-33.jpg" alt="BUTT Magazine #33" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #33</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2023</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/_forbidden-colors_1737/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/9781739364946-a518c1df-1920w.jpg" alt="Forbidden Colors" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Various Contributors</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Forbidden Colors</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Pilot Press &middot; 2023</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/stellar_the-piers_1941/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/stellar_stanley_the_piers_9781736667620.jpg" alt="The Piers" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Stanley Stellar</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Piers</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Szaransky Print Co. and Kapp Kapp &middot; 2023</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/pierson_tomorrows-man-6_1950/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/pierson_jack_tomorrows_man_6_9781988469157.jpg" alt="Tomorrow&#39;s Man 6" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Pierson</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tomorrow&#39;s Man 6</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Bywater Bros. Editions &middot; 2023</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/heffner_cruisn-uncovering-gay-design-history-through-collecting_1959/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/heffner_cruisn_noisbn.jpg" alt="Cruis&#39;n: Uncovering Gay Design History Through Collecting" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Rick Heffner</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cruis&#39;n: Uncovering Gay Design History Through Collecting</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">HEFF Publishing &middot; 2023</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/tom-of-finland_tom-of-finland-threesome_2389/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/tom_of_finland_tom_of_finland_threesome_2023.jpg" alt="Tom of Finland: Threesome" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tom of Finland</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tom of Finland: Threesome</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">David Kordansky Gallery &middot; 2023</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/hujar_peter-hujar-curated-by-elton-john_1799/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/Peter_Hujar_Peter_Hujar_Curated_by_Elton_John.jpg" alt="Peter Hujar Curated by Elton John" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Hujar</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Peter Hujar Curated by Elton John</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Fraenkel Gallery &middot; 2022</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/eggerer_selected-collages_1851/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/eggerer_thomas_selected_collages_2002_to_2022.jpg" alt="Selected Collages" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Thomas Eggerer</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Selected Collages</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Inpatient Press &middot; 2022</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/simpson_the-my-comrade-anthology_1940/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/simpson_les_my_comrade_noisbn.jpg" alt="The My Comrade Anthology" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Les Simpson</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The My Comrade Anthology</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Boo-Hooray &middot; 2022</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/rex_portfolio_1958/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/rex_portfolios_noisbn.jpg" alt="Portfolio" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">REX</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Portfolio</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">REX Publications (rexbooks.press) &middot; 2022</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/davey_the-shabbiness-of-beauty_1939/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/davey_moyra_the_shabbiness_of_beauty_9781913620202.jpg" alt="The Shabbiness of Beauty" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Moyra Davey, Peter Hujar</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Shabbiness of Beauty</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">MACK &middot; 2021</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/pierson_tomorrows-man-5_1949/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/pierson_jack_tomorrows_man_5_9781988469140.jpg" alt="Tomorrow&#39;s Man 5" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Pierson</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tomorrow&#39;s Man 5</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Bywater Bros. Editions &middot; 2020</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/earnest_the-young-and-evil-queer-modernism-in-new-york-1930-1955_1965/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/earnest_jarrett_the_young_and_evil_9781644230268.jpg" alt="The Young and Evil: Queer Modernism in New York, 1930–1955" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jarrett Earnest</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Young and Evil: Queer Modernism in New York, 1930–1955</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">David Zwirner Books &middot; 2020</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/rhein_eric-rhein-lifelines_2397/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/rhein_eric_lifelines_9781732848238.jpg" alt="Eric Rhein: Lifelines" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Eric Rhein</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Eric Rhein: Lifelines</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Institute 193 &middot; 2020</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/frisa_dune-vol-001-n-001-dark-room_2400/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/frisa_maria_luisa_dune_vol_001_n_001_dark_room_2020.jpg" alt="Dune Vol. 001 n. 001: Dark Room" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Maria Luisa Frisa</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Dune Vol. 001 n. 001: Dark Room</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Flash Art &middot; 2020</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/weinberg_pier-groups-art-and-sex-along-the-new-york-waterfront_1938/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/weinberg_jonathan_pier_groups_9780271082172.jpg" alt="Pier Groups: Art and Sex Along the New York Waterfront" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jonathan Weinberg</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Pier Groups: Art and Sex Along the New York Waterfront</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Penn State University Press &middot; 2019</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/bianchi_63-e-9th-street-nyc-polaroids-1975-1983_1942/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/bianchi_tom_63_e_9th_street_9788862086462.jpg" alt="63 E 9th Street: NYC Polaroids 1975-1983" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tom Bianchi</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">63 E 9th Street: NYC Polaroids 1975-1983</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Damiani &middot; 2019</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/elio_donovan_1962/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/elio_donovan_noisbn.jpg" alt="Donovan" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Elio</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Donovan</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self-published (Donovan) &middot; 2019</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/schneider_salters-cottages_2442/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/schneider_gary_salters_cottages_9780996657464.jpg" alt="Salters Cottages" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Gary Schneider</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Salters Cottages</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Dashwood Books &middot; 2019</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/extra-extra_extra-extra-issue-10_1773/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/extra_extra/extra-extra-10.jpg" alt="Extra Extra Issue 10" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Extra Extra Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Extra Extra Issue 10</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2018</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/extra-extra_extra-extra-issue-8_1771/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/extra_extra/extra-extra-8.jpg" alt="Extra Extra Issue 8" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Extra Extra Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Extra Extra Issue 8</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2017</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/extra-extra_extra-extra-issue-9_1772/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/extra_extra/extra-extra-9.jpg" alt="Extra Extra Issue 9" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Extra Extra Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Extra Extra Issue 9</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2017</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/hujar_speed-of-life_1800/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/Peter_Hujar_Speed_of_Life.jpg" alt="Speed of Life" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Hujar</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Speed of Life</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aperture &middot; 2017</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/pierson_tomorrows-man-4_1948/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/pierson_jack_tomorrows_man_4_9781988469065.jpg" alt="Tomorrow&#39;s Man 4" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Pierson</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tomorrow&#39;s Man 4</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Bywater Bros. Editions &middot; 2017</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/pierson_the-hungry-years_1951/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/pierson_jack_the_hungry_years_9788862085625.jpg" alt="The Hungry Years" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Pierson</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Hungry Years</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Damiani &middot; 2017</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/mendel_the-ward_2398/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/mendel_gideon_the_ward_9781907112560.jpg" alt="The Ward" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Gideon Mendel</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Ward</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Trolley Books &middot; 2017</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/crimp_disss-co-a-fragment_255/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/crimp_douglas_disss_co_a_fragment_9780989985949.jpg" alt="Disss-Co (A Fragment)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Douglas Crimp</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Disss-Co (A Fragment)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">MoMA PS1 &middot; 2016</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/hang_september_486/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/hang_ren_september_486.jpg" alt="September" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ren Hang</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">September</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self-published &middot; 2016</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/hang_march_489/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/hang_ren_march_489.jpg" alt="March" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ren Hang</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">March</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self-published &middot; 2016</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/hang_october_492/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/hang_ren_october_492.jpg" alt="October" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ren Hang</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">October</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self-published &middot; 2016</p>
-        
-    </div>
-</a>
 
         
-            
-<a href="/books/extra-extra_extra-extra-issue-1_1764/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/extra_extra/extra-extra-1.jpg" alt="Extra Extra Issue 1" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Extra Extra Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Extra Extra Issue 1</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2016</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/extra-extra_extra-extra-issue-2_1765/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/extra_extra/extra-extra-2.jpg" alt="Extra Extra Issue 2" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Extra Extra Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Extra Extra Issue 2</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2016</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/extra-extra_extra-extra-issue-3_1766/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/extra_extra/extra-extra-3.jpg" alt="Extra Extra Issue 3" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Extra Extra Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Extra Extra Issue 3</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2016</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/extra-extra_extra-extra-issue-4_1767/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/extra_extra/extra-extra-4.jpg" alt="Extra Extra Issue 4" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Extra Extra Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Extra Extra Issue 4</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2016</p>
-        
-    </div>
-</a>
-
-        
-            
-<a href="/books/extra-extra_extra-extra-issue-5_1768/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/extra_extra/extra-extra-5.jpg" alt="Extra Extra Issue 5" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Extra Extra Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Extra Extra Issue 5</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2016</p>
-        
-    </div>
-</a>
 
         
             
-<a href="/books/extra-extra_extra-extra-issue-6_1769/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/extra_extra/extra-extra-6.jpg" alt="Extra Extra Issue 6" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Extra Extra Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Extra Extra Issue 6</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2016</p>
+<section class="collection-section">
+    
+    <div class="collection-books">
         
-    </div>
-</a>
-
-        
             
-<a href="/books/extra-extra_extra-extra-issue-7_1770/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/extra_extra/extra-extra-7.jpg" alt="Extra Extra Issue 7" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Extra Extra Magazine</p>
+<a href="/books/sepuya_shoot_1689/" class="collection-book">
+    <div class="collection-book-cover">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Extra Extra Issue 7</p>
+            <img src="/assets/images/books/Sepuya_Shoot_9798991036771.jpg" alt="Shoot" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2016</p>
-        
     </div>
+    
+        <div class="collection-book-author">Paul Mpagi Sepuya</div>
+    
+    <div class="collection-book-title">Shoot</div>
+    
+        <div class="collection-book-meta">Primary Information &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/hujar_lost-downtown_1802/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/Peter_Hujar_Lost_Downtown.jpg" alt="Lost Downtown" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
+<a href="/books/fierce-pussy_fierce-pussy_1779/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Hujar</p>
+            <img src="/assets/images/books/fierce_pussy_fierce_pussy_9798991036795.jpg" alt="fierce pussy" loading="lazy">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Lost Downtown</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl / Pace MacGill Gallery &middot; 2016</p>
-        
     </div>
+    
+        <div class="collection-book-author">fierce pussy</div>
+    
+    <div class="collection-book-title">fierce pussy</div>
+    
+        <div class="collection-book-meta">Primary Information &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/frantz_cock-paper-scissors_2396/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/frantz_david_evans_cock_paper_scissors_9780989407212.jpg" alt="Cock, Paper, Scissors" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">David Evans Frantz</p>
+<a href="/books/hujar_hujarcontact_1797/" class="collection-book">
+    <div class="collection-book-cover">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cock, Paper, Scissors</p>
+            <img src="/assets/images/books/Peter_Hujar_HujarContact.jpg" alt="Hujar:Contact" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">ONE Archives at the USC Libraries in collaboration with the Leslie-Lohman Museum of Gay and Lesbian Art &middot; 2016</p>
-        
     </div>
+    
+        <div class="collection-book-author">Peter Hujar</div>
+    
+    <div class="collection-book-title">Hujar:Contact</div>
+    
+        <div class="collection-book-meta">MACK / Morgan Library &amp; Museum &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/pierre-et-gilles_pierre-et-gilles-40_2405/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/pierre_et_gilles_pierre_et_gilles_40_9782080202802.jpg" alt="Pierre et Gilles: 40" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Pierre et Gilles</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Pierre et Gilles: 40</p>
+<a href="/books/mateos_cruising-pavilion-architecture-dissident-sex-and-cruising-cultures_1810/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Flammarion &middot; 2016</p>
+            <img src="/assets/images/books/Unknown_Cruising_Pavilion.jpg" alt="Cruising Pavilion: Architecture, Dissident Sex and Cruising Cultures" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Pierre-Alexandre Mateos &amp; Charles Teyssou (eds.)</div>
+    
+    <div class="collection-book-title">Cruising Pavilion: Architecture, Dissident Sex and Cruising Cultures</div>
+    
+        <div class="collection-book-meta">Spector Books &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-29_1719/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/dempsey_fire-island-art-100-years_1961/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-29.jpg" alt="BUTT Magazine #29" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/dempsey_fire_island_art_100_years_9781580936712.jpg" alt="Fire Island Art: 100 Years" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #29</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2015</p>
-        
-    </div>
+    
+        <div class="collection-book-author">John Dempsey</div>
+    
+    <div class="collection-book-title">Fire Island Art: 100 Years</div>
+    
+        <div class="collection-book-meta">Monacelli &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-30_1720/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/butt/butt-30.jpg" alt="BUTT Magazine #30" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
+<a href="/books/schorr_writing-a-letter-akerman-ballet-act-1_1972/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+            <img src="/assets/images/books/schorr_collier_writing_a_letter_akerman_ballet_act_1_9798993181127.jpg" alt="Writing a Letter: Akerman Ballet, Act 1" loading="lazy">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #30</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2015</p>
-        
     </div>
+    
+        <div class="collection-book-author">Collier Schorr</div>
+    
+    <div class="collection-book-title">Writing a Letter: Akerman Ballet, Act 1</div>
+    
+        <div class="collection-book-meta">The Song Cave &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/tissue_tissue-magazine-n3_1776/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/magazines/tissue/tissue-3.jpg" alt="Tissue Magazine N°3" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tissue Magazine</p>
+<a href="/books/campbell_naes-02-he-believes-in-beauty_2403/" class="collection-book">
+    <div class="collection-book-cover">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tissue Magazine N°3</p>
+            <img src="/assets/images/books/campbell_liam_naes_02_he_believes_in_beauty_2026.jpg" alt="NÆS 02: He Believes in Beauty" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2015</p>
-        
     </div>
+    
+        <div class="collection-book-author">Liam Campbell</div>
+    
+    <div class="collection-book-title">NÆS 02: He Believes in Beauty</div>
+    
+        <div class="collection-book-meta">Elska Magazine &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/pierson_tomorrows-man-3_1947/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/pierson_jack_tomorrows_man_3_9780993856754.jpg" alt="Tomorrow&#39;s Man 3" class="w-full h-full object-cover" loading="lazy">
+<a href="/books/gribbon_jenna-gribbon-the-honeymoon-show_455/" class="collection-book">
+    <div class="collection-book-cover">
         
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Pierson</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tomorrow&#39;s Man 3</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Bywater Bros. Editions &middot; 2015</p>
+            <img src="/assets/images/books/gribbon_jenna_jenna_gribbon_the_honeymoon_show_9798218342876.jpg" alt="Jenna Gribbon: The Honeymoon Show!" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Jenna Gribbon</div>
+    
+    <div class="collection-book-title">Jenna Gribbon: The Honeymoon Show!</div>
+    
+        <div class="collection-book-meta">Lévy Gorvy Dayan &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/weiermair_photography-is-the-medium-of-desire-an-international-anthology-of-photography-and-video_2392/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/weiermair_peter_photography_is_the_medium_of_desire_9780979389566.jpg" alt="Photography Is the Medium of Desire: An International Anthology of Photography and Video" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Weiermair</p>
+<a href="/books/thek_stay-away-from-nothing_1309/" class="collection-book">
+    <div class="collection-book-cover">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Photography Is the Medium of Desire: An International Anthology of Photography and Video</p>
+            <img src="/assets/images/queer/thek-hujar-stay-away-from-nothing.jpg" alt="Stay away from nothing" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Leslie-Lohman Museum of Gay and Lesbian Art &middot; 2015</p>
-        
     </div>
+    
+        <div class="collection-book-author">Paul Thek and Peter Hujar</div>
+    
+    <div class="collection-book-title">Stay away from nothing</div>
+    
+        <div class="collection-book-meta">Primary Information &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/matsu_dr-makumakuran-and-other-stories_2401/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/matsu_takeshi_dr_makumakuran_and_other_stories_9783867878432.jpg" alt="Dr. Makumakuran and Other Stories" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
+<a href="/books/wojnarowicz_david-wojnarowicz-arthur-rimbaud-in-new-york_1356/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Takeshi Matsu</p>
+            <img src="/assets/images/books/Wojnarowicz_David_Wojnarowicz_Arthur_Rimbaud_in_New_York_9788857254067.jpg" alt="David Wojnarowicz: Arthur Rimbaud in New York" loading="lazy">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Dr. Makumakuran and Other Stories</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Bruno Gmünder Verlag &middot; 2015</p>
-        
     </div>
+    
+        <div class="collection-book-author">David Wojnarowicz</div>
+    
+    <div class="collection-book-title">David Wojnarowicz: Arthur Rimbaud in New York</div>
+    
+        <div class="collection-book-meta">Skira &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/hujar_love-and-lust_535/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/Hujar_Love_Lust_9781881337379.jpg" alt="Love &amp; Lust" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Hujar</p>
+<a href="/books/butt_butt-magazine-36_1726/" class="collection-book">
+    <div class="collection-book-cover">
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Love &amp; Lust</p>
+            <img src="/assets/images/magazines/butt/butt-36.jpg" alt="BUTT Magazine #36" loading="lazy">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Fraenkel Gallery &middot; 2014</p>
-        
     </div>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #36</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2025</div>
+    
 </a>
 
-        
-            
-<a href="/books/pierson_tomorrows-man-lynn-valley-9_879/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
-        
-            <img src="/assets/images/books/pierson_jack_tomorrows_man_1_9780920293911.jpg" alt="Tomorrow&#39;s Man, Lynn Valley 9" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Pierson</p>
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tomorrow&#39;s Man, Lynn Valley 9</p>
+            
+<a href="/books/butt_butt-magazine-37_1727/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Bywater Bros. Editions &middot; 2014</p>
+            <img src="/assets/images/magazines/butt/butt-37.jpg" alt="BUTT Magazine #37" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #37</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-27_1717/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/mcknight_posthume_1749/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-27.jpg" alt="BUTT Magazine #27" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/mcknight_mark_armijo_posthume_9781942953746.jpg" alt="Posthume" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">Mark Armijo McKnight</div>
+    
+    <div class="collection-book-title">Posthume</div>
+    
+        <div class="collection-book-meta">TBW Books &middot; 2025</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #27</p>
+            
+<a href="/books/aletti_physique_1943/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2014</p>
+            <img src="/assets/images/books/aletti_vince_physique_9781915743879.jpg" alt="Physique" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Vince Aletti</div>
+    
+    <div class="collection-book-title">Physique</div>
+    
+        <div class="collection-book-meta">SPBH Editions &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-28_1718/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/aletti_physique-naughty-edition_1967/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-28.jpg" alt="BUTT Magazine #28" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/aletti_vince_physique_naughty_edition_9781917651059.jpg" alt="Physique (Naughty Edition)" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">Vince Aletti</div>
+    
+    <div class="collection-book-title">Physique (Naughty Edition)</div>
+    
+        <div class="collection-book-meta">SPBH Editions &middot; 2025</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #28</p>
+            
+<a href="/books/fratino_satura_1969/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2014</p>
+            <img src="/assets/images/books/fratino_louis_satura_9788867496563.jpg" alt="Satura" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Louis Fratino</div>
+    
+    <div class="collection-book-title">Satura</div>
+    
+        <div class="collection-book-meta">Mousse Publishing &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/tissue_tissue-magazine-n4_1777/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/gran-fury_gran-fury-art-is-not-enough_2391/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/tissue/tissue-4.jpg" alt="Tissue Magazine N°4" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/gran_fury_gran_fury_art_is_not_enough_9786557770504.jpg" alt="Gran Fury: Art Is Not Enough" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tissue Magazine</p>
+    
+        <div class="collection-book-author">Gran Fury</div>
+    
+    <div class="collection-book-title">Gran Fury: Art Is Not Enough</div>
+    
+        <div class="collection-book-meta">Museu de Arte de São Paulo Assis Chateaubriand (MASP) / KMEC Books &middot; 2025</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tissue Magazine N°4</p>
+            
+<a href="/books/slanted_slanted-magazine-45sex_1589/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2014</p>
+            <img src="/assets/images/magazines/slanted/slanted-45-sex.jpg" alt="Slanted Magazine #45—Sex" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Slanted Publishers</div>
+    
+    <div class="collection-book-title">Slanted Magazine #45—Sex</div>
+    
+        <div class="collection-book-meta">Slanted Publishers &middot; 2024</div>
+    
 </a>
 
         
             
-<a href="/books/tissue_tissue-magazine-n5_1778/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/gonzalez-torres_felix-gonzalez-torres-always-to-return_1592/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/tissue/tissue-5.jpg" alt="Tissue Magazine N°5" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/gonzalez-torres_always-to-return/Felix Gonzalez-Torres-Always to Return.jpg" alt="Felix Gonzalez-Torres: Always to Return" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tissue Magazine</p>
+    
+        <div class="collection-book-author">Felix Gonzalez-Torres</div>
+    
+    <div class="collection-book-title">Felix Gonzalez-Torres: Always to Return</div>
+    
+        <div class="collection-book-meta">Radius Books &middot; 2024</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tissue Magazine N°5</p>
+            
+<a href="/books/butt_butt-magazine-34_1724/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2014</p>
+            <img src="/assets/images/magazines/butt/butt-34.jpg" alt="BUTT Magazine #34" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #34</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2024</div>
+    
 </a>
 
         
             
-<a href="/books/pierson_tomorrows-man-2_1946/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/butt_butt-magazine-35_1725/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/pierson_jack_tomorrows_man_2_9780978078997.jpg" alt="Tomorrow&#39;s Man 2" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/butt/butt-35.jpg" alt="BUTT Magazine #35" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Pierson</p>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #35</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2024</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tomorrow&#39;s Man 2</p>
+            
+<a href="/books/hujar_portraits-in-life-and-death_1798/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Bywater Bros. Editions &middot; 2014</p>
+            <img src="/assets/images/books/Peter_Hujar_Portraits_in_Life_and_Death.jpg" alt="Portraits in Life and Death" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Peter Hujar</div>
+    
+    <div class="collection-book-title">Portraits in Life and Death</div>
+    
+        <div class="collection-book-meta">Liveright Publishing Corporation &middot; 2024</div>
+    
 </a>
 
         
             
-<a href="/books/bruce-of-los-angeles_rodeo_174/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/schneider_peter-hujar-behind-the-camera-and-in-the-darkroom_1801/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/bruce_of_los_angeles_rodeo_174.jpg" alt="Rodeo" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/Gary_Schneider_Peter_Hujar_Behind_the_Camera_and_In_the_Darkroom.jpg" alt="Peter Hujar: Behind the Camera and In the Darkroom" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Bruce of Los Angeles</p>
+    
+        <div class="collection-book-author">Gary Schneider</div>
+    
+    <div class="collection-book-title">Peter Hujar: Behind the Camera and In the Darkroom</div>
+    
+        <div class="collection-book-meta">BookCrave Books &middot; 2024</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Rodeo</p>
+            
+<a href="/books/mcgough_alphabet_1945/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Acne Studios &middot; 2013</p>
+            <img src="/assets/images/books/mcgough_peter_alphabet_9781961883062.jpg" alt="Alphabet" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Peter McGough</div>
+    
+    <div class="collection-book-title">Alphabet</div>
+    
+        <div class="collection-book-meta">Karma &middot; 2024</div>
+    
 </a>
 
         
             
-<a href="/books/bruce-of-los-angeles_rodeo_175/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/de-sana_salvation_1960/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/bruce_of_los_angeles_rodeo_175.jpg" alt="Rodeo" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/de_sana_jimmy_salvation_9798988573630.jpg" alt="Salvation" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Bruce of Los Angeles</p>
+    
+        <div class="collection-book-author">Jimmy De Sana</div>
+    
+    <div class="collection-book-title">Salvation</div>
+    
+        <div class="collection-book-meta">Primary Information &middot; 2024</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Rodeo</p>
+            
+<a href="/books/labruce_the-revolution-is-my-boyfriend_2393/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Acne Studios &middot; 2013</p>
+            <img src="/assets/images/books/labruce_bruce_the_revolution_is_my_boyfriend_2024.jpg" alt="The Revolution Is My Boyfriend" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Bruce LaBruce</div>
+    
+    <div class="collection-book-title">The Revolution Is My Boyfriend</div>
+    
+        <div class="collection-book-meta">Baron &middot; 2024</div>
+    
 </a>
 
         
             
-<a href="/books/french_tinker-tailor-soldier-sailor-jim-french-polaroids_411/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/butt_butt-magazine-31_1721/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/french_jim_tinker_tailor_soldier_sailor_9780615782614.jpg" alt="Tinker, Tailor, Soldier, Sailor: Jim French Polaroids" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/butt/butt-31.jpg" alt="BUTT Magazine #31" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jim French</p>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #31</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2023</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tinker, Tailor, Soldier, Sailor: Jim French Polaroids</p>
+            
+<a href="/books/butt_butt-magazine-32_1722/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Antinous Press &middot; 2013</p>
+            <img src="/assets/images/magazines/butt/butt-32.jpg" alt="BUTT Magazine #32" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #32</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2023</div>
+    
 </a>
 
         
             
-<a href="/books/hang_huang-jiaqi_487/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/butt_butt-magazine-33_1723/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/hang_ren_huang_jiaqi_487.jpg" alt="Huang Jiaqi" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/butt/butt-33.jpg" alt="BUTT Magazine #33" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ren Hang</p>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #33</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2023</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Huang Jiaqi</p>
+            
+<a href="/books/_forbidden-colors_1737/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self-published &middot; 2013</p>
+            <img src="/assets/images/books/9781739364946-a518c1df-1920w.jpg" alt="Forbidden Colors" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Various Contributors</div>
+    
+    <div class="collection-book-title">Forbidden Colors</div>
+    
+        <div class="collection-book-meta">Pilot Press &middot; 2023</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-25_1715/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/stellar_the-piers_1941/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-25.jpg" alt="BUTT Magazine #25" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/stellar_stanley_the_piers_9781736667620.jpg" alt="The Piers" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">Stanley Stellar</div>
+    
+    <div class="collection-book-title">The Piers</div>
+    
+        <div class="collection-book-meta">Szaransky Print Co. and Kapp Kapp &middot; 2023</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #25</p>
+            
+<a href="/books/pierson_tomorrows-man-6_1950/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2013</p>
+            <img src="/assets/images/books/pierson_jack_tomorrows_man_6_9781988469157.jpg" alt="Tomorrow&#39;s Man 6" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Jack Pierson</div>
+    
+    <div class="collection-book-title">Tomorrow&#39;s Man 6</div>
+    
+        <div class="collection-book-meta">Bywater Bros. Editions &middot; 2023</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-26_1716/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/heffner_cruisn-uncovering-gay-design-history-through-collecting_1959/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-26.jpg" alt="BUTT Magazine #26" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/heffner_cruisn_noisbn.jpg" alt="Cruis&#39;n: Uncovering Gay Design History Through Collecting" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">Rick Heffner</div>
+    
+    <div class="collection-book-title">Cruis&#39;n: Uncovering Gay Design History Through Collecting</div>
+    
+        <div class="collection-book-meta">HEFF Publishing &middot; 2023</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #26</p>
+            
+<a href="/books/tom-of-finland_tom-of-finland-threesome_2389/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2013</p>
+            <img src="/assets/images/books/tom_of_finland_tom_of_finland_threesome_2023.jpg" alt="Tom of Finland: Threesome" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Tom of Finland</div>
+    
+    <div class="collection-book-title">Tom of Finland: Threesome</div>
+    
+        <div class="collection-book-meta">David Kordansky Gallery &middot; 2023</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-23_1713/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/hujar_peter-hujar-curated-by-elton-john_1799/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-23.jpg" alt="BUTT Magazine #23" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/Peter_Hujar_Peter_Hujar_Curated_by_Elton_John.jpg" alt="Peter Hujar Curated by Elton John" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">Peter Hujar</div>
+    
+    <div class="collection-book-title">Peter Hujar Curated by Elton John</div>
+    
+        <div class="collection-book-meta">Fraenkel Gallery &middot; 2022</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #23</p>
+            
+<a href="/books/eggerer_selected-collages_1851/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2012</p>
+            <img src="/assets/images/books/eggerer_thomas_selected_collages_2002_to_2022.jpg" alt="Selected Collages" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Thomas Eggerer</div>
+    
+    <div class="collection-book-title">Selected Collages</div>
+    
+        <div class="collection-book-meta">Inpatient Press &middot; 2022</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-24_1714/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/simpson_the-my-comrade-anthology_1940/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-24.jpg" alt="BUTT Magazine #24" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/simpson_les_my_comrade_noisbn.jpg" alt="The My Comrade Anthology" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">Les Simpson</div>
+    
+    <div class="collection-book-title">The My Comrade Anthology</div>
+    
+        <div class="collection-book-meta">Boo-Hooray &middot; 2022</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #24</p>
+            
+<a href="/books/rex_portfolio_1958/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2012</p>
+            <img src="/assets/images/books/rex_portfolios_noisbn.jpg" alt="Portfolio" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">REX</div>
+    
+    <div class="collection-book-title">Portfolio</div>
+    
+        <div class="collection-book-meta">REX Publications (rexbooks.press) &middot; 2022</div>
+    
 </a>
 
         
             
-<a href="/books/tissue_tissue-magazine-n2_1775/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/davey_the-shabbiness-of-beauty_1939/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/tissue/tissue-2.jpg" alt="Tissue Magazine N°2" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/davey_moyra_the_shabbiness_of_beauty_9781913620202.jpg" alt="The Shabbiness of Beauty" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tissue Magazine</p>
+    
+        <div class="collection-book-author">Moyra Davey, Peter Hujar</div>
+    
+    <div class="collection-book-title">The Shabbiness of Beauty</div>
+    
+        <div class="collection-book-meta">MACK &middot; 2021</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tissue Magazine N°2</p>
+            
+<a href="/books/pierson_tomorrows-man-5_1949/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2012</p>
+            <img src="/assets/images/books/pierson_jack_tomorrows_man_5_9781988469140.jpg" alt="Tomorrow&#39;s Man 5" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Jack Pierson</div>
+    
+    <div class="collection-book-title">Tomorrow&#39;s Man 5</div>
+    
+        <div class="collection-book-meta">Bywater Bros. Editions &middot; 2020</div>
+    
 </a>
 
         
             
-<a href="/books/pierson_jesus-and-nazimova_1952/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/earnest_the-young-and-evil-queer-modernism-in-new-york-1930-1955_1965/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/pierson_jack_jesus_and_nazimova_9789491245046.jpg" alt="Jesus and Nazimova" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/earnest_jarrett_the_young_and_evil_9781644230268.jpg" alt="The Young and Evil: Queer Modernism in New York, 1930–1955" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Pierson</p>
+    
+        <div class="collection-book-author">Jarrett Earnest</div>
+    
+    <div class="collection-book-title">The Young and Evil: Queer Modernism in New York, 1930–1955</div>
+    
+        <div class="collection-book-meta">David Zwirner Books &middot; 2020</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Jesus and Nazimova</p>
+            
+<a href="/books/rhein_eric-rhein-lifelines_2397/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Xavier Hufkens &middot; 2012</p>
+            <img src="/assets/images/books/rhein_eric_lifelines_9781732848238.jpg" alt="Eric Rhein: Lifelines" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Eric Rhein</div>
+    
+    <div class="collection-book-title">Eric Rhein: Lifelines</div>
+    
+        <div class="collection-book-meta">Institute 193 &middot; 2020</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-21_1711/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/frisa_dune-vol-001-n-001-dark-room_2400/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-21.jpg" alt="BUTT Magazine #21" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/frisa_maria_luisa_dune_vol_001_n_001_dark_room_2020.jpg" alt="Dune Vol. 001 n. 001: Dark Room" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">Maria Luisa Frisa</div>
+    
+    <div class="collection-book-title">Dune Vol. 001 n. 001: Dark Room</div>
+    
+        <div class="collection-book-meta">Flash Art &middot; 2020</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #21</p>
+            
+<a href="/books/weinberg_pier-groups-art-and-sex-along-the-new-york-waterfront_1938/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2011</p>
+            <img src="/assets/images/books/weinberg_jonathan_pier_groups_9780271082172.jpg" alt="Pier Groups: Art and Sex Along the New York Waterfront" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Jonathan Weinberg</div>
+    
+    <div class="collection-book-title">Pier Groups: Art and Sex Along the New York Waterfront</div>
+    
+        <div class="collection-book-meta">Penn State University Press &middot; 2019</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-22_1712/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/bianchi_63-e-9th-street-nyc-polaroids-1975-1983_1942/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-22.jpg" alt="BUTT Magazine #22" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/bianchi_tom_63_e_9th_street_9788862086462.jpg" alt="63 E 9th Street: NYC Polaroids 1975-1983" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">Tom Bianchi</div>
+    
+    <div class="collection-book-title">63 E 9th Street: NYC Polaroids 1975-1983</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2019</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #22</p>
+            
+<a href="/books/elio_donovan_1962/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2011</p>
+            <img src="/assets/images/books/elio_donovan_noisbn.jpg" alt="Donovan" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Elio</div>
+    
+    <div class="collection-book-title">Donovan</div>
+    
+        <div class="collection-book-meta">Self-published (Donovan) &middot; 2019</div>
+    
 </a>
 
         
             
-<a href="/books/tissue_tissue-magazine-n1_1774/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/schneider_salters-cottages_2442/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/tissue/tissue-1.jpg" alt="Tissue Magazine N°1" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/schneider_gary_salters_cottages_9780996657464.jpg" alt="Salters Cottages" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tissue Magazine</p>
+    
+        <div class="collection-book-author">Gary Schneider</div>
+    
+    <div class="collection-book-title">Salters Cottages</div>
+    
+        <div class="collection-book-meta">Dashwood Books &middot; 2019</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tissue Magazine N°1</p>
+            
+<a href="/books/extra-extra_extra-extra-issue-10_1773/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">2011</p>
+            <img src="/assets/images/magazines/extra_extra/extra-extra-10.jpg" alt="Extra Extra Issue 10" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Extra Extra Magazine</div>
+    
+    <div class="collection-book-title">Extra Extra Issue 10</div>
+    
+        <div class="collection-book-meta">2018</div>
+    
 </a>
 
         
             
-<a href="/books/hardy_frank-peter-john-dick_1890/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/extra-extra_extra-extra-issue-8_1771/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/hardy_k8_frank_peter_john_dick_9780982209028.jpg" alt="Frank Peter John Dick" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/extra_extra/extra-extra-8.jpg" alt="Extra Extra Issue 8" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">K8 Hardy</p>
+    
+        <div class="collection-book-author">Extra Extra Magazine</div>
+    
+    <div class="collection-book-title">Extra Extra Issue 8</div>
+    
+        <div class="collection-book-meta">2017</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Frank Peter John Dick</p>
+            
+<a href="/books/extra-extra_extra-extra-issue-9_1772/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Capricious &middot; 2011</p>
+            <img src="/assets/images/magazines/extra_extra/extra-extra-9.jpg" alt="Extra Extra Issue 9" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Extra Extra Magazine</div>
+    
+    <div class="collection-book-title">Extra Extra Issue 9</div>
+    
+        <div class="collection-book-meta">2017</div>
+    
 </a>
 
         
             
-<a href="/books/states_cruising_2188/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/hujar_speed-of-life_1800/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/states_chad_cruising_9781576875834.jpg" alt="Cruising" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/Peter_Hujar_Speed_of_Life.jpg" alt="Speed of Life" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Chad States</p>
+    
+        <div class="collection-book-author">Peter Hujar</div>
+    
+    <div class="collection-book-title">Speed of Life</div>
+    
+        <div class="collection-book-meta">Aperture &middot; 2017</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cruising</p>
+            
+<a href="/books/pierson_tomorrows-man-4_1948/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">powerHouse Books &middot; 2011</p>
+            <img src="/assets/images/books/pierson_jack_tomorrows_man_4_9781988469065.jpg" alt="Tomorrow&#39;s Man 4" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Jack Pierson</div>
+    
+    <div class="collection-book-title">Tomorrow&#39;s Man 4</div>
+    
+        <div class="collection-book-meta">Bywater Bros. Editions &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-19_1709/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/pierson_the-hungry-years_1951/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-19.jpg" alt="BUTT Magazine #19" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/pierson_jack_the_hungry_years_9788862085625.jpg" alt="The Hungry Years" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">Jack Pierson</div>
+    
+    <div class="collection-book-title">The Hungry Years</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2017</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #19</p>
+            
+<a href="/books/mendel_the-ward_2398/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2010</p>
+            <img src="/assets/images/books/mendel_gideon_the_ward_9781907112560.jpg" alt="The Ward" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Gideon Mendel</div>
+    
+    <div class="collection-book-title">The Ward</div>
+    
+        <div class="collection-book-meta">Trolley Books &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-20_1710/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/crimp_disss-co-a-fragment_255/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-20.jpg" alt="BUTT Magazine #20" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/crimp_douglas_disss_co_a_fragment_9780989985949.jpg" alt="Disss-Co (A Fragment)" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">Douglas Crimp</div>
+    
+    <div class="collection-book-title">Disss-Co (A Fragment)</div>
+    
+        <div class="collection-book-meta">MoMA PS1 &middot; 2016</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #20</p>
+            
+<a href="/books/hang_september_486/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2010</p>
+            <img src="/assets/images/books/hang_ren_september_486.jpg" alt="September" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Ren Hang</div>
+    
+    <div class="collection-book-title">September</div>
+    
+        <div class="collection-book-meta">Self-published &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/pierson_jack-pierson-its-not-dark-yet-galerie-thaddaeus-ropac_1964/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/hang_march_489/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/pierson_jack_ropac_noisbn.jpg" alt="Jack Pierson: It&#39;s Not Dark Yet (Galerie Thaddaeus Ropac)" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/hang_ren_march_489.jpg" alt="March" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Pierson</p>
+    
+        <div class="collection-book-author">Ren Hang</div>
+    
+    <div class="collection-book-title">March</div>
+    
+        <div class="collection-book-meta">Self-published &middot; 2016</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Jack Pierson: It&#39;s Not Dark Yet (Galerie Thaddaeus Ropac)</p>
+            
+<a href="/books/hang_october_492/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Galerie Thaddaeus Ropac &middot; 2010</p>
+            <img src="/assets/images/books/hang_ren_october_492.jpg" alt="October" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Ren Hang</div>
+    
+    <div class="collection-book-title">October</div>
+    
+        <div class="collection-book-meta">Self-published &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-17_1707/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/extra-extra_extra-extra-issue-1_1764/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-17.jpg" alt="BUTT Magazine #17" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/extra_extra/extra-extra-1.jpg" alt="Extra Extra Issue 1" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">Extra Extra Magazine</div>
+    
+    <div class="collection-book-title">Extra Extra Issue 1</div>
+    
+        <div class="collection-book-meta">2016</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #17</p>
+            
+<a href="/books/extra-extra_extra-extra-issue-2_1765/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2009</p>
+            <img src="/assets/images/magazines/extra_extra/extra-extra-2.jpg" alt="Extra Extra Issue 2" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Extra Extra Magazine</div>
+    
+    <div class="collection-book-title">Extra Extra Issue 2</div>
+    
+        <div class="collection-book-meta">2016</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-18_1708/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/extra-extra_extra-extra-issue-3_1766/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-18.jpg" alt="BUTT Magazine #18" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/extra_extra/extra-extra-3.jpg" alt="Extra Extra Issue 3" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">Extra Extra Magazine</div>
+    
+    <div class="collection-book-title">Extra Extra Issue 3</div>
+    
+        <div class="collection-book-meta">2016</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #18</p>
+            
+<a href="/books/extra-extra_extra-extra-issue-4_1767/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2009</p>
+            <img src="/assets/images/magazines/extra_extra/extra-extra-4.jpg" alt="Extra Extra Issue 4" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Extra Extra Magazine</div>
+    
+    <div class="collection-book-title">Extra Extra Issue 4</div>
+    
+        <div class="collection-book-meta">2016</div>
+    
 </a>
 
         
             
-<a href="/books/kost_love-hate-nature_1956/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/extra-extra_extra-extra-issue-5_1768/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/kost_jeremy_love_hate_nature_noisbn.jpg" alt="Love... Hate... Nature." class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/extra_extra/extra-extra-5.jpg" alt="Extra Extra Issue 5" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jeremy Kost</p>
+    
+        <div class="collection-book-author">Extra Extra Magazine</div>
+    
+    <div class="collection-book-title">Extra Extra Issue 5</div>
+    
+        <div class="collection-book-meta">2016</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Love... Hate... Nature.</p>
+            
+<a href="/books/extra-extra_extra-extra-issue-6_1769/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">International Center of Photography &middot; 2009</p>
+            <img src="/assets/images/magazines/extra_extra/extra-extra-6.jpg" alt="Extra Extra Issue 6" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Extra Extra Magazine</div>
+    
+    <div class="collection-book-title">Extra Extra Issue 6</div>
+    
+        <div class="collection-book-meta">2016</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-15_1705/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/extra-extra_extra-extra-issue-7_1770/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-15.jpg" alt="BUTT Magazine #15" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/extra_extra/extra-extra-7.jpg" alt="Extra Extra Issue 7" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">Extra Extra Magazine</div>
+    
+    <div class="collection-book-title">Extra Extra Issue 7</div>
+    
+        <div class="collection-book-meta">2016</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #15</p>
+            
+<a href="/books/hujar_lost-downtown_1802/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2008</p>
+            <img src="/assets/images/books/Peter_Hujar_Lost_Downtown.jpg" alt="Lost Downtown" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Peter Hujar</div>
+    
+    <div class="collection-book-title">Lost Downtown</div>
+    
+        <div class="collection-book-meta">Steidl / Pace MacGill Gallery &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-16_1706/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/frantz_cock-paper-scissors_2396/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-16.jpg" alt="BUTT Magazine #16" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/frantz_david_evans_cock_paper_scissors_9780989407212.jpg" alt="Cock, Paper, Scissors" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">David Evans Frantz</div>
+    
+    <div class="collection-book-title">Cock, Paper, Scissors</div>
+    
+        <div class="collection-book-meta">ONE Archives at the USC Libraries in collaboration with the Leslie-Lohman Museum of Gay and Lesbian Art &middot; 2016</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #16</p>
+            
+<a href="/books/pierre-et-gilles_pierre-et-gilles-40_2405/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2008</p>
+            <img src="/assets/images/books/pierre_et_gilles_pierre_et_gilles_40_9782080202802.jpg" alt="Pierre et Gilles: 40" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Pierre et Gilles</div>
+    
+    <div class="collection-book-title">Pierre et Gilles: 40</div>
+    
+        <div class="collection-book-meta">Flammarion &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/weiermair_treasures-of-gay-art-from-the-leslielohman-gay-art-foundation_1966/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/butt_butt-magazine-29_1719/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/weiermair_treasures_of_gay_art_9783900361020.jpg" alt="Treasures of Gay Art from the Leslie/Lohman Gay Art Foundation" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/butt/butt-29.jpg" alt="BUTT Magazine #29" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Weiermair</p>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #29</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2015</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Treasures of Gay Art from the Leslie/Lohman Gay Art Foundation</p>
+            
+<a href="/books/butt_butt-magazine-30_1720/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">All Saints Press &middot; 2008</p>
+            <img src="/assets/images/magazines/butt/butt-30.jpg" alt="BUTT Magazine #30" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #30</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/pierre-et-gilles_pierre-et-gilles-double-je-1976-2007_878/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/tissue_tissue-magazine-n3_1776/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/pierre_et_gilles_taschen_9783822846506.jpg" alt="Pierre et Gilles: Double Je, 1976–2007" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/tissue/tissue-3.jpg" alt="Tissue Magazine N°3" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Pierre et Gilles</p>
+    
+        <div class="collection-book-author">Tissue Magazine</div>
+    
+    <div class="collection-book-title">Tissue Magazine N°3</div>
+    
+        <div class="collection-book-meta">2015</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Pierre et Gilles: Double Je, 1976–2007</p>
+            
+<a href="/books/pierson_tomorrows-man-3_1947/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Taschen &middot; 2007</p>
+            <img src="/assets/images/books/pierson_jack_tomorrows_man_3_9780993856754.jpg" alt="Tomorrow&#39;s Man 3" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Jack Pierson</div>
+    
+    <div class="collection-book-title">Tomorrow&#39;s Man 3</div>
+    
+        <div class="collection-book-meta">Bywater Bros. Editions &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-13_1703/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/weiermair_photography-is-the-medium-of-desire-an-international-anthology-of-photography-and-video_2392/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-13.jpg" alt="BUTT Magazine #13" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/weiermair_peter_photography_is_the_medium_of_desire_9780979389566.jpg" alt="Photography Is the Medium of Desire: An International Anthology of Photography and Video" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">Peter Weiermair</div>
+    
+    <div class="collection-book-title">Photography Is the Medium of Desire: An International Anthology of Photography and Video</div>
+    
+        <div class="collection-book-meta">Leslie-Lohman Museum of Gay and Lesbian Art &middot; 2015</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #13</p>
+            
+<a href="/books/matsu_dr-makumakuran-and-other-stories_2401/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2007</p>
+            <img src="/assets/images/books/matsu_takeshi_dr_makumakuran_and_other_stories_9783867878432.jpg" alt="Dr. Makumakuran and Other Stories" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Takeshi Matsu</div>
+    
+    <div class="collection-book-title">Dr. Makumakuran and Other Stories</div>
+    
+        <div class="collection-book-meta">Bruno Gmünder Verlag &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-14_1704/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/hujar_love-and-lust_535/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-14.jpg" alt="BUTT Magazine #14" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/Hujar_Love_Lust_9781881337379.jpg" alt="Love &amp; Lust" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">Peter Hujar</div>
+    
+    <div class="collection-book-title">Love &amp; Lust</div>
+    
+        <div class="collection-book-meta">Fraenkel Gallery &middot; 2014</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #14</p>
+            
+<a href="/books/pierson_tomorrows-man-lynn-valley-9_879/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2007</p>
+            <img src="/assets/images/books/pierson_jack_tomorrows_man_1_9780920293911.jpg" alt="Tomorrow&#39;s Man, Lynn Valley 9" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Jack Pierson</div>
+    
+    <div class="collection-book-title">Tomorrow&#39;s Man, Lynn Valley 9</div>
+    
+        <div class="collection-book-meta">Bywater Bros. Editions &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-11_1701/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/butt_butt-magazine-27_1717/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-11.jpg" alt="BUTT Magazine #11" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/butt/butt-27.jpg" alt="BUTT Magazine #27" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #27</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2014</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #11</p>
+            
+<a href="/books/butt_butt-magazine-28_1718/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2006</p>
+            <img src="/assets/images/magazines/butt/butt-28.jpg" alt="BUTT Magazine #28" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #28</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-12_1702/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/tissue_tissue-magazine-n4_1777/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-12.jpg" alt="BUTT Magazine #12" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/tissue/tissue-4.jpg" alt="Tissue Magazine N°4" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">Tissue Magazine</div>
+    
+    <div class="collection-book-title">Tissue Magazine N°4</div>
+    
+        <div class="collection-book-meta">2014</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #12</p>
+            
+<a href="/books/tissue_tissue-magazine-n5_1778/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2006</p>
+            <img src="/assets/images/magazines/tissue/tissue-5.jpg" alt="Tissue Magazine N°5" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Tissue Magazine</div>
+    
+    <div class="collection-book-title">Tissue Magazine N°5</div>
+    
+        <div class="collection-book-meta">2014</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-9_1699/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/pierson_tomorrows-man-2_1946/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-9.jpg" alt="BUTT Magazine #9" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/pierson_jack_tomorrows_man_2_9780978078997.jpg" alt="Tomorrow&#39;s Man 2" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">Jack Pierson</div>
+    
+    <div class="collection-book-title">Tomorrow&#39;s Man 2</div>
+    
+        <div class="collection-book-meta">Bywater Bros. Editions &middot; 2014</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #9</p>
+            
+<a href="/books/bruce-of-los-angeles_rodeo_174/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2005</p>
+            <img src="/assets/images/books/bruce_of_los_angeles_rodeo_174.jpg" alt="Rodeo" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Bruce of Los Angeles</div>
+    
+    <div class="collection-book-title">Rodeo</div>
+    
+        <div class="collection-book-meta">Acne Studios &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-10_1700/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/bruce-of-los-angeles_rodeo_175/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-10.jpg" alt="BUTT Magazine #10" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/bruce_of_los_angeles_rodeo_175.jpg" alt="Rodeo" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">Bruce of Los Angeles</div>
+    
+    <div class="collection-book-title">Rodeo</div>
+    
+        <div class="collection-book-meta">Acne Studios &middot; 2013</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #10</p>
+            
+<a href="/books/french_tinker-tailor-soldier-sailor-jim-french-polaroids_411/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2005</p>
+            <img src="/assets/images/books/french_jim_tinker_tailor_soldier_sailor_9780615782614.jpg" alt="Tinker, Tailor, Soldier, Sailor: Jim French Polaroids" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Jim French</div>
+    
+    <div class="collection-book-title">Tinker, Tailor, Soldier, Sailor: Jim French Polaroids</div>
+    
+        <div class="collection-book-meta">Antinous Press &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/herrmann_toscana_1957/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/hang_huang-jiaqi_487/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/herrmann_matthias_toscana_9780894390197.jpg" alt="Toscana" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/hang_ren_huang_jiaqi_487.jpg" alt="Huang Jiaqi" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Matthias Herrmann</p>
+    
+        <div class="collection-book-author">Ren Hang</div>
+    
+    <div class="collection-book-title">Huang Jiaqi</div>
+    
+        <div class="collection-book-meta">Self-published &middot; 2013</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Toscana</p>
+            
+<a href="/books/butt_butt-magazine-25_1715/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Printed Matter, Inc. &middot; 2005</p>
+            <img src="/assets/images/magazines/butt/butt-25.jpg" alt="BUTT Magazine #25" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #25</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-7_1697/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/butt_butt-magazine-26_1716/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-7.jpg" alt="BUTT Magazine #7" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/butt/butt-26.jpg" alt="BUTT Magazine #26" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #26</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2013</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #7</p>
+            
+<a href="/books/butt_butt-magazine-23_1713/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2004</p>
+            <img src="/assets/images/magazines/butt/butt-23.jpg" alt="BUTT Magazine #23" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #23</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-8_1698/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/butt_butt-magazine-24_1714/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-8.jpg" alt="BUTT Magazine #8" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/butt/butt-24.jpg" alt="BUTT Magazine #24" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #24</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2012</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #8</p>
+            
+<a href="/books/tissue_tissue-magazine-n2_1775/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2004</p>
+            <img src="/assets/images/magazines/tissue/tissue-2.jpg" alt="Tissue Magazine N°2" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Tissue Magazine</div>
+    
+    <div class="collection-book-title">Tissue Magazine N°2</div>
+    
+        <div class="collection-book-meta">2012</div>
+    
 </a>
 
         
             
-<a href="/books/larue_chi-chi-larues-live-and-raw_1953/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/pierson_jesus-and-nazimova_1952/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/larue_chi_chi_live_and_raw_9783861873853.jpg" alt="Chi Chi LaRue&#39;s Live and Raw" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/pierson_jack_jesus_and_nazimova_9789491245046.jpg" alt="Jesus and Nazimova" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Chi Chi LaRue</p>
+    
+        <div class="collection-book-author">Jack Pierson</div>
+    
+    <div class="collection-book-title">Jesus and Nazimova</div>
+    
+        <div class="collection-book-meta">Xavier Hufkens &middot; 2012</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Chi Chi LaRue&#39;s Live and Raw</p>
+            
+<a href="/books/butt_butt-magazine-21_1711/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Bruno Gmünder Verlag &middot; 2004</p>
+            <img src="/assets/images/magazines/butt/butt-21.jpg" alt="BUTT Magazine #21" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #21</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/falcon-studios_legends-men-of-falcon_1955/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/butt_butt-magazine-22_1712/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/falcon_legends_men_of_falcon_9783861876731.jpg" alt="Legends: Men of Falcon" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/butt/butt-22.jpg" alt="BUTT Magazine #22" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Falcon Studios</p>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #22</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2011</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Legends: Men of Falcon</p>
+            
+<a href="/books/tissue_tissue-magazine-n1_1774/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Bruno Gmünder Verlag &middot; 2004</p>
+            <img src="/assets/images/magazines/tissue/tissue-1.jpg" alt="Tissue Magazine N°1" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Tissue Magazine</div>
+    
+    <div class="collection-book-title">Tissue Magazine N°1</div>
+    
+        <div class="collection-book-meta">2011</div>
+    
 </a>
 
         
             
-<a href="/books/von-berg_kingdome-19-universal_2402/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/hardy_frank-peter-john-dick_1890/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/von_berg_henning_kingdome_19_universal_9783861876557.jpg" alt="Kingdome 19 Universal" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/hardy_k8_frank_peter_john_dick_9780982209028.jpg" alt="Frank Peter John Dick" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Henning von Berg</p>
+    
+        <div class="collection-book-author">K8 Hardy</div>
+    
+    <div class="collection-book-title">Frank Peter John Dick</div>
+    
+        <div class="collection-book-meta">Capricious &middot; 2011</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Kingdome 19 Universal</p>
+            
+<a href="/books/states_cruising_2188/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Bruno Gmünder Verlag &middot; 2004</p>
+            <img src="/assets/images/books/states_chad_cruising_9781576875834.jpg" alt="Cruising" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Chad States</div>
+    
+    <div class="collection-book-title">Cruising</div>
+    
+        <div class="collection-book-meta">powerHouse Books &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-5_1695/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/butt_butt-magazine-19_1709/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-5.jpg" alt="BUTT Magazine #5" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/butt/butt-19.jpg" alt="BUTT Magazine #19" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #19</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2010</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #5</p>
+            
+<a href="/books/butt_butt-magazine-20_1710/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2003</p>
+            <img src="/assets/images/magazines/butt/butt-20.jpg" alt="BUTT Magazine #20" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #20</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-6_1696/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/pierson_jack-pierson-its-not-dark-yet-galerie-thaddaeus-ropac_1964/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-6.jpg" alt="BUTT Magazine #6" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/pierson_jack_ropac_noisbn.jpg" alt="Jack Pierson: It&#39;s Not Dark Yet (Galerie Thaddaeus Ropac)" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">Jack Pierson</div>
+    
+    <div class="collection-book-title">Jack Pierson: It&#39;s Not Dark Yet (Galerie Thaddaeus Ropac)</div>
+    
+        <div class="collection-book-meta">Galerie Thaddaeus Ropac &middot; 2010</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #6</p>
+            
+<a href="/books/butt_butt-magazine-17_1707/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2003</p>
+            <img src="/assets/images/magazines/butt/butt-17.jpg" alt="BUTT Magazine #17" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #17</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/ed_idea-kutt-magazine-the-book_1813/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/butt_butt-magazine-18_1708/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Jessica_Gysel_Ed_IDEA_KUTT_Magazine_The_Book.jpg" alt="IDEA - KUTT Magazine (The Book)" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/butt/butt-18.jpg" alt="BUTT Magazine #18" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jessica Gysel (Ed.)</p>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #18</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2009</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">IDEA - KUTT Magazine (The Book)</p>
+            
+<a href="/books/kost_love-hate-nature_1956/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">IDEA &middot; 2003</p>
+            <img src="/assets/images/books/kost_jeremy_love_hate_nature_noisbn.jpg" alt="Love... Hate... Nature." loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Jeremy Kost</div>
+    
+    <div class="collection-book-title">Love... Hate... Nature.</div>
+    
+        <div class="collection-book-meta">International Center of Photography &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-3_1693/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/butt_butt-magazine-15_1705/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-3.jpg" alt="BUTT Magazine #3" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/butt/butt-15.jpg" alt="BUTT Magazine #15" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #15</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2008</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #3</p>
+            
+<a href="/books/butt_butt-magazine-16_1706/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2002</p>
+            <img src="/assets/images/magazines/butt/butt-16.jpg" alt="BUTT Magazine #16" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #16</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2008</div>
+    
 </a>
 
         
             
-<a href="/books/butt_butt-magazine-4_1694/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/weiermair_treasures-of-gay-art-from-the-leslielohman-gay-art-foundation_1966/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/butt/butt-4.jpg" alt="BUTT Magazine #4" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/weiermair_treasures_of_gay_art_9783900361020.jpg" alt="Treasures of Gay Art from the Leslie/Lohman Gay Art Foundation" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">BUTT Magazine</p>
+    
+        <div class="collection-book-author">Peter Weiermair</div>
+    
+    <div class="collection-book-title">Treasures of Gay Art from the Leslie/Lohman Gay Art Foundation</div>
+    
+        <div class="collection-book-meta">All Saints Press &middot; 2008</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">BUTT Magazine #4</p>
+            
+<a href="/books/pierre-et-gilles_pierre-et-gilles-double-je-1976-2007_878/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">BUTT Publications &middot; 2002</p>
+            <img src="/assets/images/books/pierre_et_gilles_taschen_9783822846506.jpg" alt="Pierre et Gilles: Double Je, 1976–2007" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Pierre et Gilles</div>
+    
+    <div class="collection-book-title">Pierre et Gilles: Double Je, 1976–2007</div>
+    
+        <div class="collection-book-meta">Taschen &middot; 2007</div>
+    
 </a>
 
         
             
-<a href="/books/bianchi_on-the-couch-volume-one_2404/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/butt_butt-magazine-13_1703/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/bianchi_tom_on_the_couch_volume_one_9783861872399.jpg" alt="On the Couch: Volume One" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/butt/butt-13.jpg" alt="BUTT Magazine #13" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tom Bianchi</p>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #13</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2007</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">On the Couch: Volume One</p>
+            
+<a href="/books/butt_butt-magazine-14_1704/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Bruno Gmünder &middot; 2002</p>
+            <img src="/assets/images/magazines/butt/butt-14.jpg" alt="BUTT Magazine #14" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #14</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2007</div>
+    
 </a>
 
         
             
-<a href="/books/pierson_jack-pierson_1854/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/butt_butt-magazine-11_1701/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/pierson_jack_jack-pierson_1854.jpg" alt="Jack Pierson" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/butt/butt-11.jpg" alt="BUTT Magazine #11" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Pierson</p>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #11</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2006</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Jack Pierson</p>
+            
+<a href="/books/butt_butt-magazine-12_1702/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Photology &middot; 2001</p>
+            <img src="/assets/images/magazines/butt/butt-12.jpg" alt="BUTT Magazine #12" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #12</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2006</div>
+    
 </a>
 
         
             
-<a href="/books/roberts_the-wild-ones-the-erotic-photography-of-mel-roberts_1954/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/butt_butt-magazine-9_1699/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/roberts_mel_the_wild_ones_9781883923501.jpg" alt="The Wild Ones: The Erotic Photography of Mel Roberts" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/butt/butt-9.jpg" alt="BUTT Magazine #9" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mel Roberts</p>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #9</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2005</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Wild Ones: The Erotic Photography of Mel Roberts</p>
+            
+<a href="/books/butt_butt-magazine-10_1700/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">FotoFactory Press &middot; 2001</p>
+            <img src="/assets/images/magazines/butt/butt-10.jpg" alt="BUTT Magazine #10" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #10</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2005</div>
+    
 </a>
 
         
             
-<a href="/books/jacobson_bill-jacobson-1989-1997_1944/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/herrmann_toscana_1957/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/jacobson_bill_1989_1997_9780944092484.jpg" alt="Bill Jacobson: 1989-1997" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/herrmann_matthias_toscana_9780894390197.jpg" alt="Toscana" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Bill Jacobson</p>
+    
+        <div class="collection-book-author">Matthias Herrmann</div>
+    
+    <div class="collection-book-title">Toscana</div>
+    
+        <div class="collection-book-meta">Printed Matter, Inc. &middot; 2005</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Bill Jacobson: 1989-1997</p>
+            
+<a href="/books/butt_butt-magazine-7_1697/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Twin Palms Publishers &middot; 1998</p>
+            <img src="/assets/images/magazines/butt/butt-7.jpg" alt="BUTT Magazine #7" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #7</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2004</div>
+    
 </a>
 
         
             
-<a href="/books/probst_porne-grafik_1963/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/butt_butt-magazine-8_1698/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/probst_ken_pornography_9780944092521.jpg" alt="(pôr&#39;nə-graf&#39;ik)" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/butt/butt-8.jpg" alt="BUTT Magazine #8" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ken Probst</p>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #8</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2004</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">(pôr&#39;nə-graf&#39;ik)</p>
+            
+<a href="/books/larue_chi-chi-larues-live-and-raw_1953/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Twin Palms Publishers &middot; 1998</p>
+            <img src="/assets/images/books/larue_chi_chi_live_and_raw_9783861873853.jpg" alt="Chi Chi LaRue&#39;s Live and Raw" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Chi Chi LaRue</div>
+    
+    <div class="collection-book-title">Chi Chi LaRue&#39;s Live and Raw</div>
+    
+        <div class="collection-book-meta">Bruno Gmünder Verlag &middot; 2004</div>
+    
 </a>
 
         
             
-<a href="/books/tom-of-finland_tom-of-finland-the-art-of-pleasure_2388/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/falcon-studios_legends-men-of-falcon_1955/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/tom_of_finland_tom_of_finland_the_art_of_pleasure_9783822885987.jpg" alt="Tom of Finland: The Art of Pleasure" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/falcon_legends_men_of_falcon_9783861876731.jpg" alt="Legends: Men of Falcon" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tom of Finland</p>
+    
+        <div class="collection-book-author">Falcon Studios</div>
+    
+    <div class="collection-book-title">Legends: Men of Falcon</div>
+    
+        <div class="collection-book-meta">Bruno Gmünder Verlag &middot; 2004</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tom of Finland: The Art of Pleasure</p>
+            
+<a href="/books/von-berg_kingdome-19-universal_2402/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Taschen &middot; 1998</p>
+            <img src="/assets/images/books/von_berg_henning_kingdome_19_universal_9783861876557.jpg" alt="Kingdome 19 Universal" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Henning von Berg</div>
+    
+    <div class="collection-book-title">Kingdome 19 Universal</div>
+    
+        <div class="collection-book-meta">Bruno Gmünder Verlag &middot; 2004</div>
+    
 </a>
 
         
             
-<a href="/books/tillmans_wolfgang-tillmans_1135/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/butt_butt-magazine-5_1695/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/tillmans_wolfgang_wolfgang_tillmans_9783822888537.jpg" alt="Wolfgang Tillmans" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/butt/butt-5.jpg" alt="BUTT Magazine #5" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Wolfgang Tillmans</p>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #5</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2003</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Wolfgang Tillmans</p>
+            
+<a href="/books/butt_butt-magazine-6_1696/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Benedikt Taschen Verlag &middot; 1995</p>
+            <img src="/assets/images/magazines/butt/butt-6.jpg" alt="BUTT Magazine #6" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #6</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2003</div>
+    
 </a>
 
         
             
-<a href="/books/roscoe_queer-spirits-a-gay-mens-myth-book_2408/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/ed_idea-kutt-magazine-the-book_1813/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/roscoe_will_queer_spirits_9780807079386.jpg" alt="Queer Spirits: A Gay Men&#39;s Myth Book" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/Jessica_Gysel_Ed_IDEA_KUTT_Magazine_The_Book.jpg" alt="IDEA - KUTT Magazine (The Book)" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Will Roscoe</p>
+    
+        <div class="collection-book-author">Jessica Gysel (Ed.)</div>
+    
+    <div class="collection-book-title">IDEA - KUTT Magazine (The Book)</div>
+    
+        <div class="collection-book-meta">IDEA &middot; 2003</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Queer Spirits: A Gay Men&#39;s Myth Book</p>
+            
+<a href="/books/butt_butt-magazine-3_1693/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Beacon Press &middot; 1995</p>
+            <img src="/assets/images/magazines/butt/butt-3.jpg" alt="BUTT Magazine #3" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #3</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2002</div>
+    
 </a>
 
         
             
-<a href="/books/hujar_peter-hujar-a-retrospective_534/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/butt_butt-magazine-4_1694/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Peter_Hujar_A_Retrospective.jpg" alt="Peter Hujar: A Retrospective" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/magazines/butt/butt-4.jpg" alt="BUTT Magazine #4" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Hujar</p>
+    
+        <div class="collection-book-author">BUTT Magazine</div>
+    
+    <div class="collection-book-title">BUTT Magazine #4</div>
+    
+        <div class="collection-book-meta">BUTT Publications &middot; 2002</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Peter Hujar: A Retrospective</p>
+            
+<a href="/books/bianchi_on-the-couch-volume-one_2404/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Scalo &middot; 1994</p>
+            <img src="/assets/images/books/bianchi_tom_on_the_couch_volume_one_9783861872399.jpg" alt="On the Couch: Volume One" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Tom Bianchi</div>
+    
+    <div class="collection-book-title">On the Couch: Volume One</div>
+    
+        <div class="collection-book-meta">Bruno Gmünder &middot; 2002</div>
+    
 </a>
 
         
             
-<a href="/books/wojnarowicz_brush-fires-in-the-social-landscape_1815/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/pierson_jack-pierson_1854/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/wojnarowicz_david_brush_fires_in_the_social_landscape_0893815985.jpg" alt="Brush Fires in the Social Landscape" class="w-full h-full object-cover" loading="lazy">
+            <img src="/assets/images/books/pierson_jack_jack-pierson_1854.jpg" alt="Jack Pierson" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">David Wojnarowicz</p>
+    
+        <div class="collection-book-author">Jack Pierson</div>
+    
+    <div class="collection-book-title">Jack Pierson</div>
+    
+        <div class="collection-book-meta">Photology &middot; 2001</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Brush Fires in the Social Landscape</p>
+            
+<a href="/books/roberts_the-wild-ones-the-erotic-photography-of-mel-roberts_1954/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aperture Foundation &middot; 1994</p>
+            <img src="/assets/images/books/roberts_mel_the_wild_ones_9781883923501.jpg" alt="The Wild Ones: The Erotic Photography of Mel Roberts" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Mel Roberts</div>
+    
+    <div class="collection-book-title">The Wild Ones: The Erotic Photography of Mel Roberts</div>
+    
+        <div class="collection-book-meta">FotoFactory Press &middot; 2001</div>
+    
 </a>
 
         
             
-<a href="/books/silano_i-wish-i-never-saw-the-sunshine_1066/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/jacobson_bill-jacobson-1989-1997_1944/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+            <img src="/assets/images/books/jacobson_bill_1989_1997_9780944092484.jpg" alt="Bill Jacobson: 1989-1997" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Pacifico Silano</p>
+    
+        <div class="collection-book-author">Bill Jacobson</div>
+    
+    <div class="collection-book-title">Bill Jacobson: 1989-1997</div>
+    
+        <div class="collection-book-meta">Twin Palms Publishers &middot; 1998</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">I Wish I Never Saw the Sunshine.</p>
+            
+<a href="/books/probst_porne-grafik_1963/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Loose Joints &middot; 2021</p>
+            <img src="/assets/images/books/probst_ken_pornography_9780944092521.jpg" alt="(pôr&#39;nə-graf&#39;ik)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Ken Probst</div>
+    
+    <div class="collection-book-title">(pôr&#39;nə-graf&#39;ik)</div>
+    
+        <div class="collection-book-meta">Twin Palms Publishers &middot; 1998</div>
+    
 </a>
 
         
             
-<a href="/books/gupta_lovers-ten-tears-on_462/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/tom-of-finland_tom-of-finland-the-art-of-pleasure_2388/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+            <img src="/assets/images/books/tom_of_finland_tom_of_finland_the_art_of_pleasure_9783822885987.jpg" alt="Tom of Finland: The Art of Pleasure" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Sunil Gupta</p>
+    
+        <div class="collection-book-author">Tom of Finland</div>
+    
+    <div class="collection-book-title">Tom of Finland: The Art of Pleasure</div>
+    
+        <div class="collection-book-meta">Taschen &middot; 1998</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Lovers Ten Tears On</p>
+            
+<a href="/books/tillmans_wolfgang-tillmans_1135/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Stanley Barker &middot; 2020</p>
+            <img src="/assets/images/books/tillmans_wolfgang_wolfgang_tillmans_9783822888537.jpg" alt="Wolfgang Tillmans" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Wolfgang Tillmans</div>
+    
+    <div class="collection-book-title">Wolfgang Tillmans</div>
+    
+        <div class="collection-book-meta">Benedikt Taschen Verlag &middot; 1995</div>
+    
 </a>
 
         
             
-<a href="/books/hanson_two-years-of-bluto_500/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/roscoe_queer-spirits-a-gay-mens-myth-book_2408/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+            <img src="/assets/images/books/roscoe_will_queer_spirits_9780807079386.jpg" alt="Queer Spirits: A Gay Men&#39;s Myth Book" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Erik Hanson</p>
+    
+        <div class="collection-book-author">Will Roscoe</div>
+    
+    <div class="collection-book-title">Queer Spirits: A Gay Men&#39;s Myth Book</div>
+    
+        <div class="collection-book-meta">Beacon Press &middot; 1995</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Two Years of Bluto</p>
+            
+<a href="/books/hujar_peter-hujar-a-retrospective_534/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Marlborough Gallery Inc &middot; 2019</p>
+            <img src="/assets/images/books/Peter_Hujar_A_Retrospective.jpg" alt="Peter Hujar: A Retrospective" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Peter Hujar</div>
+    
+    <div class="collection-book-title">Peter Hujar: A Retrospective</div>
+    
+        <div class="collection-book-meta">Scalo &middot; 1994</div>
+    
 </a>
 
         
             
-<a href="/books/wojnarowicz_david-wojnarowicz_1259/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/wojnarowicz_brush-fires-in-the-social-landscape_1815/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+            <img src="/assets/images/books/wojnarowicz_david_brush_fires_in_the_social_landscape_0893815985.jpg" alt="Brush Fires in the Social Landscape" loading="lazy">
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">David Wojnarowicz</p>
+    
+        <div class="collection-book-author">David Wojnarowicz</div>
+    
+    <div class="collection-book-title">Brush Fires in the Social Landscape</div>
+    
+        <div class="collection-book-meta">Aperture Foundation &middot; 1994</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">David Wojnarowicz</p>
+            
+<a href="/books/silano_i-wish-i-never-saw-the-sunshine_1066/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Whitney/Yale &middot; 2018</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Pacifico Silano</div>
+    
+    <div class="collection-book-title">I Wish I Never Saw the Sunshine.</div>
+    
+        <div class="collection-book-meta">Loose Joints &middot; 2021</div>
+    
 </a>
 
         
             
-<a href="/books/silano_tear-sheets_1067/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/gupta_lovers-ten-tears-on_462/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+            <span class="no-cover">No cover</span>
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Pacifico Silano</p>
+    
+        <div class="collection-book-author">Sunil Gupta</div>
+    
+    <div class="collection-book-title">Lovers Ten Tears On</div>
+    
+        <div class="collection-book-meta">Stanley Barker &middot; 2020</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tear Sheets</p>
+            
+<a href="/books/hanson_two-years-of-bluto_500/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Silent Face Projects with Dashwood Books &middot; 2016</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Erik Hanson</div>
+    
+    <div class="collection-book-title">Two Years of Bluto</div>
+    
+        <div class="collection-book-meta">Marlborough Gallery Inc &middot; 2019</div>
+    
 </a>
 
         
             
-<a href="/books/brinkerhoff_dear-martin_160/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/wojnarowicz_david-wojnarowicz_1259/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+            <span class="no-cover">No cover</span>
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jason Brinkerhoff</p>
+    
+        <div class="collection-book-author">David Wojnarowicz</div>
+    
+    <div class="collection-book-title">David Wojnarowicz</div>
+    
+        <div class="collection-book-meta">Whitney/Yale &middot; 2018</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Dear Martin</p>
+            
+<a href="/books/silano_tear-sheets_1067/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ampersand Gallery &middot; 2015</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Pacifico Silano</div>
+    
+    <div class="collection-book-title">Tear Sheets</div>
+    
+        <div class="collection-book-meta">Silent Face Projects with Dashwood Books &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/carland_some-of-us-did-not-die_200/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/brinkerhoff_dear-martin_160/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
+            <span class="no-cover">No cover</span>
         
     </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tammy Rae Carland</p>
+    
+        <div class="collection-book-author">Jason Brinkerhoff</div>
+    
+    <div class="collection-book-title">Dear Martin</div>
+    
+        <div class="collection-book-meta">Ampersand Gallery &middot; 2015</div>
+    
+</a>
+
         
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Some of Us Did Not Die</p>
+            
+<a href="/books/carland_some-of-us-did-not-die_200/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tammy Rae Carland &amp; Land and Sea &middot; 2015</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Tammy Rae Carland</div>
+    
+    <div class="collection-book-title">Some of Us Did Not Die</div>
+    
+        <div class="collection-book-meta">Tammy Rae Carland &amp; Land and Sea &middot; 2015</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 

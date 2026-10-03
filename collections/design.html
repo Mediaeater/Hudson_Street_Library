@@ -311,688 +311,879 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+    
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Design</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Design.”</p>
+            <div class="collection-eyebrow">Mediums
+            </div>
+            <h1 class="collection-title">Design</h1>
+            
+                <p class="collection-description">Every book in the library tagged “Design.”</p>
+            
+            <div class="collection-count">34 books</div>
+            
+            
             
             
         </div>
-        
 
-        
-        
-            
-        
         
 
         
             
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
-        
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<section class="collection-section">
+    
+    <div class="collection-books">
         
             
-<a href="/books/adamson_postmodernism-style-and-subversion-1970-1990_2098/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/adamson_postmodernism-style-and-subversion-1970-1990_2098/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/adamson_glenn_postmodernism_style_and_subversion_1970_1990_9781851776597.jpg" alt="Postmodernism: Style and Subversion 1970–1990" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Glenn Adamson, Jane Pavitt</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Postmodernism: Style and Subversion 1970–1990</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">V&amp;A Publishing &middot; 2011</p>
+            <img src="/assets/images/books/adamson_glenn_postmodernism_style_and_subversion_1970_1990_9781851776597.jpg" alt="Postmodernism: Style and Subversion 1970–1990" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Glenn Adamson, Jane Pavitt</div>
+    
+    <div class="collection-book-title">Postmodernism: Style and Subversion 1970–1990</div>
+    
+        <div class="collection-book-meta">V&amp;A Publishing &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/bass_saul-bass-a-life-in-film-and-design_1979/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/bass_saul-bass-a-life-in-film-and-design_1979/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Saul_Bass_Saul_Bass_A_Life_in_Film_and_Design_9781856697521.jpg" alt="Saul Bass: A Life in Film and Design" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Saul Bass</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Saul Bass: A Life in Film and Design</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Laurence King Publishing &middot; 2011</p>
+            <img src="/assets/images/books/Saul_Bass_Saul_Bass_A_Life_in_Film_and_Design_9781856697521.jpg" alt="Saul Bass: A Life in Film and Design" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Saul Bass</div>
+    
+    <div class="collection-book-title">Saul Bass: A Life in Film and Design</div>
+    
+        <div class="collection-book-meta">Laurence King Publishing &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/bellini_usa-1972_1729/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/bellini_usa-1972_1729/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/bellini_mario_usa_1972_9788899385002.jpg" alt="USA 1972" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mario Bellini</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">USA 1972</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Humboldt Books &middot; 2015</p>
+            <img src="/assets/images/books/bellini_mario_usa_1972_9788899385002.jpg" alt="USA 1972" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Mario Bellini</div>
+    
+    <div class="collection-book-title">USA 1972</div>
+    
+        <div class="collection-book-meta">Humboldt Books &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/bergdoll_bauhaus-1919-1933-workshops-for-modernity_2085/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/bergdoll_bauhaus-1919-1933-workshops-for-modernity_2085/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/bergdoll_barry_bauhaus_1919_1933_workshops_for_modernity_9780870707582.jpg" alt="Bauhaus 1919–1933: Workshops for Modernity" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Barry Bergdoll</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Bauhaus 1919–1933: Workshops for Modernity</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Museum of Modern Art &middot; 2009</p>
+            <img src="/assets/images/books/bergdoll_barry_bauhaus_1919_1933_workshops_for_modernity_9780870707582.jpg" alt="Bauhaus 1919–1933: Workshops for Modernity" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Barry Bergdoll</div>
+    
+    <div class="collection-book-title">Bauhaus 1919–1933: Workshops for Modernity</div>
+    
+        <div class="collection-book-meta">The Museum of Modern Art &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/blackshaw_scrawl-too-more-dirt_2110/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/blackshaw_scrawl-too-more-dirt_2110/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/blackshaw_ric_scrawl_too_more_dirt_9781861542137.jpg" alt="Scrawl Too: More Dirt" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ric Blackshaw, Liz Farrelly</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Scrawl Too: More Dirt</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Booth-Clibborn Editions &middot; 2001</p>
+            <img src="/assets/images/books/blackshaw_ric_scrawl_too_more_dirt_9781861542137.jpg" alt="Scrawl Too: More Dirt" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Ric Blackshaw, Liz Farrelly</div>
+    
+    <div class="collection-book-title">Scrawl Too: More Dirt</div>
+    
+        <div class="collection-book-meta">Booth-Clibborn Editions &middot; 2001</div>
+    
 </a>
 
         
             
-<a href="/books/brown_reynold-brown-a-life-in-pictures_1983/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/brown_reynold-brown-a-life-in-pictures_1983/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Reynold_Brown_Reynold_Brown_A_Life_in_Pictures_9780982004128.jpg" alt="Reynold Brown: A Life in Pictures" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Reynold Brown</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Reynold Brown: A Life in Pictures</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Illustrated Press &middot; 2009</p>
+            <img src="/assets/images/books/Reynold_Brown_Reynold_Brown_A_Life_in_Pictures_9780982004128.jpg" alt="Reynold Brown: A Life in Pictures" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Reynold Brown</div>
+    
+    <div class="collection-book-title">Reynold Brown: A Life in Pictures</div>
+    
+        <div class="collection-book-meta">The Illustrated Press &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/busch_the-age-of-collage-2-contemporary-collage-in-modern-art_1871/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/busch_the-age-of-collage-2-contemporary-collage-in-modern-art_1871/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/busch_dennis_the_age_of_collage_2_contemporary_collage_in_modern_art_9783899555837.jpg" alt="The Age of Collage 2: Contemporary Collage in Modern Art" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Dennis Busch</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Age of Collage 2: Contemporary Collage in Modern Art</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gestalten &middot; 2016</p>
+            <img src="/assets/images/books/busch_dennis_the_age_of_collage_2_contemporary_collage_in_modern_art_9783899555837.jpg" alt="The Age of Collage 2: Contemporary Collage in Modern Art" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Dennis Busch</div>
+    
+    <div class="collection-book-title">The Age of Collage 2: Contemporary Collage in Modern Art</div>
+    
+        <div class="collection-book-meta">Gestalten &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/busch_the-age-of-collage-3-contemporary-collage-in-modern-art_1872/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/busch_the-age-of-collage-3-contemporary-collage-in-modern-art_1872/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/busch_dennis_the_age_of_collage_3_contemporary_collage_in_modern_art_9783899551105.jpg" alt="The Age of Collage 3: Contemporary Collage in Modern Art" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Dennis Busch</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Age of Collage 3: Contemporary Collage in Modern Art</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gestalten &middot; 2020</p>
+            <img src="/assets/images/books/busch_dennis_the_age_of_collage_3_contemporary_collage_in_modern_art_9783899551105.jpg" alt="The Age of Collage 3: Contemporary Collage in Modern Art" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Dennis Busch</div>
+    
+    <div class="collection-book-title">The Age of Collage 3: Contemporary Collage in Modern Art</div>
+    
+        <div class="collection-book-meta">Gestalten &middot; 2020</div>
+    
 </a>
 
         
             
-<a href="/books/busch_the-age-of-collage-contemporary-collage-in-modern-art_1870/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/busch_the-age-of-collage-contemporary-collage-in-modern-art_1870/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/busch_dennis_the_age_of_collage_contemporary_collage_in_modern_art_9783899554830.jpg" alt="The Age of Collage: Contemporary Collage in Modern Art" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Dennis Busch</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Age of Collage: Contemporary Collage in Modern Art</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gestalten &middot; 2013</p>
+            <img src="/assets/images/books/busch_dennis_the_age_of_collage_contemporary_collage_in_modern_art_9783899554830.jpg" alt="The Age of Collage: Contemporary Collage in Modern Art" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Dennis Busch</div>
+    
+    <div class="collection-book-title">The Age of Collage: Contemporary Collage in Modern Art</div>
+    
+        <div class="collection-book-meta">Gestalten &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/heller_merz-to-emigre-and-beyond-avant-garde-magazine-design-of-the-twentieth-century_2088/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/heller_merz-to-emigre-and-beyond-avant-garde-magazine-design-of-the-twentieth-century_2088/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/heller_steven_merz_to_emigre_and_beyond_9780714839271.jpg" alt="Merz to Emigre and Beyond: Avant-Garde Magazine Design of the Twentieth Century" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Steven Heller</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Merz to Emigre and Beyond: Avant-Garde Magazine Design of the Twentieth Century</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press &middot; 2003</p>
+            <img src="/assets/images/books/heller_steven_merz_to_emigre_and_beyond_9780714839271.jpg" alt="Merz to Emigre and Beyond: Avant-Garde Magazine Design of the Twentieth Century" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Steven Heller</div>
+    
+    <div class="collection-book-title">Merz to Emigre and Beyond: Avant-Garde Magazine Design of the Twentieth Century</div>
+    
+        <div class="collection-book-meta">Phaidon Press &middot; 2003</div>
+    
 </a>
 
         
             
-<a href="/books/karl_arabic-graffiti_2113/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/karl_arabic-graffiti_2113/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/karl_don_arabic_graffiti_9783937946269.jpg" alt="Arabic Graffiti" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Don Karl, Pascal Zoghbi</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Arabic Graffiti</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">From Here to Fame Publishing &middot; 2011</p>
+            <img src="/assets/images/books/karl_don_arabic_graffiti_9783937946269.jpg" alt="Arabic Graffiti" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Don Karl, Pascal Zoghbi</div>
+    
+    <div class="collection-book-title">Arabic Graffiti</div>
+    
+        <div class="collection-book-meta">From Here to Fame Publishing &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/king_red-star-over-russia-a-visual-history-of-the-soviet-union-from-the-revolution-to-the-death-of-stalin_2099/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/king_red-star-over-russia-a-visual-history-of-the-soviet-union-from-the-revolution-to-the-death-of-stalin_2099/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/king_david_red_star_over_russia_9780810982796.jpg" alt="Red Star Over Russia: A Visual History of the Soviet Union from the Revolution to the Death of Stalin" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">David King</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Red Star Over Russia: A Visual History of the Soviet Union from the Revolution to the Death of Stalin</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Abrams &middot; 2009</p>
+            <img src="/assets/images/books/king_david_red_star_over_russia_9780810982796.jpg" alt="Red Star Over Russia: A Visual History of the Soviet Union from the Revolution to the Death of Stalin" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">David King</div>
+    
+    <div class="collection-book-title">Red Star Over Russia: A Visual History of the Soviet Union from the Revolution to the Death of Stalin</div>
+    
+        <div class="collection-book-meta">Abrams &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/klanten_cutting-edges-contemporary-collage_1869/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/klanten_cutting-edges-contemporary-collage_1869/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/klanten_robert_cutting_edges_contemporary_collage_9783899553383.jpg" alt="Cutting Edges: Contemporary Collage" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Robert Klanten</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cutting Edges: Contemporary Collage</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gestalten &middot; 2011</p>
+            <img src="/assets/images/books/klanten_robert_cutting_edges_contemporary_collage_9783899553383.jpg" alt="Cutting Edges: Contemporary Collage" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Robert Klanten</div>
+    
+    <div class="collection-book-title">Cutting Edges: Contemporary Collage</div>
+    
+        <div class="collection-book-meta">Gestalten &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/klanten_trigger_2114/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/klanten_trigger_2114/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/klanten_robert_trigger_9783931126216.jpg" alt="Trigger" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Robert Klanten, Hendrik Hellige, Michael Mischler</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Trigger</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Die Gestalten Verlag &middot; 1999</p>
+            <img src="/assets/images/books/klanten_robert_trigger_9783931126216.jpg" alt="Trigger" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Robert Klanten, Hendrik Hellige, Michael Mischler</div>
+    
+    <div class="collection-book-title">Trigger</div>
+    
+        <div class="collection-book-meta">Die Gestalten Verlag &middot; 1999</div>
+    
 </a>
 
         
             
-<a href="/books/leslie_board-surfskatesnow-graphics_2125/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/leslie_board-surfskatesnow-graphics_2125/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/leslie_jeremy_board_surf_skate_snow_graphics_9781856693738.jpg" alt="Board: Surf/Skate/Snow Graphics" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jeremy Leslie, Patrick Burgoyne</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Board: Surf/Skate/Snow Graphics</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Laurence King / Harper Design &middot; 2003</p>
+            <img src="/assets/images/books/leslie_jeremy_board_surf_skate_snow_graphics_9781856693738.jpg" alt="Board: Surf/Skate/Snow Graphics" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Jeremy Leslie, Patrick Burgoyne</div>
+    
+    <div class="collection-book-title">Board: Surf/Skate/Snow Graphics</div>
+    
+        <div class="collection-book-meta">Laurence King / Harper Design &middot; 2003</div>
+    
 </a>
 
         
             
-<a href="/books/lippy_modern-artifacts_2117/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/lippy_modern-artifacts_2117/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/lippy_tod_modern_artifacts_9780989911771.jpg" alt="Modern Artifacts" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tod Lippy</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Modern Artifacts</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Esopus Books &middot; 2020</p>
+            <img src="/assets/images/books/lippy_tod_modern_artifacts_9780989911771.jpg" alt="Modern Artifacts" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Tod Lippy</div>
+    
+    <div class="collection-book-title">Modern Artifacts</div>
+    
+        <div class="collection-book-meta">Esopus Books &middot; 2020</div>
+    
 </a>
 
         
             
-<a href="/books/lupano_fashion-at-the-time-of-fascism-italian-modernist-lifestyle-1922-1943_2101/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/lupano_fashion-at-the-time-of-fascism-italian-modernist-lifestyle-1922-1943_2101/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/lupano_mario_fashion_at_the_time_of_fascism_9788862080514.jpg" alt="Fashion at the Time of Fascism: Italian Modernist Lifestyle 1922–1943" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mario Lupano, Alessandra Vaccari</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Fashion at the Time of Fascism: Italian Modernist Lifestyle 1922–1943</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Damiani &middot; 2009</p>
+            <img src="/assets/images/books/lupano_mario_fashion_at_the_time_of_fascism_9788862080514.jpg" alt="Fashion at the Time of Fascism: Italian Modernist Lifestyle 1922–1943" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Mario Lupano, Alessandra Vaccari</div>
+    
+    <div class="collection-book-title">Fashion at the Time of Fascism: Italian Modernist Lifestyle 1922–1943</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/manco_stencil-graffiti_2076/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/manco_stencil-graffiti_2076/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/manco_tristan_stencil_graffiti_9780500283424.jpg" alt="Stencil Graffiti" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tristan Manco</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Stencil Graffiti</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Thames &amp; Hudson &middot; 2002</p>
+            <img src="/assets/images/books/manco_tristan_stencil_graffiti_9780500283424.jpg" alt="Stencil Graffiti" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Tristan Manco</div>
+    
+    <div class="collection-book-title">Stencil Graffiti</div>
+    
+        <div class="collection-book-meta">Thames &amp; Hudson &middot; 2002</div>
+    
 </a>
 
         
             
-<a href="/books/matheu_creem-americas-only-rock-n-roll-magazine_1510/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matheu_creem-americas-only-rock-n-roll-magazine_1510/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/music-books/creem-magazine.jpg" alt="CREEM: America&#39;s Only Rock &#39;N&#39; Roll Magazine" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Matheu Robert</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">CREEM: America&#39;s Only Rock &#39;N&#39; Roll Magazine</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Collins Design &middot; 2007</p>
+            <img src="/assets/images/music-books/creem-magazine.jpg" alt="CREEM: America&#39;s Only Rock &#39;N&#39; Roll Magazine" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Matheu Robert</div>
+    
+    <div class="collection-book-title">CREEM: America&#39;s Only Rock &#39;N&#39; Roll Magazine</div>
+    
+        <div class="collection-book-meta">Collins Design &middot; 2007</div>
+    
 </a>
 
         
             
-<a href="/books/mckimm_prototype-issue-0_2358/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/mckimm_prototype-issue-0_2358/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/mckimm_alastair_prototype-issue-0_2358.jpg" alt="PROTOTYPE ISSUE 0" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Alastair McKimm</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">PROTOTYPE ISSUE 0</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">IDEA / PROTOTYPE &middot; 2026</p>
+            <img src="/assets/images/books/mckimm_alastair_prototype-issue-0_2358.jpg" alt="PROTOTYPE ISSUE 0" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Alastair McKimm</div>
+    
+    <div class="collection-book-title">PROTOTYPE ISSUE 0</div>
+    
+        <div class="collection-book-meta">IDEA / PROTOTYPE &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/meredith_public-spaces-ny_1680/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/meredith_public-spaces-ny_1680/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Meredith_Public_Spaces_NY_978_3_03860_434_1.jpg" alt="Public Spaces NY" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Michael Meredith and Hilary Sample (MOS)</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Public Spaces NY</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Park Books &middot; 2025</p>
+            <img src="/assets/images/books/Meredith_Public_Spaces_NY_978_3_03860_434_1.jpg" alt="Public Spaces NY" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Michael Meredith and Hilary Sample (MOS)</div>
+    
+    <div class="collection-book-title">Public Spaces NY</div>
+    
+        <div class="collection-book-meta">Park Books &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/meredith_vacant-spaces-ny_1197/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/meredith_vacant-spaces-ny_1197/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Meredith_Vacant_Spaces_NY_978_1_94876_599_2.jpg" alt="Vacant Spaces NY" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Michael Meredith and Hilary Sample (MOS)</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Vacant Spaces NY</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Actar Publishers &middot; 2021</p>
+            <img src="/assets/images/books/Meredith_Vacant_Spaces_NY_978_1_94876_599_2.jpg" alt="Vacant Spaces NY" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Michael Meredith and Hilary Sample (MOS)</div>
+    
+    <div class="collection-book-title">Vacant Spaces NY</div>
+    
+        <div class="collection-book-meta">Actar Publishers &middot; 2021</div>
+    
 </a>
 
         
             
-<a href="/books/metzger_berlin-the-twenties_2090/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/metzger_berlin-the-twenties_2090/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/metzger_rainer_berlin_the_twenties_9780810993297.jpg" alt="Berlin: The Twenties" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Rainer Metzger</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Berlin: The Twenties</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Abrams &middot; 2007</p>
+            <img src="/assets/images/books/metzger_rainer_berlin_the_twenties_9780810993297.jpg" alt="Berlin: The Twenties" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Rainer Metzger</div>
+    
+    <div class="collection-book-title">Berlin: The Twenties</div>
+    
+        <div class="collection-book-meta">Abrams &middot; 2007</div>
+    
 </a>
 
         
             
-<a href="/books/morgan_static-magic-first-edition-second-printing-current-editions-no-10_1739/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/morgan_static-magic-first-edition-second-printing-current-editions-no-10_1739/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/morgan_paul_static_magic_current_editions_no_10.jpg" alt="Static Magic [First Edition / Second Printing]: Current Editions No. 10" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Paul Morgan</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Static Magic [First Edition / Second Printing]: Current Editions No. 10</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Current Editions &middot; 2025</p>
+            <img src="/assets/images/books/morgan_paul_static_magic_current_editions_no_10.jpg" alt="Static Magic [First Edition / Second Printing]: Current Editions No. 10" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Paul Morgan</div>
+    
+    <div class="collection-book-title">Static Magic [First Edition / Second Printing]: Current Editions No. 10</div>
+    
+        <div class="collection-book-meta">Current Editions &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/moss_tertium-quid_779/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/moss_tertium-quid_779/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/moss_murray_tertium_quid_9780985995836.jpg" alt="Tertium Quid" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Murray Moss</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tertium Quid</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">August Editions &middot; 2014</p>
+            <img src="/assets/images/books/moss_murray_tertium_quid_9780985995836.jpg" alt="Tertium Quid" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Murray Moss</div>
+    
+    <div class="collection-book-title">Tertium Quid</div>
+    
+        <div class="collection-book-meta">August Editions &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/nakashima_the-soul-of-a-tree-a-woodworkers-reflections_2020/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/nakashima_the-soul-of-a-tree-a-woodworkers-reflections_2020/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/George_Nakashima_The_Soul_of_a_Tree_A_Woodworkers_Reflections_9780870114823.jpg" alt="The Soul of a Tree: A Woodworker&#39;s Reflections" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">George Nakashima</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Soul of a Tree: A Woodworker&#39;s Reflections</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Kodansha International &middot; 1981</p>
+            <img src="/assets/images/books/George_Nakashima_The_Soul_of_a_Tree_A_Woodworkers_Reflections_9780870114823.jpg" alt="The Soul of a Tree: A Woodworker&#39;s Reflections" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">George Nakashima</div>
+    
+    <div class="collection-book-title">The Soul of a Tree: A Woodworker&#39;s Reflections</div>
+    
+        <div class="collection-book-meta">Kodansha International &middot; 1981</div>
+    
 </a>
 
         
             
-<a href="/books/prelinger_another-science-fiction-advertising-the-space-race-1957-1962_2092/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/prelinger_another-science-fiction-advertising-the-space-race-1957-1962_2092/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/prelinger_megan_another_science_fiction_9780922233359.jpg" alt="Another Science Fiction: Advertising the Space Race 1957–1962" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Megan Prelinger</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Another Science Fiction: Advertising the Space Race 1957–1962</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Blast Books &middot; 2010</p>
+            <img src="/assets/images/books/prelinger_megan_another_science_fiction_9780922233359.jpg" alt="Another Science Fiction: Advertising the Space Race 1957–1962" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Megan Prelinger</div>
+    
+    <div class="collection-book-title">Another Science Fiction: Advertising the Space Race 1957–1962</div>
+    
+        <div class="collection-book-meta">Blast Books &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/purvis_hn-werkman_2102/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/purvis_hn-werkman_2102/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/purvis_alston_w_h_n_werkman_9780300102901.jpg" alt="H.N. Werkman" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Alston W. Purvis</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">H.N. Werkman</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Yale University Press &middot; 2004</p>
+            <img src="/assets/images/books/purvis_alston_w_h_n_werkman_9780300102901.jpg" alt="H.N. Werkman" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Alston W. Purvis</div>
+    
+    <div class="collection-book-title">H.N. Werkman</div>
+    
+        <div class="collection-book-meta">Yale University Press &middot; 2004</div>
+    
 </a>
 
         
             
-<a href="/books/ross_mythology-the-dc-comics-art-of-alex-ross_2091/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/ross_mythology-the-dc-comics-art-of-alex-ross_2091/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/ross_alex_mythology_the_dc_comics_art_of_alex_ross_9780375422409.jpg" alt="Mythology: The DC Comics Art of Alex Ross" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Alex Ross</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Mythology: The DC Comics Art of Alex Ross</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Pantheon Books &middot; 2003</p>
+            <img src="/assets/images/books/ross_alex_mythology_the_dc_comics_art_of_alex_ross_9780375422409.jpg" alt="Mythology: The DC Comics Art of Alex Ross" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Alex Ross</div>
+    
+    <div class="collection-book-title">Mythology: The DC Comics Art of Alex Ross</div>
+    
+        <div class="collection-book-meta">Pantheon Books &middot; 2003</div>
+    
 </a>
 
         
             
-<a href="/books/saville_designed-by-peter-saville_1020/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/saville_designed-by-peter-saville_1020/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/saville_peter_designed_by_peter_saville_9781568984223.jpg" alt="Designed by Peter Saville" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Saville</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Designed by Peter Saville</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Princeton Architectural Press &middot; 2003</p>
+            <img src="/assets/images/books/saville_peter_designed_by_peter_saville_9781568984223.jpg" alt="Designed by Peter Saville" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Peter Saville</div>
+    
+    <div class="collection-book-title">Designed by Peter Saville</div>
+    
+        <div class="collection-book-meta">Princeton Architectural Press &middot; 2003</div>
+    
 </a>
 
         
             
-<a href="/books/slanted_slanted-magazine-46cairo_1849/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/slanted_slanted-magazine-46cairo_1849/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/magazines/slanted/slanted-46-cairo.jpg" alt="Slanted Magazine #46—Cairo" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Slanted Publishers</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Slanted Magazine #46—Cairo</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Slanted Publishers &middot; 2025</p>
+            <img src="/assets/images/magazines/slanted/slanted-46-cairo.jpg" alt="Slanted Magazine #46—Cairo" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Slanted Publishers</div>
+    
+    <div class="collection-book-title">Slanted Magazine #46—Cairo</div>
+    
+        <div class="collection-book-meta">Slanted Publishers &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/weiner_of-and-about-posters-the-lawrence-weiner-poster-archive-1965-2021_1577/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/weiner_of-and-about-posters-the-lawrence-weiner-poster-archive-1965-2021_1577/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Lawrence_Weiner_Of_About_Posters_9783777443706.jpg" alt="Of &amp; About Posters: The Lawrence Weiner Poster Archive (1965-2021)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Lawrence Weiner</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Of &amp; About Posters: The Lawrence Weiner Poster Archive (1965-2021)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Vancouver Art Gallery &middot; 2021</p>
+            <img src="/assets/images/books/Lawrence_Weiner_Of_About_Posters_9783777443706.jpg" alt="Of &amp; About Posters: The Lawrence Weiner Poster Archive (1965-2021)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Lawrence Weiner</div>
+    
+    <div class="collection-book-title">Of &amp; About Posters: The Lawrence Weiner Poster Archive (1965-2021)</div>
+    
+        <div class="collection-book-meta">Vancouver Art Gallery &middot; 2021</div>
+    
 </a>
 
         
             
-<a href="/books/meindertsma_bottom-ash-observatory_739/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/meindertsma_bottom-ash-observatory_739/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Christien Meindertsma</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Bottom Ash Observatory</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Thomas Eyck &middot; 2015</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Christien Meindertsma</div>
+    
+    <div class="collection-book-title">Bottom Ash Observatory</div>
+    
+        <div class="collection-book-meta">Thomas Eyck &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/mott_kraftwerk-45-rpm_781/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/mott_kraftwerk-45-rpm_781/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Toby Mott</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Kraftwerk 45 RPM</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Vinyl Factory Publishing &middot; 2012</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Toby Mott</div>
+    
+    <div class="collection-book-title">Kraftwerk 45 RPM</div>
+    
+        <div class="collection-book-meta">Vinyl Factory Publishing &middot; 2012</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 

@@ -59,8 +59,8 @@
     {
       "@type": "ListItem",
       "position": 2,
-      "name": "Collections",
-      "item": "https://hudsonstreetlibrary.com/collection-explore.html"
+      "name": "Posters",
+      "item": "https://hudsonstreetlibrary.com/posters/"
     },
     {
       "@type": "ListItem",
@@ -311,441 +311,658 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+    
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Posters</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Posters.”</p>
+            <div class="collection-eyebrow"><a href="/posters/">Posters</a> &middot; Formats
+            </div>
+            <h1 class="collection-title">Posters</h1>
+            
+                <p class="collection-description">Every book in the library tagged “Posters.”</p>
+            
+            <div class="collection-count">21 items</div>
+            
+            
             
             
         </div>
-        
 
-        
-        
-            
-        
         
 
         
             
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
-        
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<section class="collection-section">
+    
+    <div class="collection-books">
         
             
-<a href="/books/bacon_francis-bacon-study-from-the-human-body-poster_80001/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/bacon_francis-bacon-study-from-the-human-body-poster_80001/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/bacon_francis_study-from-the-human-body-poster_80001.jpg" alt="Francis Bacon: Study from the Human Body Poster" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Francis Bacon</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Francis Bacon: Study from the Human Body Poster</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian &middot; 2026</p>
+            <img src="/assets/images/books/bacon_francis_study-from-the-human-body-poster_80001.jpg" alt="Francis Bacon: Study from the Human Body Poster" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Francis Bacon</div>
+    
+    <div class="collection-book-title">Francis Bacon: Study from the Human Body Poster</div>
+    
+        <div class="collection-book-meta">Gagosian &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/kaphar_titus-kaphar-analogous-colors-poster_80010/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/kaphar_titus-kaphar-analogous-colors-poster_80010/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/kaphar_titus_analogous-colors-poster_80010.jpg" alt="Titus Kaphar: Analogous Colors Poster" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Titus Kaphar</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Titus Kaphar: Analogous Colors Poster</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian &middot; 2021</p>
+            <img src="/assets/images/books/kaphar_titus_analogous-colors-poster_80010.jpg" alt="Titus Kaphar: Analogous Colors Poster" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Titus Kaphar</div>
+    
+    <div class="collection-book-title">Titus Kaphar: Analogous Colors Poster</div>
+    
+        <div class="collection-book-meta">Gagosian &middot; 2021</div>
+    
 </a>
 
         
             
-<a href="/books/picasso_picasso-and-marie-therese-lamour-fou-poster_80005/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/picasso_picasso-and-marie-therese-lamour-fou-poster_80005/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/picasso_pablo_lamour-fou-poster_80005.jpg" alt="Picasso and Marie-Thérèse: L&#39;amour fou Poster" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Pablo Picasso</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Picasso and Marie-Thérèse: L&#39;amour fou Poster</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian &middot; 2011</p>
+            <img src="/assets/images/books/picasso_pablo_lamour-fou-poster_80005.jpg" alt="Picasso and Marie-Thérèse: L&#39;amour fou Poster" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Pablo Picasso</div>
+    
+    <div class="collection-book-title">Picasso and Marie-Thérèse: L&#39;amour fou Poster</div>
+    
+        <div class="collection-book-meta">Gagosian &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/prince_richard-prince-bob-dylan-poster_80015/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/prince_richard-prince-bob-dylan-poster_80015/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/prince_richard_bob-dylan-poster_80015.jpg" alt="Richard Prince: Bob Dylan Poster" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Richard Prince: Bob Dylan Poster</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian &middot; 2025</p>
+            <img src="/assets/images/books/prince_richard_bob-dylan-poster_80015.jpg" alt="Richard Prince: Bob Dylan Poster" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Richard Prince</div>
+    
+    <div class="collection-book-title">Richard Prince: Bob Dylan Poster</div>
+    
+        <div class="collection-book-meta">Gagosian &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/prince_richard-prince-canal-zone-poster_80003/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/prince_richard-prince-canal-zone-poster_80003/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/prince_richard_canal-zone-poster_80003.jpg" alt="Richard Prince: Canal Zone Poster" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Richard Prince: Canal Zone Poster</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian &middot; 2014</p>
+            <img src="/assets/images/books/prince_richard_canal-zone-poster_80003.jpg" alt="Richard Prince: Canal Zone Poster" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Richard Prince</div>
+    
+    <div class="collection-book-title">Richard Prince: Canal Zone Poster</div>
+    
+        <div class="collection-book-meta">Gagosian &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/prince_richard-prince-early-photography-1977-87-poster_80007/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/prince_richard-prince-early-photography-1977-87-poster_80007/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/prince_richard_early-photography-poster_80007.jpg" alt="Richard Prince: Early Photography, 1977–87 Poster" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Richard Prince: Early Photography, 1977–87 Poster</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian &middot; 2023</p>
+            <img src="/assets/images/books/prince_richard_early-photography-poster_80007.jpg" alt="Richard Prince: Early Photography, 1977–87 Poster" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Richard Prince</div>
+    
+    <div class="collection-book-title">Richard Prince: Early Photography, 1977–87 Poster</div>
+    
+        <div class="collection-book-meta">Gagosian &middot; 2023</div>
+    
 </a>
 
         
             
-<a href="/books/prince_richard-prince-high-times-poster_80006/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/prince_richard-prince-high-times-poster_80006/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/prince_richard_high-times-poster_80006.jpg" alt="Richard Prince: High Times Poster" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Richard Prince: High Times Poster</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian &middot; 2018</p>
+            <img src="/assets/images/books/prince_richard_high-times-poster_80006.jpg" alt="Richard Prince: High Times Poster" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Richard Prince</div>
+    
+    <div class="collection-book-title">Richard Prince: High Times Poster</div>
+    
+        <div class="collection-book-meta">Gagosian &middot; 2018</div>
+    
 </a>
 
         
             
-<a href="/books/prince_richard-prince-hoods-poster_80008/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/prince_richard-prince-hoods-poster_80008/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/prince_richard_hoods-poster_80008.jpg" alt="Richard Prince: Hoods Poster" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Richard Prince: Hoods Poster</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian &middot; 2022</p>
+            <img src="/assets/images/books/prince_richard_hoods-poster_80008.jpg" alt="Richard Prince: Hoods Poster" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Richard Prince</div>
+    
+    <div class="collection-book-title">Richard Prince: Hoods Poster</div>
+    
+        <div class="collection-book-meta">Gagosian &middot; 2022</div>
+    
 </a>
 
         
             
-<a href="/books/ray_seeing-is-believing-lee-miller-and-friends-poster_80021/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/ray_seeing-is-believing-lee-miller-and-friends-poster_80021/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/ray_man_seeing-is-believing-poster_80021.jpg" alt="Seeing Is Believing: Lee Miller and Friends Poster" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Man Ray</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Seeing Is Believing: Lee Miller and Friends Poster</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian &middot; 2023</p>
+            <img src="/assets/images/books/ray_man_seeing-is-believing-poster_80021.jpg" alt="Seeing Is Believing: Lee Miller and Friends Poster" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Man Ray</div>
+    
+    <div class="collection-book-title">Seeing Is Believing: Lee Miller and Friends Poster</div>
+    
+        <div class="collection-book-meta">Gagosian &middot; 2023</div>
+    
 </a>
 
         
             
-<a href="/books/ruscha_pop-art-is-ed-ruscha-poster_80017/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/ruscha_pop-art-is-ed-ruscha-poster_80017/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/ruscha_ed_pop-art-is-poster_80017.jpg" alt="Pop Art Is. . . (Ed Ruscha) Poster" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ed Ruscha</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Pop Art Is. . . (Ed Ruscha) Poster</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian &middot; 2007</p>
+            <img src="/assets/images/books/ruscha_ed_pop-art-is-poster_80017.jpg" alt="Pop Art Is. . . (Ed Ruscha) Poster" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Ed Ruscha</div>
+    
+    <div class="collection-book-title">Pop Art Is. . . (Ed Ruscha) Poster</div>
+    
+        <div class="collection-book-meta">Gagosian &middot; 2007</div>
+    
 </a>
 
         
             
-<a href="/books/saville_jenny-saville-a-ca-pesaro-poster_80020/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/saville_jenny-saville-a-ca-pesaro-poster_80020/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/saville_jenny_a-ca-pesaro-poster_80020.jpg" alt="Jenny Saville a Ca&#39; Pesaro Poster" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jenny Saville</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Jenny Saville a Ca&#39; Pesaro Poster</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ca&#39; Pesaro–Galleria Internazionale d&#39;Arte Moderna &middot; 2026</p>
+            <img src="/assets/images/books/saville_jenny_a-ca-pesaro-poster_80020.jpg" alt="Jenny Saville a Ca&#39; Pesaro Poster" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Jenny Saville</div>
+    
+    <div class="collection-book-title">Jenny Saville a Ca&#39; Pesaro Poster</div>
+    
+        <div class="collection-book-meta">Ca&#39; Pesaro–Galleria Internazionale d&#39;Arte Moderna &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/sze_sarah-sze-feel-free-poster_80002/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/sze_sarah-sze-feel-free-poster_80002/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/sze_sarah_feel-free-poster_80002.jpg" alt="Sarah Sze: Feel Free Poster" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Sarah Sze</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Sarah Sze: Feel Free Poster</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian &middot; 2026</p>
+            <img src="/assets/images/books/sze_sarah_feel-free-poster_80002.jpg" alt="Sarah Sze: Feel Free Poster" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Sarah Sze</div>
+    
+    <div class="collection-book-title">Sarah Sze: Feel Free Poster</div>
+    
+        <div class="collection-book-meta">Gagosian &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/sze_sarah-sze-rip-tide-poster_80004/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/sze_sarah-sze-rip-tide-poster_80004/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/sze_sarah_rip-tide-poster_80004.jpg" alt="Sarah Sze: Rip Tide Poster" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Sarah Sze</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Sarah Sze: Rip Tide Poster</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian &middot; 2025</p>
+            <img src="/assets/images/books/sze_sarah_rip-tide-poster_80004.jpg" alt="Sarah Sze: Rip Tide Poster" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Sarah Sze</div>
+    
+    <div class="collection-book-title">Sarah Sze: Rip Tide Poster</div>
+    
+        <div class="collection-book-meta">Gagosian &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/twombly_cy-twombly-a-survey-of-photographs-1954-2011-poster_80009/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/twombly_cy-twombly-a-survey-of-photographs-1954-2011-poster_80009/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/twombly_cy_survey-of-photographs-poster_80009.jpg" alt="Cy Twombly: A Survey of Photographs, 1954–2011 Poster" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Cy Twombly</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cy Twombly: A Survey of Photographs, 1954–2011 Poster</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian &middot; 2012</p>
+            <img src="/assets/images/books/twombly_cy_survey-of-photographs-poster_80009.jpg" alt="Cy Twombly: A Survey of Photographs, 1954–2011 Poster" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Cy Twombly</div>
+    
+    <div class="collection-book-title">Cy Twombly: A Survey of Photographs, 1954–2011 Poster</div>
+    
+        <div class="collection-book-meta">Gagosian &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/twombly_cy-twombly-in-beauty-it-is-finished-poster_80012/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/twombly_cy-twombly-in-beauty-it-is-finished-poster_80012/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/twombly_cy_in-beauty-it-is-finished-poster_80012.jpg" alt="Cy Twombly: In Beauty it is finished Poster" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Cy Twombly</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cy Twombly: In Beauty it is finished Poster</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian &middot; 2018</p>
+            <img src="/assets/images/books/twombly_cy_in-beauty-it-is-finished-poster_80012.jpg" alt="Cy Twombly: In Beauty it is finished Poster" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Cy Twombly</div>
+    
+    <div class="collection-book-title">Cy Twombly: In Beauty it is finished Poster</div>
+    
+        <div class="collection-book-meta">Gagosian &middot; 2018</div>
+    
 </a>
 
         
             
-<a href="/books/twombly_cy-twombly-lepanto-poster_80014/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/twombly_cy-twombly-lepanto-poster_80014/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/twombly_cy_lepanto-poster_80014.jpg" alt="Cy Twombly: Lepanto Poster" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Cy Twombly</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cy Twombly: Lepanto Poster</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian &middot; 2002</p>
+            <img src="/assets/images/books/twombly_cy_lepanto-poster_80014.jpg" alt="Cy Twombly: Lepanto Poster" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Cy Twombly</div>
+    
+    <div class="collection-book-title">Cy Twombly: Lepanto Poster</div>
+    
+        <div class="collection-book-meta">Gagosian &middot; 2002</div>
+    
 </a>
 
         
             
-<a href="/books/twombly_cy-twombly-paesaggio-poster_80016/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/twombly_cy-twombly-paesaggio-poster_80016/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/twombly_cy_paesaggio-poster_80016.jpg" alt="Cy Twombly: Paesaggio Poster" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Cy Twombly</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cy Twombly: Paesaggio Poster</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian &middot; 2025</p>
+            <img src="/assets/images/books/twombly_cy_paesaggio-poster_80016.jpg" alt="Cy Twombly: Paesaggio Poster" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Cy Twombly</div>
+    
+    <div class="collection-book-title">Cy Twombly: Paesaggio Poster</div>
+    
+        <div class="collection-book-meta">Gagosian &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/twombly_cy-twombly-untitled-2007-poster_80019/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/twombly_cy-twombly-untitled-2007-poster_80019/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/twombly_cy_untitled-2007-poster_80019.jpg" alt="Cy Twombly: Untitled (2007) Poster" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Cy Twombly</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cy Twombly: Untitled (2007) Poster</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian &middot; 2022</p>
+            <img src="/assets/images/books/twombly_cy_untitled-2007-poster_80019.jpg" alt="Cy Twombly: Untitled (2007) Poster" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Cy Twombly</div>
+    
+    <div class="collection-book-title">Cy Twombly: Untitled (2007) Poster</div>
+    
+        <div class="collection-book-meta">Gagosian &middot; 2022</div>
+    
 </a>
 
         
             
-<a href="/books/wall_jeff-wall-mother-of-pearl-poster_80013/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/wall_jeff-wall-mother-of-pearl-poster_80013/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/wall_jeff_mother-of-pearl-poster_80013.jpg" alt="Jeff Wall: Mother of pearl Poster" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jeff Wall</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Jeff Wall: Mother of pearl Poster</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian &middot; 2019</p>
+            <img src="/assets/images/books/wall_jeff_mother-of-pearl-poster_80013.jpg" alt="Jeff Wall: Mother of pearl Poster" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Jeff Wall</div>
+    
+    <div class="collection-book-title">Jeff Wall: Mother of pearl Poster</div>
+    
+        <div class="collection-book-meta">Gagosian &middot; 2019</div>
+    
 </a>
 
         
             
-<a href="/books/weyant_anna-weyant-the-guitar-man-poster_80011/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/weyant_anna-weyant-the-guitar-man-poster_80011/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/weyant_anna_the-guitar-man-poster_80011.jpg" alt="Anna Weyant: The Guitar Man Poster" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Anna Weyant</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Anna Weyant: The Guitar Man Poster</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian &middot; 2023</p>
+            <img src="/assets/images/books/weyant_anna_the-guitar-man-poster_80011.jpg" alt="Anna Weyant: The Guitar Man Poster" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Anna Weyant</div>
+    
+    <div class="collection-book-title">Anna Weyant: The Guitar Man Poster</div>
+    
+        <div class="collection-book-meta">Gagosian &middot; 2023</div>
+    
 </a>
 
         
             
-<a href="/books/weyant_paris-review-anna-weyant-poster_80018/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/weyant_paris-review-anna-weyant-poster_80018/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/weyant_anna_paris-review-poster_80018.jpg" alt="Paris Review: Anna Weyant Poster" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Anna Weyant</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Paris Review: Anna Weyant Poster</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Paris Review &middot; 2025</p>
+            <img src="/assets/images/books/weyant_anna_paris-review-poster_80018.jpg" alt="Paris Review: Anna Weyant Poster" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Anna Weyant</div>
+    
+    <div class="collection-book-title">Paris Review: Anna Weyant Poster</div>
+    
+        <div class="collection-book-meta">The Paris Review &middot; 2025</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 

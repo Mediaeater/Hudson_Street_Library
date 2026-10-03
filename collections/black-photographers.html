@@ -311,175 +311,420 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+    
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Black Photographers</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Photography books by and about Black photographers, exploring their unique perspectives, communities, and contributions to visual culture.</p>
+            <div class="collection-eyebrow">Collection
+            </div>
+            <h1 class="collection-title">Black Photographers</h1>
+            
+                <p class="collection-description">Photography books by and about Black photographers, exploring their unique perspectives, communities, and contributions to visual culture.</p>
+            
+            <div class="collection-count">7 books</div>
+            
+            
             
             
         </div>
-        
 
-        
-        
-            
-        
         
 
         
             
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
-        
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<section class="collection-section">
+    
+    <div class="collection-books">
         
             
-<a href="/books/enwezor_lorna-simpson_1440/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/enwezor_lorna-simpson_1440/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Enwezor_Lorna_Simpson_9781885449320.jpg" alt="Lorna Simpson" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Okwui Enwezor</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Lorna Simpson</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Abrams &middot; 2006</p>
+            <img src="/assets/images/books/Enwezor_Lorna_Simpson_9781885449320.jpg" alt="Lorna Simpson" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Okwui Enwezor</div>
+    
+    <div class="collection-book-title">Lorna Simpson</div>
+    
+        <div class="collection-book-meta">Abrams &middot; 2006</div>
+    
 </a>
 
         
             
-<a href="/books/parks_collected-works-study-edition-volume-1-1942-1948_835/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/parks_collected-works-study-edition-volume-1-1942-1948_835/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/parks_gordon_collected_works_study_edition_9783958292628.jpg" alt="Collected Works. Study Edition, Volume 1: 1942–1948" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Gordon Parks</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Collected Works. Study Edition, Volume 1: 1942–1948</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl / The Gordon Parks Foundation &middot; 2017</p>
+            <img src="/assets/images/books/parks_gordon_collected_works_study_edition_9783958292628.jpg" alt="Collected Works. Study Edition, Volume 1: 1942–1948" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Gordon Parks</div>
+    
+    <div class="collection-book-title">Collected Works. Study Edition, Volume 1: 1942–1948</div>
+    
+        <div class="collection-book-meta">Steidl / The Gordon Parks Foundation &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/parks_collected-works-study-edition-volume-2-1947-1963_1930/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/parks_collected-works-study-edition-volume-2-1947-1963_1930/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/parks_gordon_collected_works_study_edition_9783958292628.jpg" alt="Collected Works. Study Edition, Volume 2: 1947–1963" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Gordon Parks</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Collected Works. Study Edition, Volume 2: 1947–1963</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl / The Gordon Parks Foundation &middot; 2017</p>
+            <img src="/assets/images/books/parks_gordon_collected_works_study_edition_9783958292628.jpg" alt="Collected Works. Study Edition, Volume 2: 1947–1963" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Gordon Parks</div>
+    
+    <div class="collection-book-title">Collected Works. Study Edition, Volume 2: 1947–1963</div>
+    
+        <div class="collection-book-meta">Steidl / The Gordon Parks Foundation &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/parks_collected-works-study-edition-volume-3-1956-1965_2349/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/parks_collected-works-study-edition-volume-3-1956-1965_2349/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/parks_gordon_collected_works_study_edition_9783958292628.jpg" alt="Collected Works. Study Edition, Volume 3: 1956–1965" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Gordon Parks</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Collected Works. Study Edition, Volume 3: 1956–1965</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl / The Gordon Parks Foundation &middot; 2017</p>
+            <img src="/assets/images/books/parks_gordon_collected_works_study_edition_9783958292628.jpg" alt="Collected Works. Study Edition, Volume 3: 1956–1965" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Gordon Parks</div>
+    
+    <div class="collection-book-title">Collected Works. Study Edition, Volume 3: 1956–1965</div>
+    
+        <div class="collection-book-meta">Steidl / The Gordon Parks Foundation &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/parks_the-atmosphere-of-crime-1957_834/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/parks_the-atmosphere-of-crime-1957_834/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/parks_gordon_the_atmosphere_of_crime_1957_9783958296961.jpg" alt="The Atmosphere of Crime, 1957" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Gordon Parks</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Atmosphere of Crime, 1957</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl/The Gordon Parks Foundation &middot; 2020</p>
+            <img src="/assets/images/books/parks_gordon_the_atmosphere_of_crime_1957_9783958296961.jpg" alt="The Atmosphere of Crime, 1957" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Gordon Parks</div>
+    
+    <div class="collection-book-title">The Atmosphere of Crime, 1957</div>
+    
+        <div class="collection-book-meta">Steidl/The Gordon Parks Foundation &middot; 2020</div>
+    
 </a>
 
         
             
-<a href="/books/scarville_passports_1806/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/scarville_passports_1806/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Keisha_Scarville_Passports.jpg" alt="Passports" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Keisha Scarville</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Passports</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">MACK &middot; 2026</p>
+            <img src="/assets/images/books/Keisha_Scarville_Passports.jpg" alt="Passports" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Keisha Scarville</div>
+    
+    <div class="collection-book-title">Passports</div>
+    
+        <div class="collection-book-meta">MACK &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/weems_one-picture-book-two-vol-40_1314/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/weems_one-picture-book-two-vol-40_1314/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Weems_One_Picture_Book_Two_Vol_40_9781590055748.jpg" alt="One Picture Book Two Vol 40" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Carrie Mae Weems</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 40</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/Weems_One_Picture_Book_Two_Vol_40_9781590055748.jpg" alt="One Picture Book Two Vol 40" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Carrie Mae Weems</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 40</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 

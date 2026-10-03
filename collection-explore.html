@@ -12,14 +12,17 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
 <style>
+    /*
+      Written in the site's own language, the same idiom as src/wings.njk; read
+      the DESIGN note there before changing anything here. design-system.css
+      loads after Tailwind and its reset and `p` rule (65ch cap, auto margins)
+      beat utilities, so spacing and type are declared in this block.
+    */
     :root {
         --color-ink: #0A0A0A;
         --color-paper: #F8F7F4;
-        --color-vellum: #EEEDE8;
         --color-brown: #8B7355;
-        --color-red: #C8102E;
         --color-border: rgba(10, 10, 10, 0.12);
     }
 
@@ -34,461 +37,205 @@
         color: var(--color-ink);
         font-family: 'Literata', Georgia, serif;
         line-height: 1.5;
-        overflow-x: hidden;
-        position: relative;
     }
 
-    /* Subtle paper texture */
-    body::before {
-        content: '';
-        /* Was position: fixed — a fixed full-viewport overlay repaints on
-           every scroll frame and contributes to mobile scroll jitter.
-           `absolute` (body is now position: relative) scrolls the texture
-           with the document; visually identical. */
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0.03;
-        background-image:
-            repeating-linear-gradient(0deg, transparent, transparent 2px, var(--color-ink) 2px, var(--color-ink) 3px);
-        pointer-events: none;
-        z-index: 1;
-    }
-
-    .page-wrapper {
-        position: relative;
-        z-index: 2;
-    }
-
-    /* Massive Editorial Header */
-    .hero-section {
-        padding: 8rem 2rem 4rem;
-        max-width: 1600px;
+    .explore-page {
+        max-width: 1200px;
         margin: 0 auto;
-        border-bottom: 3px solid var(--color-ink);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .hero-title {
+        padding: 5rem 2rem 6rem;
         font-family: 'Literata', Georgia, serif;
-        font-size: clamp(4rem, 12vw, 11rem);
-        font-weight: 700;
-        line-height: 0.9;
-        letter-spacing: -0.03em;
-        margin-bottom: 1.5rem;
-        text-transform: uppercase;
-        animation: slideInDown 1s cubic-bezier(0.16, 1, 0.3, 1);
+        color: var(--color-ink);
     }
 
-    .hero-subtitle {
-        font-family: 'Archivo Narrow', sans-serif;
-        font-size: clamp(0.875rem, 1.5vw, 1.125rem);
-        font-weight: 400;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        color: var(--color-brown);
-        margin-bottom: 3rem;
-        animation: fadeIn 1s 0.3s both;
+    .explore-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
     }
 
-    .hero-description {
-        max-width: 52ch;
-        font-size: clamp(1.125rem, 2vw, 1.5rem);
-        line-height: 1.6;
-        font-weight: 300;
-        animation: fadeIn 1s 0.5s both;
-    }
-
-    /* Filter Bar - Editorial Style */
-    .filter-bar {
-        padding: 2rem;
-        max-width: 1600px;
-        margin: 0 auto 4rem;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1.5rem;
-        align-items: center;
-        justify-content: space-between;
-        border-bottom: 1px solid var(--color-border);
-        animation: fadeIn 1s 0.7s both;
-    }
-
-    .filter-group {
-        display: flex;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-    }
-
-    .filter-label {
+    .explore-eyebrow {
         font-family: 'Archivo Narrow', sans-serif;
         font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    /* Tailwind's base layer colours headings; every heading here says ink. */
+    .explore-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .explore-intro {
+        font-size: clamp(1.0625rem, 2vw, 1.25rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .explore-count {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
         letter-spacing: 0.15em;
         text-transform: uppercase;
         color: var(--color-brown);
-        padding: 0.5rem 0;
-        align-self: center;
+        margin-top: 1.75rem;
     }
 
-    .filter-btn {
-        font-family: 'Archivo Narrow', sans-serif;
-        font-size: 0.875rem;
-        padding: 0.75rem 1.5rem;
-        background: transparent;
-        border: 1px solid var(--color-border);
-        color: var(--color-ink);
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-
-    .filter-btn:hover {
-        background: var(--color-ink);
-        color: var(--color-paper);
-        border-color: var(--color-ink);
-        transform: translateY(-2px);
-    }
-
-    .filter-btn.active {
-        background: var(--color-ink);
-        color: var(--color-paper);
-        border-color: var(--color-ink);
-    }
-
-    .recent-link {
-        font-family: 'Archivo Narrow', sans-serif;
-        font-size: 0.875rem;
-        padding: 0.75rem 1.5rem;
-        background: var(--color-red);
-        color: var(--color-paper);
-        text-decoration: none;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        border: 1px solid var(--color-red);
-    }
-
-    .recent-link:hover {
-        background: transparent;
-        color: var(--color-red);
-        transform: translateY(-2px);
-    }
-
-    .tags-link {
-        font-family: 'Archivo Narrow', sans-serif;
-        font-size: 0.875rem;
-        padding: 0.75rem 1.5rem;
-        background: var(--color-brown);
-        color: var(--color-paper);
-        text-decoration: none;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        border: 1px solid var(--color-brown);
-    }
-
-    .tags-link:hover {
-        background: transparent;
-        color: var(--color-brown);
-        transform: translateY(-2px);
-    }
-
-    .filter-links {
+    /* Text links, not buttons: a hairline underline that darkens on hover. */
+    .explore-links {
         display: flex;
-        gap: 0.75rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.75rem 2.5rem;
+        margin-top: 1.25rem;
     }
 
-    /* Collections Masonry Grid */
-    .collections-container {
-        max-width: 1600px;
-        margin: 0 auto;
-        padding: 2rem;
+    .explore-links a {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
     }
 
-    .collections-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 2rem;
-        animation: fadeIn 1s 0.9s both;
+    .explore-links a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .explore-section { margin-bottom: 4.5rem; }
+    .explore-section:last-child { margin-bottom: 0; }
+
+    .explore-section > h2 {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
     }
 
-    /* Featured collections span 2 columns */
-    .collection-card.featured {
-        grid-column: span 2;
+    /* A facet: a list of names with counts, set as text. */
+    .explore-terms {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem 2.5rem;
+        margin: 0;
+        padding: 0;
     }
 
-    .collection-card {
-        position: relative;
-        background: white;
+    .explore-terms a {
+        text-decoration: none;
+        color: var(--color-ink);
+        font-size: 1.0625rem;
+        transition: color 0.3s ease;
+    }
+
+    .explore-terms a:hover { color: var(--color-brown); }
+
+    .explore-terms .count {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        color: var(--color-brown);
+        margin-left: 0.4rem;
+    }
+
+    /* Curated: hairline-separated rows, not cards. */
+    .explore-curated-item {
+        display: flex;
+        gap: 1.5rem;
+        align-items: flex-start;
+        padding: 1.5rem 0;
+        border-bottom: 1px solid var(--color-border);
+        text-decoration: none;
+        color: var(--color-ink);
+    }
+
+    .explore-curated-item:first-child { padding-top: 0; }
+
+    .explore-curated-thumb {
+        width: 72px;
+        flex-shrink: 0;
+        aspect-ratio: 3 / 4;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(10, 10, 10, 0.12);
+    }
+
+    /* No image: a hairline outline, as the 'No cover' tile on a collection page. */
+    .explore-curated-thumb.is-empty {
+        box-shadow: none;
         border: 1px solid var(--color-border);
-        overflow: hidden;
-        cursor: pointer;
-        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        animation: cardSlideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
-    .collection-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 60px rgba(10, 10, 10, 0.15);
-        border-color: var(--color-ink);
-    }
-
-    .collection-image-wrapper {
-        position: relative;
-        aspect-ratio: 4/3;
-        overflow: hidden;
-        background: var(--color-vellum);
-    }
-
-    .collection-image {
+    .explore-curated-thumb img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        display: block;
     }
 
-    .collection-card:hover .collection-image {
-        transform: scale(1.08);
-    }
-
-    .collection-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to top, rgba(10, 10, 10, 0.9) 0%, transparent 60%);
-        opacity: 0;
-        transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        display: flex;
-        align-items: flex-end;
-        padding: 2rem;
-    }
-
-    .collection-card:hover .collection-overlay {
-        opacity: 1;
-    }
-
-    .collection-overlay-text {
-        color: var(--color-paper);
-        font-size: 0.875rem;
-        line-height: 1.6;
-        transform: translateY(10px);
-        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
-    }
-
-    .collection-card:hover .collection-overlay-text {
-        transform: translateY(0);
-    }
-
-    /* Category badge */
-    .collection-category {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        font-family: 'Archivo Narrow', sans-serif;
-        font-size: 0.625rem;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        background: white;
-        color: var(--color-ink);
-        padding: 0.375rem 0.75rem;
-        border: 1px solid var(--color-border);
-        z-index: 2;
-        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .collection-card:hover .collection-category {
-        background: var(--color-ink);
-        color: var(--color-paper);
-        border-color: var(--color-ink);
-    }
-
-    .collection-info {
-        padding: 1.5rem;
-        background: white;
-    }
-
-    .collection-number {
-        font-family: 'Archivo Narrow', sans-serif;
-        font-size: 0.75rem;
-        letter-spacing: 0.15em;
-        color: var(--color-brown);
-        margin-bottom: 0.5rem;
-        text-transform: uppercase;
-    }
-
-    .collection-name {
+    .explore-curated-item h3 {
         font-family: 'Literata', Georgia, serif;
-        font-size: 1.75rem;
-        font-weight: 600;
-        line-height: 1.2;
+        font-size: 1.25rem;
+        font-weight: 700;
+        line-height: 1.3;
+        color: var(--color-ink);
         margin-bottom: 0.5rem;
         transition: color 0.3s ease;
     }
 
-    .collection-card:hover .collection-name {
-        color: var(--color-brown);
-    }
+    .explore-curated-item:hover h3 { color: var(--color-brown); }
 
-    .collection-description {
+    .explore-curated-item p {
         font-size: 0.9375rem;
-        line-height: 1.5;
-        color: rgba(10, 10, 10, 0.7);
-        margin-bottom: 1rem;
+        line-height: 1.6;
+        font-weight: 300;
+        /* design-system.css caps every p at 65ch and centers it. */
+        max-width: none;
+        margin-left: 0;
+        margin-right: 0;
     }
 
-    .collection-count {
-        font-family: 'Archivo Narrow', sans-serif;
-        font-size: 0.75rem;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: var(--color-brown);
-    }
-
-    /* Placeholder styles for collections without images */
-    .collection-placeholder {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem;
-        text-align: center;
-    }
-
-    .collection-placeholder-text {
-        font-family: 'Literata', Georgia, serif;
-        font-size: 1.5rem;
-        font-weight: 600;
-        line-height: 1.2;
-    }
-
-    .fashion-bg { background: linear-gradient(135deg, #f5f3f0, #e8e6e1); }
-    .photography-bg { background: linear-gradient(135deg, #e8eef5, #d6dfe8); }
-    .art-bg { background: linear-gradient(135deg, #f5e8e8, #e8d6d6); }
-    .ephemera-bg { background: linear-gradient(135deg, #e8f2f5, #d6e5e8); }
-    .magazines-bg { background: linear-gradient(135deg, #f5e8f2, #e8d6e5); }
-    .subject-bg { background: linear-gradient(135deg, color-mix(in srgb, #034706 5%, white), color-mix(in srgb, #034706 12%, white)); }
-
-    /* Loading State */
-    .loading-indicator {
-        text-align: center;
-        padding: 4rem 2rem;
-        display: none;
-    }
-
-    .loading-indicator.active {
+    .explore-curated-count {
         display: block;
-    }
-
-    .loading-spinner {
-        width: 48px;
-        height: 48px;
-        border: 2px solid var(--color-border);
-        border-top-color: var(--color-ink);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin: 0 auto 1rem;
-    }
-
-    .loading-text {
+        margin-top: 0.75rem;
         font-family: 'Archivo Narrow', sans-serif;
-        font-size: 0.875rem;
-        letter-spacing: 0.1em;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
         text-transform: uppercase;
         color: var(--color-brown);
     }
 
-    /* Animations */
-    @keyframes slideInDown {
-        from {
-            opacity: 0;
-            transform: translateY(-40px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-        to {
-            opacity: 1;
-        }
-    }
-
-    @keyframes cardSlideIn {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
-
-    /* Responsive */
     @media (max-width: 768px) {
-        .hero-section {
-            padding: 4rem 1.5rem 3rem;
-        }
-
-        .filter-bar {
-            padding: 1.5rem;
-            gap: 1rem;
-        }
-
-        .collections-container {
-            padding: 1.5rem;
-        }
-
-        .collections-grid {
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-        }
-
-        .collection-card.featured {
-            grid-column: span 1;
-        }
+        .explore-page { padding: 3rem 1.5rem 4rem; }
+        .explore-masthead { margin-bottom: 3.5rem; }
     }
-
-    @media (min-width: 769px) and (max-width: 1024px) {
-        .collections-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
-    /* Stagger animation delays for cards */
-    .collection-card:nth-child(1) { animation-delay: 0s; }
-    .collection-card:nth-child(2) { animation-delay: 0.05s; }
-    .collection-card:nth-child(3) { animation-delay: 0.1s; }
-    .collection-card:nth-child(4) { animation-delay: 0.15s; }
-    .collection-card:nth-child(5) { animation-delay: 0.2s; }
-    .collection-card:nth-child(6) { animation-delay: 0.25s; }
-    .collection-card:nth-child(7) { animation-delay: 0.3s; }
-    .collection-card:nth-child(8) { animation-delay: 0.35s; }
 </style>
 </head>
 <body>
 
-<div class="page-wrapper">
-    
-    
+
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -724,1826 +471,823 @@ function toggleMobileMenu() {
 </script>
 
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="hero-subtitle">Thematic Archives</div>
-        <h1 class="hero-title">Collections</h1>
-        <p class="hero-description">
-            Curated groupings of visual culture—rare publications, ephemera, and significant bodies of work
-            from photographers, artists, and fashion houses that define our holdings.
-        </p>
-    </section>
 
-    <!-- Filter Bar -->
-    <div class="filter-bar">
-        <div class="filter-group">
-            <span class="filter-label">Filter:</span>
-            <button class="filter-btn active" data-category="all">All</button>
-            <button class="filter-btn" data-category="subject">Subjects</button>
-            <button class="filter-btn" data-category="fashion">Fashion</button>
-            <button class="filter-btn" data-category="photography">Photography</button>
-            <button class="filter-btn" data-category="magazines">Magazines</button>
-            <button class="filter-btn" data-category="art">Art</button>
-            <button class="filter-btn" data-category="ephemera">Ephemera</button>
-        </div>
-        <div class="filter-links">
-            <a href="/tags/" class="tags-link">
-                <i class="fas fa-tag"></i>
-                Browse by Subject
-            </a>
-            <a href="collections/recently_added.html" class="recent-link">
-                <i class="fas fa-clock"></i>
-                Recent
-            </a>
-        </div>
-    </div>
+<main>
+    <div class="explore-page">
 
-    <!-- Collections Grid (rendered at build from exploreCollections) -->
-    <div class="collections-container">
-        <div id="collections-grid" class="collections-grid">
-            
-            <a href="/collections/photography.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/shibata_toshio_one_picture_book_two_52_lone_pine_9781590056288.jpg"
-                         alt="Photography"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Photography</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Photography.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 001</div>
-                    <h2 class="collection-name">Photography</h2>
-                    <p class="collection-description">Every book in the library tagged “Photography.”</p>
-                    <div class="collection-count">1092 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/art.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/parks_gordon_the_atmosphere_of_crime_1957_9783958296961.jpg"
-                         alt="Art"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Art</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Art.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 002</div>
-                    <h2 class="collection-name">Art</h2>
-                    <p class="collection-description">Every book in the library tagged “Art.”</p>
-                    <div class="collection-count">661 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/contemporary-art.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Yuskavage_Lisa_Yuskavage_Contemporary_Artists_978_1_83866_811_2.jpg"
-                         alt="Contemporary Art"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Contemporary Art</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Contemporary Art.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 003</div>
-                    <h2 class="collection-name">Contemporary Art</h2>
-                    <p class="collection-description">Every book in the library tagged “Contemporary Art.”</p>
-                    <div class="collection-count">388 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/exhibition-catalog.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Yuskavage_Lisa_Yuskavage_9789685979146.jpg"
-                         alt="Exhibition Catalog"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Exhibition Catalog</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Exhibition Catalog.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 004</div>
-                    <h2 class="collection-name">Exhibition Catalog</h2>
-                    <p class="collection-description">Every book in the library tagged “Exhibition Catalog.”</p>
-                    <div class="collection-count">261 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/surveillance-index.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Keisha_Scarville_Passports.jpg"
-                         alt="Surveillance Index"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Surveillance Index</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Surveillance Index.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 005</div>
-                    <h2 class="collection-name">Surveillance Index</h2>
-                    <p class="collection-description">Every book in the library tagged “Surveillance Index.”</p>
-                    <div class="collection-count">158 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/painting.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Yuskavage_Lisa_Yuskavage_9789685979146.jpg"
-                         alt="Painting"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Painting</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Painting.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 006</div>
-                    <h2 class="collection-name">Painting</h2>
-                    <p class="collection-description">Every book in the library tagged “Painting.”</p>
-                    <div class="collection-count">146 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/photobook.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Homma_Portrait_of_J.jpg"
-                         alt="Photobook"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Photobook</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Photobook.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 007</div>
-                    <h2 class="collection-name">Photobook</h2>
-                    <p class="collection-description">Every book in the library tagged “Photobook.”</p>
-                    <div class="collection-count">136 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/fashion.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/magazines/purple-magazine/covers/purple-45-glamour.jpg"
-                         alt="Fashion"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Fashion</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Fashion.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 008</div>
-                    <h2 class="collection-name">Fashion</h2>
-                    <p class="collection-description">Every book in the library tagged “Fashion.”</p>
-                    <div class="collection-count">129 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/documentary.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/fitch_steve_one_picture_book_two_50_plywood_signs_9781590056264.jpg"
-                         alt="Documentary"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Documentary</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Documentary.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 009</div>
-                    <h2 class="collection-name">Documentary</h2>
-                    <p class="collection-description">Every book in the library tagged “Documentary.”</p>
-                    <div class="collection-count">120 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/appropriation-art.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/prince_richard_works_from_the_astrup_fearnley_collection_9788293654025.jpg"
-                         alt="Appropriation Art"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Appropriation Art</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Appropriation Art.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 010</div>
-                    <h2 class="collection-name">Appropriation Art</h2>
-                    <p class="collection-description">Every book in the library tagged “Appropriation Art.”</p>
-                    <div class="collection-count">101 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/surveillance-index-edition-one.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/rimaz_simon_unusual_view_of_unknown_subjects_9789462261693.jpg"
-                         alt="Surveillance Index Edition One"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Surveillance Index Edition One</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Surveillance Index Edition One.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 011</div>
-                    <h2 class="collection-name">Surveillance Index Edition One</h2>
-                    <p class="collection-description">Every book in the library tagged “Surveillance Index Edition One.”</p>
-                    <div class="collection-count">99 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/portraiture.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Homma_Portrait_of_J.jpg"
-                         alt="Portraiture"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Portraiture</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Portraiture.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 012</div>
-                    <h2 class="collection-name">Portraiture</h2>
-                    <p class="collection-description">Every book in the library tagged “Portraiture.”</p>
-                    <div class="collection-count">99 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/limited-edition.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/shibata_toshio_one_picture_book_two_52_lone_pine_9781590056288.jpg"
-                         alt="Limited Edition"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Limited Edition</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Limited Edition.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 013</div>
-                    <h2 class="collection-name">Limited Edition</h2>
-                    <p class="collection-description">Every book in the library tagged “Limited Edition.”</p>
-                    <div class="collection-count">78 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/music.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Ryan_Spencer_There_Is_No_Light_at_the_End_of_the_Tunnel_Because.jpg"
-                         alt="Music"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Music</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Music.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 014</div>
-                    <h2 class="collection-name">Music</h2>
-                    <p class="collection-description">Every book in the library tagged “Music.”</p>
-                    <div class="collection-count">71 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/surveillance.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/paglen_trevor_how_to_see_like_a_machine_9781836742166.jpg"
-                         alt="Surveillance"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Surveillance</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Surveillance.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 015</div>
-                    <h2 class="collection-name">Surveillance</h2>
-                    <p class="collection-description">Every book in the library tagged “Surveillance.”</p>
-                    <div class="collection-count">70 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/culture.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/magazines/purple-magazine/covers/purple-45-glamour.jpg"
-                         alt="Culture"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Culture</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Culture.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 016</div>
-                    <h2 class="collection-name">Culture</h2>
-                    <p class="collection-description">Every book in the library tagged “Culture.”</p>
-                    <div class="collection-count">68 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/zines.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/fischer_marc_who_shares_the_restroom_code_with_ice_agents.jpg"
-                         alt="Zines"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Zines</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Zines.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 017</div>
-                    <h2 class="collection-name">Zines</h2>
-                    <p class="collection-description">Every book in the library tagged “Zines.”</p>
-                    <div class="collection-count">66 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/artist-book.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/de_cointet_guy_a-captain-from-portugal_9798994638194.jpg"
-                         alt="Artist Book"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Artist Book</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Artist Book.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 018</div>
-                    <h2 class="collection-name">Artist Book</h2>
-                    <p class="collection-description">Every book in the library tagged “Artist Book.”</p>
-                    <div class="collection-count">60 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/new-york-city.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Meredith_Vacant_Spaces_NY_978_1_94876_599_2.jpg"
-                         alt="New York City"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">New York City</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “New York City.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 019</div>
-                    <h2 class="collection-name">New York City</h2>
-                    <p class="collection-description">Every book in the library tagged “New York City.”</p>
-                    <div class="collection-count">56 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/pop-culture.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/da_corte_alex_mr_remember_9788793659575.jpg"
-                         alt="Pop Culture"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Pop Culture</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Pop Culture.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 020</div>
-                    <h2 class="collection-name">Pop Culture</h2>
-                    <p class="collection-description">Every book in the library tagged “Pop Culture.”</p>
-                    <div class="collection-count">55 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/periodical.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Record_Culture_Magazine_Issue_11_9772711992004.jpg"
-                         alt="Periodical"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Periodical</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Periodical.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 021</div>
-                    <h2 class="collection-name">Periodical</h2>
-                    <p class="collection-description">Every book in the library tagged “Periodical.”</p>
-                    <div class="collection-count">55 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/conceptual-art.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Arnaud_Desjardin_The_Book_on_Books_on_Artists_Books.jpg"
-                         alt="Conceptual Art"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Conceptual Art</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Conceptual Art.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 022</div>
-                    <h2 class="collection-name">Conceptual Art</h2>
-                    <p class="collection-description">Every book in the library tagged “Conceptual Art.”</p>
-                    <div class="collection-count">55 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/drawing.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/marten_helen_treatise_of_a_coat_9783753309132.jpg"
-                         alt="Drawing"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Drawing</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Drawing.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 023</div>
-                    <h2 class="collection-name">Drawing</h2>
-                    <p class="collection-description">Every book in the library tagged “Drawing.”</p>
-                    <div class="collection-count">54 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/found-photography.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Ryan_Spencer_There_Is_No_Light_at_the_End_of_the_Tunnel_Because.jpg"
-                         alt="Found Photography"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Found Photography</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Found Photography.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 024</div>
-                    <h2 class="collection-name">Found Photography</h2>
-                    <p class="collection-description">Every book in the library tagged “Found Photography.”</p>
-                    <div class="collection-count">51 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/nazraeli-press.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/hosoe_eikoh_one_picture_book_two_vol_48_kimono_1306.jpg"
-                         alt="Nazraeli Press"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Nazraeli Press</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Nazraeli Press.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 025</div>
-                    <h2 class="collection-name">Nazraeli Press</h2>
-                    <p class="collection-description">Every book in the library tagged “Nazraeli Press.”</p>
-                    <div class="collection-count">48 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/punk.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Raymond_Pettibon_Nervous_Breakdown.jpg"
-                         alt="Punk"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Punk</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Punk.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 026</div>
-                    <h2 class="collection-name">Punk</h2>
-                    <p class="collection-description">Every book in the library tagged “Punk.”</p>
-                    <div class="collection-count">47 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/museum-publication.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/craven_ann_painted_time_2020_2024_9781961883031.jpg"
-                         alt="Museum Publication"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Museum Publication</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Museum Publication.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 027</div>
-                    <h2 class="collection-name">Museum Publication</h2>
-                    <p class="collection-description">Every book in the library tagged “Museum Publication.”</p>
-                    <div class="collection-count">42 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/architecture.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Meredith_Vacant_Spaces_NY_978_1_94876_599_2.jpg"
-                         alt="Architecture"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Architecture</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Architecture.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 028</div>
-                    <h2 class="collection-name">Architecture</h2>
-                    <p class="collection-description">Every book in the library tagged “Architecture.”</p>
-                    <div class="collection-count">39 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/street-photography.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/winogrand_garry_winogrand-color_9781936611188.jpg"
-                         alt="Street Photography"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Street Photography</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Street Photography.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 029</div>
-                    <h2 class="collection-name">Street Photography</h2>
-                    <p class="collection-description">Every book in the library tagged “Street Photography.”</p>
-                    <div class="collection-count">39 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/1980s.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Ridgers_78_87_London_Youth_9788862083591.jpg"
-                         alt="1980s"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">1980s</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “1980s.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 030</div>
-                    <h2 class="collection-name">1980s</h2>
-                    <p class="collection-description">Every book in the library tagged “1980s.”</p>
-                    <div class="collection-count">39 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/1990s.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/ruisinger_tina_faces-of-photography_9783908162264.jpg"
-                         alt="1990s"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">1990s</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “1990s.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 031</div>
-                    <h2 class="collection-name">1990s</h2>
-                    <p class="collection-description">Every book in the library tagged “1990s.”</p>
-                    <div class="collection-count">39 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/sculpture.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/condo_george_the_mad_and_the_lonely_9786185039455.jpg"
-                         alt="Sculpture"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Sculpture</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Sculpture.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 032</div>
-                    <h2 class="collection-name">Sculpture</h2>
-                    <p class="collection-description">Every book in the library tagged “Sculpture.”</p>
-                    <div class="collection-count">37 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/self-published.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/steiner_danko_and_ana_sisters_issue_2.jpg"
-                         alt="Self-Published"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Self-Published</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Self-Published.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 033</div>
-                    <h2 class="collection-name">Self-Published</h2>
-                    <p class="collection-description">Every book in the library tagged “Self-Published.”</p>
-                    <div class="collection-count">37 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/catalogs.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/covers/9780300236989.jpg"
-                         alt="Catalogs"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Catalogs</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Catalogs.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 034</div>
-                    <h2 class="collection-name">Catalogs</h2>
-                    <p class="collection-description">Every book in the library tagged “Catalogs.”</p>
-                    <div class="collection-count">37 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/japanese-fashion.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Japanese Fashion</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Japanese Fashion.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 035</div>
-                    <h2 class="collection-name">Japanese Fashion</h2>
-                    <p class="collection-description">Every book in the library tagged “Japanese Fashion.”</p>
-                    <div class="collection-count">36 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/menswear.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Menswear</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Menswear.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 036</div>
-                    <h2 class="collection-name">Menswear</h2>
-                    <p class="collection-description">Every book in the library tagged “Menswear.”</p>
-                    <div class="collection-count">36 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/rock.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Bolton_Punk_Chaos_to_Couture_9780300191851.jpg"
-                         alt="Rock"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Rock</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Rock.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 037</div>
-                    <h2 class="collection-name">Rock</h2>
-                    <p class="collection-description">Every book in the library tagged “Rock.”</p>
-                    <div class="collection-count">36 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/graphic-design.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/David_King_David_King_Publications_19772019.jpg"
-                         alt="Graphic Design"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Graphic Design</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Graphic Design.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 038</div>
-                    <h2 class="collection-name">Graphic Design</h2>
-                    <p class="collection-description">Every book in the library tagged “Graphic Design.”</p>
-                    <div class="collection-count">34 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/design.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Meredith_Vacant_Spaces_NY_978_1_94876_599_2.jpg"
-                         alt="Design"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Design</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Design.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 039</div>
-                    <h2 class="collection-name">Design</h2>
-                    <p class="collection-description">Every book in the library tagged “Design.”</p>
-                    <div class="collection-count">34 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/japanese-photography.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/shiga_lieko_blind_date_9788410024496.jpg"
-                         alt="Japanese Photography"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Japanese Photography</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Japanese Photography.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 040</div>
-                    <h2 class="collection-name">Japanese Photography</h2>
-                    <p class="collection-description">Every book in the library tagged “Japanese Photography.”</p>
-                    <div class="collection-count">30 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/street-art.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Barry_McGee_Fuzz_Gathering_9791091539326.jpg"
-                         alt="Street Art"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Street Art</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Street Art.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 041</div>
-                    <h2 class="collection-name">Street Art</h2>
-                    <p class="collection-description">Every book in the library tagged “Street Art.”</p>
-                    <div class="collection-count">30 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/color-photography.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/parks_gordon_segregation_story_9783969990261.jpg"
-                         alt="Color Photography"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Color Photography</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Color Photography.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 042</div>
-                    <h2 class="collection-name">Color Photography</h2>
-                    <p class="collection-description">Every book in the library tagged “Color Photography.”</p>
-                    <div class="collection-count">25 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/landscape.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/shibata_toshio_one_picture_book_two_52_lone_pine_9781590056288.jpg"
-                         alt="Landscape"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Landscape</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Landscape.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 043</div>
-                    <h2 class="collection-name">Landscape</h2>
-                    <p class="collection-description">Every book in the library tagged “Landscape.”</p>
-                    <div class="collection-count">21 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/landscape-photography.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/shibata_toshio_one_picture_book_two_52_lone_pine_9781590056288.jpg"
-                         alt="Landscape Photography"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Landscape Photography</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Landscape Photography.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 044</div>
-                    <h2 class="collection-name">Landscape Photography</h2>
-                    <p class="collection-description">Every book in the library tagged “Landscape Photography.”</p>
-                    <div class="collection-count">21 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/art-book.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Villareal_Leo_Villareal_Coding_Light_9781580936538.jpg"
-                         alt="Art Book"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Art Book</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Art Book.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 045</div>
-                    <h2 class="collection-name">Art Book</h2>
-                    <p class="collection-description">Every book in the library tagged “Art Book.”</p>
-                    <div class="collection-count">21 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/film.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/morris_sarah_sarah_morris_9789525509588.jpg"
-                         alt="Film"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Film</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Film.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 046</div>
-                    <h2 class="collection-name">Film</h2>
-                    <p class="collection-description">Every book in the library tagged “Film.”</p>
-                    <div class="collection-count">20 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/american-art.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Richard_Prince_Richard_Prince.jpg"
-                         alt="American Art"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">American Art</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “American Art.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 047</div>
-                    <h2 class="collection-name">American Art</h2>
-                    <p class="collection-description">Every book in the library tagged “American Art.”</p>
-                    <div class="collection-count">20 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/illustration.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/lee_joyce_baron_9781838424862.jpg"
-                         alt="Illustration"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Illustration</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Illustration.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 048</div>
-                    <h2 class="collection-name">Illustration</h2>
-                    <p class="collection-description">Every book in the library tagged “Illustration.”</p>
-                    <div class="collection-count">19 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/new-york.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/clark_larry_bedtime_stories_for_bad_boys_and_girls.jpg"
-                         alt="New York"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">New York</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “New York.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 049</div>
-                    <h2 class="collection-name">New York</h2>
-                    <p class="collection-description">Every book in the library tagged “New York.”</p>
-                    <div class="collection-count">19 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/photojournalism.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Christopher_Anderson_Index.jpg"
-                         alt="Photojournalism"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Photojournalism</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Photojournalism.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 050</div>
-                    <h2 class="collection-name">Photojournalism</h2>
-                    <p class="collection-description">Every book in the library tagged “Photojournalism.”</p>
-                    <div class="collection-count">18 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/american-photography.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/winogrand_garry_winogrand-color_9781936611188.jpg"
-                         alt="American Photography"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">American Photography</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “American Photography.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 051</div>
-                    <h2 class="collection-name">American Photography</h2>
-                    <p class="collection-description">Every book in the library tagged “American Photography.”</p>
-                    <div class="collection-count">18 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/contemporary-photography.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/demand_thomas_thomas_demand_9781905190089.jpg"
-                         alt="Contemporary Photography"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Contemporary Photography</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Contemporary Photography.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 052</div>
-                    <h2 class="collection-name">Contemporary Photography</h2>
-                    <p class="collection-description">Every book in the library tagged “Contemporary Photography.”</p>
-                    <div class="collection-count">18 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/modernism.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/gehrke_andreas_der_spiegel_hamburg_brandstwiete_9783981573503.jpg"
-                         alt="Modernism"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Modernism</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Modernism.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 053</div>
-                    <h2 class="collection-name">Modernism</h2>
-                    <p class="collection-description">Every book in the library tagged “Modernism.”</p>
-                    <div class="collection-count">18 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/fashion-photography.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/newman_bella_the-world-we-knew_2359.jpg"
-                         alt="Fashion Photography"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Fashion Photography</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Fashion Photography.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 054</div>
-                    <h2 class="collection-name">Fashion Photography</h2>
-                    <p class="collection-description">Every book in the library tagged “Fashion Photography.”</p>
-                    <div class="collection-count">17 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/vernacular-photography.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/fitch_steve_one_picture_book_two_50_plywood_signs_9781590056264.jpg"
-                         alt="Vernacular Photography"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Vernacular Photography</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Vernacular Photography.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 055</div>
-                    <h2 class="collection-name">Vernacular Photography</h2>
-                    <p class="collection-description">Every book in the library tagged “Vernacular Photography.”</p>
-                    <div class="collection-count">16 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/reference.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Arnaud_Desjardin_The_Book_on_Books_on_Artists_Books.jpg"
-                         alt="Reference"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Reference</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Reference.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 056</div>
-                    <h2 class="collection-name">Reference</h2>
-                    <p class="collection-description">Every book in the library tagged “Reference.”</p>
-                    <div class="collection-count">16 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/archive.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Keisha_Scarville_Passports.jpg"
-                         alt="Archive"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Archive</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Archive.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 057</div>
-                    <h2 class="collection-name">Archive</h2>
-                    <p class="collection-description">Every book in the library tagged “Archive.”</p>
-                    <div class="collection-count">16 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/video-art.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/da_corte_alex_mr_remember_9788793659575.jpg"
-                         alt="Video Art"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Video Art</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Video Art.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 058</div>
-                    <h2 class="collection-name">Video Art</h2>
-                    <p class="collection-description">Every book in the library tagged “Video Art.”</p>
-                    <div class="collection-count">16 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/nature.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Barker_Beyond_Drifting_Imperfectly_Known_Animals_9780994791917.jpg"
-                         alt="Nature"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Nature</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Nature.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 059</div>
-                    <h2 class="collection-name">Nature</h2>
-                    <p class="collection-description">Every book in the library tagged “Nature.”</p>
-                    <div class="collection-count">15 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/pop-art.html"
-               class="collection-card"
-               data-category="subject">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/johnson_ray_ray_johnson_9781944929114.jpg"
-                         alt="Pop Art"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder subject-bg">
-                        <div class="collection-placeholder-text">Pop Art</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Every book in the library tagged “Pop Art.”</div>
-                    </div>
-                    <div class="collection-category">subject</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 060</div>
-                    <h2 class="collection-name">Pop Art</h2>
-                    <p class="collection-description">Every book in the library tagged “Pop Art.”</p>
-                    <div class="collection-count">15 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/ephemera.html"
-               class="collection-card"
-               data-category="ephemera">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/ephemera/ephemera.jpg"
-                         alt="Ephemera"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder ephemera-bg">
-                        <div class="collection-placeholder-text">Ephemera</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Postcards, invitations, flyers, posters, and other transient printed matter.</div>
-                    </div>
-                    <div class="collection-category">ephemera</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 061</div>
-                    <h2 class="collection-name">Ephemera</h2>
-                    <p class="collection-description">Postcards, invitations, flyers, posters, and other transient printed matter.</p>
-                    <div class="collection-count">32 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/matsuda-fashion-catalogs.html"
-               class="collection-card"
-               data-category="fashion">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/fashion/matsuda/matsuda_catalogs.png"
-                         alt="Matsuda Fashion Catalogs"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder fashion-bg">
-                        <div class="collection-placeholder-text">Matsuda Fashion Catalogs</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Rare catalogs from the Japanese fashion designer&#39;s influential work.</div>
-                    </div>
-                    <div class="collection-category">fashion</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 062</div>
-                    <h2 class="collection-name">Matsuda Fashion Catalogs</h2>
-                    <p class="collection-description">Rare catalogs from the Japanese fashion designer&#39;s influential work.</p>
-                    <div class="collection-count">36 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/disaster.html"
-               class="collection-card"
-               data-category="photography">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Goya_Goya_The_Disasters_of_War_9788410024632.jpg"
-                         alt="Disaster"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder photography-bg">
-                        <div class="collection-placeholder-text">Disaster</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Photobooks documenting catastrophe, violence, and human tragedy. From Goya&#39;s pioneering protest etchings to forensic photography and photojournalism capturing accidents, emergencies, and war.</div>
-                    </div>
-                    <div class="collection-category">photography</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 063</div>
-                    <h2 class="collection-name">Disaster</h2>
-                    <p class="collection-description">Photobooks documenting catastrophe, violence, and human tragedy. From Goya&#39;s pioneering protest etchings to forensic photography and photojournalism capturing accidents, emergencies, and war.</p>
-                    <div class="collection-count">10 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/comme-des-garcons.html"
-               class="collection-card featured"
-               data-category="fashion">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/fashion/comme-des-garcons/comme-hero.png"
-                         alt="Comme des Garçons Archive"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder fashion-bg">
-                        <div class="collection-placeholder-text">Comme des Garçons Archive</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Rare publications from Rei Kawakubo&#39;s revolutionary fashion house.</div>
-                    </div>
-                    <div class="collection-category">fashion</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 064</div>
-                    <h2 class="collection-name">Comme des Garçons Archive</h2>
-                    <p class="collection-description">Rare publications from Rei Kawakubo&#39;s revolutionary fashion house.</p>
-                    <div class="collection-count">3 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/wombat-artist-boxes.html"
-               class="collection-card featured"
-               data-category="photography">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Wombat_Artist_Box_39_Betina_du_Toit.jpg"
-                         alt="Wombat Artist Boxes"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder photography-bg">
-                        <div class="collection-placeholder-text">Wombat Artist Boxes</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Limited edition photography portfolios produced by Wombat Paris featuring museum-quality prints and unpublished work from contemporary photographers.</div>
-                    </div>
-                    <div class="collection-category">photography</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 065</div>
-                    <h2 class="collection-name">Wombat Artist Boxes</h2>
-                    <p class="collection-description">Limited edition photography portfolios produced by Wombat Paris featuring museum-quality prints and unpublished work from contemporary photographers.</p>
-                    <div class="collection-count">17 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/richard-prince.html"
-               class="collection-card featured"
-               data-category="art">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/books/Prince_Cowboy.jpg"
-                         alt="Richard Prince"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder art-bg">
-                        <div class="collection-placeholder-text">Richard Prince</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">A barely comprehensive, not even close to complete collection of publications by and about Richard Prince, the influential American artist known for his appropriation photography, cowboys, jokes, and social media work.</div>
-                    </div>
-                    <div class="collection-category">art</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 066</div>
-                    <h2 class="collection-name">Richard Prince</h2>
-                    <p class="collection-description">A barely comprehensive, not even close to complete collection of publications by and about Richard Prince, the influential American artist known for his appropriation photography, cowboys, jokes, and social media work.</p>
-                    <div class="collection-count">81 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/magazines.html"
-               class="collection-card featured"
-               data-category="magazines">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/magazines/magazines-hero.jpg"
-                         alt="Magazines"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder magazines-bg">
-                        <div class="collection-placeholder-text">Magazines</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Independent and art magazines exploring photography, design, and visual culture.</div>
-                    </div>
-                    <div class="collection-category">magazines</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 067</div>
-                    <h2 class="collection-name">Magazines</h2>
-                    <p class="collection-description">Independent and art magazines exploring photography, design, and visual culture.</p>
-                    <div class="collection-count">150 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/one-picture-book.html"
-               class="collection-card featured"
-               data-category="photography">
-                <div class="collection-image-wrapper">
-                    
-                    <div class="collection-placeholder photography-bg">
-                        <div class="collection-placeholder-text">One Picture Book Two</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Nazraeli Press limited edition photography books with signed original prints.</div>
-                    </div>
-                    <div class="collection-category">photography</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 068</div>
-                    <h2 class="collection-name">One Picture Book Two</h2>
-                    <p class="collection-description">Nazraeli Press limited edition photography books with signed original prints.</p>
-                    <div class="collection-count">53 Items</div>
-                </div>
-            </a>
-            
-            <a href="/collections/collage-collections.html"
-               class="collection-card featured"
-               data-category="art">
-                <div class="collection-image-wrapper">
-                    
-                    <img src="/assets/images/collections/collage-hero.jpg"
-                         alt="Collage Collections"
-                         class="collection-image"
-                         loading="lazy">
-                    
-                    <div class="collection-placeholder art-bg">
-                        <div class="collection-placeholder-text">Collage Collections</div>
-                    </div>
-                    <div class="collection-overlay">
-                        <div class="collection-overlay-text">Explorations in mixed media, assemblage, and photomontage techniques.</div>
-                    </div>
-                    <div class="collection-category">art</div>
-                </div>
-                <div class="collection-info">
-                    <div class="collection-number">Lot 069</div>
-                    <h2 class="collection-name">Collage Collections</h2>
-                    <p class="collection-description">Explorations in mixed media, assemblage, and photomontage techniques.</p>
-                    <div class="collection-count">78 Items</div>
-                </div>
-            </a>
-            
+        <div class="explore-masthead">
+            <div class="explore-eyebrow">Hudson Street Library</div>
+            <h1 class="explore-title">Collections</h1>
+            <p class="explore-intro">
+                Every collection in the art and photography wing, listed by theme, medium, genre,
+                format, place, era, person, series and decade of publication. The collections
+                put together by hand come last.
+            </p>
+            <div class="explore-count">119 collections</div>
+            <div class="explore-links">
+                <a href="/tags/">All tags A-Z</a>
+                <a href="/collections/recently_added.html">Recently added</a>
+            </div>
         </div>
+
+        
+        <section class="explore-section">
+            <h2>Themes</h2>
+            
+            <ul class="explore-terms">
+                
+                    <li>
+                        <a href="/collections/queer-culture.html">Queer Culture<span class="count">140</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/fashion.html">Fashion<span class="count">129</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/music.html">Music<span class="count">71</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/surveillance.html">Surveillance<span class="count">70</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/culture.html">Culture<span class="count">68</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/pop-culture.html">Pop Culture<span class="count">55</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/punk.html">Punk<span class="count">47</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/architecture.html">Architecture<span class="count">39</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/rock.html">Rock<span class="count">36</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/archive.html">Archive<span class="count">24</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/nature.html">Nature<span class="count">15</span></a>
+                    </li>
+                
+            </ul>
+            
+        </section>
+        
+        <section class="explore-section">
+            <h2>Mediums</h2>
+            
+            <ul class="explore-terms">
+                
+                    <li>
+                        <a href="/collections/photography.html">Photography<span class="count">1,092</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/art.html">Art<span class="count">661</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/painting.html">Painting<span class="count">146</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/collage.html">Collage<span class="count">111</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/drawing.html">Drawing<span class="count">54</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/sculpture.html">Sculpture<span class="count">37</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/design.html">Design<span class="count">34</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/graphic-design.html">Graphic Design<span class="count">34</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/installation-art.html">Installation Art<span class="count">21</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/film.html">Film<span class="count">20</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/illustration.html">Illustration<span class="count">19</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/video-art.html">Video Art<span class="count">19</span></a>
+                    </li>
+                
+            </ul>
+            
+        </section>
+        
+        <section class="explore-section">
+            <h2>Genres</h2>
+            
+            <ul class="explore-terms">
+                
+                    <li>
+                        <a href="/collections/contemporary-art.html">Contemporary Art<span class="count">388</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/documentary.html">Documentary<span class="count">120</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/portraiture.html">Portraiture<span class="count">115</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/appropriation-art.html">Appropriation Art<span class="count">101</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/conceptual-art.html">Conceptual Art<span class="count">57</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/found-photography.html">Found Photography<span class="count">51</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/landscape.html">Landscape<span class="count">40</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/street-photography.html">Street Photography<span class="count">39</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/street-art.html">Street Art<span class="count">31</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/nudes.html">Nudes<span class="count">29</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/color-photography.html">Color Photography<span class="count">25</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/black-and-white-photography.html">Black-and-White Photography<span class="count">23</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/contemporary-photography.html">Contemporary Photography<span class="count">18</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/modernism.html">Modernism<span class="count">18</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/photojournalism.html">Photojournalism<span class="count">18</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/fashion-photography.html">Fashion Photography<span class="count">17</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/vernacular-photography.html">Vernacular Photography<span class="count">16</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/pop-art.html">Pop Art<span class="count">15</span></a>
+                    </li>
+                
+            </ul>
+            
+        </section>
+        
+        <section class="explore-section">
+            <h2>Formats</h2>
+            
+            <ul class="explore-terms">
+                
+                    <li>
+                        <a href="/collections/photographer-monograph.html">Photographer Monograph<span class="count">386</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/photobook.html">Photobook<span class="count">324</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/artist-monograph.html">Artist Monograph<span class="count">289</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/exhibition-catalog.html">Exhibition Catalog<span class="count">277</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/artist-book.html">Artist Book<span class="count">229</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/periodical.html">Periodical<span class="count">116</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/limited-edition.html">Limited Edition<span class="count">78</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/zines.html">Zines<span class="count">66</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/museum-publication.html">Museum Publication<span class="count">42</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/catalogs.html">Catalogs<span class="count">37</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/self-published.html">Self-Published<span class="count">37</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/art-book.html">Art Book<span class="count">21</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/reference.html">Reference<span class="count">16</span></a>
+                    </li>
+                
+            </ul>
+            
+        </section>
+        
+        <section class="explore-section">
+            <h2>Places</h2>
+            
+            <ul class="explore-terms">
+                
+                    <li>
+                        <a href="/collections/new-york-city.html">New York City<span class="count">77</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/japanese-photography.html">Japanese Photography<span class="count">30</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/american-art.html">American Art<span class="count">20</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/american-photography.html">American Photography<span class="count">18</span></a>
+                    </li>
+                
+            </ul>
+            
+        </section>
+        
+        <section class="explore-section">
+            <h2>Eras</h2>
+            
+            <ul class="explore-terms">
+                
+                    <li>
+                        <a href="/collections/1980s.html">1980s<span class="count">39</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/1990s.html">1990s<span class="count">39</span></a>
+                    </li>
+                
+            </ul>
+            
+        </section>
+        
+        <section class="explore-section">
+            <h2>Artists &amp; Authors</h2>
+            
+            <ul class="explore-terms">
+                
+                    <li>
+                        <a href="/collections/wolfgang-tillmans.html">Wolfgang Tillmans<span class="count">40</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/christopher-wool.html">Christopher Wool<span class="count">19</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/daisuke-yokota.html">Daisuke Yokota<span class="count">15</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/jason-nocito.html">Jason Nocito<span class="count">15</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/raymond-pettibon.html">Raymond Pettibon<span class="count">15</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/roe-ethridge.html">Roe Ethridge<span class="count">15</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/neo-rauch.html">Neo Rauch<span class="count">14</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/erik-kessels.html">Erik Kessels<span class="count">13</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/jack-pierson.html">Jack Pierson<span class="count">13</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/john-stezaker.html">John Stezaker<span class="count">13</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/hans-peter-feldmann.html">Hans-Peter Feldmann<span class="count">12</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/ren-hang.html">Ren Hang<span class="count">12</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/wade-guyton.html">Wade Guyton<span class="count">12</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/gerhard-richter.html">Gerhard Richter<span class="count">11</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/gordon-parks.html">Gordon Parks<span class="count">11</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/lee-lozano.html">Lee Lozano<span class="count">11</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/eric-tabuchi.html">Eric Tabuchi<span class="count">10</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/mitch-epstein.html">Mitch Epstein<span class="count">10</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/alex-da-corte.html">Alex Da Corte<span class="count">9</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/ari-marcopoulos.html">Ari Marcopoulos<span class="count">9</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/daido-moriyama.html">Daido Moriyama<span class="count">9</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/edward-ruscha.html">Edward Ruscha<span class="count">9</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/elizabeth-peyton.html">Elizabeth Peyton<span class="count">9</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/lewis-baltz.html">Lewis Baltz<span class="count">9</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/nobuyoshi-araki.html">Nobuyoshi Araki<span class="count">9</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/robert-frank.html">Robert Frank<span class="count">9</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/sophie-calle.html">Sophie Calle<span class="count">9</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/torbjorn-rodland.html">Torbjørn Rødland<span class="count">9</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/cecily-brown.html">Cecily Brown<span class="count">8</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/rita-ackermann.html">Rita Ackermann<span class="count">8</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/roy-lichtenstein.html">Roy Lichtenstein<span class="count">8</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/theaster-gates.html">Theaster Gates<span class="count">8</span></a>
+                    </li>
+                
+            </ul>
+            
+        </section>
+        
+        <section class="explore-section">
+            <h2>Series &amp; Imprints</h2>
+            
+            <ul class="explore-terms">
+                
+                    <li>
+                        <a href="/collections/surveillance-index.html">Surveillance Index<span class="count">158</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/surveillance-index-edition-one.html">Surveillance Index Edition One<span class="count">99</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/one-picture-book.html">One Picture Book<span class="count">53</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/nazraeli-press.html">Nazraeli Press<span class="count">48</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/purple-magazine.html">Purple Magazine<span class="count">46</span></a>
+                    </li>
+                
+            </ul>
+            
+        </section>
+        
+        <section class="explore-section">
+            <h2>Published</h2>
+            
+            <ul class="explore-terms">
+                
+                    <li>
+                        <a href="/collections/published-2010s.html">Published in the 2010s<span class="count">1,219</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/published-2020s.html">Published in the 2020s<span class="count">413</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/published-2000s.html">Published in the 2000s<span class="count">297</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/published-1990s.html">Published in the 1990s<span class="count">63</span></a>
+                    </li>
+                
+                    <li>
+                        <a href="/collections/published-1980s.html">Published in the 1980s<span class="count">19</span></a>
+                    </li>
+                
+            </ul>
+            
+        </section>
+        
+        <section class="explore-section">
+            <h2>Curated collections</h2>
+            
+            <div class="explore-curated">
+                
+                    <a href="/collections/afm.html" class="explore-curated-item">
+                        
+                        <div class="explore-curated-thumb">
+                            <img src="/assets/images/magazines/afm/afm-issue-1.jpg" alt="" loading="lazy">
+                        </div>
+                        <div>
+                            <h3>AFM Magazine</h3>
+                            <p>A biannual magazine dedicated to fashion, art, and contemporary culture.</p>
+                            
+                            
+                                <span class="explore-curated-count">2 books</span>
+                            
+                        </div>
+                    </a>
+                
+                    <a href="/collections/apartamento.html" class="explore-curated-item">
+                        
+                        <div class="explore-curated-thumb">
+                            <img src="/assets/images/magazines/apartamento/apartamento-36.jpg" alt="" loading="lazy">
+                        </div>
+                        <div>
+                            <h3>Apartamento Magazine</h3>
+                            <p>Today&#39;s most influential, inspiring, and honest interiors publication. Exploring the intimate relationship between people and their private spaces since 2008.</p>
+                            
+                            
+                                <span class="explore-curated-count">34 books</span>
+                            
+                        </div>
+                    </a>
+                
+                    <a href="/collections/black-photographers.html" class="explore-curated-item">
+                        
+                        <div class="explore-curated-thumb">
+                            <img src="/assets/images/books/parks_gordon_collected_works_study_edition_9783958292628.jpg" alt="" loading="lazy">
+                        </div>
+                        <div>
+                            <h3>Black Photographers</h3>
+                            <p>Photography books by and about Black photographers, exploring their unique perspectives, communities, and contributions to visual culture.</p>
+                            
+                            
+                                <span class="explore-curated-count">7 books</span>
+                            
+                        </div>
+                    </a>
+                
+                    <a href="/collections/butt.html" class="explore-curated-item">
+                        
+                        <div class="explore-curated-thumb">
+                            <img src="/assets/images/magazines/butt/butt-37.jpg" alt="" loading="lazy">
+                        </div>
+                        <div>
+                            <h3>BUTT Magazine</h3>
+                            <p>Legendary independent gay culture and lifestyle magazine known for its distinctive photography, intimate interviews, and honest storytelling. Published from 2001 to 2011, relaunched in 2023.</p>
+                            
+                            
+                                <span class="explore-curated-count">35 books</span>
+                            
+                        </div>
+                    </a>
+                
+                    <a href="/collections/disaster.html" class="explore-curated-item">
+                        
+                        <div class="explore-curated-thumb">
+                            <img src="/assets/images/books/Goya_Goya_The_Disasters_of_War_9788410024632.jpg" alt="" loading="lazy">
+                        </div>
+                        <div>
+                            <h3>Disaster</h3>
+                            <p>Photobooks documenting catastrophe, violence, and human tragedy. From Goya&#39;s pioneering protest etchings to forensic photography and photojournalism capturing accidents, emergencies, and war.</p>
+                            
+                            
+                                <span class="explore-curated-count">10 books</span>
+                            
+                        </div>
+                    </a>
+                
+                    <a href="/collections/ephemera.html" class="explore-curated-item">
+                        
+                        <div class="explore-curated-thumb">
+                            <img src="/assets/images/ephemera/ephemera.jpg" alt="" loading="lazy">
+                        </div>
+                        <div>
+                            <h3>Ephemera</h3>
+                            <p>Everything in the library tagged Ephemera: the invitations, stickers, postcards and other printed matter of the Ephemera wing, alongside the books and magazines in the art wing that are tagged the same way.</p>
+                            
+                            
+                                <span class="explore-curated-count">32 books</span>
+                            
+                        </div>
+                    </a>
+                
+                    <a href="/collections/matsuda-fashion-catalogs.html" class="explore-curated-item">
+                        
+                        <div class="explore-curated-thumb">
+                            <img src="/assets/images/fashion/matsuda/matsuda_catalogs.png" alt="" loading="lazy">
+                        </div>
+                        <div>
+                            <h3>Matsuda Fashion Catalogues</h3>
+                            <p>A collection of rare and influential fashion catalogues from Japanese designer Mitsuhiro Matsuda (published between 1984–1993)</p>
+                            
+                            
+                                <span class="explore-curated-count">36 books</span>
+                            
+                        </div>
+                    </a>
+                
+                    <a href="/collections/music-photobooks.html" class="explore-curated-item">
+                        
+                        <div class="explore-curated-thumb">
+                            <img src="/assets/images/books/Bolton_Punk_Chaos_to_Couture_9780300191851.jpg" alt="" loading="lazy">
+                        </div>
+                        <div>
+                            <h3>Music Photobooks</h3>
+                            <p>Capturing the energy, aesthetic, and personalities of music scenes and artists through the lens of photography.</p>
+                            
+                            
+                                <span class="explore-curated-count">35 books</span>
+                            
+                        </div>
+                    </a>
+                
+                    <a href="/collections/purple-magazine.html" class="explore-curated-item">
+                        
+                        <div class="explore-curated-thumb">
+                            <img src="/assets/images/magazines/purple-magazine/covers/purple-45-glamour.jpg" alt="" loading="lazy">
+                        </div>
+                        <div>
+                            <h3>Purple Magazine</h3>
+                            <p>An influential French fashion and contemporary culture magazine founded in Paris in 1992 by Elein Fleiss and Olivier Zahm. Purple emerged as a reaction against the superficial glamour of the 1980s, pioneering the &quot;anti-fashion&quot; aesthetic and becoming synonymous with the new realism in fashion photography through collaborators like Juergen Teller, Terry Richardson, Wolfgang Tillmans, and Mario Sorrenti.</p>
+                            
+                            
+                                <span class="explore-curated-count">46 books</span>
+                            
+                        </div>
+                    </a>
+                
+                    <a href="/collections/queer-culture.html" class="explore-curated-item">
+                        
+                        <div class="explore-curated-thumb">
+                            <img src="/assets/images/books/campbell_liam_naes_02_he_believes_in_beauty_2026.jpg" alt="" loading="lazy">
+                        </div>
+                        <div>
+                            <h3>Queer Culture</h3>
+                            <p>Queer photography, artists&#39; books, zines, and visual culture from the collection — physique photography and its archives, the West Side piers, Fire Island, drag and nightlife, erotica, appropriation, and queer art history. A growing collection.</p>
+                            
+                            
+                                <span class="explore-curated-count">140 books</span>
+                            
+                        </div>
+                    </a>
+                
+                    <a href="/collections/record-culture.html" class="explore-curated-item">
+                        
+                        <div class="explore-curated-thumb">
+                            <img src="/assets/images/books/Record_Culture_Magazine_Issue_11_9772711992004.jpg" alt="" loading="lazy">
+                        </div>
+                        <div>
+                            <h3>Record Culture Magazine</h3>
+                            <p>A magazine celebrating vinyl culture, album art, and the rich history of recorded music.</p>
+                            
+                            
+                                <span class="explore-curated-count">11 books</span>
+                            
+                        </div>
+                    </a>
+                
+                    <a href="/collections/slanted.html" class="explore-curated-item">
+                        
+                        <div class="explore-curated-thumb">
+                            <img src="/assets/images/magazines/slanted/slanted-46-cairo.jpg" alt="" loading="lazy">
+                        </div>
+                        <div>
+                            <h3>Slanted Magazine</h3>
+                            <p>A magazine about type, graphic design, and visual culture from around the world.</p>
+                            
+                            
+                                <span class="explore-curated-count">2 books</span>
+                            
+                        </div>
+                    </a>
+                
+                    <a href="/collections/tissue.html" class="explore-curated-item">
+                        
+                        <div class="explore-curated-thumb">
+                            <img src="/assets/images/magazines/tissue/tissue-3.jpg" alt="" loading="lazy">
+                        </div>
+                        <div>
+                            <h3>TISSUE Magazine</h3>
+                            <p>Independent art and media magazine published from 2011 to 2022, devoted — in its own words — to life and death. Across five print issues, TISSUE mixed photography, nightlife, sexuality, and contemporary culture with a restless, collaged design language. The library holds the complete print run, N°1 through N°5.</p>
+                            
+                            
+                                <span class="explore-curated-count">5 books</span>
+                            
+                        </div>
+                    </a>
+                
+                    <a href="/collections/useful-photography.html" class="explore-curated-item">
+                        
+                        <div class="explore-curated-thumb">
+                            <img src="/assets/images/books/khandekar_narayan_collecting_colour_9789491444487.jpg" alt="" loading="lazy">
+                        </div>
+                        <div>
+                            <h3>Useful Photography</h3>
+                            <p>The complete run of Useful Photography, the influential Dutch annual publication devoted to functional, everyday, and anonymous photography.</p>
+                            
+                            
+                                <span class="explore-curated-count">12 books</span>
+                            
+                        </div>
+                    </a>
+                
+                    <a href="/collections/collage-collections.html" class="explore-curated-item">
+                        
+                        <div class="explore-curated-thumb">
+                            <img src="/assets/images/collections/collage-hero.jpg" alt="" loading="lazy">
+                        </div>
+                        <div>
+                            <h3>Collage Collections</h3>
+                            <p>Exploring the art of assemblage and juxtaposition through photographic collage, cut-and-paste techniques, and related visual works. The works below are part of an actively curated collection of books on collage in the Hudson Street Library.</p>
+                            
+                            
+                                <span class="explore-curated-count">78 books</span>
+                            
+                        </div>
+                    </a>
+                
+                    <a href="/collections/comme-des-garcons.html" class="explore-curated-item">
+                        
+                        <div class="explore-curated-thumb">
+                            <img src="/assets/images/fashion/comme-des-garcons/comme-hero.png" alt="" loading="lazy">
+                        </div>
+                        <div>
+                            <h3>Comme des Garçons Related</h3>
+                            <p>Exploring the influential and avant-garde world of Rei Kawakubo and Comme des Garçons through books, publications, and related materials.</p>
+                            
+                            
+                                <span class="explore-curated-count">3 books</span>
+                            
+                        </div>
+                    </a>
+                
+                    <a href="/collections/magazines.html" class="explore-curated-item">
+                        
+                        <div class="explore-curated-thumb is-empty">
+                            
+                        </div>
+                        <div>
+                            <h3>Magazines</h3>
+                            <p>Independent and art magazines exploring photography, design, and visual culture.</p>
+                            
+                            
+                        </div>
+                    </a>
+                
+                    <a href="/collections/one-picture-book.html" class="explore-curated-item">
+                        
+                        <div class="explore-curated-thumb">
+                            <img src="/assets/images/books/templeton_ed_one_picture_book_two_49_all_hallows_eve_9781590056257.jpg" alt="" loading="lazy">
+                        </div>
+                        <div>
+                            <h3>One Picture Book Two</h3>
+                            <p>Nazraeli Press&#39;s celebrated series of limited edition photography books. Each volume is limited to 500 numbered copies and includes a removable, signed, original 5x7 inch print by the artist. Featuring work by masters like Daido Moriyama, Michael Kenna, Todd Hido, Alec Soth, and Carrie Mae Weems.</p>
+                            
+                            
+                                <span class="explore-curated-count">53 books</span>
+                            
+                        </div>
+                    </a>
+                
+                    <a href="/collections/richard-prince.html" class="explore-curated-item">
+                        
+                        <div class="explore-curated-thumb">
+                            <img src="/assets/images/books/Prince_Cowboy.jpg" alt="" loading="lazy">
+                        </div>
+                        <div>
+                            <h3>Richard Prince</h3>
+                            <p>A barely comprehensive, not even close to complete collection of publications by and about Richard Prince, the influential American artist known for his appropriation photography, cowboys, jokes, and social media work.</p>
+                            
+                            
+                        </div>
+                    </a>
+                
+                    <a href="/collections/wombat-artist-boxes.html" class="explore-curated-item">
+                        
+                        <div class="explore-curated-thumb">
+                            <img src="/assets/images/books/Wombat_Artist_Box_39_Betina_du_Toit.jpg" alt="" loading="lazy">
+                        </div>
+                        <div>
+                            <h3>Wombat Artist Boxes</h3>
+                            <p>Limited edition photography portfolios produced by Wombat Paris. Each box contains museum-quality numbered prints on Hahnemühle paper, printed by Processus lab, and unpublished portfolios from contemporary photographers. Hand-assembled, numbered, and stamp-dated in limited editions.</p>
+                            
+                            
+                                <span class="explore-curated-count">17 books</span>
+                            
+                        </div>
+                    </a>
+                
+            </div>
+            
+        </section>
+        
+
     </div>
-</div>
+</main>
 
 
 
@@ -2555,27 +1299,6 @@ function toggleMobileMenu() {
         <p>© 2026 Hudson Street Library · <a href="/identity/" class="text-neutral-600 underline hover:text-neutral-900">Identity</a> · <a href="/colophon.html" class="text-neutral-600 underline hover:text-neutral-900">Colophon</a></p>
     </div>
 </footer>
-
-<script>
-    // Cards are rendered at build time; the buttons just show/hide them.
-    document.addEventListener('DOMContentLoaded', () => {
-        const filterButtons = document.querySelectorAll('.filter-btn');
-        const cards = document.querySelectorAll('.collection-card');
-
-        filterButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-
-                const category = button.dataset.category;
-                cards.forEach(card => {
-                    card.style.display =
-                        (category === 'all' || card.dataset.category === category) ? '' : 'none';
-                });
-            });
-        });
-    });
-</script>
 
 </body>
 </html>

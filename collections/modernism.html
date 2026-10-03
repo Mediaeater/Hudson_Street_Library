@@ -311,384 +311,607 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+    
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Modernism</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Modernism.”</p>
+            <div class="collection-eyebrow">Genres
+            </div>
+            <h1 class="collection-title">Modernism</h1>
+            
+                <p class="collection-description">Every book in the library tagged “Modernism.”</p>
+            
+            <div class="collection-count">18 books</div>
+            
+            
             
             
         </div>
-        
 
-        
-        
-            
-        
         
 
         
             
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
-        
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<section class="collection-section">
+    
+    <div class="collection-books">
         
             
-<a href="/books/albers_one-and-one-is-four-the-bauhaus-photocollages-of-josef-albers_1873/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/albers_one-and-one-is-four-the-bauhaus-photocollages-of-josef-albers_1873/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/albers_josef_one_and_one_is_four_the_bauhaus_photocollages_of_josef_albers_9781633450172.jpg" alt="One and One Is Four: The Bauhaus Photocollages of Josef Albers" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Josef Albers</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One and One Is Four: The Bauhaus Photocollages of Josef Albers</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Museum of Modern Art (MoMA) &middot; 2016</p>
+            <img src="/assets/images/books/albers_josef_one_and_one_is_four_the_bauhaus_photocollages_of_josef_albers_9781633450172.jpg" alt="One and One Is Four: The Bauhaus Photocollages of Josef Albers" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Josef Albers</div>
+    
+    <div class="collection-book-title">One and One Is Four: The Bauhaus Photocollages of Josef Albers</div>
+    
+        <div class="collection-book-meta">The Museum of Modern Art (MoMA) &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/bajac_photography-at-moma-1920-to-1960_2274/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/bajac_photography-at-moma-1920-to-1960_2274/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/bajac_quentin_photography-at-moma-1920-to-1960_9781633450134.jpg" alt="Photography at MoMA: 1920 to 1960" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Quentin Bajac</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Photography at MoMA: 1920 to 1960</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Museum of Modern Art, New York &middot; 2016</p>
+            <img src="/assets/images/books/bajac_quentin_photography-at-moma-1920-to-1960_9781633450134.jpg" alt="Photography at MoMA: 1920 to 1960" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Quentin Bajac</div>
+    
+    <div class="collection-book-title">Photography at MoMA: 1920 to 1960</div>
+    
+        <div class="collection-book-meta">The Museum of Modern Art, New York &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/bergdoll_bauhaus-1919-1933-workshops-for-modernity_2085/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/bergdoll_bauhaus-1919-1933-workshops-for-modernity_2085/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/bergdoll_barry_bauhaus_1919_1933_workshops_for_modernity_9780870707582.jpg" alt="Bauhaus 1919–1933: Workshops for Modernity" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Barry Bergdoll</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Bauhaus 1919–1933: Workshops for Modernity</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Museum of Modern Art &middot; 2009</p>
+            <img src="/assets/images/books/bergdoll_barry_bauhaus_1919_1933_workshops_for_modernity_9780870707582.jpg" alt="Bauhaus 1919–1933: Workshops for Modernity" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Barry Bergdoll</div>
+    
+    <div class="collection-book-title">Bauhaus 1919–1933: Workshops for Modernity</div>
+    
+        <div class="collection-book-meta">The Museum of Modern Art &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/frizot_vu-the-story-of-a-magazine_2086/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/frizot_vu-the-story-of-a-magazine_2086/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/frizot_michel_vu_the_story_of_a_magazine_9780500543832.jpg" alt="VU: The Story of a Magazine" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Michel Frizot</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">VU: The Story of a Magazine</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Thames &amp; Hudson &middot; 2009</p>
+            <img src="/assets/images/books/frizot_michel_vu_the_story_of_a_magazine_9780500543832.jpg" alt="VU: The Story of a Magazine" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Michel Frizot</div>
+    
+    <div class="collection-book-title">VU: The Story of a Magazine</div>
+    
+        <div class="collection-book-meta">Thames &amp; Hudson &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/gehrke_der-spiegel-hamburg-brandstwiete_1733/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/gehrke_der-spiegel-hamburg-brandstwiete_1733/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/gehrke_andreas_der_spiegel_hamburg_brandstwiete_9783981573503.jpg" alt="DER SPIEGEL – Hamburg Brandstwiete" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Andreas Gehrke</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">DER SPIEGEL – Hamburg Brandstwiete</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Drittel Books &middot; 2013</p>
+            <img src="/assets/images/books/gehrke_andreas_der_spiegel_hamburg_brandstwiete_9783981573503.jpg" alt="DER SPIEGEL – Hamburg Brandstwiete" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Andreas Gehrke</div>
+    
+    <div class="collection-book-title">DER SPIEGEL – Hamburg Brandstwiete</div>
+    
+        <div class="collection-book-meta">Drittel Books &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/gehrke_ibm-campus-stuttgart-vaihingen_1736/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/gehrke_ibm-campus-stuttgart-vaihingen_1736/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/gehrke_andreas_ibm_campus_stuttgart_vaihingen_9783981573510.jpg" alt="IBM CAMPUS – Stuttgart-Vaihingen" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Andreas Gehrke</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">IBM CAMPUS – Stuttgart-Vaihingen</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Drittel Books &middot; 2013</p>
+            <img src="/assets/images/books/gehrke_andreas_ibm_campus_stuttgart_vaihingen_9783981573510.jpg" alt="IBM CAMPUS – Stuttgart-Vaihingen" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Andreas Gehrke</div>
+    
+    <div class="collection-book-title">IBM CAMPUS – Stuttgart-Vaihingen</div>
+    
+        <div class="collection-book-meta">Drittel Books &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/gehrke_quelle-versand-nurnberg_1735/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/gehrke_quelle-versand-nurnberg_1735/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/gehrke_andreas_quelle_versand_nurnberg_9783981573527.jpg" alt="QUELLE VERSAND – Nürnberg" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Andreas Gehrke</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">QUELLE VERSAND – Nürnberg</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Drittel Books &middot; 2013</p>
+            <img src="/assets/images/books/gehrke_andreas_quelle_versand_nurnberg_9783981573527.jpg" alt="QUELLE VERSAND – Nürnberg" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Andreas Gehrke</div>
+    
+    <div class="collection-book-title">QUELLE VERSAND – Nürnberg</div>
+    
+        <div class="collection-book-meta">Drittel Books &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/heller_merz-to-emigre-and-beyond-avant-garde-magazine-design-of-the-twentieth-century_2088/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/heller_merz-to-emigre-and-beyond-avant-garde-magazine-design-of-the-twentieth-century_2088/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/heller_steven_merz_to_emigre_and_beyond_9780714839271.jpg" alt="Merz to Emigre and Beyond: Avant-Garde Magazine Design of the Twentieth Century" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Steven Heller</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Merz to Emigre and Beyond: Avant-Garde Magazine Design of the Twentieth Century</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press &middot; 2003</p>
+            <img src="/assets/images/books/heller_steven_merz_to_emigre_and_beyond_9780714839271.jpg" alt="Merz to Emigre and Beyond: Avant-Garde Magazine Design of the Twentieth Century" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Steven Heller</div>
+    
+    <div class="collection-book-title">Merz to Emigre and Beyond: Avant-Garde Magazine Design of the Twentieth Century</div>
+    
+        <div class="collection-book-meta">Phaidon Press &middot; 2003</div>
+    
 </a>
 
         
             
-<a href="/books/howe_paul-outerbridge-jr-photographs_2406/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/howe_paul-outerbridge-jr-photographs_2406/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/howe_graham_paul_outerbridge_jr_photographs_9780847802814.jpg" alt="Paul Outerbridge Jr.: Photographs" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Graham Howe, Paul Outerbridge Jr.</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Paul Outerbridge Jr.: Photographs</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Rizzoli International Publications &middot; 1980</p>
+            <img src="/assets/images/books/howe_graham_paul_outerbridge_jr_photographs_9780847802814.jpg" alt="Paul Outerbridge Jr.: Photographs" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Graham Howe, Paul Outerbridge Jr.</div>
+    
+    <div class="collection-book-title">Paul Outerbridge Jr.: Photographs</div>
+    
+        <div class="collection-book-meta">Rizzoli International Publications &middot; 1980</div>
+    
 </a>
 
         
             
-<a href="/books/kertesz_andre-kertesz_2253/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/kertesz_andre-kertesz_2253/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/kertsz_andr_andr-kertsz_9780300167818.jpg" alt="André Kertész" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">André Kertész</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">André Kertész</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Éditions Hazan / Jeu de Paume &middot; 2010</p>
+            <img src="/assets/images/books/kertsz_andr_andr-kertsz_9780300167818.jpg" alt="André Kertész" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">André Kertész</div>
+    
+    <div class="collection-book-title">André Kertész</div>
+    
+        <div class="collection-book-meta">Éditions Hazan / Jeu de Paume &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/lodder_russian-constructivism_2094/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/lodder_russian-constructivism_2094/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/lodder_christina_russian_constructivism_9780300027273.jpg" alt="Russian Constructivism" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Christina Lodder</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Russian Constructivism</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Yale University Press &middot; 1983</p>
+            <img src="/assets/images/books/lodder_christina_russian_constructivism_9780300027273.jpg" alt="Russian Constructivism" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Christina Lodder</div>
+    
+    <div class="collection-book-title">Russian Constructivism</div>
+    
+        <div class="collection-book-meta">Yale University Press &middot; 1983</div>
+    
 </a>
 
         
             
-<a href="/books/metzger_berlin-the-twenties_2090/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/metzger_berlin-the-twenties_2090/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/metzger_rainer_berlin_the_twenties_9780810993297.jpg" alt="Berlin: The Twenties" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Rainer Metzger</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Berlin: The Twenties</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Abrams &middot; 2007</p>
+            <img src="/assets/images/books/metzger_rainer_berlin_the_twenties_9780810993297.jpg" alt="Berlin: The Twenties" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Rainer Metzger</div>
+    
+    <div class="collection-book-title">Berlin: The Twenties</div>
+    
+        <div class="collection-book-meta">Abrams &middot; 2007</div>
+    
 </a>
 
         
             
-<a href="/books/moholy-nagy_laszlo-moholy-nagy_2087/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/moholy-nagy_laszlo-moholy-nagy_2087/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/moholy_nagy_laszlo_laszlo_moholy_nagy_9783791350028.jpg" alt="László Moholy-Nagy" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">László Moholy-Nagy</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">László Moholy-Nagy</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Prestel &middot; 2009</p>
+            <img src="/assets/images/books/moholy_nagy_laszlo_laszlo_moholy_nagy_9783791350028.jpg" alt="László Moholy-Nagy" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">László Moholy-Nagy</div>
+    
+    <div class="collection-book-title">László Moholy-Nagy</div>
+    
+        <div class="collection-book-meta">Prestel &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/moholy-nagy_laszlo-moholy-nagy-the-art-of-light_2089/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/moholy-nagy_laszlo-moholy-nagy-the-art-of-light_2089/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/moholy_nagy_laszlo_laszlo_moholy_nagy_the_art_of_light_9788492841349.jpg" alt="László Moholy-Nagy: The Art of Light" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">László Moholy-Nagy</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">László Moholy-Nagy: The Art of Light</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">La Fábrica &middot; 2010</p>
+            <img src="/assets/images/books/moholy_nagy_laszlo_laszlo_moholy_nagy_the_art_of_light_9788492841349.jpg" alt="László Moholy-Nagy: The Art of Light" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">László Moholy-Nagy</div>
+    
+    <div class="collection-book-title">László Moholy-Nagy: The Art of Light</div>
+    
+        <div class="collection-book-meta">La Fábrica &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/outerbridge_paul-outerbridge-a-singular-aesthetic-photographs-and-drawings-1921-1941-a-catalogue-raisonne_2275/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/outerbridge_paul-outerbridge-a-singular-aesthetic-photographs-and-drawings-1921-1941-a-catalogue-raisonne_2275/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/outerbridge_paul_paul-outerbridge-a-singular-aesthetic-photographs_9780876855409.jpg" alt="Paul Outerbridge, A Singular Aesthetic: Photographs &amp; Drawings, 1921-1941: A Catalogue Raisonné" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Paul Outerbridge</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Paul Outerbridge, A Singular Aesthetic: Photographs &amp; Drawings, 1921-1941: A Catalogue Raisonné</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Arabesque Books &middot; 1981</p>
+            <img src="/assets/images/books/outerbridge_paul_paul-outerbridge-a-singular-aesthetic-photographs_9780876855409.jpg" alt="Paul Outerbridge, A Singular Aesthetic: Photographs &amp; Drawings, 1921-1941: A Catalogue Raisonné" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Paul Outerbridge</div>
+    
+    <div class="collection-book-title">Paul Outerbridge, A Singular Aesthetic: Photographs &amp; Drawings, 1921-1941: A Catalogue Raisonné</div>
+    
+        <div class="collection-book-meta">Arabesque Books &middot; 1981</div>
+    
 </a>
 
         
             
-<a href="/books/outerbridge_paul-outerbridge-command-performance_2386/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/outerbridge_paul-outerbridge-command-performance_2386/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/outerbridge_paul_command_performance_9780892369614.jpg" alt="Paul Outerbridge: Command Performance" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Paul Outerbridge</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Paul Outerbridge: Command Performance</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">J. Paul Getty Museum &middot; 2009</p>
+            <img src="/assets/images/books/outerbridge_paul_command_performance_9780892369614.jpg" alt="Paul Outerbridge: Command Performance" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Paul Outerbridge</div>
+    
+    <div class="collection-book-title">Paul Outerbridge: Command Performance</div>
+    
+        <div class="collection-book-meta">J. Paul Getty Museum &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/outerbridge_paul-outerbridge-new-color-photographs-from-mexico-and-california-1948-1955_2385/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/outerbridge_paul-outerbridge-new-color-photographs-from-mexico-and-california-1948-1955_2385/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/outerbridge_paul_new_color_photographs_from_mexico_and_california_1948_1955_9781590052617.jpg" alt="Paul Outerbridge: New Color Photographs from Mexico and California, 1948-1955" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Paul Outerbridge</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Paul Outerbridge: New Color Photographs from Mexico and California, 1948-1955</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2009</p>
+            <img src="/assets/images/books/outerbridge_paul_new_color_photographs_from_mexico_and_california_1948_1955_9781590052617.jpg" alt="Paul Outerbridge: New Color Photographs from Mexico and California, 1948-1955" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Paul Outerbridge</div>
+    
+    <div class="collection-book-title">Paul Outerbridge: New Color Photographs from Mexico and California, 1948-1955</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/gehrke_der-spiegel-hamburg-dovenfleet_1734/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/gehrke_der-spiegel-hamburg-dovenfleet_1734/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Andreas Gehrke</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">DER SPIEGEL – Hamburg Dovenfleet</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Drittel Books &middot; 2013</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Andreas Gehrke</div>
+    
+    <div class="collection-book-title">DER SPIEGEL – Hamburg Dovenfleet</div>
+    
+        <div class="collection-book-meta">Drittel Books &middot; 2013</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 

@@ -311,1011 +311,1168 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+    
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Found Photography</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Found Photography.”</p>
+            <div class="collection-eyebrow">Genres
+            </div>
+            <h1 class="collection-title">Found Photography</h1>
+            
+                <p class="collection-description">Every book in the library tagged “Found Photography.”</p>
+            
+            <div class="collection-count">51 books</div>
+            
+            
             
             
         </div>
-        
 
-        
-        
-            
-        
         
 
         
             
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
-        
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<section class="collection-section">
+    
+    <div class="collection-books">
         
             
-<a href="/books/anonymous_type-42-fame-is-the-name-of-the-game-photographs-by-anonymous_2151/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/anonymous_type-42-fame-is-the-name-of-the-game-photographs-by-anonymous_2151/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/anonymous_anonymous_type-42-fame-is-the-name-of-the-game_9783863356439.jpg" alt="Type 42: Fame Is the Name of the Game: Photographs by Anonymous" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Anonymous</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Type 42: Fame Is the Name of the Game: Photographs by Anonymous</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Walther König &middot; 2015</p>
+            <img src="/assets/images/books/anonymous_anonymous_type-42-fame-is-the-name-of-the-game_9783863356439.jpg" alt="Type 42: Fame Is the Name of the Game: Photographs by Anonymous" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Anonymous</div>
+    
+    <div class="collection-book-title">Type 42: Fame Is the Name of the Game: Photographs by Anonymous</div>
+    
+        <div class="collection-book-meta">Walther König &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/archive-of-modern-conflict_a-guide-for-the-protection-of-the-public-in-peacetime_2412/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/archive-of-modern-conflict_a-guide-for-the-protection-of-the-public-in-peacetime_2412/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/archive_of_modern_conflict_a_guide_for_the_protection_of_the_public_in_peacetime_9780992941369.jpg" alt="A Guide for the Protection of the Public in Peacetime" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Archive of Modern Conflict</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">A Guide for the Protection of the Public in Peacetime</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Archive of Modern Conflict (AMC Books) &middot; 2014</p>
+            <img src="/assets/images/books/archive_of_modern_conflict_a_guide_for_the_protection_of_the_public_in_peacetime_9780992941369.jpg" alt="A Guide for the Protection of the Public in Peacetime" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Archive of Modern Conflict</div>
+    
+    <div class="collection-book-title">A Guide for the Protection of the Public in Peacetime</div>
+    
+        <div class="collection-book-meta">Archive of Modern Conflict (AMC Books) &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/benitah_jamais-je-ne-toublierai_1916/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/benitah_jamais-je-ne-toublierai_1916/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/benitah_carolle_jamais_je_ne_toublierai_9788887569841.jpg" alt="Jamais je ne t&#39;oublierai" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Carolle Bénitah</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Jamais je ne t&#39;oublierai</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">L&#39;Artiere Edizioni &middot; 2019</p>
+            <img src="/assets/images/books/benitah_carolle_jamais_je_ne_toublierai_9788887569841.jpg" alt="Jamais je ne t&#39;oublierai" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Carolle Bénitah</div>
+    
+    <div class="collection-book-title">Jamais je ne t&#39;oublierai</div>
+    
+        <div class="collection-book-meta">L&#39;Artiere Edizioni &middot; 2019</div>
+    
 </a>
 
         
             
-<a href="/books/bogaers_stereosophic-conjunctions_1892/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/bogaers_stereosophic-conjunctions_1892/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/bogaers_paul_stereosophic_conjunctions_9789462261860.jpg" alt="Stereosophic Conjunctions" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Paul Bogaers</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Stereosophic Conjunctions</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Timmer Art Books (Lecturis) &middot; 2016</p>
+            <img src="/assets/images/books/bogaers_paul_stereosophic_conjunctions_9789462261860.jpg" alt="Stereosophic Conjunctions" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Paul Bogaers</div>
+    
+    <div class="collection-book-title">Stereosophic Conjunctions</div>
+    
+        <div class="collection-book-meta">Timmer Art Books (Lecturis) &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/breyer-p-orridge_30-years-of-being-cut-up_1927/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/breyer-p-orridge_30-years-of-being-cut-up_1927/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/breyer_p_orridge_genesis_30_years_of_being_cut_up_9781616236106.jpg" alt="30 Years of Being Cut Up" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Genesis Breyer P-Orridge</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">30 Years of Being Cut Up</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Invisible-Exports &middot; 2009</p>
+            <img src="/assets/images/books/breyer_p_orridge_genesis_30_years_of_being_cut_up_9781616236106.jpg" alt="30 Years of Being Cut Up" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Genesis Breyer P-Orridge</div>
+    
+    <div class="collection-book-title">30 Years of Being Cut Up</div>
+    
+        <div class="collection-book-meta">Invisible-Exports &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/champassak_siams-guy_219/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/champassak_siams-guy_219/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/champassak_tiane-doan-na_siams_guy_9791090306509.jpg" alt="Siam&#39;s Guy" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tiane Doan na Champassak</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Siam&#39;s Guy</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">RVB Books &middot; 2016</p>
+            <img src="/assets/images/books/champassak_tiane-doan-na_siams_guy_9791090306509.jpg" alt="Siam&#39;s Guy" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Tiane Doan na Champassak</div>
+    
+    <div class="collection-book-title">Siam&#39;s Guy</div>
+    
+        <div class="collection-book-meta">RVB Books &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/coghlan_930-vol-02-concealed-identity-02-transfiguration_1968/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/coghlan_930-vol-02-concealed-identity-02-transfiguration_1968/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/coghlan_tim_930_vol_02_transfiguration_noisbn.jpg" alt="930 Vol 02: Concealed Identity 02: Transfiguration" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tim Coghlan</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">930 Vol 02: Concealed Identity 02: Transfiguration</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Knowledge Editions &middot; 2025</p>
+            <img src="/assets/images/books/coghlan_tim_930_vol_02_transfiguration_noisbn.jpg" alt="930 Vol 02: Concealed Identity 02: Transfiguration" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Tim Coghlan</div>
+    
+    <div class="collection-book-title">930 Vol 02: Concealed Identity 02: Transfiguration</div>
+    
+        <div class="collection-book-meta">Knowledge Editions &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/de-blauwer_stills_1917/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/de-blauwer_stills_1917/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/de_blauwer_katrien_stills_9782955795309.jpg" alt="Stills" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Katrien De Blauwer</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Stills</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">IIKKI &middot; 2016</p>
+            <img src="/assets/images/books/de_blauwer_katrien_stills_9782955795309.jpg" alt="Stills" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Katrien De Blauwer</div>
+    
+    <div class="collection-book-title">Stills</div>
+    
+        <div class="collection-book-meta">IIKKI &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/donat_predator_2144/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/donat_predator_2144/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/donat_jean-marie_predator_9791095154020.jpg" alt="Predator" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jean-Marie Donat</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Predator</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">INNOCENCES &middot; 2015</p>
+            <img src="/assets/images/books/donat_jean-marie_predator_9791095154020.jpg" alt="Predator" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Jean-Marie Donat</div>
+    
+    <div class="collection-book-title">Predator</div>
+    
+        <div class="collection-book-meta">INNOCENCES &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/doran_targets_1898/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/doran_targets_1898/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/doran_anne_targets_2018.jpg" alt="Targets" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Anne Doran</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Targets</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ratstar Press &middot; 2018</p>
+            <img src="/assets/images/books/doran_anne_targets_2018.jpg" alt="Targets" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Anne Doran</div>
+    
+    <div class="collection-book-title">Targets</div>
+    
+        <div class="collection-book-meta">Ratstar Press &middot; 2018</div>
+    
 </a>
 
         
             
-<a href="/books/fabricius_stellungen_1902/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/fabricius_stellungen_1902/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/fabricius_jesper_stellungen_9783941601529.jpg" alt="Stellungen" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jesper Fabricius</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Stellungen</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">J. Fabricius / Lubok Verlag &middot; 2011</p>
+            <img src="/assets/images/books/fabricius_jesper_stellungen_9783941601529.jpg" alt="Stellungen" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Jesper Fabricius</div>
+    
+    <div class="collection-book-title">Stellungen</div>
+    
+        <div class="collection-book-meta">J. Fabricius / Lubok Verlag &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/feldmann_272-pages_2223/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/feldmann_272-pages_2223/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/feldmann_hans_peter_272-pages_9788488786586.jpg" alt="272 Pages" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Hans-Peter Feldmann</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">272 Pages</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Fundacio Antoni Tapies &middot; 2001</p>
+            <img src="/assets/images/books/feldmann_hans_peter_272-pages_9788488786586.jpg" alt="272 Pages" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Hans-Peter Feldmann</div>
+    
+    <div class="collection-book-title">272 Pages</div>
+    
+        <div class="collection-book-meta">Fundacio Antoni Tapies &middot; 2001</div>
+    
 </a>
 
         
             
-<a href="/books/horvitz_other-people_2378/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/horvitz_other-people_2378/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/horvitz_david_other_people_9782492175534.jpg" alt="Other People" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">David Horvitz</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Other People</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">RVB Books &middot; 2025</p>
+            <img src="/assets/images/books/horvitz_david_other_people_9782492175534.jpg" alt="Other People" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">David Horvitz</div>
+    
+    <div class="collection-book-title">Other People</div>
+    
+        <div class="collection-book-meta">RVB Books &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/huning_private-rooms_2148/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/huning_private-rooms_2148/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/huning_fred_private-rooms_9783941825727.jpg" alt="Private Rooms" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Fred Hüning</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Private Rooms</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Peperoni Books &middot; 2015</p>
+            <img src="/assets/images/books/huning_fred_private-rooms_9783941825727.jpg" alt="Private Rooms" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Fred Hüning</div>
+    
+    <div class="collection-book-title">Private Rooms</div>
+    
+        <div class="collection-book-meta">Peperoni Books &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/kessels_incomplete-encyclopedia-of-touch_2254/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/kessels_incomplete-encyclopedia-of-touch_2254/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/kessels_erik_incomplete-encyclopedia-of-touch_9782492175473.jpg" alt="Incomplete Encyclopedia of Touch" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Erik Kessels, Thomas Sauvin, Karel de Mulder</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Incomplete Encyclopedia of Touch</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">RVB Books &middot; 2024</p>
+            <img src="/assets/images/books/kessels_erik_incomplete-encyclopedia-of-touch_9782492175473.jpg" alt="Incomplete Encyclopedia of Touch" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Erik Kessels, Thomas Sauvin, Karel de Mulder</div>
+    
+    <div class="collection-book-title">Incomplete Encyclopedia of Touch</div>
+    
+        <div class="collection-book-meta">RVB Books &middot; 2024</div>
+    
 </a>
 
         
             
-<a href="/books/matthews_robber-queens-favorites_2149/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matthews_robber-queens-favorites_2149/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/matthews_nathaniel_robber-queens-favorites.jpg" alt="Robber Queen&#39;s Favorites" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Nathaniel Matthews</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Robber Queen&#39;s Favorites</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">8 Ball Zines &middot; 2015</p>
+            <img src="/assets/images/books/matthews_nathaniel_robber-queens-favorites.jpg" alt="Robber Queen&#39;s Favorites" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Nathaniel Matthews</div>
+    
+    <div class="collection-book-title">Robber Queen&#39;s Favorites</div>
+    
+        <div class="collection-book-meta">8 Ball Zines &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/moss_tertium-quid_779/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/moss_tertium-quid_779/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/moss_murray_tertium_quid_9780985995836.jpg" alt="Tertium Quid" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Murray Moss</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tertium Quid</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">August Editions &middot; 2014</p>
+            <img src="/assets/images/books/moss_murray_tertium_quid_9780985995836.jpg" alt="Tertium Quid" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Murray Moss</div>
+    
+    <div class="collection-book-title">Tertium Quid</div>
+    
+        <div class="collection-book-meta">August Editions &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/nagle_sub-rosa_1919/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/nagle_sub-rosa_1919/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/nagle_ron_sub_rosa_9783957634580.jpg" alt="Sub Rosa" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ron Nagle</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Sub Rosa</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Revolver Publishing &middot; 2019</p>
+            <img src="/assets/images/books/nagle_ron_sub_rosa_9783957634580.jpg" alt="Sub Rosa" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Ron Nagle</div>
+    
+    <div class="collection-book-title">Sub Rosa</div>
+    
+        <div class="collection-book-meta">Revolver Publishing &middot; 2019</div>
+    
 </a>
 
         
             
-<a href="/books/neves_why-i-hustle-to-feed-my-pimp_1903/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/neves_why-i-hustle-to-feed-my-pimp_1903/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/neves_caco_why_i_hustle_to_feed_my_pimp_2016.jpg" alt="Why I Hustle to Feed My Pimp" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Caco Neves</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Why I Hustle to Feed My Pimp</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Calipso Press &middot; 2016</p>
+            <img src="/assets/images/books/neves_caco_why_i_hustle_to_feed_my_pimp_2016.jpg" alt="Why I Hustle to Feed My Pimp" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Caco Neves</div>
+    
+    <div class="collection-book-title">Why I Hustle to Feed My Pimp</div>
+    
+        <div class="collection-book-meta">Calipso Press &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/piller_archiv-peter-piller-materialien-h-irrlaufer_2282/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/piller_archiv-peter-piller-materialien-h-irrlaufer_2282/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/piller_peter_archiv-peter-piller-materialien-h-irrlufer_9783905999839.jpg" alt="Archiv Peter Piller: Materialien (H) – Irrläufer" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Piller</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Archiv Peter Piller: Materialien (H) – Irrläufer</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nieves &middot; 2017</p>
+            <img src="/assets/images/books/piller_peter_archiv-peter-piller-materialien-h-irrlufer_9783905999839.jpg" alt="Archiv Peter Piller: Materialien (H) – Irrläufer" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Peter Piller</div>
+    
+    <div class="collection-book-title">Archiv Peter Piller: Materialien (H) – Irrläufer</div>
+    
+        <div class="collection-book-meta">Nieves &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/piller_umschlage_881/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/piller_umschlage_881/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/piller_peter_umschlaege_881.jpg" alt="Umschläge" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Piller</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Umschläge</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Dashwood Books &middot; 2014</p>
+            <img src="/assets/images/books/piller_peter_umschlaege_881.jpg" alt="Umschläge" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Peter Piller</div>
+    
+    <div class="collection-book-title">Umschläge</div>
+    
+        <div class="collection-book-meta">Dashwood Books &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/pourtier_figures_2369/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/pourtier_figures_2369/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/pourtier_gilles_figures_9782490140695.jpg" alt="Figures" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Gilles Pourtier</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Figures</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Poursuite Éditions &middot; 2026</p>
+            <img src="/assets/images/books/pourtier_gilles_figures_9782490140695.jpg" alt="Figures" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Gilles Pourtier</div>
+    
+    <div class="collection-book-title">Figures</div>
+    
+        <div class="collection-book-meta">Poursuite Éditions &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/presha_lovers_2137/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/presha_lovers_2137/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/presha_corey_lovers.jpg" alt="Lovers" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Corey Presha</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Lovers</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">S_U_N &middot; 2013</p>
+            <img src="/assets/images/books/presha_corey_lovers.jpg" alt="Lovers" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Corey Presha</div>
+    
+    <div class="collection-book-title">Lovers</div>
+    
+        <div class="collection-book-meta">S_U_N &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/reimann_amateur_2377/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/reimann_amateur_2377/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/reimann_fabian_amateur_9783940064745.jpg" alt="Amateur" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Fabian Reimann</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Amateur</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Spector Books &middot; 2013</p>
+            <img src="/assets/images/books/reimann_fabian_amateur_9783940064745.jpg" alt="Amateur" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Fabian Reimann</div>
+    
+    <div class="collection-book-title">Amateur</div>
+    
+        <div class="collection-book-meta">Spector Books &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/reimann_jaunt_2376/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/reimann_jaunt_2376/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/reimann_lotte_jaunt_9789490800338.jpg" alt="Jaunt" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Lotte Reimann</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Jaunt</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">APE (Art Paper Editions) &middot; 2015</p>
+            <img src="/assets/images/books/reimann_lotte_jaunt_9789490800338.jpg" alt="Jaunt" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Lotte Reimann</div>
+    
+    <div class="collection-book-title">Jaunt</div>
+    
+        <div class="collection-book-meta">APE (Art Paper Editions) &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/rickard_na_2171/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/rickard_na_2171/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/rickard_doug_na_9781938922626.jpg" alt="N.A." class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Doug Rickard</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">N.A.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">D.A.P. / Distributed Art Publishers &middot; 2014</p>
+            <img src="/assets/images/books/rickard_doug_na_9781938922626.jpg" alt="N.A." loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Doug Rickard</div>
+    
+    <div class="collection-book-title">N.A.</div>
+    
+        <div class="collection-book-meta">D.A.P. / Distributed Art Publishers &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/rickard_tom_964/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/rickard_tom_964/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/rickard_doug_tom_964.jpg" alt="Tom" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Doug Rickard</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tom</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Little Big Man Books &middot; 2013</p>
+            <img src="/assets/images/books/rickard_doug_tom_964.jpg" alt="Tom" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Doug Rickard</div>
+    
+    <div class="collection-book-title">Tom</div>
+    
+        <div class="collection-book-meta">Little Big Man Books &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/rimaz_unusual-view-of-unknown-subjects_1928/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/rimaz_unusual-view-of-unknown-subjects_1928/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/rimaz_simon_unusual_view_of_unknown_subjects_9789462261693.jpg" alt="Unusual View of Unknown Subjects" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Simon Rimaz</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Unusual View of Unknown Subjects</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Lecturis &middot; 2015</p>
+            <img src="/assets/images/books/rimaz_simon_unusual_view_of_unknown_subjects_9789462261693.jpg" alt="Unusual View of Unknown Subjects" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Simon Rimaz</div>
+    
+    <div class="collection-book-title">Unusual View of Unknown Subjects</div>
+    
+        <div class="collection-book-meta">Lecturis &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/ruiz_mexican-crime-photographs-from-the-archive-of-stefan-ruiz_2379/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/ruiz_mexican-crime-photographs-from-the-archive-of-stefan-ruiz_2379/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/ruiz_stefan_mexican_crime_photographs_from_the_archive_of_stefan_ruiz_9781910401040.jpg" alt="Mexican Crime Photographs from the Archive of Stefan Ruiz" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Stefan Ruiz</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Mexican Crime Photographs from the Archive of Stefan Ruiz</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">GOST Books &middot; 2015</p>
+            <img src="/assets/images/books/ruiz_stefan_mexican_crime_photographs_from_the_archive_of_stefan_ruiz_9781910401040.jpg" alt="Mexican Crime Photographs from the Archive of Stefan Ruiz" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Stefan Ruiz</div>
+    
+    <div class="collection-book-title">Mexican Crime Photographs from the Archive of Stefan Ruiz</div>
+    
+        <div class="collection-book-meta">GOST Books &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/simpson_collages_1082/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/simpson_collages_1082/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/simpson_lorna_collages_2018.jpg" alt="Collages" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Lorna Simpson</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Collages</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Chronicle Books &middot; 2018</p>
+            <img src="/assets/images/books/simpson_lorna_collages_2018.jpg" alt="Collages" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Lorna Simpson</div>
+    
+    <div class="collection-book-title">Collages</div>
+    
+        <div class="collection-book-meta">Chronicle Books &middot; 2018</div>
+    
 </a>
 
         
             
-<a href="/books/solomon_one-picture-book-83-witness_2172/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/solomon_one-picture-book-83-witness_2172/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/solomon_dan_one-picture-book-83-witness_9781590053942.jpg" alt="One Picture Book #83: Witness" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Dan Solomon</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book #83: Witness</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2014</p>
+            <img src="/assets/images/books/solomon_dan_one-picture-book-83-witness_9781590053942.jpg" alt="One Picture Book #83: Witness" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Dan Solomon</div>
+    
+    <div class="collection-book-title">One Picture Book #83: Witness</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/spencer_there-is-no-light-at-the-end-of-the-tunnel-because-the-tunnel-is-made-of-light_1804/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/spencer_there-is-no-light-at-the-end-of-the-tunnel-because-the-tunnel-is-made-of-light_1804/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Ryan_Spencer_There_Is_No_Light_at_the_End_of_the_Tunnel_Because.jpg" alt="There Is No Light at the End of the Tunnel Because the Tunnel Is Made of Light" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ryan Spencer</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">There Is No Light at the End of the Tunnel Because the Tunnel Is Made of Light</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">TBW Books &middot; 2024</p>
+            <img src="/assets/images/books/Ryan_Spencer_There_Is_No_Light_at_the_End_of_the_Tunnel_Because.jpg" alt="There Is No Light at the End of the Tunnel Because the Tunnel Is Made of Light" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Ryan Spencer</div>
+    
+    <div class="collection-book-title">There Is No Light at the End of the Tunnel Because the Tunnel Is Made of Light</div>
+    
+        <div class="collection-book-meta">TBW Books &middot; 2024</div>
+    
 </a>
 
         
             
-<a href="/books/stezaker_john-stezaker_1878/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/stezaker_john-stezaker_1878/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/stezaker_john_monograph_2010_9781905464333.jpg" alt="John Stezaker" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">John Stezaker</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ridinghouse, in association with Whitechapel Gallery, Mudam Luxembourg, and Mildred Lane Kemper Art Museum &middot; 2010</p>
+            <img src="/assets/images/books/stezaker_john_monograph_2010_9781905464333.jpg" alt="John Stezaker" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">John Stezaker</div>
+    
+    <div class="collection-book-title">John Stezaker</div>
+    
+        <div class="collection-book-meta">Ridinghouse, in association with Whitechapel Gallery, Mudam Luxembourg, and Mildred Lane Kemper Art Museum &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/stezaker_john-stezaker-at-the-edge-of-pictures_1926/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/stezaker_john-stezaker-at-the-edge-of-pictures_1926/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/stezaker_john_at_the_edge_of_pictures_9783960988915.jpg" alt="John Stezaker: At the Edge of Pictures" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">John Stezaker: At the Edge of Pictures</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Verlag der Buchhandlung Walther König &middot; 2020</p>
+            <img src="/assets/images/books/stezaker_john_at_the_edge_of_pictures_9783960988915.jpg" alt="John Stezaker: At the Edge of Pictures" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">John Stezaker</div>
+    
+    <div class="collection-book-title">John Stezaker: At the Edge of Pictures</div>
+    
+        <div class="collection-book-meta">Verlag der Buchhandlung Walther König &middot; 2020</div>
+    
 </a>
 
         
             
-<a href="/books/stezaker_john-stezaker-crossing-over_1874/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/stezaker_john-stezaker-crossing-over_1874/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/stezaker_john_crossing_over_9781905464890.jpg" alt="John Stezaker: Crossing Over" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">John Stezaker: Crossing Over</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ridinghouse &middot; 2014</p>
+            <img src="/assets/images/books/stezaker_john_crossing_over_9781905464890.jpg" alt="John Stezaker: Crossing Over" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">John Stezaker</div>
+    
+    <div class="collection-book-title">John Stezaker: Crossing Over</div>
+    
+        <div class="collection-book-meta">Ridinghouse &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/stezaker_john-stezaker-double-shadow_1875/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/stezaker_john-stezaker-double-shadow_1875/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/stezaker_john_double_shadow_9783753304021.jpg" alt="John Stezaker: Double Shadow" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">John Stezaker: Double Shadow</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Verlag der Buchhandlung Walther König / Ridinghouse &middot; 2024</p>
+            <img src="/assets/images/books/stezaker_john_double_shadow_9783753304021.jpg" alt="John Stezaker: Double Shadow" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">John Stezaker</div>
+    
+    <div class="collection-book-title">John Stezaker: Double Shadow</div>
+    
+        <div class="collection-book-meta">Verlag der Buchhandlung Walther König / Ridinghouse &middot; 2024</div>
+    
 </a>
 
         
             
-<a href="/books/stezaker_john-stezaker-film-still_1876/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/stezaker_john-stezaker-film-still_1876/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/stezaker_john_film_still_9781905464418.jpg" alt="John Stezaker: Film Still" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">John Stezaker: Film Still</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ridinghouse &middot; 2011</p>
+            <img src="/assets/images/books/stezaker_john_film_still_9781905464418.jpg" alt="John Stezaker: Film Still" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">John Stezaker</div>
+    
+    <div class="collection-book-title">John Stezaker: Film Still</div>
+    
+        <div class="collection-book-meta">Ridinghouse &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/stezaker_john-stezaker-fumetti_1906/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/stezaker_john-stezaker-fumetti_1906/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/stezaker_john_fumetti_9783865605337.jpg" alt="John Stezaker: Fumetti" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">John Stezaker: Fumetti</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Verlag der Buchhandlung Walther König &middot; 2009</p>
+            <img src="/assets/images/books/stezaker_john_fumetti_9783865605337.jpg" alt="John Stezaker: Fumetti" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">John Stezaker</div>
+    
+    <div class="collection-book-title">John Stezaker: Fumetti</div>
+    
+        <div class="collection-book-meta">Verlag der Buchhandlung Walther König &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/stezaker_john-stezaker-lost-world_1877/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/stezaker_john-stezaker-lost-world_1877/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/stezaker_john_lost_world_9781909932432.jpg" alt="John Stezaker: Lost World" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">John Stezaker: Lost World</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ridinghouse &middot; 2017</p>
+            <img src="/assets/images/books/stezaker_john_lost_world_9781909932432.jpg" alt="John Stezaker: Lost World" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">John Stezaker</div>
+    
+    <div class="collection-book-title">John Stezaker: Lost World</div>
+    
+        <div class="collection-book-meta">Ridinghouse &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/stezaker_john-stezaker-tabula-rasa_1907/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/stezaker_john-stezaker-tabula-rasa_1907/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/stezaker_john_tabula_rasa_9781905464302.jpg" alt="John Stezaker: Tabula Rasa" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">John Stezaker: Tabula Rasa</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ridinghouse &middot; 2010</p>
+            <img src="/assets/images/books/stezaker_john_tabula_rasa_9781905464302.jpg" alt="John Stezaker: Tabula Rasa" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">John Stezaker</div>
+    
+    <div class="collection-book-title">John Stezaker: Tabula Rasa</div>
+    
+        <div class="collection-book-meta">Ridinghouse &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/stezaker_john-stezaker-unassisted-readymade_1923/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/stezaker_john-stezaker-unassisted-readymade_1923/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/stezaker_john_unassisted_readymade_9783037644492.jpg" alt="John Stezaker: Unassisted Readymade" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">John Stezaker: Unassisted Readymade</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">JRPRingier &middot; 2016</p>
+            <img src="/assets/images/books/stezaker_john_unassisted_readymade_9783037644492.jpg" alt="John Stezaker: Unassisted Readymade" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">John Stezaker</div>
+    
+    <div class="collection-book-title">John Stezaker: Unassisted Readymade</div>
+    
+        <div class="collection-book-meta">JRPRingier &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/stezaker_nude-and-landscape_1838/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/stezaker_nude-and-landscape_1838/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/stezaker_john_nude_and_landscape_9781905464531.jpg" alt="Nude and Landscape" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nude and Landscape</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ridinghouse &middot; 2012</p>
+            <img src="/assets/images/books/stezaker_john_nude_and_landscape_9781905464531.jpg" alt="Nude and Landscape" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">John Stezaker</div>
+    
+    <div class="collection-book-title">Nude and Landscape</div>
+    
+        <div class="collection-book-meta">Ridinghouse &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/stezaker_one-on-one_1841/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/stezaker_one-on-one_1841/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/stezaker_john_one_on_one_9781905464715.jpg" alt="One on One" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One on One</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ridinghouse / Tel Aviv Museum of Art &middot; 2013</p>
+            <img src="/assets/images/books/stezaker_john_one_on_one_9781905464715.jpg" alt="One on One" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">John Stezaker</div>
+    
+    <div class="collection-book-title">One on One</div>
+    
+        <div class="collection-book-meta">Ridinghouse / Tel Aviv Museum of Art &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/stezaker_silkscreens_1840/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/stezaker_silkscreens_1840/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/stezaker_john_silkscreens_9781905464340.jpg" alt="Silkscreens" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Stezaker</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Silkscreens</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ridinghouse &middot; 2010</p>
+            <img src="/assets/images/books/stezaker_john_silkscreens_9781905464340.jpg" alt="Silkscreens" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">John Stezaker</div>
+    
+    <div class="collection-book-title">Silkscreens</div>
+    
+        <div class="collection-book-meta">Ridinghouse &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/struvay_love-and-hate-and-other-mysteries-found-altered-snapshots-from-the-collection-of-thierry-struvay_1109/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/struvay_love-and-hate-and-other-mysteries-found-altered-snapshots-from-the-collection-of-thierry-struvay_1109/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/struvay_thierry_love_and_hate_and_other_mysteries_9780985995850.jpg" alt="Love &amp; Hate &amp; Other Mysteries: Found Altered Snapshots from the Collection of Thierry Struvay" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Thierry Struvay</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Love &amp; Hate &amp; Other Mysteries: Found Altered Snapshots from the Collection of Thierry Struvay</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">August Editions &middot; 2016</p>
+            <img src="/assets/images/books/struvay_thierry_love_and_hate_and_other_mysteries_9780985995850.jpg" alt="Love &amp; Hate &amp; Other Mysteries: Found Altered Snapshots from the Collection of Thierry Struvay" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Thierry Struvay</div>
+    
+    <div class="collection-book-title">Love &amp; Hate &amp; Other Mysteries: Found Altered Snapshots from the Collection of Thierry Struvay</div>
+    
+        <div class="collection-book-meta">August Editions &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/sume_tekerrur-recurrence_1111/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/sume_tekerrur-recurrence_1111/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/sume_selim_tekerrur_recurrence_1111.jpg" alt="Tekerrür (Recurrence)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Selim Süme</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tekerrür (Recurrence)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Reccollective &middot; 2016</p>
+            <img src="/assets/images/books/sume_selim_tekerrur_recurrence_1111.jpg" alt="Tekerrür (Recurrence)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Selim Süme</div>
+    
+    <div class="collection-book-title">Tekerrür (Recurrence)</div>
+    
+        <div class="collection-book-meta">Reccollective &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/sun_ficciones_1910/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/sun_ficciones_1910/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/sun_yanchu_ficciones_2016.jpg" alt="Ficciones" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Sun Yanchu</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Ficciones</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Jiazazhi Press &middot; 2016</p>
+            <img src="/assets/images/books/sun_yanchu_ficciones_2016.jpg" alt="Ficciones" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Sun Yanchu</div>
+    
+    <div class="collection-book-title">Ficciones</div>
+    
+        <div class="collection-book-meta">Jiazazhi Press &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/van-beek_the-cast_1908/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/van-beek_the-cast_1908/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/vanbeek_ruth_the_cast_9781927354261.jpg" alt="The Cast" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ruth van Beek</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Cast</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">New Documents &middot; 2017</p>
+            <img src="/assets/images/books/vanbeek_ruth_the_cast_9781927354261.jpg" alt="The Cast" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Ruth van Beek</div>
+    
+    <div class="collection-book-title">The Cast</div>
+    
+        <div class="collection-book-meta">New Documents &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/walls_ada-a-series-of-collages_1929/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/walls_ada-a-series-of-collages_1929/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/walls_jack_ada_a_series_of_collages.jpg" alt="Ada: A Series of Collages" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jack Walls</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Ada: A Series of Collages</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Fuse Gallery &middot; 2008</p>
+            <img src="/assets/images/books/walls_jack_ada_a_series_of_collages.jpg" alt="Ada: A Series of Collages" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Jack Walls</div>
+    
+    <div class="collection-book-title">Ada: A Series of Collages</div>
+    
+        <div class="collection-book-meta">Fuse Gallery &middot; 2008</div>
+    
 </a>
 
         
             
-<a href="/books/wessels_taking-off-henry-my-neighbor_2428/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/wessels_taking-off-henry-my-neighbor_2428/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/wessels_mariken_taking_off_henry_my_neighbor_9789490800345.jpg" alt="Taking Off. Henry My Neighbor" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mariken Wessels</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Taking Off. Henry My Neighbor</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Art Paper Editions &middot; 2015</p>
+            <img src="/assets/images/books/wessels_mariken_taking_off_henry_my_neighbor_9789490800345.jpg" alt="Taking Off. Henry My Neighbor" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Mariken Wessels</div>
+    
+    <div class="collection-book-title">Taking Off. Henry My Neighbor</div>
+    
+        <div class="collection-book-meta">Art Paper Editions &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/maelfeyt_wet_658/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/maelfeyt_wet_658/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jurgen Maelfeyt</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">WET</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">APE (Art Paper Editions) &middot; 2021</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Jurgen Maelfeyt</div>
+    
+    <div class="collection-book-title">WET</div>
+    
+        <div class="collection-book-meta">APE (Art Paper Editions) &middot; 2021</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 

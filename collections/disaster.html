@@ -311,230 +311,469 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Disaster</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Photobooks documenting catastrophe, violence, and human tragedy. From Goya&#39;s pioneering protest etchings to forensic photography and photojournalism capturing accidents, emergencies, and war.</p>
+            <div class="collection-eyebrow">Collection
+            </div>
+            <h1 class="collection-title">Disaster</h1>
+            
+                <p class="collection-description">Photobooks documenting catastrophe, violence, and human tragedy. From Goya&#39;s pioneering protest etchings to forensic photography and photojournalism capturing accidents, emergencies, and war.</p>
+            
+            <div class="collection-count">10 books</div>
+            
+            
             
             
         </div>
-        
 
-        
-        
         
 
         
             
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
-        
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<section class="collection-section">
+    
+    <div class="collection-books">
         
             
-<a href="/books/metinides_series_746/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/metinides_series_746/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Metinides_Series_9783981510508.jpg" alt="Series" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Enrique Metinides ed. Misha Kominek text by Véronique Ricardoni</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Series</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Kominek Books &middot; 2011</p>
+            <img src="/assets/images/books/Metinides_Series_9783981510508.jpg" alt="Series" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Enrique Metinides ed. Misha Kominek text by Véronique Ricardoni</div>
+    
+    <div class="collection-book-title">Series</div>
+    
+        <div class="collection-book-meta">Kominek Books &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/goya_goya-the-disasters-of-war_1354/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/goya_goya-the-disasters-of-war_1354/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Goya_Goya_The_Disasters_of_War_9788410024632.jpg" alt="Goya: The Disasters of War" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Francisco de Goya</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Goya: The Disasters of War</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">La Fábrica &middot; 2025</p>
+            <img src="/assets/images/books/Goya_Goya_The_Disasters_of_War_9788410024632.jpg" alt="Goya: The Disasters of War" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Francisco de Goya</div>
+    
+    <div class="collection-book-title">Goya: The Disasters of War</div>
+    
+        <div class="collection-book-meta">La Fábrica &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/raban-oliva_les-oiseaux_1580/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/raban-oliva_les-oiseaux_1580/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Les_Oiseaux_9782492175626.jpg" alt="Les Oiseaux" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Lola Raban-Oliva, Jean-René Etienne</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Les Oiseaux</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">RVB Books &middot; 2025</p>
+            <img src="/assets/images/books/Les_Oiseaux_9782492175626.jpg" alt="Les Oiseaux" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Lola Raban-Oliva, Jean-René Etienne</div>
+    
+    <div class="collection-book-title">Les Oiseaux</div>
+    
+        <div class="collection-book-meta">RVB Books &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/viver_revelations-iconographie-de-la-salpetriere-paris-1875-1918_1842/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/viver_revelations-iconographie-de-la-salpetriere-paris-1875-1918_1842/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Viver_Revelations_Iconographie_de_la_Salpetriere_9788416282456.jpg" alt="Révélations: Iconographie de la Salpêtrière, Paris 1875–1918" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Javier Viver (ed.)</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Révélations: Iconographie de la Salpêtrière, Paris 1875–1918</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">RM Editorial &middot; 2015</p>
+            <img src="/assets/images/books/Viver_Revelations_Iconographie_de_la_Salpetriere_9788416282456.jpg" alt="Révélations: Iconographie de la Salpêtrière, Paris 1875–1918" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Javier Viver (ed.)</div>
+    
+    <div class="collection-book-title">Révélations: Iconographie de la Salpêtrière, Paris 1875–1918</div>
+    
+        <div class="collection-book-meta">RM Editorial &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/schmuch_script-of-demolition_1843/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/schmuch_script-of-demolition_1843/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Schmuch_Script_of_Demolition_9783944669281.jpg" alt="Script of Demolition" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Alina Schmuch</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Script of Demolition</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Spector Books &middot; 2014</p>
+            <img src="/assets/images/books/Schmuch_Script_of_Demolition_9783944669281.jpg" alt="Script of Demolition" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Alina Schmuch</div>
+    
+    <div class="collection-book-title">Script of Demolition</div>
+    
+        <div class="collection-book-meta">Spector Books &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/metinides_101-tragedies-of-enrique-metinides_1844/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/metinides_101-tragedies-of-enrique-metinides_1844/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Metinides_101_Tragedies_of_Enrique_Metinides_9781597112093.jpg" alt="101 Tragedies of Enrique Metinides" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Enrique Metinides ed. Trisha Ziff</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">101 Tragedies of Enrique Metinides</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aperture &middot; 2012</p>
+            <img src="/assets/images/books/Metinides_101_Tragedies_of_Enrique_Metinides_9781597112093.jpg" alt="101 Tragedies of Enrique Metinides" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Enrique Metinides ed. Trisha Ziff</div>
+    
+    <div class="collection-book-title">101 Tragedies of Enrique Metinides</div>
+    
+        <div class="collection-book-meta">Aperture &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/phillips_police-pictures-the-photograph-as-evidence_1845/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/phillips_police-pictures-the-photograph-as-evidence_1845/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Phillips_Police_Pictures_9780811819848.jpg" alt="Police Pictures: The Photograph as Evidence" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Sandra S. Phillips Mark Haworth-Booth Carol Squiers</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Police Pictures: The Photograph as Evidence</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Chronicle Books in association with SFMOMA &middot; 1997</p>
+            <img src="/assets/images/books/Phillips_Police_Pictures_9780811819848.jpg" alt="Police Pictures: The Photograph as Evidence" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Sandra S. Phillips Mark Haworth-Booth Carol Squiers</div>
+    
+    <div class="collection-book-title">Police Pictures: The Photograph as Evidence</div>
+    
+        <div class="collection-book-meta">Chronicle Books in association with SFMOMA &middot; 1997</div>
+    
 </a>
 
         
             
-<a href="/books/botz_the-nutshell-studies-of-unexplained-death_1846/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/botz_the-nutshell-studies-of-unexplained-death_1846/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Botz_The_Nutshell_Studies_of_Unexplained_Death_9781580931458.jpg" alt="The Nutshell Studies of Unexplained Death" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Corinne May Botz</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Nutshell Studies of Unexplained Death</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Monacelli Press &middot; 2004</p>
+            <img src="/assets/images/books/Botz_The_Nutshell_Studies_of_Unexplained_Death_9781580931458.jpg" alt="The Nutshell Studies of Unexplained Death" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Corinne May Botz</div>
+    
+    <div class="collection-book-title">The Nutshell Studies of Unexplained Death</div>
+    
+        <div class="collection-book-meta">The Monacelli Press &middot; 2004</div>
+    
 </a>
 
         
             
-<a href="/books/pickering_explosions-fires-and-public-order_1847/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/pickering_explosions-fires-and-public-order_1847/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Pickering_Explosions_Fires_and_Public_Order_9781597111232.jpg" alt="Explosions, Fires, and Public Order" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Sarah Pickering text by Karen Irvine</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Explosions, Fires, and Public Order</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aperture &middot; 2010</p>
+            <img src="/assets/images/books/Pickering_Explosions_Fires_and_Public_Order_9781597111232.jpg" alt="Explosions, Fires, and Public Order" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Sarah Pickering text by Karen Irvine</div>
+    
+    <div class="collection-book-title">Explosions, Fires, and Public Order</div>
+    
+        <div class="collection-book-meta">Aperture &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/odermatt_karambolage_1848/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/odermatt_karambolage_1848/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/odermatt_arnold_karambolage_9783869309316.jpg" alt="Karambolage" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Arnold Odermatt text by Urs Odermatt</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Karambolage</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl &middot; 2015</p>
+            <img src="/assets/images/books/odermatt_arnold_karambolage_9783869309316.jpg" alt="Karambolage" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Arnold Odermatt text by Urs Odermatt</div>
+    
+    <div class="collection-book-title">Karambolage</div>
+    
+        <div class="collection-book-meta">Steidl &middot; 2015</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 

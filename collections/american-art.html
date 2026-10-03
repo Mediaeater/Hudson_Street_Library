@@ -311,422 +311,641 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+    
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">American Art</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “American Art.”</p>
+            <div class="collection-eyebrow">Places
+            </div>
+            <h1 class="collection-title">American Art</h1>
+            
+                <p class="collection-description">Every book in the library tagged “American Art.”</p>
+            
+            <div class="collection-count">20 books</div>
+            
+            
             
             
         </div>
-        
 
-        
-        
-            
-        
         
 
         
             
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
-        
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<section class="collection-section">
+    
+    <div class="collection-books">
         
             
-<a href="/books/brown_reynold-brown-a-life-in-pictures_1983/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/brown_reynold-brown-a-life-in-pictures_1983/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Reynold_Brown_Reynold_Brown_A_Life_in_Pictures_9780982004128.jpg" alt="Reynold Brown: A Life in Pictures" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Reynold Brown</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Reynold Brown: A Life in Pictures</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Illustrated Press &middot; 2009</p>
+            <img src="/assets/images/books/Reynold_Brown_Reynold_Brown_A_Life_in_Pictures_9780982004128.jpg" alt="Reynold Brown: A Life in Pictures" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Reynold Brown</div>
+    
+    <div class="collection-book-title">Reynold Brown: A Life in Pictures</div>
+    
+        <div class="collection-book-meta">The Illustrated Press &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/close_chuck-close-prints-process-and-collaboration_232/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/close_chuck-close-prints-process-and-collaboration_232/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/close_chuck_prints_9780691115771.jpg" alt="Chuck Close Prints: Process and Collaboration" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Chuck Close</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Chuck Close Prints: Process and Collaboration</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Princeton University Press &middot; 2003</p>
+            <img src="/assets/images/books/close_chuck_prints_9780691115771.jpg" alt="Chuck Close Prints: Process and Collaboration" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Chuck Close</div>
+    
+    <div class="collection-book-title">Chuck Close Prints: Process and Collaboration</div>
+    
+        <div class="collection-book-meta">Princeton University Press &middot; 2003</div>
+    
 </a>
 
         
             
-<a href="/books/de-kooning_a-way-of-living-the-art-of-willem-de-kooning_289/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/de-kooning_a-way-of-living-the-art-of-willem-de-kooning_289/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/de_Kooning_A_Way_of_Living_9780714845814.jpg" alt="A Way of Living: The Art of Willem de Kooning" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Willem de Kooning</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">A Way of Living: The Art of Willem de Kooning</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press &middot; 2014</p>
+            <img src="/assets/images/books/de_Kooning_A_Way_of_Living_9780714845814.jpg" alt="A Way of Living: The Art of Willem de Kooning" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Willem de Kooning</div>
+    
+    <div class="collection-book-title">A Way of Living: The Art of Willem de Kooning</div>
+    
+        <div class="collection-book-meta">Phaidon Press &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/elvgren_gil-elvgrens-private-stock_2221/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/elvgren_gil-elvgrens-private-stock_2221/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/elvgren_gil_gil-elvgrens-private-stock_9780957261051.jpg" alt="Gil Elvgren&#39;s Private Stock" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Gil Elvgren</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Gil Elvgren&#39;s Private Stock</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Reel Art Press &middot; 2012</p>
+            <img src="/assets/images/books/elvgren_gil_gil-elvgrens-private-stock_9780957261051.jpg" alt="Gil Elvgren&#39;s Private Stock" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Gil Elvgren</div>
+    
+    <div class="collection-book-title">Gil Elvgren&#39;s Private Stock</div>
+    
+        <div class="collection-book-meta">Reel Art Press &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/jafa_helter-skelter_1863/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/jafa_helter-skelter_1863/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/jafa_arthur_helter_skelter_9788887029963.jpg" alt="Helter Skelter" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Arthur Jafa, Richard Prince</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Helter Skelter</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Fondazione Prada &middot; 2026</p>
+            <img src="/assets/images/books/jafa_arthur_helter_skelter_9788887029963.jpg" alt="Helter Skelter" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Arthur Jafa, Richard Prince</div>
+    
+    <div class="collection-book-title">Helter Skelter</div>
+    
+        <div class="collection-book-meta">Fondazione Prada &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/jafa_helter-skelter-dispensa_1864/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/jafa_helter-skelter-dispensa_1864/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/jafa_arthur_helter_skelter_dispensa.jpg" alt="Helter Skelter (Dispensa)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Arthur Jafa, Richard Prince</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Helter Skelter (Dispensa)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Fondazione Prada &middot; 2026</p>
+            <img src="/assets/images/books/jafa_arthur_helter_skelter_dispensa.jpg" alt="Helter Skelter (Dispensa)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Arthur Jafa, Richard Prince</div>
+    
+    <div class="collection-book-title">Helter Skelter (Dispensa)</div>
+    
+        <div class="collection-book-meta">Fondazione Prada &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/lowman_nate-lowman-before-and-after_2350/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/lowman_nate-lowman-before-and-after_2350/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/lowman_nate_nate_lowman_before_and_after_9780934324816.jpg" alt="Nate Lowman: Before and After" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Nate Lowman</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nate Lowman: Before and After</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aspen Art Press &middot; 2019</p>
+            <img src="/assets/images/books/lowman_nate_nate_lowman_before_and_after_9780934324816.jpg" alt="Nate Lowman: Before and After" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Nate Lowman</div>
+    
+    <div class="collection-book-title">Nate Lowman: Before and After</div>
+    
+        <div class="collection-book-meta">Aspen Art Press &middot; 2019</div>
+    
 </a>
 
         
             
-<a href="/books/lozano_drawings-1958-64_2067/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/lozano_drawings-1958-64_2067/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Lee_Lozano_Drawings_195864_9781949172409.jpg" alt="Drawings 1958–64" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Lee Lozano</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Drawings 1958–64</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Karma &middot; 2021</p>
+            <img src="/assets/images/books/Lee_Lozano_Drawings_195864_9781949172409.jpg" alt="Drawings 1958–64" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Lee Lozano</div>
+    
+    <div class="collection-book-title">Drawings 1958–64</div>
+    
+        <div class="collection-book-meta">Karma &middot; 2021</div>
+    
 </a>
 
         
             
-<a href="/books/neel_alice-neel-painted-truths_792/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/neel_alice-neel-painted-truths_792/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/neel_alice_painted_truths_9780300163322.jpg" alt="Alice Neel: Painted Truths" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Alice Neel</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Alice Neel: Painted Truths</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Museum of Fine Arts, Houston &middot; 2010</p>
+            <img src="/assets/images/books/neel_alice_painted_truths_9780300163322.jpg" alt="Alice Neel: Painted Truths" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Alice Neel</div>
+    
+    <div class="collection-book-title">Alice Neel: Painted Truths</div>
+    
+        <div class="collection-book-meta">The Museum of Fine Arts, Houston &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/neel_alice-neel-people-come-first_791/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/neel_alice-neel-people-come-first_791/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/neel_alice_people_come_first_9781588397256.jpg" alt="Alice Neel: People Come First" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Alice Neel</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Alice Neel: People Come First</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Metropolitan Museum of Art &middot; 2021</p>
+            <img src="/assets/images/books/neel_alice_people_come_first_9781588397256.jpg" alt="Alice Neel: People Come First" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Alice Neel</div>
+    
+    <div class="collection-book-title">Alice Neel: People Come First</div>
+    
+        <div class="collection-book-meta">The Metropolitan Museum of Art &middot; 2021</div>
+    
 </a>
 
         
             
-<a href="/books/okeeffe_georgia-okeeffe-art-and-letters_2021/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/okeeffe_georgia-okeeffe-art-and-letters_2021/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Georgia_OKeeffe_Georgia_OKeeffe_Art_and_Letters_9780821216866.jpg" alt="Georgia O&#39;Keeffe: Art and Letters" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Georgia O&#39;Keeffe</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Georgia O&#39;Keeffe: Art and Letters</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">National Gallery of Art &middot; 1987</p>
+            <img src="/assets/images/books/Georgia_OKeeffe_Georgia_OKeeffe_Art_and_Letters_9780821216866.jpg" alt="Georgia O&#39;Keeffe: Art and Letters" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Georgia O&#39;Keeffe</div>
+    
+    <div class="collection-book-title">Georgia O&#39;Keeffe: Art and Letters</div>
+    
+        <div class="collection-book-meta">National Gallery of Art &middot; 1987</div>
+    
 </a>
 
         
             
-<a href="/books/okeeffe_georgia-okeeffe-the-poetry-of-things_2022/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/okeeffe_georgia-okeeffe-the-poetry-of-things_2022/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Georgia_OKeeffe_Georgia_OKeeffe_The_Poetry_of_Things_9780943044248.jpg" alt="Georgia O&#39;Keeffe: The Poetry of Things" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Georgia O&#39;Keeffe</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Georgia O&#39;Keeffe: The Poetry of Things</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Phillips Collection &middot; 1999</p>
+            <img src="/assets/images/books/Georgia_OKeeffe_Georgia_OKeeffe_The_Poetry_of_Things_9780943044248.jpg" alt="Georgia O&#39;Keeffe: The Poetry of Things" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Georgia O&#39;Keeffe</div>
+    
+    <div class="collection-book-title">Georgia O&#39;Keeffe: The Poetry of Things</div>
+    
+        <div class="collection-book-meta">The Phillips Collection &middot; 1999</div>
+    
 </a>
 
         
             
-<a href="/books/prince_new-cowboys_1808/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/prince_new-cowboys_1808/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Richard_Prince_New_Cowboys.jpg" alt="New Cowboys" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">New Cowboys</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Karma &middot; 2017</p>
+            <img src="/assets/images/books/Richard_Prince_New_Cowboys.jpg" alt="New Cowboys" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Richard Prince</div>
+    
+    <div class="collection-book-title">New Cowboys</div>
+    
+        <div class="collection-book-meta">Karma &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/prince_richard-prince_1807/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/prince_richard-prince_1807/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Richard_Prince_Richard_Prince.jpg" alt="Richard Prince" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Richard Prince</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Hirmer Publishers &middot; 2026</p>
+            <img src="/assets/images/books/Richard_Prince_Richard_Prince.jpg" alt="Richard Prince" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Richard Prince</div>
+    
+    <div class="collection-book-title">Richard Prince</div>
+    
+        <div class="collection-book-meta">Hirmer Publishers &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/rosenquist_a-retrospective_983/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/rosenquist_a-retrospective_983/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Rosenquist_A_Retrospective_9780892072675.jpg" alt="A Retrospective" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">James Rosenquist</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">A Retrospective</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Guggenheim Museum Publications &middot; 2003</p>
+            <img src="/assets/images/books/Rosenquist_A_Retrospective_9780892072675.jpg" alt="A Retrospective" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">James Rosenquist</div>
+    
+    <div class="collection-book-title">A Retrospective</div>
+    
+        <div class="collection-book-meta">Guggenheim Museum Publications &middot; 2003</div>
+    
 </a>
 
         
             
-<a href="/books/sultan_evidence_2318/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/sultan_evidence_2318/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/sultan_larry_evidence_9781891024627.jpg" alt="Evidence" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Larry Sultan, Mike Mandel</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Evidence</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">D.A.P. / Distributed Art Publishers &middot; 2003</p>
+            <img src="/assets/images/books/sultan_larry_evidence_9781891024627.jpg" alt="Evidence" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Larry Sultan, Mike Mandel</div>
+    
+    <div class="collection-book-title">Evidence</div>
+    
+        <div class="collection-book-meta">D.A.P. / Distributed Art Publishers &middot; 2003</div>
+    
 </a>
 
         
             
-<a href="/books/sultan_the-valley_2319/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/sultan_the-valley_2319/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/sultan_larry_the-valley_9783908247791.jpg" alt="The Valley" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Larry Sultan</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Valley</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Scalo Publishers &middot; 2004</p>
+            <img src="/assets/images/books/sultan_larry_the-valley_9783908247791.jpg" alt="The Valley" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Larry Sultan</div>
+    
+    <div class="collection-book-title">The Valley</div>
+    
+        <div class="collection-book-meta">Scalo Publishers &middot; 2004</div>
+    
 </a>
 
         
             
-<a href="/books/tooker_george-tooker_2030/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/tooker_george-tooker_2030/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/George_Tooker_George_Tooker_9781858944562.jpg" alt="George Tooker" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">George Tooker</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">George Tooker</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Merrell Publishers &middot; 2008</p>
+            <img src="/assets/images/books/George_Tooker_George_Tooker_9781858944562.jpg" alt="George Tooker" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">George Tooker</div>
+    
+    <div class="collection-book-title">George Tooker</div>
+    
+        <div class="collection-book-meta">Merrell Publishers &middot; 2008</div>
+    
 </a>
 
         
             
-<a href="/books/whitney-museum-of-american-art_whitney-biennial-2024-even-better-than-the-real-thing_2044/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/whitney-museum-of-american-art_whitney-biennial-2024-even-better-than-the-real-thing_2044/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Whitney_Museum_of_American_Art_Whitney_Biennial_2024_Even_Better_Than_the_Real_Th_9780300275872.jpg" alt="Whitney Biennial 2024: Even Better Than the Real Thing" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Whitney Museum of American Art</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Whitney Biennial 2024: Even Better Than the Real Thing</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Whitney Museum of American Art / Yale University Press &middot; 2024</p>
+            <img src="/assets/images/books/Whitney_Museum_of_American_Art_Whitney_Biennial_2024_Even_Better_Than_the_Real_Th_9780300275872.jpg" alt="Whitney Biennial 2024: Even Better Than the Real Thing" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Whitney Museum of American Art</div>
+    
+    <div class="collection-book-title">Whitney Biennial 2024: Even Better Than the Real Thing</div>
+    
+        <div class="collection-book-meta">Whitney Museum of American Art / Yale University Press &middot; 2024</div>
+    
 </a>
 
         
             
-<a href="/books/wittenberg_nicole-wittenberg_1439/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/wittenberg_nicole-wittenberg_1439/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Wittenberg_Nicole_Wittenberg_9781580936811.jpg" alt="Nicole Wittenberg" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Nicole Wittenberg</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole Wittenberg</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Monacelli Press &middot; 2025</p>
+            <img src="/assets/images/books/Wittenberg_Nicole_Wittenberg_9781580936811.jpg" alt="Nicole Wittenberg" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Nicole Wittenberg</div>
+    
+    <div class="collection-book-title">Nicole Wittenberg</div>
+    
+        <div class="collection-book-meta">The Monacelli Press &middot; 2025</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 

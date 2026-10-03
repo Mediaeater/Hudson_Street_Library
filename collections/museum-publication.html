@@ -311,840 +311,1015 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+    
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Museum Publication</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Museum Publication.”</p>
+            <div class="collection-eyebrow">Formats
+            </div>
+            <h1 class="collection-title">Museum Publication</h1>
+            
+                <p class="collection-description">Every book in the library tagged “Museum Publication.”</p>
+            
+            <div class="collection-count">42 books</div>
+            
+            
             
             
         </div>
-        
 
-        
-        
-            
-        
         
 
         
             
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
-        
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<section class="collection-section">
+    
+    <div class="collection-books">
         
             
-<a href="/books/abbe_shooting-stalin-the-wonderful-years-of-photographer-james-abbe_2096/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/abbe_shooting-stalin-the-wonderful-years-of-photographer-james-abbe_2096/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/abbe_james_shooting_stalin_9783865210432.jpg" alt="Shooting Stalin: The &#39;Wonderful&#39; Years of Photographer James Abbe" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">James Abbe</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Shooting Stalin: The &#39;Wonderful&#39; Years of Photographer James Abbe</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl / Museum Ludwig &middot; 2004</p>
+            <img src="/assets/images/books/abbe_james_shooting_stalin_9783865210432.jpg" alt="Shooting Stalin: The &#39;Wonderful&#39; Years of Photographer James Abbe" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">James Abbe</div>
+    
+    <div class="collection-book-title">Shooting Stalin: The &#39;Wonderful&#39; Years of Photographer James Abbe</div>
+    
+        <div class="collection-book-meta">Steidl / Museum Ludwig &middot; 2004</div>
+    
 </a>
 
         
             
-<a href="/books/adamson_postmodernism-style-and-subversion-1970-1990_2098/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/adamson_postmodernism-style-and-subversion-1970-1990_2098/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/adamson_glenn_postmodernism_style_and_subversion_1970_1990_9781851776597.jpg" alt="Postmodernism: Style and Subversion 1970–1990" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Glenn Adamson, Jane Pavitt</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Postmodernism: Style and Subversion 1970–1990</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">V&amp;A Publishing &middot; 2011</p>
+            <img src="/assets/images/books/adamson_glenn_postmodernism_style_and_subversion_1970_1990_9781851776597.jpg" alt="Postmodernism: Style and Subversion 1970–1990" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Glenn Adamson, Jane Pavitt</div>
+    
+    <div class="collection-book-title">Postmodernism: Style and Subversion 1970–1990</div>
+    
+        <div class="collection-book-meta">V&amp;A Publishing &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/basquiat_jean-michel-basquiat_2065/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/basquiat_jean-michel-basquiat_2065/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/basquiat_jean_michel_jean_michel_basquiat_9780810968066.jpg" alt="Jean-Michel Basquiat" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jean-Michel Basquiat</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Jean-Michel Basquiat</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Whitney Museum of American Art / Harry N. Abrams &middot; 1992</p>
+            <img src="/assets/images/books/basquiat_jean_michel_jean_michel_basquiat_9780810968066.jpg" alt="Jean-Michel Basquiat" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Jean-Michel Basquiat</div>
+    
+    <div class="collection-book-title">Jean-Michel Basquiat</div>
+    
+        <div class="collection-book-meta">Whitney Museum of American Art / Harry N. Abrams &middot; 1992</div>
+    
 </a>
 
         
             
-<a href="/books/bergdoll_bauhaus-1919-1933-workshops-for-modernity_2085/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/bergdoll_bauhaus-1919-1933-workshops-for-modernity_2085/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/bergdoll_barry_bauhaus_1919_1933_workshops_for_modernity_9780870707582.jpg" alt="Bauhaus 1919–1933: Workshops for Modernity" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Barry Bergdoll</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Bauhaus 1919–1933: Workshops for Modernity</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Museum of Modern Art &middot; 2009</p>
+            <img src="/assets/images/books/bergdoll_barry_bauhaus_1919_1933_workshops_for_modernity_9780870707582.jpg" alt="Bauhaus 1919–1933: Workshops for Modernity" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Barry Bergdoll</div>
+    
+    <div class="collection-book-title">Bauhaus 1919–1933: Workshops for Modernity</div>
+    
+        <div class="collection-book-meta">The Museum of Modern Art &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/brown_cecily-brown-death-and-the-maid_1982/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/brown_cecily-brown-death-and-the-maid_1982/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Cecily_Brown_Cecily_Brown_Death_and_the_Maid_9781588397614.jpg" alt="Cecily Brown: Death and the Maid" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Cecily Brown</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cecily Brown: Death and the Maid</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Metropolitan Museum of Art &middot; 2023</p>
+            <img src="/assets/images/books/Cecily_Brown_Cecily_Brown_Death_and_the_Maid_9781588397614.jpg" alt="Cecily Brown: Death and the Maid" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Cecily Brown</div>
+    
+    <div class="collection-book-title">Cecily Brown: Death and the Maid</div>
+    
+        <div class="collection-book-meta">The Metropolitan Museum of Art &middot; 2023</div>
+    
 </a>
 
         
             
-<a href="/books/brown_cecily-brown-the-lady-and-the-swan_1980/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/brown_cecily-brown-the-lady-and-the-swan_1980/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Cecily_Brown_Cecily_Brown_The_Lady_and_the_Swan.jpg" alt="Cecily Brown: The Lady and the Swan" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Cecily Brown</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cecily Brown: The Lady and the Swan</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Staatliche Graphische Sammlung München &middot; 2022</p>
+            <img src="/assets/images/books/Cecily_Brown_Cecily_Brown_The_Lady_and_the_Swan.jpg" alt="Cecily Brown: The Lady and the Swan" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Cecily Brown</div>
+    
+    <div class="collection-book-title">Cecily Brown: The Lady and the Swan</div>
+    
+        <div class="collection-book-meta">Staatliche Graphische Sammlung München &middot; 2022</div>
+    
 </a>
 
         
             
-<a href="/books/butler_bisa-butler-portraits_1987/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/butler_bisa-butler-portraits_1987/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Bisa_Butler_Bisa_Butler_Portraits_9780300254310.jpg" alt="Bisa Butler: Portraits" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Bisa Butler</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Bisa Butler: Portraits</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Art Institute of Chicago / Yale University Press &middot; 2020</p>
+            <img src="/assets/images/books/Bisa_Butler_Bisa_Butler_Portraits_9780300254310.jpg" alt="Bisa Butler: Portraits" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Bisa Butler</div>
+    
+    <div class="collection-book-title">Bisa Butler: Portraits</div>
+    
+        <div class="collection-book-meta">The Art Institute of Chicago / Yale University Press &middot; 2020</div>
+    
 </a>
 
         
             
-<a href="/books/collier_anne-collier_1999/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/collier_anne-collier_1999/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Anne_Collier_Anne_Collier_9781938922527.jpg" alt="Anne Collier" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Anne Collier</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Anne Collier</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Museum of Contemporary Art Chicago &middot; 2014</p>
+            <img src="/assets/images/books/Anne_Collier_Anne_Collier_9781938922527.jpg" alt="Anne Collier" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Anne Collier</div>
+    
+    <div class="collection-book-title">Anne Collier</div>
+    
+        <div class="collection-book-meta">Museum of Contemporary Art Chicago &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/collier_anne-collier-photographic_1998/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/collier_anne-collier-photographic_1998/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Anne_Collier_Anne_Collier_Photographic_9783960700302.jpg" alt="Anne Collier: Photographic" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Anne Collier</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Anne Collier: Photographic</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Hartmann Books &middot; 2018</p>
+            <img src="/assets/images/books/Anne_Collier_Anne_Collier_Photographic_9783960700302.jpg" alt="Anne Collier: Photographic" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Anne Collier</div>
+    
+    <div class="collection-book-title">Anne Collier: Photographic</div>
+    
+        <div class="collection-book-meta">Hartmann Books &middot; 2018</div>
+    
 </a>
 
         
             
-<a href="/books/craven_painted-time-2020-2024_1971/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/craven_painted-time-2020-2024_1971/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/craven_ann_painted_time_2020_2024_9781961883031.jpg" alt="Painted Time: (2020–2024)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ann Craven</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Painted Time: (2020–2024)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Farnsworth Art Museum &middot; 2025</p>
+            <img src="/assets/images/books/craven_ann_painted_time_2020_2024_9781961883031.jpg" alt="Painted Time: (2020–2024)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Ann Craven</div>
+    
+    <div class="collection-book-title">Painted Time: (2020–2024)</div>
+    
+        <div class="collection-book-meta">Farnsworth Art Museum &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/dix_otto-dix_2007/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/dix_otto-dix_2007/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Otto_Dix_Otto_Dix_9783791350202.jpg" alt="Otto Dix" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Otto Dix</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Otto Dix</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Prestel / Neue Galerie New York &middot; 2010</p>
+            <img src="/assets/images/books/Otto_Dix_Otto_Dix_9783791350202.jpg" alt="Otto Dix" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Otto Dix</div>
+    
+    <div class="collection-book-title">Otto Dix</div>
+    
+        <div class="collection-book-meta">Prestel / Neue Galerie New York &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/duchamp_marcel-duchamp-etant-donnes_2008/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/duchamp_marcel-duchamp-etant-donnes_2008/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Marcel_Duchamp_Marcel_Duchamp_tant_donns_9780300149791.jpg" alt="Marcel Duchamp: Étant donnés" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Marcel Duchamp</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Marcel Duchamp: Étant donnés</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Philadelphia Museum of Art / Yale University Press &middot; 2009</p>
+            <img src="/assets/images/books/Marcel_Duchamp_Marcel_Duchamp_tant_donns_9780300149791.jpg" alt="Marcel Duchamp: Étant donnés" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Marcel Duchamp</div>
+    
+    <div class="collection-book-title">Marcel Duchamp: Étant donnés</div>
+    
+        <div class="collection-book-meta">Philadelphia Museum of Art / Yale University Press &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/dunham_carroll-dunham-drawings-1974-2024_2010/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/dunham_carroll-dunham-drawings-1974-2024_2010/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Carroll_Dunham_Carroll_Dunham_Drawings_19742024_9780300286496.jpg" alt="Carroll Dunham: Drawings 1974–2024" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Carroll Dunham</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Carroll Dunham: Drawings 1974–2024</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Art Institute of Chicago &middot; 2026</p>
+            <img src="/assets/images/books/Carroll_Dunham_Carroll_Dunham_Drawings_19742024_9780300286496.jpg" alt="Carroll Dunham: Drawings 1974–2024" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Carroll Dunham</div>
+    
+    <div class="collection-book-title">Carroll Dunham: Drawings 1974–2024</div>
+    
+        <div class="collection-book-meta">The Art Institute of Chicago &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/lichtenstein_roy-lichtenstein-1970-1980_2034/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/lichtenstein_roy-lichtenstein-1970-1980_2034/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Roy_Lichtenstein_Roy_Lichtenstein_19701980_9780933920156.jpg" alt="Roy Lichtenstein 1970-1980" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Roy Lichtenstein</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Roy Lichtenstein 1970-1980</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Hudson Hills Press &middot; 1981</p>
+            <img src="/assets/images/books/Roy_Lichtenstein_Roy_Lichtenstein_19701980_9780933920156.jpg" alt="Roy Lichtenstein 1970-1980" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Roy Lichtenstein</div>
+    
+    <div class="collection-book-title">Roy Lichtenstein 1970-1980</div>
+    
+        <div class="collection-book-meta">Hudson Hills Press &middot; 1981</div>
+    
 </a>
 
         
             
-<a href="/books/lichtenstein_roy-lichtenstein-a-retrospective_2035/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/lichtenstein_roy-lichtenstein-a-retrospective_2035/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Roy_Lichtenstein_Roy_Lichtenstein_A_Retrospective_9780300179712.jpg" alt="Roy Lichtenstein: A Retrospective" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Roy Lichtenstein</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Roy Lichtenstein: A Retrospective</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Yale University Press in association with The Art Institute of Chicago &middot; 2012</p>
+            <img src="/assets/images/books/Roy_Lichtenstein_Roy_Lichtenstein_A_Retrospective_9780300179712.jpg" alt="Roy Lichtenstein: A Retrospective" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Roy Lichtenstein</div>
+    
+    <div class="collection-book-title">Roy Lichtenstein: A Retrospective</div>
+    
+        <div class="collection-book-meta">Yale University Press in association with The Art Institute of Chicago &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/lippy_modern-artifacts_2117/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/lippy_modern-artifacts_2117/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/lippy_tod_modern_artifacts_9780989911771.jpg" alt="Modern Artifacts" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tod Lippy</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Modern Artifacts</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Esopus Books &middot; 2020</p>
+            <img src="/assets/images/books/lippy_tod_modern_artifacts_9780989911771.jpg" alt="Modern Artifacts" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Tod Lippy</div>
+    
+    <div class="collection-book-title">Modern Artifacts</div>
+    
+        <div class="collection-book-meta">Esopus Books &middot; 2020</div>
+    
 </a>
 
         
             
-<a href="/books/madani_biscuits_2038/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/madani_biscuits_2038/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Tala_Madani_Biscuits_9781913620806.jpg" alt="Biscuits" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tala Madani</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Biscuits</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">MACK / The Museum of Contemporary Art, Los Angeles &middot; 2022</p>
+            <img src="/assets/images/books/Tala_Madani_Biscuits_9781913620806.jpg" alt="Biscuits" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Tala Madani</div>
+    
+    <div class="collection-book-title">Biscuits</div>
+    
+        <div class="collection-book-meta">MACK / The Museum of Contemporary Art, Los Angeles &middot; 2022</div>
+    
 </a>
 
         
             
-<a href="/books/morris_all-systems-fail_2018/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/morris_all-systems-fail_2018/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Sarah_Morris_All_Systems_Fail_9783775754729.jpg" alt="All Systems Fail" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Sarah Morris</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">All Systems Fail</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Hatje Cantz &middot; 2023</p>
+            <img src="/assets/images/books/Sarah_Morris_All_Systems_Fail_9783775754729.jpg" alt="All Systems Fail" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Sarah Morris</div>
+    
+    <div class="collection-book-title">All Systems Fail</div>
+    
+        <div class="collection-book-meta">Hatje Cantz &middot; 2023</div>
+    
 </a>
 
         
             
-<a href="/books/mount_stenberg-brothers-constructing-a-revolution-in-soviet-design_2097/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/mount_stenberg-brothers-constructing-a-revolution-in-soviet-design_2097/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/mount_christopher_stenberg_brothers_9780870700514.jpg" alt="Stenberg Brothers: Constructing a Revolution in Soviet Design" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Christopher Mount</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Stenberg Brothers: Constructing a Revolution in Soviet Design</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Museum of Modern Art &middot; 1997</p>
+            <img src="/assets/images/books/mount_christopher_stenberg_brothers_9780870700514.jpg" alt="Stenberg Brothers: Constructing a Revolution in Soviet Design" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Christopher Mount</div>
+    
+    <div class="collection-book-title">Stenberg Brothers: Constructing a Revolution in Soviet Design</div>
+    
+        <div class="collection-book-meta">The Museum of Modern Art &middot; 1997</div>
+    
 </a>
 
         
             
-<a href="/books/okeeffe_georgia-okeeffe-art-and-letters_2021/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/okeeffe_georgia-okeeffe-art-and-letters_2021/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Georgia_OKeeffe_Georgia_OKeeffe_Art_and_Letters_9780821216866.jpg" alt="Georgia O&#39;Keeffe: Art and Letters" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Georgia O&#39;Keeffe</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Georgia O&#39;Keeffe: Art and Letters</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">National Gallery of Art &middot; 1987</p>
+            <img src="/assets/images/books/Georgia_OKeeffe_Georgia_OKeeffe_Art_and_Letters_9780821216866.jpg" alt="Georgia O&#39;Keeffe: Art and Letters" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Georgia O&#39;Keeffe</div>
+    
+    <div class="collection-book-title">Georgia O&#39;Keeffe: Art and Letters</div>
+    
+        <div class="collection-book-meta">National Gallery of Art &middot; 1987</div>
+    
 </a>
 
         
             
-<a href="/books/okeeffe_georgia-okeeffe-the-poetry-of-things_2022/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/okeeffe_georgia-okeeffe-the-poetry-of-things_2022/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Georgia_OKeeffe_Georgia_OKeeffe_The_Poetry_of_Things_9780943044248.jpg" alt="Georgia O&#39;Keeffe: The Poetry of Things" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Georgia O&#39;Keeffe</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Georgia O&#39;Keeffe: The Poetry of Things</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Phillips Collection &middot; 1999</p>
+            <img src="/assets/images/books/Georgia_OKeeffe_Georgia_OKeeffe_The_Poetry_of_Things_9780943044248.jpg" alt="Georgia O&#39;Keeffe: The Poetry of Things" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Georgia O&#39;Keeffe</div>
+    
+    <div class="collection-book-title">Georgia O&#39;Keeffe: The Poetry of Things</div>
+    
+        <div class="collection-book-meta">The Phillips Collection &middot; 1999</div>
+    
 </a>
 
         
             
-<a href="/books/paik_nam-june-paik_2025/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/paik_nam-june-paik_2025/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Nam_June_Paik_Nam_June_Paik_9783791359533.jpg" alt="Nam June Paik" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Nam June Paik</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nam June Paik</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tate Publishing / DelMonico Books · Prestel &middot; 2019</p>
+            <img src="/assets/images/books/Nam_June_Paik_Nam_June_Paik_9783791359533.jpg" alt="Nam June Paik" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Nam June Paik</div>
+    
+    <div class="collection-book-title">Nam June Paik</div>
+    
+        <div class="collection-book-meta">Tate Publishing / DelMonico Books · Prestel &middot; 2019</div>
+    
 </a>
 
         
             
-<a href="/books/paik_nam-june-paik-global-groove-2004_2026/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/paik_nam-june-paik-global-groove-2004_2026/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Nam_June_Paik_Nam_June_Paik_Global_Groove_2004_9780892073108.jpg" alt="Nam June Paik: Global Groove 2004" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Nam June Paik</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nam June Paik: Global Groove 2004</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Guggenheim Museum Publications &middot; 2004</p>
+            <img src="/assets/images/books/Nam_June_Paik_Nam_June_Paik_Global_Groove_2004_9780892073108.jpg" alt="Nam June Paik: Global Groove 2004" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Nam June Paik</div>
+    
+    <div class="collection-book-title">Nam June Paik: Global Groove 2004</div>
+    
+        <div class="collection-book-meta">Guggenheim Museum Publications &middot; 2004</div>
+    
 </a>
 
         
             
-<a href="/books/paik_nam-june-paik-global-visionary_2028/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/paik_nam-june-paik-global-visionary_2028/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Nam_June_Paik_Nam_June_Paik_Global_Visionary_9781907804205.jpg" alt="Nam June Paik: Global Visionary" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Nam June Paik</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nam June Paik: Global Visionary</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Smithsonian American Art Museum / D Giles Limited &middot; 2012</p>
+            <img src="/assets/images/books/Nam_June_Paik_Nam_June_Paik_Global_Visionary_9781907804205.jpg" alt="Nam June Paik: Global Visionary" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Nam June Paik</div>
+    
+    <div class="collection-book-title">Nam June Paik: Global Visionary</div>
+    
+        <div class="collection-book-meta">Smithsonian American Art Museum / D Giles Limited &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/parker_erik-parker-colorful-resistance_2046/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/parker_erik-parker-colorful-resistance_2046/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Erik_Parker_Erik_Parker_Colorful_Resistance_9780847838943.jpg" alt="Erik Parker: Colorful Resistance" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Erik Parker</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Erik Parker: Colorful Resistance</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Skira Rizzoli &middot; 2012</p>
+            <img src="/assets/images/books/Erik_Parker_Erik_Parker_Colorful_Resistance_9780847838943.jpg" alt="Erik Parker: Colorful Resistance" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Erik Parker</div>
+    
+    <div class="collection-book-title">Erik Parker: Colorful Resistance</div>
+    
+        <div class="collection-book-meta">Skira Rizzoli &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/peyton_elizabeth-peyton_2048/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/peyton_elizabeth-peyton_2048/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Elizabeth_Peyton_Elizabeth_Peyton_9783775790994.jpg" alt="Elizabeth Peyton" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Elizabeth Peyton</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Elizabeth Peyton</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Hatje Cantz &middot; 2001</p>
+            <img src="/assets/images/books/Elizabeth_Peyton_Elizabeth_Peyton_9783775790994.jpg" alt="Elizabeth Peyton" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Elizabeth Peyton</div>
+    
+    <div class="collection-book-title">Elizabeth Peyton</div>
+    
+        <div class="collection-book-meta">Hatje Cantz &middot; 2001</div>
+    
 </a>
 
         
             
-<a href="/books/peyton_elizabeth-peyton-aire-and-angels_2049/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/peyton_elizabeth-peyton-aire-and-angels_2049/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Elizabeth_Peyton_Elizabeth_Peyton_Aire_and_Angels_9781855147478.jpg" alt="Elizabeth Peyton: Aire and Angels" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Elizabeth Peyton</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Elizabeth Peyton: Aire and Angels</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">National Portrait Gallery, London &middot; 2019</p>
+            <img src="/assets/images/books/Elizabeth_Peyton_Elizabeth_Peyton_Aire_and_Angels_9781855147478.jpg" alt="Elizabeth Peyton: Aire and Angels" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Elizabeth Peyton</div>
+    
+    <div class="collection-book-title">Elizabeth Peyton: Aire and Angels</div>
+    
+        <div class="collection-book-meta">National Portrait Gallery, London &middot; 2019</div>
+    
 </a>
 
         
             
-<a href="/books/peyton_here-she-comes-now_859/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/peyton_here-she-comes-now_859/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/peyton_elizabeth_here_she_comes_now_9783863353254.jpg" alt="Here She Comes Now" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Elizabeth Peyton</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Here She Comes Now</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Verlag der Buchhandlung Walther König &middot; 2013</p>
+            <img src="/assets/images/books/peyton_elizabeth_here_she_comes_now_9783863353254.jpg" alt="Here She Comes Now" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Elizabeth Peyton</div>
+    
+    <div class="collection-book-title">Here She Comes Now</div>
+    
+        <div class="collection-book-meta">Verlag der Buchhandlung Walther König &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/peyton_here-she-comes-now_1976/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/peyton_here-she-comes-now_1976/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/peyton_elizabeth_here_she_comes_now_9783863353254.jpg" alt="Here She Comes Now" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Elizabeth Peyton</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Here She Comes Now</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Verlag der Buchhandlung Walther König &middot; 2013</p>
+            <img src="/assets/images/books/peyton_elizabeth_here_she_comes_now_9783863353254.jpg" alt="Here She Comes Now" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Elizabeth Peyton</div>
+    
+    <div class="collection-book-title">Here She Comes Now</div>
+    
+        <div class="collection-book-meta">Verlag der Buchhandlung Walther König &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/picasso_secret-images-picasso-and-the-japanese-erotic-print_2052/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/picasso_secret-images-picasso-and-the-japanese-erotic-print_2052/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Pablo_Picasso_Secret_Images_Picasso_and_the_Japanese_Erotic_Prin_9780500093542.jpg" alt="Secret Images: Picasso and the Japanese Erotic Print" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Pablo Picasso</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Secret Images: Picasso and the Japanese Erotic Print</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Thames &amp; Hudson &middot; 2010</p>
+            <img src="/assets/images/books/Pablo_Picasso_Secret_Images_Picasso_and_the_Japanese_Erotic_Prin_9780500093542.jpg" alt="Secret Images: Picasso and the Japanese Erotic Print" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Pablo Picasso</div>
+    
+    <div class="collection-book-title">Secret Images: Picasso and the Japanese Erotic Print</div>
+    
+        <div class="collection-book-meta">Thames &amp; Hudson &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/pollock_jackson-pollock_2054/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/pollock_jackson-pollock_2054/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Jackson_Pollock_Jackson_Pollock_9780870700682.jpg" alt="Jackson Pollock" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Jackson Pollock</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Jackson Pollock</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Museum of Modern Art, New York &middot; 1998</p>
+            <img src="/assets/images/books/Jackson_Pollock_Jackson_Pollock_9780870700682.jpg" alt="Jackson Pollock" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Jackson Pollock</div>
+    
+    <div class="collection-book-title">Jackson Pollock</div>
+    
+        <div class="collection-book-meta">The Museum of Modern Art, New York &middot; 1998</div>
+    
 </a>
 
         
             
-<a href="/books/porter_fairfield-porter-raw-the-creative-process-of-an-american-master_2055/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/porter_fairfield-porter-raw-the-creative-process-of-an-american-master_2055/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Fairfield_Porter_Fairfield_Porter_Raw_The_Creative_Process_of_an_Am_9781904832720.jpg" alt="Fairfield Porter: Raw: The Creative Process of an American Master" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Fairfield Porter</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Fairfield Porter: Raw: The Creative Process of an American Master</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">GILES, in association with the Parrish Art Museum &middot; 2010</p>
+            <img src="/assets/images/books/Fairfield_Porter_Fairfield_Porter_Raw_The_Creative_Process_of_an_Am_9781904832720.jpg" alt="Fairfield Porter: Raw: The Creative Process of an American Master" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Fairfield Porter</div>
+    
+    <div class="collection-book-title">Fairfield Porter: Raw: The Creative Process of an American Master</div>
+    
+        <div class="collection-book-meta">GILES, in association with the Parrish Art Museum &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/ray_man-ray-or-lee-miller-partners-in-surrealism_2056/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/ray_man-ray-or-lee-miller-partners-in-surrealism_2056/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Man_Ray_Man_Ray_Lee_Miller_Partners_in_Surrealism_9781858945576.jpg" alt="Man Ray | Lee Miller: Partners in Surrealism" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Man Ray, Lee Miller</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Man Ray | Lee Miller: Partners in Surrealism</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Merrell, in association with the Peabody Essex Museum &middot; 2011</p>
+            <img src="/assets/images/books/Man_Ray_Man_Ray_Lee_Miller_Partners_in_Surrealism_9781858945576.jpg" alt="Man Ray | Lee Miller: Partners in Surrealism" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Man Ray, Lee Miller</div>
+    
+    <div class="collection-book-title">Man Ray | Lee Miller: Partners in Surrealism</div>
+    
+        <div class="collection-book-meta">Merrell, in association with the Peabody Essex Museum &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/rowell_the-russian-avant-garde-book-1910-1934_2093/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/rowell_the-russian-avant-garde-book-1910-1934_2093/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/rowell_margit_the_russian_avant_garde_book_1910_1934_9780870700071.jpg" alt="The Russian Avant-Garde Book 1910–1934" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Margit Rowell, Deborah Wye</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Russian Avant-Garde Book 1910–1934</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Museum of Modern Art &middot; 2002</p>
+            <img src="/assets/images/books/rowell_margit_the_russian_avant_garde_book_1910_1934_9780870700071.jpg" alt="The Russian Avant-Garde Book 1910–1934" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Margit Rowell, Deborah Wye</div>
+    
+    <div class="collection-book-title">The Russian Avant-Garde Book 1910–1934</div>
+    
+        <div class="collection-book-meta">The Museum of Modern Art &middot; 2002</div>
+    
 </a>
 
         
             
-<a href="/books/sherman_cindy-sherman_1997/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/sherman_cindy-sherman_1997/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Cindy_Sherman_Cindy_Sherman_9780870708121.jpg" alt="Cindy Sherman" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Cindy Sherman</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cindy Sherman</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Museum of Modern Art, New York &middot; 2012</p>
+            <img src="/assets/images/books/Cindy_Sherman_Cindy_Sherman_9780870708121.jpg" alt="Cindy Sherman" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Cindy Sherman</div>
+    
+    <div class="collection-book-title">Cindy Sherman</div>
+    
+        <div class="collection-book-meta">The Museum of Modern Art, New York &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/sherman_cindy-sherman-the-complete-untitled-film-stills_2295/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/sherman_cindy-sherman-the-complete-untitled-film-stills_2295/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/sherman_cindy_cindy-sherman-the-complete-untitled-film-stills_9780870705076.jpg" alt="Cindy Sherman: The Complete Untitled Film Stills" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Cindy Sherman</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cindy Sherman: The Complete Untitled Film Stills</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Museum of Modern Art, New York &middot; 2003</p>
+            <img src="/assets/images/books/sherman_cindy_cindy-sherman-the-complete-untitled-film-stills_9780870705076.jpg" alt="Cindy Sherman: The Complete Untitled Film Stills" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Cindy Sherman</div>
+    
+    <div class="collection-book-title">Cindy Sherman: The Complete Untitled Film Stills</div>
+    
+        <div class="collection-book-meta">The Museum of Modern Art, New York &middot; 2003</div>
+    
 </a>
 
         
             
-<a href="/books/tooker_george-tooker_2030/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/tooker_george-tooker_2030/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/George_Tooker_George_Tooker_9781858944562.jpg" alt="George Tooker" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">George Tooker</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">George Tooker</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Merrell Publishers &middot; 2008</p>
+            <img src="/assets/images/books/George_Tooker_George_Tooker_9781858944562.jpg" alt="George Tooker" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">George Tooker</div>
+    
+    <div class="collection-book-title">George Tooker</div>
+    
+        <div class="collection-book-meta">Merrell Publishers &middot; 2008</div>
+    
 </a>
 
         
             
-<a href="/books/toor_salman-toor-no-ordinary-love_2031/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/toor_salman-toor-no-ordinary-love_2031/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Salman_Toor_Salman_Toor_No_Ordinary_Love_9781941366424.jpg" alt="Salman Toor: No Ordinary Love" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Salman Toor</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Salman Toor: No Ordinary Love</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gregory R. Miller &amp; Co. / Baltimore Museum of Art &middot; 2022</p>
+            <img src="/assets/images/books/Salman_Toor_Salman_Toor_No_Ordinary_Love_9781941366424.jpg" alt="Salman Toor: No Ordinary Love" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Salman Toor</div>
+    
+    <div class="collection-book-title">Salman Toor: No Ordinary Love</div>
+    
+        <div class="collection-book-meta">Gregory R. Miller &amp; Co. / Baltimore Museum of Art &middot; 2022</div>
+    
 </a>
 
         
             
-<a href="/books/tupitsyn_rodchenko-and-popova-defining-constructivism_2095/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/tupitsyn_rodchenko-and-popova-defining-constructivism_2095/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/tupitsyn_margarita_rodchenko_popova_defining_constructivism_9781854377968.jpg" alt="Rodchenko &amp; Popova: Defining Constructivism" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Margarita Tupitsyn</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Rodchenko &amp; Popova: Defining Constructivism</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tate Publishing &middot; 2009</p>
+            <img src="/assets/images/books/tupitsyn_margarita_rodchenko_popova_defining_constructivism_9781854377968.jpg" alt="Rodchenko &amp; Popova: Defining Constructivism" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Margarita Tupitsyn</div>
+    
+    <div class="collection-book-title">Rodchenko &amp; Popova: Defining Constructivism</div>
+    
+        <div class="collection-book-meta">Tate Publishing &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/whitney-museum-of-american-art_whitney-biennial-2024-even-better-than-the-real-thing_2044/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/whitney-museum-of-american-art_whitney-biennial-2024-even-better-than-the-real-thing_2044/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Whitney_Museum_of_American_Art_Whitney_Biennial_2024_Even_Better_Than_the_Real_Th_9780300275872.jpg" alt="Whitney Biennial 2024: Even Better Than the Real Thing" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Whitney Museum of American Art</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Whitney Biennial 2024: Even Better Than the Real Thing</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Whitney Museum of American Art / Yale University Press &middot; 2024</p>
+            <img src="/assets/images/books/Whitney_Museum_of_American_Art_Whitney_Biennial_2024_Even_Better_Than_the_Real_Th_9780300275872.jpg" alt="Whitney Biennial 2024: Even Better Than the Real Thing" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Whitney Museum of American Art</div>
+    
+    <div class="collection-book-title">Whitney Biennial 2024: Even Better Than the Real Thing</div>
+    
+        <div class="collection-book-meta">Whitney Museum of American Art / Yale University Press &middot; 2024</div>
+    
 </a>
 
         
             
-<a href="/books/owens_laura-owens_827/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/owens_laura-owens_827/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Laura Owens</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Laura Owens</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Whitney Museum of American Art &middot; 2017</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Laura Owens</div>
+    
+    <div class="collection-book-title">Laura Owens</div>
+    
+        <div class="collection-book-meta">Whitney Museum of American Art &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/tuymans_luc-tuymans_1185/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/tuymans_luc-tuymans_1185/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Luc Tuymans</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Luc Tuymans</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">SFMOMA/DAP &middot; 2009</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Luc Tuymans</div>
+    
+    <div class="collection-book-title">Luc Tuymans</div>
+    
+        <div class="collection-book-meta">SFMOMA/DAP &middot; 2009</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 

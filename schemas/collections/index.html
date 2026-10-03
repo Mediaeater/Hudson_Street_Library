@@ -261,17 +261,23 @@ function toggleMobileMenu() {
 
   <section class="mb-8">
     <h2 class="text-2xl font-semibold mb-4">Overview</h2>
-    <p class="mb-4">The collections metadata describes thematic groupings of books within the library catalog.</p>
+    <p class="mb-4">The endpoint lists every collection the art wing's explore page lists. It is generated at build from the same index as the collection pages, so a count here matches the page it points to.</p>
+    <p class="mb-4">The response has two keys. <code class="bg-gray-100 px-2 py-1 rounded-sm">collections</code> is an array of the entries described below: collections generated from tags and from the catalogue record first, grouped by facet, then the curated collections. <code class="bg-gray-100 px-2 py-1 rounded-sm">categories</code> is the list of category ids with a name and a description for each.</p>
 
-    <h3 class="text-xl font-semibold mb-2">Key Fields</h3>
+    <h3 class="text-xl font-semibold mb-2">Fields</h3>
     <ul class="list-disc pl-6 space-y-2">
-      <li><code class="bg-gray-100 px-2 py-1 rounded-sm">name</code> - Collection name</li>
+      <li><code class="bg-gray-100 px-2 py-1 rounded-sm">id</code> - Same value as <code class="bg-gray-100 px-2 py-1 rounded-sm">slug</code></li>
+      <li><code class="bg-gray-100 px-2 py-1 rounded-sm">name</code> - Collection name, as printed on its page</li>
       <li><code class="bg-gray-100 px-2 py-1 rounded-sm">slug</code> - URL-safe collection identifier</li>
       <li><code class="bg-gray-100 px-2 py-1 rounded-sm">description</code> - Collection description</li>
-      <li><code class="bg-gray-100 px-2 py-1 rounded-sm">count</code> - Number of books in collection</li>
+      <li><code class="bg-gray-100 px-2 py-1 rounded-sm">path</code> - Site path of the collection page</li>
+      <li><code class="bg-gray-100 px-2 py-1 rounded-sm">image</code> - Site path of a cover image, or null</li>
+      <li><code class="bg-gray-100 px-2 py-1 rounded-sm">bookCount</code> - Number of books the page lists. Optional: the two hand-built pages (Richard Prince, Magazines) have no count</li>
+      <li><code class="bg-gray-100 px-2 py-1 rounded-sm">facet</code> - Which section lists the collection: <code>theme</code>, <code>medium</code>, <code>genre</code>, <code>format</code>, <code>place</code>, <code>period</code>, <code>person</code>, <code>series</code> or <code>published</code>. Null for curated collections</li>
+      <li><code class="bg-gray-100 px-2 py-1 rounded-sm">origin</code> - Where the collection comes from: <code>hand</code> (a tag), <code>derived</code> (the catalogue record: publication decade, author or classification), <code>hand+derived</code> (both), <code>curated</code> (a hand-written rule) or <code>static</code> (a hand-built page)</li>
+      <li><code class="bg-gray-100 px-2 py-1 rounded-sm">category</code> - <code>subject</code> for generated collections, a category id for curated ones, or null</li>
+      <li><code class="bg-gray-100 px-2 py-1 rounded-sm">featured</code> - True for the curated collections listed last</li>
     </ul>
-
-    <p class="mt-4">Collections represent curatorial groupings such as "Ephemera", "Photography", "Magazines", and subject-specific thematic collections.</p>
   </section>
 
   <section>

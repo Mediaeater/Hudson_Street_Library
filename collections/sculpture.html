@@ -311,745 +311,930 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+    
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Sculpture</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Sculpture.”</p>
+            <div class="collection-eyebrow">Mediums
+            </div>
+            <h1 class="collection-title">Sculpture</h1>
+            
+                <p class="collection-description">Every book in the library tagged “Sculpture.”</p>
+            
+            <div class="collection-count">37 books</div>
+            
+            
             
             
         </div>
-        
 
-        
-        
-            
-        
         
 
         
             
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
-        
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<section class="collection-section">
+    
+    <div class="collection-books">
         
             
-<a href="/books/bischof_psychobuch-2_2375/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/bischof_psychobuch-2_2375/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/bischof_beni_psychobuch_2_9783907236970.jpg" alt="Psychobuch 2" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Beni Bischof</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Psychobuch 2</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Edition Patrick Frey &middot; 2026</p>
+            <img src="/assets/images/books/bischof_beni_psychobuch_2_9783907236970.jpg" alt="Psychobuch 2" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Beni Bischof</div>
+    
+    <div class="collection-book-title">Psychobuch 2</div>
+    
+        <div class="collection-book-meta">Edition Patrick Frey &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/borruso_hands-and-feet-and-their-supports_2209/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/borruso_hands-and-feet-and-their-supports_2209/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/borruso_matt_hands-and-feet-and-their-supports.jpg" alt="Hands and Feet and Their Supports" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Matt Borruso</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Hands and Feet and Their Supports</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Visible Publications &middot; 2024</p>
+            <img src="/assets/images/books/borruso_matt_hands-and-feet-and-their-supports.jpg" alt="Hands and Feet and Their Supports" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Matt Borruso</div>
+    
+    <div class="collection-book-title">Hands and Feet and Their Supports</div>
+    
+        <div class="collection-book-meta">Visible Publications &middot; 2024</div>
+    
 </a>
 
         
             
-<a href="/books/bourgeois_the-spider-and-the-tapestries_148/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/bourgeois_the-spider-and-the-tapestries_148/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/bourgeois_louise_the_spider_and_the_tapestries_9783775739979.jpg" alt="The Spider and the Tapestries" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Louise Bourgeois</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Spider and the Tapestries</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Hatje Cantz &middot; 2015</p>
+            <img src="/assets/images/books/bourgeois_louise_the_spider_and_the_tapestries_9783775739979.jpg" alt="The Spider and the Tapestries" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Louise Bourgeois</div>
+    
+    <div class="collection-book-title">The Spider and the Tapestries</div>
+    
+        <div class="collection-book-meta">Hatje Cantz &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/brancusi_brancusi-film-photographie-images-sans-fin_153/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/brancusi_brancusi-film-photographie-images-sans-fin_153/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/brancusi_constantin_brancusi_film_photographie_images_sans_fin_9782912132680.jpg" alt="Brancusi, film, photographie: images sans fin" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Constantin Brancusi</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Brancusi, film, photographie: images sans fin</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Éditions du Centre Pompidou / Le Point du Jour &middot; 2011</p>
+            <img src="/assets/images/books/brancusi_constantin_brancusi_film_photographie_images_sans_fin_9782912132680.jpg" alt="Brancusi, film, photographie: images sans fin" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Constantin Brancusi</div>
+    
+    <div class="collection-book-title">Brancusi, film, photographie: images sans fin</div>
+    
+        <div class="collection-book-meta">Éditions du Centre Pompidou / Le Point du Jour &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/burden_chris-burden_1984/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/burden_chris-burden_1984/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Chris_Burden_Chris_Burden_9781899377183.jpg" alt="Chris Burden" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Chris Burden</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Chris Burden</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Locus+ Publishing &middot; 2007</p>
+            <img src="/assets/images/books/Chris_Burden_Chris_Burden_9781899377183.jpg" alt="Chris Burden" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Chris Burden</div>
+    
+    <div class="collection-book-title">Chris Burden</div>
+    
+        <div class="collection-book-meta">Locus+ Publishing &middot; 2007</div>
+    
 </a>
 
         
             
-<a href="/books/burden_streetlamps_2066/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/burden_streetlamps_2066/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Chris_Burden_Streetlamps_9780847862696.jpg" alt="Streetlamps" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Chris Burden</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Streetlamps</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gagosian / Rizzoli &middot; 2018</p>
+            <img src="/assets/images/books/Chris_Burden_Streetlamps_9780847862696.jpg" alt="Streetlamps" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Chris Burden</div>
+    
+    <div class="collection-book-title">Streetlamps</div>
+    
+        <div class="collection-book-meta">Gagosian / Rizzoli &middot; 2018</div>
+    
 </a>
 
         
             
-<a href="/books/burr_tom-burr-torrington-project_1986/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/burr_tom-burr-torrington-project_1986/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Tom_Burr_Tom_Burr_Torrington_Project_9798991036740.jpg" alt="Tom Burr: Torrington Project" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tom Burr</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tom Burr: Torrington Project</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Primary Information &middot; 2025</p>
+            <img src="/assets/images/books/Tom_Burr_Tom_Burr_Torrington_Project_9798991036740.jpg" alt="Tom Burr: Torrington Project" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Tom Burr</div>
+    
+    <div class="collection-book-title">Tom Burr: Torrington Project</div>
+    
+        <div class="collection-book-meta">Primary Information &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/calder_cahiers-dart-calder-in-france-la-revue-no-1-2015-39th-year_1988/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/calder_cahiers-dart-calder-in-france-la-revue-no-1-2015-39th-year_1988/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Alexander_Calder_Cahiers_dArt_Calder_in_France_La_Revue_No_1_2015_3_9782851171818.jpg" alt="Cahiers d&#39;Art: Calder in France: La Revue No. 1, 2015 (39th Year)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Alexander Calder</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Cahiers d&#39;Art: Calder in France: La Revue No. 1, 2015 (39th Year)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Cahiers d&#39;Art &middot; 2015</p>
+            <img src="/assets/images/books/Alexander_Calder_Cahiers_dArt_Calder_in_France_La_Revue_No_1_2015_3_9782851171818.jpg" alt="Cahiers d&#39;Art: Calder in France: La Revue No. 1, 2015 (39th Year)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Alexander Calder</div>
+    
+    <div class="collection-book-title">Cahiers d&#39;Art: Calder in France: La Revue No. 1, 2015 (39th Year)</div>
+    
+        <div class="collection-book-meta">Cahiers d&#39;Art &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/christo_inout-studio_1994/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/christo_inout-studio_1994/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Christo_InOut_Studio_9781938922510.jpg" alt="In/Out Studio" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Christo, Jeanne-Claude</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">In/Out Studio</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">D.A.P./Distributed Art Publishers, with Verlag Kettler &middot; 2015</p>
+            <img src="/assets/images/books/Christo_InOut_Studio_9781938922510.jpg" alt="In/Out Studio" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Christo, Jeanne-Claude</div>
+    
+    <div class="collection-book-title">In/Out Studio</div>
+    
+        <div class="collection-book-meta">D.A.P./Distributed Art Publishers, with Verlag Kettler &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/condo_the-mad-and-the-lonely_1759/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/condo_the-mad-and-the-lonely_1759/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/condo_george_the_mad_and_the_lonely_9786185039455.jpg" alt="The Mad and the Lonely" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">George Condo</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Mad and the Lonely</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">DESTE Foundation for Contemporary Art &middot; 2026</p>
+            <img src="/assets/images/books/condo_george_the_mad_and_the_lonely_9786185039455.jpg" alt="The Mad and the Lonely" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">George Condo</div>
+    
+    <div class="collection-book-title">The Mad and the Lonely</div>
+    
+        <div class="collection-book-meta">DESTE Foundation for Contemporary Art &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/curry_aaron-curry-boxxes_1905/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/curry_aaron-curry-boxxes_1905/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/curry_aaron_boxxes_9783863356231.jpg" alt="Aaron Curry: Boxxes" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Aaron Curry</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Aaron Curry: Boxxes</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Koenig Books &middot; 2015</p>
+            <img src="/assets/images/books/curry_aaron_boxxes_9783863356231.jpg" alt="Aaron Curry: Boxxes" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Aaron Curry</div>
+    
+    <div class="collection-book-title">Aaron Curry: Boxxes</div>
+    
+        <div class="collection-book-meta">Koenig Books &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/duchamp_marcel-duchamp-etant-donnes_2008/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/duchamp_marcel-duchamp-etant-donnes_2008/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Marcel_Duchamp_Marcel_Duchamp_tant_donns_9780300149791.jpg" alt="Marcel Duchamp: Étant donnés" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Marcel Duchamp</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Marcel Duchamp: Étant donnés</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Philadelphia Museum of Art / Yale University Press &middot; 2009</p>
+            <img src="/assets/images/books/Marcel_Duchamp_Marcel_Duchamp_tant_donns_9780300149791.jpg" alt="Marcel Duchamp: Étant donnés" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Marcel Duchamp</div>
+    
+    <div class="collection-book-title">Marcel Duchamp: Étant donnés</div>
+    
+        <div class="collection-book-meta">Philadelphia Museum of Art / Yale University Press &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/dzama_marcel-dzama-sower-of-discord_2013/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/dzama_marcel-dzama-sower-of-discord_2013/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Marcel_Dzama_Marcel_Dzama_Sower_of_Discord_9781419704079.jpg" alt="Marcel Dzama: Sower of Discord" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Marcel Dzama</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Marcel Dzama: Sower of Discord</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Abrams &middot; 2013</p>
+            <img src="/assets/images/books/Marcel_Dzama_Marcel_Dzama_Sower_of_Discord_9781419704079.jpg" alt="Marcel Dzama: Sower of Discord" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Marcel Dzama</div>
+    
+    <div class="collection-book-title">Marcel Dzama: Sower of Discord</div>
+    
+        <div class="collection-book-meta">Abrams &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/eliasson_olafur-eliasson-reality-machines_320/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/eliasson_olafur-eliasson-reality-machines_320/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/eliasson_olafur_reality_machines_9783863358624.jpg" alt="Olafur Eliasson: Reality Machines" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Olafur Eliasson</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Olafur Eliasson: Reality Machines</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Koenig Books / Moderna Museet &middot; 2016</p>
+            <img src="/assets/images/books/eliasson_olafur_reality_machines_9783863358624.jpg" alt="Olafur Eliasson: Reality Machines" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Olafur Eliasson</div>
+    
+    <div class="collection-book-title">Olafur Eliasson: Reality Machines</div>
+    
+        <div class="collection-book-meta">Koenig Books / Moderna Museet &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/faile_faile-temple_2121/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/faile_faile-temple_2121/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/faile_faile_temple_9783899554120.jpg" alt="FAILE Temple" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">FAILE</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">FAILE Temple</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gestalten &middot; 2012</p>
+            <img src="/assets/images/books/faile_faile_temple_9783899554120.jpg" alt="FAILE Temple" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">FAILE</div>
+    
+    <div class="collection-book-title">FAILE Temple</div>
+    
+        <div class="collection-book-meta">Gestalten &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/faile_faile-works-on-wood-process-paintings-and-sculpture_2120/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/faile_faile-works-on-wood-process-paintings-and-sculpture_2120/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/faile_works_on_wood_9783899555479.jpg" alt="FAILE: Works on Wood: Process, Paintings and Sculpture" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">FAILE</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">FAILE: Works on Wood: Process, Paintings and Sculpture</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gestalten &middot; 2014</p>
+            <img src="/assets/images/books/faile_works_on_wood_9783899555479.jpg" alt="FAILE: Works on Wood: Process, Paintings and Sculpture" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">FAILE</div>
+    
+    <div class="collection-book-title">FAILE: Works on Wood: Process, Paintings and Sculpture</div>
+    
+        <div class="collection-book-meta">Gestalten &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/feinstein_rachel-feinstein_360/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/feinstein_rachel-feinstein_360/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/feinstein_rachel_rachel_feinstein_9780847864843.jpg" alt="Rachel Feinstein" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Rachel Feinstein</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Rachel Feinstein</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Rizzoli Electa &middot; 2019</p>
+            <img src="/assets/images/books/feinstein_rachel_rachel_feinstein_9780847864843.jpg" alt="Rachel Feinstein" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Rachel Feinstein</div>
+    
+    <div class="collection-book-title">Rachel Feinstein</div>
+    
+        <div class="collection-book-meta">Rizzoli Electa &middot; 2019</div>
+    
 </a>
 
         
             
-<a href="/books/kelly_ellsworth-kelly-in-san-francisco_1835/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/kelly_ellsworth-kelly-in-san-francisco_1835/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/kelly_ellsworth_ellsworth_kelly_in_san_francisco_9780520237841.jpg" alt="Ellsworth Kelly in San Francisco" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ellsworth Kelly</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Ellsworth Kelly in San Francisco</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">San Francisco Museum of Modern Art / University of California Press &middot; 2002</p>
+            <img src="/assets/images/books/kelly_ellsworth_ellsworth_kelly_in_san_francisco_9780520237841.jpg" alt="Ellsworth Kelly in San Francisco" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Ellsworth Kelly</div>
+    
+    <div class="collection-book-title">Ellsworth Kelly in San Francisco</div>
+    
+        <div class="collection-book-meta">San Francisco Museum of Modern Art / University of California Press &middot; 2002</div>
+    
 </a>
 
         
             
-<a href="/books/matter_13-photographs_1817/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matter_13-photographs_1817/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Herbert_Matter_13_Photographs.jpg" alt="13 Photographs" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Herbert Matter</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">13 Photographs</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ives-Sillman &middot; 1978</p>
+            <img src="/assets/images/books/Herbert_Matter_13_Photographs.jpg" alt="13 Photographs" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Herbert Matter</div>
+    
+    <div class="collection-book-title">13 Photographs</div>
+    
+        <div class="collection-book-meta">Ives-Sillman &middot; 1978</div>
+    
 </a>
 
         
             
-<a href="/books/mccarthy_paul-mccarthy-between-beauty-and-the-beast_723/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/mccarthy_paul-mccarthy-between-beauty-and-the-beast_723/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/mccarthy_paul_between_beauty_and_the_beast_9781891027239.jpg" alt="Paul McCarthy: Between Beauty and the Beast" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Paul McCarthy</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Paul McCarthy: Between Beauty and the Beast</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Foundation 20/21 &middot; 2007</p>
+            <img src="/assets/images/books/mccarthy_paul_between_beauty_and_the_beast_9781891027239.jpg" alt="Paul McCarthy: Between Beauty and the Beast" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Paul McCarthy</div>
+    
+    <div class="collection-book-title">Paul McCarthy: Between Beauty and the Beast</div>
+    
+        <div class="collection-book-meta">Foundation 20/21 &middot; 2007</div>
+    
 </a>
 
         
             
-<a href="/books/millet_les-enfantillages-pittoresques_2017/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/millet_les-enfantillages-pittoresques_2017/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Laurent_Millet_Les_Enfantillages_Pittoresques_9782350463100.jpg" alt="Les Enfantillages Pittoresques" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Laurent Millet</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Les Enfantillages Pittoresques</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Filigranes Éditions &middot; 2014</p>
+            <img src="/assets/images/books/Laurent_Millet_Les_Enfantillages_Pittoresques_9782350463100.jpg" alt="Les Enfantillages Pittoresques" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Laurent Millet</div>
+    
+    <div class="collection-book-title">Les Enfantillages Pittoresques</div>
+    
+        <div class="collection-book-meta">Filigranes Éditions &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/mutu_nguva-na-nyoka_2019/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/mutu_nguva-na-nyoka_2019/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Wangechi_Mutu_Nguva_na_Nyoka_9780992709266.jpg" alt="Nguva na Nyoka" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Wangechi Mutu</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nguva na Nyoka</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Victoria Miro &middot; 2014</p>
+            <img src="/assets/images/books/Wangechi_Mutu_Nguva_na_Nyoka_9780992709266.jpg" alt="Nguva na Nyoka" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Wangechi Mutu</div>
+    
+    <div class="collection-book-title">Nguva na Nyoka</div>
+    
+        <div class="collection-book-meta">Victoria Miro &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/prince_hoods_886/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/prince_hoods_886/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Prince_Hoods.jpg" alt="Hoods" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Prince</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Hoods</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Fulton Ryder &middot; 2022</p>
+            <img src="/assets/images/books/Prince_Hoods.jpg" alt="Hoods" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Richard Prince</div>
+    
+    <div class="collection-book-title">Hoods</div>
+    
+        <div class="collection-book-meta">Fulton Ryder &middot; 2022</div>
+    
 </a>
 
         
             
-<a href="/books/pruitt_pop-touched-me-the-art-of-rob-pruitt_2057/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/pruitt_pop-touched-me-the-art-of-rob-pruitt_2057/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Rob_Pruitt_Pop_Touched_Me_The_Art_of_Rob_Pruitt_9780810954328.jpg" alt="Pop Touched Me: The Art of Rob Pruitt" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Rob Pruitt</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Pop Touched Me: The Art of Rob Pruitt</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Abrams &middot; 2010</p>
+            <img src="/assets/images/books/Rob_Pruitt_Pop_Touched_Me_The_Art_of_Rob_Pruitt_9780810954328.jpg" alt="Pop Touched Me: The Art of Rob Pruitt" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Rob Pruitt</div>
+    
+    <div class="collection-book-title">Pop Touched Me: The Art of Rob Pruitt</div>
+    
+        <div class="collection-book-meta">Abrams &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/rauschenberg_robert-rauschenberg-sympathy-for-abandoned-objects_2059/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/rauschenberg_robert-rauschenberg-sympathy-for-abandoned-objects_2059/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Robert_Rauschenberg_Robert_Rauschenberg_Sympathy_for_Abandoned_Objects_9798992829204.jpg" alt="Robert Rauschenberg: Sympathy for Abandoned Objects" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Robert Rauschenberg</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Robert Rauschenberg: Sympathy for Abandoned Objects</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gladstone Gallery &middot; 2025</p>
+            <img src="/assets/images/books/Robert_Rauschenberg_Robert_Rauschenberg_Sympathy_for_Abandoned_Objects_9798992829204.jpg" alt="Robert Rauschenberg: Sympathy for Abandoned Objects" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Robert Rauschenberg</div>
+    
+    <div class="collection-book-title">Robert Rauschenberg: Sympathy for Abandoned Objects</div>
+    
+        <div class="collection-book-meta">Gladstone Gallery &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/rebetez_anthill-meteorites_2286/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/rebetez_anthill-meteorites_2286/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/rebetez_augustin_anthill-meteorites_9791090306240.jpg" alt="Anthill (Meteorites)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Augustin Rebetez</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Anthill (Meteorites)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">RVB Books &middot; 2015</p>
+            <img src="/assets/images/books/rebetez_augustin_anthill-meteorites_9791090306240.jpg" alt="Anthill (Meteorites)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Augustin Rebetez</div>
+    
+    <div class="collection-book-title">Anthill (Meteorites)</div>
+    
+        <div class="collection-book-meta">RVB Books &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/sachs_tea-ceremony-manual_1007/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/sachs_tea-ceremony-manual_1007/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/sachs_tom_tea_ceremony_manual_9780986430862.jpg" alt="Tea Ceremony Manual" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Tom Sachs</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Tea Ceremony Manual</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Isamu Noguchi Foundation and Garden Museum &middot; 2016</p>
+            <img src="/assets/images/books/sachs_tom_tea_ceremony_manual_9780986430862.jpg" alt="Tea Ceremony Manual" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Tom Sachs</div>
+    
+    <div class="collection-book-title">Tea Ceremony Manual</div>
+    
+        <div class="collection-book-meta">Isamu Noguchi Foundation and Garden Museum &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/serra_writingsinterviews_1996/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/serra_writingsinterviews_1996/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Richard_Serra_WritingsInterviews_9780226748801.jpg" alt="Writings/Interviews" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Serra</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Writings/Interviews</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">University of Chicago Press &middot; 1994</p>
+            <img src="/assets/images/books/Richard_Serra_WritingsInterviews_9780226748801.jpg" alt="Writings/Interviews" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Richard Serra</div>
+    
+    <div class="collection-book-title">Writings/Interviews</div>
+    
+        <div class="collection-book-meta">University of Chicago Press &middot; 1994</div>
+    
 </a>
 
         
             
-<a href="/books/thek_nothing-but-time-paul-thek-revisited-1964-1987_2070/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/thek_nothing-but-time-paul-thek-revisited-1964-1987_2070/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Paul_Thek_Nothing_But_Time_Paul_Thek_Revisited_19641987_9781909406063.jpg" alt="Nothing But Time: Paul Thek Revisited 1964–1987" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Paul Thek</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nothing But Time: Paul Thek Revisited 1964–1987</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Pace Publishing &middot; 2013</p>
+            <img src="/assets/images/books/Paul_Thek_Nothing_But_Time_Paul_Thek_Revisited_19641987_9781909406063.jpg" alt="Nothing But Time: Paul Thek Revisited 1964–1987" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Paul Thek</div>
+    
+    <div class="collection-book-title">Nothing But Time: Paul Thek Revisited 1964–1987</div>
+    
+        <div class="collection-book-meta">Pace Publishing &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/yuasa_letter-to-the-world_1762/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/yuasa_letter-to-the-world_1762/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/yuasa_megumi_letter_to_the_world_9798234001054.jpg" alt="Letter to the World" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Megumi Yuasa</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Letter to the World</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Ortuzar / Gomide&amp;Co &middot; 2026</p>
+            <img src="/assets/images/books/yuasa_megumi_letter_to_the_world_9798234001054.jpg" alt="Letter to the World" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Megumi Yuasa</div>
+    
+    <div class="collection-book-title">Letter to the World</div>
+    
+        <div class="collection-book-meta">Ortuzar / Gomide&amp;Co &middot; 2026</div>
+    
 </a>
 
         
             
-<a href="/books/calder_calder-by-matter_188/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/calder_calder-by-matter_188/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Calder</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Calder by Matter</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Cahiers D&#39;Art &middot; 2012</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Calder</div>
+    
+    <div class="collection-book-title">Calder by Matter</div>
+    
+        <div class="collection-book-meta">Cahiers D&#39;Art &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/chamberlain_choices_214/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/chamberlain_choices_214/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">John Chamberlain</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Choices</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Guggenheim &middot; 2012</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">John Chamberlain</div>
+    
+    <div class="collection-book-title">Choices</div>
+    
+        <div class="collection-book-meta">Guggenheim &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/fischli-and-david-weiss_haus_383/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/fischli-and-david-weiss_haus_383/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Fischli &amp; David Weiss</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Haus</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Walther König, Köln &middot; 2020</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Peter Fischli &amp; David Weiss</div>
+    
+    <div class="collection-book-title">Haus</div>
+    
+        <div class="collection-book-meta">Walther König, Köln &middot; 2020</div>
+    
 </a>
 
         
             
-<a href="/books/fischli-david-weiss_how-to-work-better_386/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/fischli-david-weiss_how-to-work-better_386/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Fischli David Weiss</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">How to Work Better</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Delmonico &middot; 2016</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Peter Fischli David Weiss</div>
+    
+    <div class="collection-book-title">How to Work Better</div>
+    
+        <div class="collection-book-meta">Delmonico &middot; 2016</div>
+    
 </a>
 
         
             
-<a href="/books/fischli-david-weiss_peter-fischli-david-weiss_387/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/fischli-david-weiss_peter-fischli-david-weiss_387/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Peter Fischli David Weiss</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Peter Fischli David Weiss</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Glenstone Foundation &middot; 2014</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Peter Fischli David Weiss</div>
+    
+    <div class="collection-book-title">Peter Fischli David Weiss</div>
+    
+        <div class="collection-book-meta">Glenstone Foundation &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/picasso_pablo-picasso-1881-1973_2051/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/picasso_pablo-picasso-1881-1973_2051/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Pablo Picasso</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Pablo Picasso: 1881–1973</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Taschen &middot; 1991</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Pablo Picasso</div>
+    
+    <div class="collection-book-title">Pablo Picasso: 1881–1973</div>
+    
+        <div class="collection-book-meta">Taschen &middot; 1991</div>
+    
 </a>
 
         
             
-<a href="/books/serra_richard-serra-early-work_1049/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/serra_richard-serra-early-work_1049/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Richard Serra</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Richard Serra Early Work</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">steidl David Zwirner</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Richard Serra</div>
+    
+    <div class="collection-book-title">Richard Serra Early Work</div>
+    
+        <div class="collection-book-meta">steidl David Zwirner</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 

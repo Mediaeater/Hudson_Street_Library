@@ -311,384 +311,607 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+    
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Contemporary Photography</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Contemporary Photography.”</p>
+            <div class="collection-eyebrow">Genres
+            </div>
+            <h1 class="collection-title">Contemporary Photography</h1>
+            
+                <p class="collection-description">Every book in the library tagged “Contemporary Photography.”</p>
+            
+            <div class="collection-count">18 books</div>
+            
+            
             
             
         </div>
-        
 
-        
-        
-            
-        
         
 
         
             
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
-        
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<section class="collection-section">
+    
+    <div class="collection-books">
         
             
-<a href="/books/comar_how-was-your-dream_2414/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/comar_how-was-your-dream_2414/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/comar_thadde_how_was_your_dream_9781907071911.jpg" alt="How Was Your Dream?" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Thaddé Comar</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">How Was Your Dream?</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Mörel Books &middot; 2022</p>
+            <img src="/assets/images/books/comar_thadde_how_was_your_dream_9781907071911.jpg" alt="How Was Your Dream?" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Thaddé Comar</div>
+    
+    <div class="collection-book-title">How Was Your Dream?</div>
+    
+        <div class="collection-book-meta">Mörel Books &middot; 2022</div>
+    
 </a>
 
         
             
-<a href="/books/demand_thomas-demand_1935/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/demand_thomas-demand_1935/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/demand_thomas_thomas_demand_9781905190089.jpg" alt="Thomas Demand" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Unknown</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Thomas Demand</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Serpentine Gallery / Schirmer/Mosel &middot; 2006</p>
+            <img src="/assets/images/books/demand_thomas_thomas_demand_9781905190089.jpg" alt="Thomas Demand" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Unknown</div>
+    
+    <div class="collection-book-title">Thomas Demand</div>
+    
+        <div class="collection-book-meta">Serpentine Gallery / Schirmer/Mosel &middot; 2006</div>
+    
 </a>
 
         
             
-<a href="/books/desienna_mono-volume-two_2399/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/desienna_mono-volume-two_2399/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/various_photographers_mono_volume_two_9780957414525.jpg" alt="MONO Volume Two" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Luca Desienna</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">MONO Volume Two</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Gomma Books &middot; 2015</p>
+            <img src="/assets/images/books/various_photographers_mono_volume_two_9780957414525.jpg" alt="MONO Volume Two" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Luca Desienna</div>
+    
+    <div class="collection-book-title">MONO Volume Two</div>
+    
+        <div class="collection-book-meta">Gomma Books &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/friedlander_the-nudes-a-second-look_406/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/friedlander_the-nudes-a-second-look_406/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Friedlander_The_Nudes_A_Second_Look_9781938922008.jpg" alt="The Nudes: A Second Look" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Lee Friedlander</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Nudes: A Second Look</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">D.A.P./Distributed Art Publishers &middot; 2013</p>
+            <img src="/assets/images/books/Friedlander_The_Nudes_A_Second_Look_9781938922008.jpg" alt="The Nudes: A Second Look" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Lee Friedlander</div>
+    
+    <div class="collection-book-title">The Nudes: A Second Look</div>
+    
+        <div class="collection-book-meta">D.A.P./Distributed Art Publishers &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/gosselin_avec-le-coeur_2238/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/gosselin_avec-le-coeur_2238/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/gosselin_tho_avec-le-coeur_9788293341055.jpg" alt="Avec le Coeur" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Théo Gosselin</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Avec le Coeur</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Éditions du LIC &middot; 2014</p>
+            <img src="/assets/images/books/gosselin_tho_avec-le-coeur_9788293341055.jpg" alt="Avec le Coeur" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Théo Gosselin</div>
+    
+    <div class="collection-book-title">Avec le Coeur</div>
+    
+        <div class="collection-book-meta">Éditions du LIC &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/harvey_you-an-orchestra-you-a-bomb_2241/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/harvey_you-an-orchestra-you-a-bomb_2241/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/harvey_cig_you-an-orchestra-you-a-bomb_9789053308936.jpg" alt="You an Orchestra You a Bomb" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Cig Harvey</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">You an Orchestra You a Bomb</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Schilt Publishing &middot; 2017</p>
+            <img src="/assets/images/books/harvey_cig_you-an-orchestra-you-a-bomb_9789053308936.jpg" alt="You an Orchestra You a Bomb" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Cig Harvey</div>
+    
+    <div class="collection-book-title">You an Orchestra You a Bomb</div>
+    
+        <div class="collection-book-meta">Schilt Publishing &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/hosteing_matador_531/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/hosteing_matador_531/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/hosteing_nicolas_matador_9782953350678.jpg" alt="Matador" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Nicolas Hosteing</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Matador</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Études Books &middot; 2012</p>
+            <img src="/assets/images/books/hosteing_nicolas_matador_9782953350678.jpg" alt="Matador" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Nicolas Hosteing</div>
+    
+    <div class="collection-book-title">Matador</div>
+    
+        <div class="collection-book-meta">Études Books &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/klauke_double-portraits_2419/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/klauke_double-portraits_2419/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/klauke_christoph_double_portraits_9780989054102.jpg" alt="Double Portraits" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Christoph Klauke</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Double Portraits</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">DBA &middot; 2013</p>
+            <img src="/assets/images/books/klauke_christoph_double_portraits_9780989054102.jpg" alt="Double Portraits" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Christoph Klauke</div>
+    
+    <div class="collection-book-title">Double Portraits</div>
+    
+        <div class="collection-book-meta">DBA &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/klimpel_the-grand-tour_2420/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/klimpel_the-grand-tour_2420/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/klimpel_kasia_the_grand_tour_9789491843365.jpg" alt="The Grand Tour" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Kasia Klimpel</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Grand Tour</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Roma Publications &middot; 2015</p>
+            <img src="/assets/images/books/klimpel_kasia_the_grand_tour_9789491843365.jpg" alt="The Grand Tour" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Kasia Klimpel</div>
+    
+    <div class="collection-book-title">The Grand Tour</div>
+    
+        <div class="collection-book-meta">Roma Publications &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/le-hors_byways-and-through-lines_617/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/le-hors_byways-and-through-lines_617/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/le_hors_pierre_byways_through_lines_617.jpg" alt="Byways &amp; Through Lines" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Pierre Le Hors</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Byways &amp; Through Lines</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Dashwood Books &middot; 2013</p>
+            <img src="/assets/images/books/le_hors_pierre_byways_through_lines_617.jpg" alt="Byways &amp; Through Lines" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Pierre Le Hors</div>
+    
+    <div class="collection-book-title">Byways &amp; Through Lines</div>
+    
+        <div class="collection-book-meta">Dashwood Books &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/maddock_iii_2422/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/maddock_iii_2422/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/maddock_robin_iii_9781907112485.jpg" alt="III" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Robin Maddock</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">III</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Trolley Books &middot; 2014</p>
+            <img src="/assets/images/books/maddock_robin_iii_9781907112485.jpg" alt="III" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Robin Maddock</div>
+    
+    <div class="collection-book-title">III</div>
+    
+        <div class="collection-book-meta">Trolley Books &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/schneider_gary-schneider-portraits_1828/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/schneider_gary-schneider-portraits_1828/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/schneider_gary_gary_schneider_portraits_9780300100549.jpg" alt="Gary Schneider: Portraits" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Gary Schneider</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Gary Schneider: Portraits</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Yale University Press &middot; 2004</p>
+            <img src="/assets/images/books/schneider_gary_gary_schneider_portraits_9780300100549.jpg" alt="Gary Schneider: Portraits" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Gary Schneider</div>
+    
+    <div class="collection-book-title">Gary Schneider: Portraits</div>
+    
+        <div class="collection-book-meta">Yale University Press &middot; 2004</div>
+    
 </a>
 
         
             
-<a href="/books/simond_rayon-vert_2298/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/simond_rayon-vert_2298/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/simond_senta_rayon-vert_9783981982404.jpg" alt="Rayon Vert" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Senta Simond</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Rayon Vert</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Kominek Books &middot; 2018</p>
+            <img src="/assets/images/books/simond_senta_rayon-vert_9783981982404.jpg" alt="Rayon Vert" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Senta Simond</div>
+    
+    <div class="collection-book-title">Rayon Vert</div>
+    
+        <div class="collection-book-meta">Kominek Books &middot; 2018</div>
+    
 </a>
 
         
             
-<a href="/books/soth_a-pound-of-pictures_1087/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/soth_a-pound-of-pictures_1087/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Soth_A_Pound_of_Pictures_9781913620110.jpg" alt="A Pound of Pictures" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Alec Soth</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">A Pound of Pictures</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Mack &middot; 2022</p>
+            <img src="/assets/images/books/Soth_A_Pound_of_Pictures_9781913620110.jpg" alt="A Pound of Pictures" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Alec Soth</div>
+    
+    <div class="collection-book-title">A Pound of Pictures</div>
+    
+        <div class="collection-book-meta">Mack &middot; 2022</div>
+    
 </a>
 
         
             
-<a href="/books/soth_i-know-how-furiously-your-heart-is-beating_2312/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/soth_i-know-how-furiously-your-heart-is-beating_2312/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/soth_alec_i-know-how-furiously-your-heart-is-beating_9781912339310.jpg" alt="I Know How Furiously Your Heart Is Beating" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Alec Soth</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">I Know How Furiously Your Heart Is Beating</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">MACK &middot; 2019</p>
+            <img src="/assets/images/books/soth_alec_i-know-how-furiously-your-heart-is-beating_9781912339310.jpg" alt="I Know How Furiously Your Heart Is Beating" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Alec Soth</div>
+    
+    <div class="collection-book-title">I Know How Furiously Your Heart Is Beating</div>
+    
+        <div class="collection-book-meta">MACK &middot; 2019</div>
+    
 </a>
 
         
             
-<a href="/books/tomiyasu_ttp_2426/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/tomiyasu_ttp_2426/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/tomiyasu_hayahisa_ttp_9781912339242.jpg" alt="TTP" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Hayahisa Tomiyasu</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">TTP</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">MACK &middot; 2018</p>
+            <img src="/assets/images/books/tomiyasu_hayahisa_ttp_9781912339242.jpg" alt="TTP" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Hayahisa Tomiyasu</div>
+    
+    <div class="collection-book-title">TTP</div>
+    
+        <div class="collection-book-meta">MACK &middot; 2018</div>
+    
 </a>
 
         
             
-<a href="/books/weifenbach_between-maple-and-chestnut_2427/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/weifenbach_between-maple-and-chestnut_2427/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/weifenbach_terri_between_maple_and_chestnut_9781590053515.jpg" alt="Between Maple and Chestnut" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Terri Weifenbach</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Between Maple and Chestnut</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2012</p>
+            <img src="/assets/images/books/weifenbach_terri_between_maple_and_chestnut_9781590053515.jpg" alt="Between Maple and Chestnut" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Terri Weifenbach</div>
+    
+    <div class="collection-book-title">Between Maple and Chestnut</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/zbierski_push-the-sky-away_2326/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/zbierski_push-the-sky-away_2326/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/zbierski_piotr_push-the-sky-away_9781911306078.jpg" alt="Push the Sky Away" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Piotr Zbierski</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Push the Sky Away</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Dewi Lewis Publishing &middot; 2017</p>
+            <img src="/assets/images/books/zbierski_piotr_push-the-sky-away_9781911306078.jpg" alt="Push the Sky Away" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Piotr Zbierski</div>
+    
+    <div class="collection-book-title">Push the Sky Away</div>
+    
+        <div class="collection-book-meta">Dewi Lewis Publishing &middot; 2017</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 

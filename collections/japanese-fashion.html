@@ -311,726 +311,915 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+    
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Japanese Fashion</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Japanese Fashion.”</p>
+            <div class="collection-eyebrow">Themes
+            </div>
+            <h1 class="collection-title">Japanese Fashion</h1>
+            
+                <p class="collection-description">Every book in the library tagged “Japanese Fashion.”</p>
+            
+            <div class="collection-count">36 books</div>
+            
+            
+            
+                <p class="collection-same">Same books as <a href="/collections/matsuda-fashion-catalogs.html">Matsuda Fashion Catalogues</a>.</p>
             
             
         </div>
-        
 
-        
-        
-            
-        
         
 
         
             
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
-        
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<section class="collection-section">
+    
+    <div class="collection-books">
         
             
-<a href="/books/matsuda_nicole-times-vol_1379/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol_1379/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol.</div>
+    
+        <div class="collection-book-meta">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol_1382/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol_1382/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol.</div>
+    
+        <div class="collection-book-meta">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol_1383/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol_1383/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol.</div>
+    
+        <div class="collection-book-meta">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol_1384/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol_1384/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol.</div>
+    
+        <div class="collection-book-meta">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol_1386/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol_1386/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol.</div>
+    
+        <div class="collection-book-meta">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol_1388/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol_1388/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tokyo : Nicole Ltd. Mitsuhiro Matsuda</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol.</div>
+    
+        <div class="collection-book-meta">Tokyo : Nicole Ltd. Mitsuhiro Matsuda</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol_1392/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol_1392/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nicole Times Publisher :  Mitsuhero Matsuda</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol.</div>
+    
+        <div class="collection-book-meta">Nicole Times Publisher :  Mitsuhero Matsuda</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-01_1357/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-01_1357/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 01</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">M. Matsuda</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 01</div>
+    
+        <div class="collection-book-meta">M. Matsuda</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-02_1358/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-02_1358/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 02.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">M. Matsuda</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 02.</div>
+    
+        <div class="collection-book-meta">M. Matsuda</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-03_1359/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-03_1359/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 03.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">M. Matsuda</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 03.</div>
+    
+        <div class="collection-book-meta">M. Matsuda</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-04_1360/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-04_1360/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 04.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">M. Matsuda</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 04.</div>
+    
+        <div class="collection-book-meta">M. Matsuda</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-05_1361/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-05_1361/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 05.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">M. Matsuda</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 05.</div>
+    
+        <div class="collection-book-meta">M. Matsuda</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-06_1362/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-06_1362/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 06.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">M. Matsuda</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 06.</div>
+    
+        <div class="collection-book-meta">M. Matsuda</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-07_1363/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-07_1363/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 07</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">M. Matsuda</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 07</div>
+    
+        <div class="collection-book-meta">M. Matsuda</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-08_1364/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-08_1364/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 08.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">M. Matsuda</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 08.</div>
+    
+        <div class="collection-book-meta">M. Matsuda</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-09_1365/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-09_1365/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 09.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">M. Matsuda</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 09.</div>
+    
+        <div class="collection-book-meta">M. Matsuda</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-10_1366/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-10_1366/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 10.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">M. Matsuda, Nicole Co.</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 10.</div>
+    
+        <div class="collection-book-meta">M. Matsuda, Nicole Co.</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-11_1367/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-11_1367/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 11.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 11.</div>
+    
+        <div class="collection-book-meta">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-12_1368/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-12_1368/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 12.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 12.</div>
+    
+        <div class="collection-book-meta">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-13_1369/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-13_1369/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 13.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 13.</div>
+    
+        <div class="collection-book-meta">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-14_1370/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-14_1370/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 14.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 14.</div>
+    
+        <div class="collection-book-meta">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-15_1371/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-15_1371/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 15.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 15.</div>
+    
+        <div class="collection-book-meta">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-16_1372/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-16_1372/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 16.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 16.</div>
+    
+        <div class="collection-book-meta">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-17_1373/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-17_1373/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 17.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 17.</div>
+    
+        <div class="collection-book-meta">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-18_1375/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-18_1375/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 18</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nicole Times Publisher, New York</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 18</div>
+    
+        <div class="collection-book-meta">Nicole Times Publisher, New York</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-18_1374/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-18_1374/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 18.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 18.</div>
+    
+        <div class="collection-book-meta">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-19_1376/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-19_1376/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 19.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tokyo : Mitsuhiro Matsuda, 1988</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 19.</div>
+    
+        <div class="collection-book-meta">Tokyo : Mitsuhiro Matsuda, 1988</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-20_1378/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-20_1378/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 20</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tokyo : Nicole Co., [©1989]</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 20</div>
+    
+        <div class="collection-book-meta">Tokyo : Nicole Co., [©1989]</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-21_1377/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-21_1377/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 21.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tokyo : Nicole Co., [©1989]</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 21.</div>
+    
+        <div class="collection-book-meta">Tokyo : Nicole Co., [©1989]</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-24_1380/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-24_1380/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 24.</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nicole Times</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 24.</div>
+    
+        <div class="collection-book-meta">Nicole Times</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-26_1381/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-26_1381/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 26</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nicole Times</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 26</div>
+    
+        <div class="collection-book-meta">Nicole Times</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-31_1385/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-31_1385/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 31</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nicole Times Publisher :  Mitsuhero Matsuda</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 31</div>
+    
+        <div class="collection-book-meta">Nicole Times Publisher :  Mitsuhero Matsuda</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-32_1387/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-32_1387/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 32</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 32</div>
+    
+        <div class="collection-book-meta">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1996</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-33_1390/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-33_1390/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 33</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nicole Times Publisher :  Mitsuhero Matsuda</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 33</div>
+    
+        <div class="collection-book-meta">Nicole Times Publisher :  Mitsuhero Matsuda</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-35_1391/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-35_1391/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 35</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nicole Times Publisher :  Mitsuhero Matsuda</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 35</div>
+    
+        <div class="collection-book-meta">Nicole Times Publisher :  Mitsuhero Matsuda</div>
+    
 </a>
 
         
             
-<a href="/books/matsuda_nicole-times-vol-36_1389/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/matsuda_nicole-times-vol-36_1389/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitsuhiro Matsuda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Nicole times, vol. 36</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1997</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Mitsuhiro Matsuda</div>
+    
+    <div class="collection-book-title">Nicole times, vol. 36</div>
+    
+        <div class="collection-book-meta">Tokyo : Nicole Times Pubisher Mitsuhiro Matsuda, ©1997</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 

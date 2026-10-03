@@ -311,517 +311,726 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+    
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Color Photography</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Color Photography.”</p>
+            <div class="collection-eyebrow">Genres
+            </div>
+            <h1 class="collection-title">Color Photography</h1>
+            
+                <p class="collection-description">Every book in the library tagged “Color Photography.”</p>
+            
+            <div class="collection-count">25 books</div>
+            
+            
             
             
         </div>
-        
 
-        
-        
-            
-        
         
 
         
             
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
-        
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<section class="collection-section">
+    
+    <div class="collection-books">
         
             
-<a href="/books/eggleston_los-alamos-revisited_313/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/eggleston_los-alamos-revisited_313/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/eggleston_william_los-alamos-revisited_9783869305325.jpg" alt="Los Alamos Revisited" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">William Eggleston</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Los Alamos Revisited</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl &middot; 2012</p>
+            <img src="/assets/images/books/eggleston_william_los-alamos-revisited_9783869305325.jpg" alt="Los Alamos Revisited" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">William Eggleston</div>
+    
+    <div class="collection-book-title">Los Alamos Revisited</div>
+    
+        <div class="collection-book-meta">Steidl &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/eggleston_the-democratic-forest_311/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/eggleston_the-democratic-forest_311/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/eggleston_william_the-democratic-forest_9783869307923.jpg" alt="The Democratic Forest" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">William Eggleston</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Democratic Forest</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl &middot; 2015</p>
+            <img src="/assets/images/books/eggleston_william_the-democratic-forest_9783869307923.jpg" alt="The Democratic Forest" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">William Eggleston</div>
+    
+    <div class="collection-book-title">The Democratic Forest</div>
+    
+        <div class="collection-book-meta">Steidl &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/gosselin_avec-le-coeur_2238/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/gosselin_avec-le-coeur_2238/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/gosselin_tho_avec-le-coeur_9788293341055.jpg" alt="Avec le Coeur" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Théo Gosselin</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Avec le Coeur</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Éditions du LIC &middot; 2014</p>
+            <img src="/assets/images/books/gosselin_tho_avec-le-coeur_9788293341055.jpg" alt="Avec le Coeur" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Théo Gosselin</div>
+    
+    <div class="collection-book-title">Avec le Coeur</div>
+    
+        <div class="collection-book-meta">Éditions du LIC &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/haas_color-correction_2240/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/haas_color-correction_2240/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/haas_ernst_color-correction_9783958290563.jpg" alt="Color Correction" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Ernst Haas</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Color Correction</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl &middot; 2011</p>
+            <img src="/assets/images/books/haas_ernst_color-correction_9783958290563.jpg" alt="Color Correction" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Ernst Haas</div>
+    
+    <div class="collection-book-title">Color Correction</div>
+    
+        <div class="collection-book-meta">Steidl &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/harvey_you-an-orchestra-you-a-bomb_2241/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/harvey_you-an-orchestra-you-a-bomb_2241/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/harvey_cig_you-an-orchestra-you-a-bomb_9789053308936.jpg" alt="You an Orchestra You a Bomb" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Cig Harvey</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">You an Orchestra You a Bomb</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Schilt Publishing &middot; 2017</p>
+            <img src="/assets/images/books/harvey_cig_you-an-orchestra-you-a-bomb_9789053308936.jpg" alt="You an Orchestra You a Bomb" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Cig Harvey</div>
+    
+    <div class="collection-book-title">You an Orchestra You a Bomb</div>
+    
+        <div class="collection-book-meta">Schilt Publishing &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/hornstra_life-here-is-serious_2252/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/hornstra_life-here-is-serious_2252/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/hornstra_rob_life-here-is-serious.jpg" alt="Life Here Is Serious" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Rob Hornstra, Arnold van Bruggen</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Life Here Is Serious</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">The Sochi Project &middot; 2012</p>
+            <img src="/assets/images/books/hornstra_rob_life-here-is-serious.jpg" alt="Life Here Is Serious" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Rob Hornstra, Arnold van Bruggen</div>
+    
+    <div class="collection-book-title">Life Here Is Serious</div>
+    
+        <div class="collection-book-meta">The Sochi Project &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/howe_paul-outerbridge-jr-photographs_2406/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/howe_paul-outerbridge-jr-photographs_2406/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/howe_graham_paul_outerbridge_jr_photographs_9780847802814.jpg" alt="Paul Outerbridge Jr.: Photographs" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Graham Howe, Paul Outerbridge Jr.</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Paul Outerbridge Jr.: Photographs</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Rizzoli International Publications &middot; 1980</p>
+            <img src="/assets/images/books/howe_graham_paul_outerbridge_jr_photographs_9780847802814.jpg" alt="Paul Outerbridge Jr.: Photographs" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Graham Howe, Paul Outerbridge Jr.</div>
+    
+    <div class="collection-book-title">Paul Outerbridge Jr.: Photographs</div>
+    
+        <div class="collection-book-meta">Rizzoli International Publications &middot; 1980</div>
+    
 </a>
 
         
             
-<a href="/books/maier_vivian-maier-a-photographer-found_2260/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/maier_vivian-maier-a-photographer-found_2260/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/maier_vivian_vivian-maier-a-photographer-found_9780062305534.jpg" alt="Vivian Maier: A Photographer Found" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Vivian Maier</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Vivian Maier: A Photographer Found</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Harper Design &middot; 2014</p>
+            <img src="/assets/images/books/maier_vivian_vivian-maier-a-photographer-found_9780062305534.jpg" alt="Vivian Maier: A Photographer Found" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Vivian Maier</div>
+    
+    <div class="collection-book-title">Vivian Maier: A Photographer Found</div>
+    
+        <div class="collection-book-meta">Harper Design &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/meyerowitz_joel-meyerowitz-where-i-find-myself-a-lifetime-retrospective_2265/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/meyerowitz_joel-meyerowitz-where-i-find-myself-a-lifetime-retrospective_2265/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/meyerowitz_joel_joel-meyerowitz-where-i-find-myself-a-lifetime-ret_9781786271860.jpg" alt="Joel Meyerowitz: Where I Find Myself: A Lifetime Retrospective" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Joel Meyerowitz</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Joel Meyerowitz: Where I Find Myself: A Lifetime Retrospective</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Laurence King Publishing &middot; 2018</p>
+            <img src="/assets/images/books/meyerowitz_joel_joel-meyerowitz-where-i-find-myself-a-lifetime-ret_9781786271860.jpg" alt="Joel Meyerowitz: Where I Find Myself: A Lifetime Retrospective" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Joel Meyerowitz</div>
+    
+    <div class="collection-book-title">Joel Meyerowitz: Where I Find Myself: A Lifetime Retrospective</div>
+    
+        <div class="collection-book-meta">Laurence King Publishing &middot; 2018</div>
+    
 </a>
 
         
             
-<a href="/books/moriyama_daido-moriyama-mirage_776/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/moriyama_daido-moriyama-mirage_776/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/moriyama_daido_mirage_9784908088131.jpg" alt="Daido Moriyama: Mirage" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Daido Moriyama</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Daido Moriyama: Mirage</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">MMM (Bookshop-M) &middot; 2015</p>
+            <img src="/assets/images/books/moriyama_daido_mirage_9784908088131.jpg" alt="Daido Moriyama: Mirage" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Daido Moriyama</div>
+    
+    <div class="collection-book-title">Daido Moriyama: Mirage</div>
+    
+        <div class="collection-book-meta">MMM (Bookshop-M) &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/outerbridge_paul-outerbridge-a-singular-aesthetic-photographs-and-drawings-1921-1941-a-catalogue-raisonne_2275/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/outerbridge_paul-outerbridge-a-singular-aesthetic-photographs-and-drawings-1921-1941-a-catalogue-raisonne_2275/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/outerbridge_paul_paul-outerbridge-a-singular-aesthetic-photographs_9780876855409.jpg" alt="Paul Outerbridge, A Singular Aesthetic: Photographs &amp; Drawings, 1921-1941: A Catalogue Raisonné" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Paul Outerbridge</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Paul Outerbridge, A Singular Aesthetic: Photographs &amp; Drawings, 1921-1941: A Catalogue Raisonné</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Arabesque Books &middot; 1981</p>
+            <img src="/assets/images/books/outerbridge_paul_paul-outerbridge-a-singular-aesthetic-photographs_9780876855409.jpg" alt="Paul Outerbridge, A Singular Aesthetic: Photographs &amp; Drawings, 1921-1941: A Catalogue Raisonné" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Paul Outerbridge</div>
+    
+    <div class="collection-book-title">Paul Outerbridge, A Singular Aesthetic: Photographs &amp; Drawings, 1921-1941: A Catalogue Raisonné</div>
+    
+        <div class="collection-book-meta">Arabesque Books &middot; 1981</div>
+    
 </a>
 
         
             
-<a href="/books/outerbridge_paul-outerbridge-command-performance_2386/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/outerbridge_paul-outerbridge-command-performance_2386/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/outerbridge_paul_command_performance_9780892369614.jpg" alt="Paul Outerbridge: Command Performance" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Paul Outerbridge</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Paul Outerbridge: Command Performance</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">J. Paul Getty Museum &middot; 2009</p>
+            <img src="/assets/images/books/outerbridge_paul_command_performance_9780892369614.jpg" alt="Paul Outerbridge: Command Performance" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Paul Outerbridge</div>
+    
+    <div class="collection-book-title">Paul Outerbridge: Command Performance</div>
+    
+        <div class="collection-book-meta">J. Paul Getty Museum &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/outerbridge_paul-outerbridge-new-color-photographs-from-mexico-and-california-1948-1955_2385/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/outerbridge_paul-outerbridge-new-color-photographs-from-mexico-and-california-1948-1955_2385/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/outerbridge_paul_new_color_photographs_from_mexico_and_california_1948_1955_9781590052617.jpg" alt="Paul Outerbridge: New Color Photographs from Mexico and California, 1948-1955" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Paul Outerbridge</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Paul Outerbridge: New Color Photographs from Mexico and California, 1948-1955</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2009</p>
+            <img src="/assets/images/books/outerbridge_paul_new_color_photographs_from_mexico_and_california_1948_1955_9781590052617.jpg" alt="Paul Outerbridge: New Color Photographs from Mexico and California, 1948-1955" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Paul Outerbridge</div>
+    
+    <div class="collection-book-title">Paul Outerbridge: New Color Photographs from Mexico and California, 1948-1955</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/parks_segregation-story-expanded-edition_1932/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/parks_segregation-story-expanded-edition_1932/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/parks_gordon_segregation_story_9783969990261.jpg" alt="Segregation Story: Expanded Edition" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Gordon Parks</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Segregation Story: Expanded Edition</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl / The Gordon Parks Foundation &middot; 2022</p>
+            <img src="/assets/images/books/parks_gordon_segregation_story_9783969990261.jpg" alt="Segregation Story: Expanded Edition" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Gordon Parks</div>
+    
+    <div class="collection-book-title">Segregation Story: Expanded Edition</div>
+    
+        <div class="collection-book-meta">Steidl / The Gordon Parks Foundation &middot; 2022</div>
+    
 </a>
 
         
             
-<a href="/books/shore_stephen-shore-american-surfaces-revised-and-expanded-edition_2296/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/shore_stephen-shore-american-surfaces-revised-and-expanded-edition_2296/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/shore_stephen_stephen-shore-american-surfaces-revised-and-expand_9781838660628.jpg" alt="Stephen Shore: American Surfaces (Revised and Expanded Edition)" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Stephen Shore</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Stephen Shore: American Surfaces (Revised and Expanded Edition)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Phaidon Press &middot; 2020</p>
+            <img src="/assets/images/books/shore_stephen_stephen-shore-american-surfaces-revised-and-expand_9781838660628.jpg" alt="Stephen Shore: American Surfaces (Revised and Expanded Edition)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Stephen Shore</div>
+    
+    <div class="collection-book-title">Stephen Shore: American Surfaces (Revised and Expanded Edition)</div>
+    
+        <div class="collection-book-meta">Phaidon Press &middot; 2020</div>
+    
 </a>
 
         
             
-<a href="/books/shore_stephen-shore-selected-works-1973-1981_2297/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/shore_stephen-shore-selected-works-1973-1981_2297/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/shore_stephen_stephen-shore-selected-works-1973-1981_9781597113885.jpg" alt="Stephen Shore: Selected Works, 1973-1981" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Stephen Shore</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Stephen Shore: Selected Works, 1973-1981</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aperture &middot; 2017</p>
+            <img src="/assets/images/books/shore_stephen_stephen-shore-selected-works-1973-1981_9781597113885.jpg" alt="Stephen Shore: Selected Works, 1973-1981" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Stephen Shore</div>
+    
+    <div class="collection-book-title">Stephen Shore: Selected Works, 1973-1981</div>
+    
+        <div class="collection-book-meta">Aperture &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/steffens_the-family-acid_2347/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/steffens_the-family-acid_2347/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/steffens_roger_the-family-acid_9780984978175.jpg" alt="The Family Acid" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Roger Steffens</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Family Acid</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">S U N &middot; 2015</p>
+            <img src="/assets/images/books/steffens_roger_the-family-acid_9780984978175.jpg" alt="The Family Acid" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Roger Steffens</div>
+    
+    <div class="collection-book-title">The Family Acid</div>
+    
+        <div class="collection-book-meta">S U N &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/sternfeld_american-prospects_2313/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/sternfeld_american-prospects_2313/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/sternfeld_joel_american-prospects_9783958296695.jpg" alt="American Prospects" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Joel Sternfeld</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">American Prospects</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl &middot; 2020</p>
+            <img src="/assets/images/books/sternfeld_joel_american-prospects_9783958296695.jpg" alt="American Prospects" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Joel Sternfeld</div>
+    
+    <div class="collection-book-title">American Prospects</div>
+    
+        <div class="collection-book-meta">Steidl &middot; 2020</div>
+    
 </a>
 
         
             
-<a href="/books/sternfeld_stranger-passing_2314/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/sternfeld_stranger-passing_2314/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/sternfeld_joel_stranger-passing_9780821227527.jpg" alt="Stranger Passing" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Joel Sternfeld</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Stranger Passing</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Bulfinch Press &middot; 2001</p>
+            <img src="/assets/images/books/sternfeld_joel_stranger-passing_9780821227527.jpg" alt="Stranger Passing" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Joel Sternfeld</div>
+    
+    <div class="collection-book-title">Stranger Passing</div>
+    
+        <div class="collection-book-meta">Bulfinch Press &middot; 2001</div>
+    
 </a>
 
         
             
-<a href="/books/traub_dolce-via-italy-in-the-1980s_1178/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/traub_dolce-via-italy-in-the-1980s_1178/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/traub_charles_dolce_via_9788862083447.jpg" alt="Dolce Via: Italy in the 1980s" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Charles H. Traub</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Dolce Via: Italy in the 1980s</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Damiani &middot; 2014</p>
+            <img src="/assets/images/books/traub_charles_dolce_via_9788862083447.jpg" alt="Dolce Via: Italy in the 1980s" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Charles H. Traub</div>
+    
+    <div class="collection-book-title">Dolce Via: Italy in the 1980s</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/weifenbach_between-maple-and-chestnut_2427/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/weifenbach_between-maple-and-chestnut_2427/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/weifenbach_terri_between_maple_and_chestnut_9781590053515.jpg" alt="Between Maple and Chestnut" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Terri Weifenbach</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Between Maple and Chestnut</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2012</p>
+            <img src="/assets/images/books/weifenbach_terri_between_maple_and_chestnut_9781590053515.jpg" alt="Between Maple and Chestnut" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Terri Weifenbach</div>
+    
+    <div class="collection-book-title">Between Maple and Chestnut</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/winogrand_winogrand-color_2324/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/winogrand_winogrand-color_2324/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/winogrand_garry_winogrand-color_9781936611188.jpg" alt="Winogrand Color" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Garry Winogrand</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Winogrand Color</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Twin Palms Publishers &middot; 2024</p>
+            <img src="/assets/images/books/winogrand_garry_winogrand-color_9781936611188.jpg" alt="Winogrand Color" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Garry Winogrand</div>
+    
+    <div class="collection-book-title">Winogrand Color</div>
+    
+        <div class="collection-book-meta">Twin Palms Publishers &middot; 2024</div>
+    
 </a>
 
         
             
-<a href="/books/eggleston_at-zenith_315/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/eggleston_at-zenith_315/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">William Eggleston</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">At Zenith</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl &middot; 2013</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">William Eggleston</div>
+    
+    <div class="collection-book-title">At Zenith</div>
+    
+        <div class="collection-book-meta">Steidl &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/eggleston_from-black-and-white-to-color_316/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/eggleston_from-black-and-white-to-color_316/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">William Eggleston</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">From Black and White to Color</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">William Eggleston</div>
+    
+    <div class="collection-book-title">From Black and White to Color</div>
+    
+        <div class="collection-book-meta">Steidl</div>
+    
 </a>
 
         
             
-<a href="/books/meyerowitz_immersion-visions_743/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/meyerowitz_immersion-visions_743/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Joel Meyerowitz</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Immersion / Visions</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Winch &middot; 2014</p>
+            <span class="no-cover">No cover</span>
         
     </div>
+    
+        <div class="collection-book-author">Joel Meyerowitz</div>
+    
+    <div class="collection-book-title">Immersion / Visions</div>
+    
+        <div class="collection-book-meta">Winch &middot; 2014</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 

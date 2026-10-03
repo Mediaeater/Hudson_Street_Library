@@ -311,441 +311,981 @@ function toggleMobileMenu() {
 </script>
 
 
+
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+    
+
+
+
+
+
+
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        
-        
-        <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">Landscape</h1>
-            <div class="line-divider inline-block"></div>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
             
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">Every book in the library tagged “Landscape.”</p>
+            <div class="collection-eyebrow">Genres
+            </div>
+            <h1 class="collection-title">Landscape</h1>
+            
+                <p class="collection-description">Every book in the library tagged “Landscape.”</p>
+            
+            <div class="collection-count">40 books</div>
+            
+            
             
             
         </div>
-        
 
-        
-        
-            
-        
         
 
         
             
-                
-                
-<section class="mb-16">
-    <div class="volume-header pl-4 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Other</h2>
-        
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<section class="collection-section">
+    
+    <div class="collection-books">
         
             
-<a href="/books/diniz_periscope_2168/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/adams_on-any-given-day-in-spring-light-balances_1833/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/diniz_jose_periscope_9788565709064.jpg" alt="Periscope" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">José Diniz</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Periscope</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Editora Madalena / Editora Terceiro Nome &middot; 2014</p>
+            <img src="/assets/images/books/adams_robert_on_any_given_day_in_spring_light_balances_9781880146637.jpg" alt="On Any Given Day in Spring / Light Balances" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Robert Adams</div>
+    
+    <div class="collection-book-title">On Any Given Day in Spring / Light Balances</div>
+    
+        <div class="collection-book-meta">Matthew Marks Gallery / Fraenkel Gallery &middot; 2012</div>
+    
 </a>
 
         
             
-<a href="/books/epstein_american-power_2222/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/baltz_the-new-industrial-parks-near-irvine-california_94/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/epstein_mitch_american-power_9783865219244.jpg" alt="American Power" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitch Epstein</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">American Power</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl &middot; 2009</p>
+            <img src="/assets/images/books/baltz_lewis_the_new_industrial_parks_near_irvine_california_94.jpg" alt="The New Industrial Parks Near Irvine, California" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Lewis Baltz</div>
+    
+    <div class="collection-book-title">The New Industrial Parks Near Irvine, California</div>
+    
+        <div class="collection-book-meta">Leo Castelli / Castelli Graphics &middot; 1974</div>
+    
 </a>
 
         
             
-<a href="/books/ethridge_american-spirit_1751/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/barbieri_site-specific-site-specific03-13_100/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/ethridge_roe_american_spirit_9781942607670.jpg" alt="American Spirit" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Roe Ethridge</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">American Spirit</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Karma &middot; 2017</p>
+            <img src="/assets/images/books/Barbieri_Site_Specific_site_specific_03_13_9781597112291.jpg" alt="Site Specific (site specific_03 13)" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Olivo Barbieri</div>
+    
+    <div class="collection-book-title">Site Specific (site specific_03 13)</div>
+    
+        <div class="collection-book-meta">Aperture &middot; 2013</div>
+    
 </a>
 
         
             
-<a href="/books/ethridge_orange-grove_1756/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/diniz_periscope_2168/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/ethridge_roe_orange_grove.jpg" alt="Orange Grove" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Roe Ethridge</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Orange Grove</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Self-published &middot; 2004</p>
+            <img src="/assets/images/books/diniz_jose_periscope_9788565709064.jpg" alt="Periscope" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">José Diniz</div>
+    
+    <div class="collection-book-title">Periscope</div>
+    
+        <div class="collection-book-meta">Editora Madalena / Editora Terceiro Nome &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/freund_gas-stop_2230/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/epstein_american-power_2222/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/freund_david_gas-stop_9783958291737.jpg" alt="Gas Stop" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">David Freund</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Gas Stop</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl &middot; 2017</p>
+            <img src="/assets/images/books/epstein_mitch_american-power_9783865219244.jpg" alt="American Power" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Mitch Epstein</div>
+    
+    <div class="collection-book-title">American Power</div>
+    
+        <div class="collection-book-meta">Steidl &middot; 2009</div>
+    
 </a>
 
         
             
-<a href="/books/hatakeyama_naoya-hatakeyama-excavating-the-future-city_508/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/ethridge_american-spirit_1751/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/hatakeyama_naoya_excavating_the_future_city_9781597114325.jpg" alt="Naoya Hatakeyama: Excavating the Future City" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Naoya Hatakeyama</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Naoya Hatakeyama: Excavating the Future City</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Aperture &middot; 2018</p>
+            <img src="/assets/images/books/ethridge_roe_american_spirit_9781942607670.jpg" alt="American Spirit" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Roe Ethridge</div>
+    
+    <div class="collection-book-title">American Spirit</div>
+    
+        <div class="collection-book-meta">Karma &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/ikeda_one-picture-book-two-vol-51-desert-daze_1744/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/ethridge_orange-grove_1756/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/ikeda_yoko_one_picture_book_two_51_desert_daze_9781590056271.jpg" alt="One Picture Book Two Vol 51: Desert Daze" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Yoko Ikeda</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 51: Desert Daze</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/ethridge_roe_orange_grove.jpg" alt="Orange Grove" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Roe Ethridge</div>
+    
+    <div class="collection-book-title">Orange Grove</div>
+    
+        <div class="collection-book-meta">Self-published &middot; 2004</div>
+    
 </a>
 
         
             
-<a href="/books/johnstone_briney-breezes_553/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/freund_gas-stop_2230/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/johnstone_charles_briney_breezes_9780984978199.jpg" alt="Briney Breezes" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Charles Johnstone</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Briney Breezes</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Sun Editions &middot; 2015</p>
+            <img src="/assets/images/books/freund_david_gas-stop_9783958291737.jpg" alt="Gas Stop" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">David Freund</div>
+    
+    <div class="collection-book-title">Gas Stop</div>
+    
+        <div class="collection-book-meta">Steidl &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/klimpel_the-grand-tour_2420/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/gossage_the-thirty-two-inch-ruler-map-of-babylon_2192/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/klimpel_kasia_the_grand_tour_9789491843365.jpg" alt="The Grand Tour" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Kasia Klimpel</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Grand Tour</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Roma Publications &middot; 2015</p>
+            <img src="/assets/images/books/gossage_john_the_thirty_two_inch_ruler_map_of_babylon_9783865217103.jpg" alt="The Thirty-Two Inch Ruler / Map of Babylon" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">John Gossage</div>
+    
+    <div class="collection-book-title">The Thirty-Two Inch Ruler / Map of Babylon</div>
+    
+        <div class="collection-book-meta">Steidl &middot; 2010</div>
+    
 </a>
 
         
             
-<a href="/books/maisel_oblivion_2202/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/hanzlova_hier_501/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/maisel_david_oblivion_9781590051825.jpg" alt="Oblivion" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">David Maisel</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Oblivion</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2006</p>
+            <img src="/assets/images/books/hanzlova_jitka_hier_9783863353247.jpg" alt="Hier" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Jitka Hanzlová</div>
+    
+    <div class="collection-book-title">Hier</div>
+    
+        <div class="collection-book-meta">Walther König &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/nunziata_how-what-exists-exists_813/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/hatakeyama_naoya-hatakeyama-excavating-the-future-city_508/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/covers/9789490119324.jpg" alt="How What Exists Exists" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Nicole Nunziata</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">How What Exists Exists</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Fw:Books &middot; 2015</p>
+            <img src="/assets/images/books/hatakeyama_naoya_excavating_the_future_city_9781597114325.jpg" alt="Naoya Hatakeyama: Excavating the Future City" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Naoya Hatakeyama</div>
+    
+    <div class="collection-book-title">Naoya Hatakeyama: Excavating the Future City</div>
+    
+        <div class="collection-book-meta">Aperture &middot; 2018</div>
+    
 </a>
 
         
             
-<a href="/books/park_dmz-demilitarized-zone-of-korea_2424/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/henner_dutch-landscapes_2184/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/park_jongwoo_dmz_demilitarized_zone_of_korea_9783958293151.jpg" alt="DMZ: Demilitarized Zone of Korea" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Park Jongwoo</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">DMZ: Demilitarized Zone of Korea</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl &middot; 2017</p>
+            <img src="/assets/images/books/henner_mishka_dutch_landscapes.jpg" alt="Dutch Landscapes" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Mishka Henner</div>
+    
+    <div class="collection-book-title">Dutch Landscapes</div>
+    
+        <div class="collection-book-meta">Self published &middot; 2011</div>
+    
 </a>
 
         
             
-<a href="/books/shea_blisner-il-an-index-of-work-as-labour-as-work_1059/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/ikeda_one-picture-book-two-vol-51-desert-daze_1744/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/shea_daniel_blisner_il_9780957381032.jpg" alt="Blisner, IL: An Index of Work as Labour as Work" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Daniel Shea</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Blisner, IL: An Index of Work as Labour as Work</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Fourteen-Nineteen &middot; 2014</p>
+            <img src="/assets/images/books/ikeda_yoko_one_picture_book_two_51_desert_daze_9781590056271.jpg" alt="One Picture Book Two Vol 51: Desert Daze" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Yoko Ikeda</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 51: Desert Daze</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
 </a>
 
         
             
-<a href="/books/shibata_one-picture-book-two-vol-52-lone-pine_1743/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/johnstone_briney-breezes_553/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/shibata_toshio_one_picture_book_two_52_lone_pine_9781590056288.jpg" alt="One Picture Book Two Vol 52: Lone Pine" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Toshio Shibata</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">One Picture Book Two Vol 52: Lone Pine</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2025</p>
+            <img src="/assets/images/books/johnstone_charles_briney_breezes_9780984978199.jpg" alt="Briney Breezes" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Charles Johnstone</div>
+    
+    <div class="collection-book-title">Briney Breezes</div>
+    
+        <div class="collection-book-meta">Sun Editions &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/snapp_vista_1084/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/klimpel_the-grand-tour_2420/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/snapp_colin_vista_9782953350692.jpg" alt="VISTA" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Colin Snapp</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">VISTA</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Editions Bessard &middot; 2013</p>
+            <img src="/assets/images/books/klimpel_kasia_the_grand_tour_9789491843365.jpg" alt="The Grand Tour" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Kasia Klimpel</div>
+    
+    <div class="collection-book-title">The Grand Tour</div>
+    
+        <div class="collection-book-meta">Roma Publications &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/weifenbach_between-maple-and-chestnut_2427/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/maisel_oblivion_2202/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/weifenbach_terri_between_maple_and_chestnut_9781590053515.jpg" alt="Between Maple and Chestnut" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Terri Weifenbach</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Between Maple and Chestnut</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Nazraeli Press &middot; 2012</p>
+            <img src="/assets/images/books/maisel_david_oblivion_9781590051825.jpg" alt="Oblivion" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">David Maisel</div>
+    
+    <div class="collection-book-title">Oblivion</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2006</div>
+    
 </a>
 
         
             
-<a href="/books/welliver_oil-studies_2043/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/nunziata_how-what-exists-exists_813/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/Neil_Welliver_Oil_Studies.jpg" alt="Oil Studies" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Neil Welliver</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Oil Studies</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Alexandre Gallery &middot; 2004</p>
+            <img src="/assets/images/covers/9789490119324.jpg" alt="How What Exists Exists" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Nicole Nunziata</div>
+    
+    <div class="collection-book-title">How What Exists Exists</div>
+    
+        <div class="collection-book-meta">Fw:Books &middot; 2015</div>
+    
 </a>
 
         
             
-<a href="/books/willett_the-disappearance-of-joseph-plummer_2411/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/park_dmz-demilitarized-zone-of-korea_2424/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <img src="/assets/images/books/willett_amani_the_disappearance_of_joseph_plummer_9780994791931.jpg" alt="The Disappearance of Joseph Plummer" class="w-full h-full object-cover" loading="lazy">
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Amani Willett</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">The Disappearance of Joseph Plummer</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Overlapse &middot; 2017</p>
+            <img src="/assets/images/books/park_jongwoo_dmz_demilitarized_zone_of_korea_9783958293151.jpg" alt="DMZ: Demilitarized Zone of Korea" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Park Jongwoo</div>
+    
+    <div class="collection-book-title">DMZ: Demilitarized Zone of Korea</div>
+    
+        <div class="collection-book-meta">Steidl &middot; 2017</div>
+    
 </a>
 
         
             
-<a href="/books/epstein_rocks-and-clouds_330/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/pyvka_terrestre_930/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Mitch Epstein</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Rocks and Clouds</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Steidl &middot; 2017</p>
+            <img src="/assets/images/books/pyvka_arnaud_terrestre_9782916838052.jpg" alt="Terrestre" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Arnaud Pyvka</div>
+    
+    <div class="collection-book-title">Terrestre</div>
+    
+        <div class="collection-book-meta">Marc Bervillé Éditions &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/schmidt_natur_1031/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/shea_blisner-il-an-index-of-work-as-labour-as-work_1059/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Michael Schmidt</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">NATUR</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">MACK &middot; 2014</p>
+            <img src="/assets/images/books/shea_daniel_blisner_il_9780957381032.jpg" alt="Blisner, IL: An Index of Work as Labour as Work" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Daniel Shea</div>
+    
+    <div class="collection-book-title">Blisner, IL: An Index of Work as Labour as Work</div>
+    
+        <div class="collection-book-meta">Fourteen-Nineteen &middot; 2014</div>
+    
 </a>
 
         
             
-<a href="/books/suter_hexamiles-mont-voisin_1114/" class="item-card no-underline bg-white rounded-lg overflow-hidden shadow-xs">
-    <div class="aspect-3/4 bg-gray-100">
+<a href="/books/shibata_one-picture-book-two-vol-52-lone-pine_1743/" class="collection-book">
+    <div class="collection-book-cover">
         
-            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">No cover</div>
-        
-    </div>
-    <div class="p-3">
-        
-            <p class="text-[0.65rem] uppercase tracking-wide text-gray-500 line-clamp-1">Batia Suter</p>
-        
-        <p class="text-xs font-medium text-gray-900 line-clamp-2">Hexamiles (Mont-Voisin)</p>
-        
-            <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">Roma Publications &middot; 2019</p>
+            <img src="/assets/images/books/shibata_toshio_one_picture_book_two_52_lone_pine_9781590056288.jpg" alt="One Picture Book Two Vol 52: Lone Pine" loading="lazy">
         
     </div>
+    
+        <div class="collection-book-author">Toshio Shibata</div>
+    
+    <div class="collection-book-title">One Picture Book Two Vol 52: Lone Pine</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2025</div>
+    
+</a>
+
+        
+            
+<a href="/books/snapp_vista_1084/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/snapp_colin_vista_9782953350692.jpg" alt="VISTA" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Colin Snapp</div>
+    
+    <div class="collection-book-title">VISTA</div>
+    
+        <div class="collection-book-meta">Editions Bessard &middot; 2013</div>
+    
+</a>
+
+        
+            
+<a href="/books/spinatsch_snow-management-complex_2300/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/spinatsch_jules_snow-management-complex_9783037643556.jpg" alt="Snow Management Complex" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Jules Spinatsch</div>
+    
+    <div class="collection-book-title">Snow Management Complex</div>
+    
+        <div class="collection-book-meta">JRP|Ringier &middot; 2014</div>
+    
+</a>
+
+        
+            
+<a href="/books/sternfeld_american-prospects_2313/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/sternfeld_joel_american-prospects_9783958296695.jpg" alt="American Prospects" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Joel Sternfeld</div>
+    
+    <div class="collection-book-title">American Prospects</div>
+    
+        <div class="collection-book-meta">Steidl &middot; 2020</div>
+    
+</a>
+
+        
+            
+<a href="/books/tabuchi_aller-retour_2368/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/tabuchi_eric_aller-retour_9782490140626.jpg" alt="Aller-Retour" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Eric Tabuchi, Nelly Monnier</div>
+    
+    <div class="collection-book-title">Aller-Retour</div>
+    
+        <div class="collection-book-meta">Poursuite Éditions &middot; 2025</div>
+    
+</a>
+
+        
+            
+<a href="/books/tabuchi_atlas-des-regions-naturelles-vol-1_2305/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/tabuchi_eric_atlas-des-rgions-naturelles_9782490140107.jpg" alt="Atlas des Régions Naturelles, Vol. 1" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Eric Tabuchi, Nelly Monnier</div>
+    
+    <div class="collection-book-title">Atlas des Régions Naturelles, Vol. 1</div>
+    
+        <div class="collection-book-meta">Poursuite Éditions &middot; 2021</div>
+    
+</a>
+
+        
+            
+<a href="/books/tabuchi_atlas-des-regions-naturelles-vol-2_2338/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/tabuchi_eric_atlas-des-rgions-naturelles-vol-2_9782490140343.jpg" alt="Atlas des Régions Naturelles, Vol. 2" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Eric Tabuchi, Nelly Monnier</div>
+    
+    <div class="collection-book-title">Atlas des Régions Naturelles, Vol. 2</div>
+    
+        <div class="collection-book-meta">Poursuite Éditions &middot; 2022</div>
+    
+</a>
+
+        
+            
+<a href="/books/tabuchi_atlas-des-regions-naturelles-vol-3_2339/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/tabuchi_eric_atlas-des-rgions-naturelles-vol-3_9782490140398.jpg" alt="Atlas des Régions Naturelles, Vol. 3" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Eric Tabuchi, Nelly Monnier</div>
+    
+    <div class="collection-book-title">Atlas des Régions Naturelles, Vol. 3</div>
+    
+        <div class="collection-book-meta">Poursuite Éditions &middot; 2022</div>
+    
+</a>
+
+        
+            
+<a href="/books/tabuchi_atlas-des-regions-naturelles-vol-4_2340/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/tabuchi_eric_atlas-des-rgions-naturelles-vol-4_9782490140411.jpg" alt="Atlas des Régions Naturelles, Vol. 4" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Eric Tabuchi, Nelly Monnier</div>
+    
+    <div class="collection-book-title">Atlas des Régions Naturelles, Vol. 4</div>
+    
+        <div class="collection-book-meta">Poursuite Éditions &middot; 2023</div>
+    
+</a>
+
+        
+            
+<a href="/books/tabuchi_atlas-des-regions-naturelles-vol-5_2341/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/tabuchi_eric_atlas-des-rgions-naturelles-vol-5_9782490140527.jpg" alt="Atlas des Régions Naturelles, Vol. 5" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Eric Tabuchi, Nelly Monnier</div>
+    
+    <div class="collection-book-title">Atlas des Régions Naturelles, Vol. 5</div>
+    
+        <div class="collection-book-meta">Poursuite Éditions &middot; 2023</div>
+    
+</a>
+
+        
+            
+<a href="/books/tabuchi_atlas-des-regions-naturelles-vol-6_2342/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/tabuchi_eric_atlas-des-rgions-naturelles-vol-6_9782490140558.jpg" alt="Atlas des Régions Naturelles, Vol. 6" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Eric Tabuchi, Nelly Monnier</div>
+    
+    <div class="collection-book-title">Atlas des Régions Naturelles, Vol. 6</div>
+    
+        <div class="collection-book-meta">Poursuite Éditions &middot; 2024</div>
+    
+</a>
+
+        
+            
+<a href="/books/tabuchi_atlas-des-regions-naturelles-vol-7_2362/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/tabuchi_eric_atlas-des-rgions-naturelles-vol-7_9782490140657.jpg" alt="Atlas des Régions Naturelles, Vol. 7" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Eric Tabuchi, Nelly Monnier</div>
+    
+    <div class="collection-book-title">Atlas des Régions Naturelles, Vol. 7</div>
+    
+        <div class="collection-book-meta">Poursuite Éditions &middot; 2025</div>
+    
+</a>
+
+        
+            
+<a href="/books/tabuchi_atlas-des-regions-naturelles-vol-8_2363/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/tabuchi_eric_atlas-des-rgions-naturelles-vol-8_9782490140718.jpg" alt="Atlas des Régions Naturelles, Vol. 8" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Eric Tabuchi, Nelly Monnier</div>
+    
+    <div class="collection-book-title">Atlas des Régions Naturelles, Vol. 8</div>
+    
+        <div class="collection-book-meta">Poursuite Éditions &middot; 2026</div>
+    
+</a>
+
+        
+            
+<a href="/books/weifenbach_between-maple-and-chestnut_2427/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/weifenbach_terri_between_maple_and_chestnut_9781590053515.jpg" alt="Between Maple and Chestnut" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Terri Weifenbach</div>
+    
+    <div class="collection-book-title">Between Maple and Chestnut</div>
+    
+        <div class="collection-book-meta">Nazraeli Press &middot; 2012</div>
+    
+</a>
+
+        
+            
+<a href="/books/welliver_oil-studies_2043/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/Neil_Welliver_Oil_Studies.jpg" alt="Oil Studies" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Neil Welliver</div>
+    
+    <div class="collection-book-title">Oil Studies</div>
+    
+        <div class="collection-book-meta">Alexandre Gallery &middot; 2004</div>
+    
+</a>
+
+        
+            
+<a href="/books/weston_edward-weston_2320/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/weston_edward_edward-weston_9780893813055.jpg" alt="Edward Weston" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Edward Weston</div>
+    
+    <div class="collection-book-title">Edward Weston</div>
+    
+        <div class="collection-book-meta">Aperture &middot; 1988</div>
+    
+</a>
+
+        
+            
+<a href="/books/willett_the-disappearance-of-joseph-plummer_2411/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/willett_amani_the_disappearance_of_joseph_plummer_9780994791931.jpg" alt="The Disappearance of Joseph Plummer" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Amani Willett</div>
+    
+    <div class="collection-book-title">The Disappearance of Joseph Plummer</div>
+    
+        <div class="collection-book-meta">Overlapse &middot; 2017</div>
+    
+</a>
+
+        
+            
+<a href="/books/epstein_rocks-and-clouds_330/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">Mitch Epstein</div>
+    
+    <div class="collection-book-title">Rocks and Clouds</div>
+    
+        <div class="collection-book-meta">Steidl &middot; 2017</div>
+    
+</a>
+
+        
+            
+<a href="/books/schmidt_natur_1031/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">Michael Schmidt</div>
+    
+    <div class="collection-book-title">NATUR</div>
+    
+        <div class="collection-book-meta">MACK &middot; 2014</div>
+    
+</a>
+
+        
+            
+<a href="/books/suter_hexamiles-mont-voisin_1114/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">Batia Suter</div>
+    
+    <div class="collection-book-title">Hexamiles (Mont-Voisin)</div>
+    
+        <div class="collection-book-meta">Roma Publications &middot; 2019</div>
+    
 </a>
 
         
     </div>
 </section>
 
-            
         
+
+        
+
     </div>
 </main>
 
