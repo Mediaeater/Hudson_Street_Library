@@ -7,6 +7,7 @@ const Image = require("@11ty/eleventy-img").default;
 const { loadCatalog, writeMergedCsv, writeBooksJson, loadWings } = require("./scripts/utils/catalog");
 const { coverSrc, hasCover, existingCoverPath } = require("./scripts/utils/cover-path");
 const { resetIndex, tagUrl } = require("./scripts/utils/collections-index");
+const { FACETS } = require("./scripts/utils/tag-vocabulary");
 const { verifiedRowDates } = require("./scripts/utils/row-dates");
 
 const { exec } = require("child_process");
@@ -334,6 +335,14 @@ module.exports = function(eleventyConfig) {
     }
     return books.filter(b => matchesCollection(b, collectionConfig));
   });
+
+  // --- Filters for the collection page masthead and breadcrumb ---
+  // facetLabel: 'theme' -> 'Themes'; '' for a curated page, which has no facet.
+  eleventyConfig.addFilter("facetLabel", id => (FACETS.find(f => f.id === id) || {}).label || '');
+  // nonDefaultWing: the wing object for a slug, or null for the default wing,
+  // whose collections sit under /collection-explore.html rather than a landing page.
+  const WINGS = loadWings();
+  eleventyConfig.addFilter("nonDefaultWing", slug => WINGS.find(w => w.slug === slug && !w.isDefault) || null);
 
   // --- Filter: the collection page a book's tag links to, '' when none lists the book ---
   eleventyConfig.addFilter("tagUrl", (tag, book) => tagUrl(tag, book));

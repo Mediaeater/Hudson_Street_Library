@@ -34,12 +34,20 @@
     {#- `page.url` is the resolved URL. `permalink` is the raw front-matter
         string, which on any paginated page is itself a template expression and
         would ship unrendered — the same bug fixed in schema-collection.njk. -#}
+    {#- A collection outside the default wing sits under its wing's landing
+        page; /collection-explore.html lists the art wing only. -#}
     {%- elif title and permalink %},
+    {%- set crumbWing = collectionConfig.wing | nonDefaultWing if collectionConfig else null %}
     {
       "@type": "ListItem",
       "position": 2,
+      {%- if crumbWing %}
+      "name": "{{ crumbWing.name | escape }}",
+      "item": "https://hudsonstreetlibrary.com/{{ crumbWing.slug }}/"
+      {%- else %}
       "name": "Collections",
       "item": "https://hudsonstreetlibrary.com/collection-explore.html"
+      {%- endif %}
     },
     {
       "@type": "ListItem",

@@ -10,81 +10,331 @@ eleventyComputed:
   title: "{{ collectionConfig.title | safe }}"
   description: "{{ collectionConfig.description | safe }}"
 ---
+{#
+  Collection page: one per page in the collections index (curated configs, tag
+  pages, record-term pages). Written in the site's own language, the same idiom
+  as src/wings.njk; read the DESIGN note there before changing anything here.
+
+  The layout loads design-system.css, whose unlayered reset and `p` rule (65ch
+  cap, auto margins) beat Tailwind utilities, so spacing and type are declared
+  in this block. The class prefix is .collection-book, not .collection-card:
+  design-system.css and input.css still style .collection-card for the old
+  explore page.
+#}
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+{% set matched = books | inWing(collectionConfig.scope or collectionConfig.wing) | booksInCollection(collectionConfig) | sortBooks(collectionConfig.sortBy) %}
+{% if collectionConfig.coversFirst %}
+    {% set matched = matched | coversFirst %}
+{% endif %}
+{% set grouped = matched | groupBySections(collectionConfig) %}
+{% set facetLabel = collectionConfig.facet | facetLabel %}
+{% set pageWing = collectionConfig.wing | nonDefaultWing %}
+{# The posters and ephemera wings hold objects, not books. #}
+{% set noun = 'item' if pageWing and pageWing.itemPath != 'books' else 'book' %}
+
 <main>
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 {% if collectionConfig.headerImage %}py-8 md:py-10{% else %}py-16 md:py-20{% endif %}">
-        {% set relatedAside %}
-            {% if collectionConfig.relatedLinks %}
-                <aside class="border border-gray-200 rounded-lg p-4 self-start">
-                    <h2 class="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-3">Related Pages</h2>
-                    <ul class="list-none space-y-2">
-                        {% for link in collectionConfig.relatedLinks %}
-                            <li>
-                                <a href="{{ link.url }}" target="_blank" rel="noopener" class="text-sm text-primary-700 hover:underline">{{ link.label }}</a>
-                                {% if link.source %}<p class="text-xs text-gray-500 mt-0.5">{{ link.source }}</p>{% endif %}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </aside>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
+            {# Outside the art wing the eyebrow leads with a way back to the wing. #}
+            <div class="collection-eyebrow">
+                {%- if pageWing %}<a href="/{{ pageWing.slug }}/">{{ pageWing.name }}</a> &middot; {% endif -%}
+                {{ facetLabel or 'Collection' }}
+            </div>
+            <h1 class="collection-title">{{ collectionConfig.title }}</h1>
+            {% if collectionConfig.description %}
+                <p class="collection-description">{{ collectionConfig.description }}</p>
             {% endif %}
-        {% endset %}
-        {% if collectionConfig.headerImage %}
-        <div class="max-w-5xl mx-auto mb-10 md:mb-14">
-            <div class="text-center mb-8 md:mb-10">
-                <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">{{ collectionConfig.title }}</h1>
-                <div class="line-divider inline-block"></div>
-            </div>
-            <div class="grid md:grid-cols-2 gap-8 md:gap-12">
-                <figure class="w-full md:relative">
-                    <img src="{{ collectionConfig.headerImage.src }}" alt="{{ collectionConfig.headerImage.alt }}" class="max-w-full h-auto md:absolute md:inset-y-0 md:right-0 md:w-auto md:h-full md:object-contain md:object-right rounded-sm shadow-md">
-                    {% if collectionConfig.headerImage.caption %}
-                        <figcaption class="text-xs text-gray-500 mt-2 md:absolute md:top-full md:right-0 md:w-max">{{ collectionConfig.headerImage.caption }}</figcaption>
-                    {% endif %}
-                </figure>
-                <div class="text-left">
-                    <p class="text-base sm:text-lg text-gray-600 leading-relaxed">{{ collectionConfig.description }}</p>
-                    <div class="mt-8">{{ relatedAside | safe }}</div>
-                </div>
-            </div>
-        </div>
-        {% else %}
-        <div class="{% if collectionConfig.relatedLinks %}max-w-4xl{% else %}max-w-3xl{% endif %} mx-auto text-center mb-12 md:mb-16">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">{{ collectionConfig.title }}</h1>
-            <div class="line-divider inline-block"></div>
-            {% if collectionConfig.relatedLinks %}
-                <div class="mt-6 grid md:grid-cols-3 gap-6 md:gap-8 text-left">
-                    <p class="md:col-span-2 text-base sm:text-lg text-gray-600 leading-relaxed">{{ collectionConfig.description }}</p>
-                    {{ relatedAside | safe }}
-                </div>
-            {% else %}
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">{{ collectionConfig.description }}</p>
+            <div class="collection-count">{{ matched.length | commafy }} {{ noun }}{% if matched.length != 1 %}s{% endif %}</div>
+            {# Record terms are computed from the row, not tagged by hand; say so. #}
+            {% if collectionConfig.origin == 'derived' %}
+                <div class="collection-source">From the catalogue record</div>
+            {% elif collectionConfig.origin == 'hand+derived' %}
+                <div class="collection-source">From the catalogue record and tags</div>
+            {% endif %}
+            {% if collectionConfig.sameAs %}
+                <p class="collection-same">Same books as <a href="{{ collectionConfig.sameAs.url }}">{{ collectionConfig.sameAs.title }}</a>.</p>
             {% endif %}
             {% if collectionConfig.externalUrl %}
-                <div class="mt-6 flex justify-center gap-4">
-                    <a href="{{ collectionConfig.externalUrl }}" target="_blank" class="text-sm text-primary-700 hover:underline">
-                        <i class="fas fa-external-link-alt mr-1"></i> {{ collectionConfig.externalUrl | replace("https://", "") | replace("/", "") }}
-                    </a>
+                <div>
+                    <a href="{{ collectionConfig.externalUrl }}" target="_blank" rel="noopener" class="collection-external">{{ collectionConfig.externalUrl | replace("https://", "") | replace("/", "") }}</a>
                 </div>
             {% endif %}
         </div>
+
+        {% if collectionConfig.headerImage %}
+            <figure class="collection-figure">
+                <img src="{{ collectionConfig.headerImage.src }}" alt="{{ collectionConfig.headerImage.alt }}">
+                {% if collectionConfig.headerImage.caption %}
+                    <figcaption>{{ collectionConfig.headerImage.caption }}</figcaption>
+                {% endif %}
+            </figure>
         {% endif %}
 
-        {% set matched = books | inWing(collectionConfig.scope or collectionConfig.wing) | booksInCollection(collectionConfig) | sortBooks(collectionConfig.sortBy) %}
-        {% if collectionConfig.coversFirst %}
-            {% set matched = matched | coversFirst %}
-        {% endif %}
-        {% set grouped = matched | groupBySections(collectionConfig) %}
+        {% for section in grouped %}
+            {% include "components/collection-section.njk" %}
+        {% endfor %}
 
-        {% if grouped.length > 0 %}
-            {% for section in grouped %}
-                {% set section = section %}
-                {% include "components/collection-section.njk" %}
-            {% endfor %}
-        {% else %}
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                {% for book in matched %}
-                    {% include "components/collection-card.njk" %}
-                {% endfor %}
-            </div>
+        {% if collectionConfig.relatedLinks %}
+            <section class="collection-section">
+                <div class="collection-section-head"><h2>Related Pages</h2></div>
+                <ul class="collection-related">
+                    {% for link in collectionConfig.relatedLinks %}
+                        <li><a href="{{ link.url }}" target="_blank" rel="noopener">{{ link.label }}</a>{% if link.source %}<span class="source">{{ link.source }}</span>{% endif %}</li>
+                    {% endfor %}
+                </ul>
+            </section>
         {% endif %}
+
     </div>
 </main>
