@@ -119,7 +119,7 @@ class CSVHandler {
         const defaultOptions = {
             header: true,
             quoted: true,
-            quoted_empty: true,
+            quoted_empty: false,   // bare empties match the on-disk format (see append below); true churned every row
             escape: '"',
             ...options
         };
