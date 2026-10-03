@@ -703,10 +703,10 @@
             </a>
             {% endfor %}
         </div>
-        {# A hand-listed author page first, then the author's own collection page when it lists this book. The count is by surname, so it is left off a link to one person's page. #}
+        {# A hand-listed author page first (those list art-wing books only, so only for a book in that wing), then the author's own collection page when it lists this book. The count is by surname, so it is left off a link to one person's page. #}
         {% set person = null %}
         {% for term in record %}{% if term.rule == 'person' %}{% set person = term %}{% endif %}{% endfor %}
-        {% set handAuthorPage = authorCollectionPages[book.author_last] %}
+        {% set handAuthorPage = authorCollectionPages[book.author_last] if not (book.collection | nonDefaultWing) else '' %}
         {% set curatedAuthorPage = handAuthorPage or (person.url if person else '') %}
         {% if curatedAuthorPage or totalByAuthor > 12 %}
         <a href="{% if curatedAuthorPage %}{{ curatedAuthorPage }}{% else %}/static-demo/?author={{ book.author_last | urlencode }}{% endif %}" class="view-all-link"{% if not curatedAuthorPage %} rel="nofollow"{% endif %}>
