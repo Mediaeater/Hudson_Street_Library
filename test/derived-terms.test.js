@@ -53,6 +53,10 @@ describe('derived-terms', () => {
       expect(person('Anonymous', 'Anonymous')).to.be.undefined;
       expect(person('Various', 'Artists')).to.be.undefined;
       expect(person('John', 'Unknown')).to.be.undefined;
+      // Each placeholder on its own, beside a cell that would pass.
+      expect(person('Anonymous', 'Smith')).to.be.undefined;
+      expect(person('NA', 'Smith')).to.be.undefined;
+      expect(person('Various', 'Smith')).to.be.undefined;
     });
 
     it('skips cells that hold more than one name', () => {
@@ -62,6 +66,7 @@ describe('derived-terms', () => {
       expect(person('Bernd; Hilla', 'Becher')).to.be.undefined;
       expect(person('Bernd/Hilla', 'Becher')).to.be.undefined;
       expect(person('Richard', 'Prince (ed.)')).to.be.undefined;
+      expect(person('Richard', 'Prince ed.)')).to.be.undefined;
     });
 
     it('skips a row whose two cells are the same', () => {
@@ -91,6 +96,13 @@ describe('derived-terms', () => {
       expect(describeTerm('person', 'Wolfgang Tillmans')).to.equal('Books in the library by Wolfgang Tillmans, taken from the author on each record.');
       expect(describeTerm('form', 'Photobook')).to.equal('Books in the library catalogued as Photobook, by classification or by tag.');
     });
+
+    it('says "by or about" for a person only when a member came by tag alone', () => {
+      expect(describeTerm('person', 'Edward Ruscha', true))
+        .to.equal('Books in the library by or about Edward Ruscha, taken from the author on each record or from a tag.');
+      expect(describeTerm('person', 'Edward Ruscha', false)).to.equal(describeTerm('person', 'Edward Ruscha'));
+      expect(describeTerm('published', '1980s', true)).to.equal(describeTerm('published', '1980s'));
+    });
   });
 
   describe('buildTagCollections with options.derive', () => {
@@ -107,6 +119,20 @@ describe('derived-terms', () => {
       expect(page.sourceTags).to.deep.equal([]);
       expect(page.members).to.deep.equal({ hand: [], derived: page.bookIds });
       expect(bySlug(Array.from({ length: 7 }, (_, i) => tillmans(i + 1))).has('wolfgang-tillmans')).to.be.false;
+    });
+
+    it('describes a person page as "by or about" when another author\'s book is tagged with the name', () => {
+      const own = Array.from({ length: 8 }, (_, i) => tillmans(i + 1));
+      // Tagged with his own name: still by him.
+      own[0].tags = 'Wolfgang Tillmans';
+      const byHim = bySlug(own).get('wolfgang-tillmans');
+      expect(byHim.origin).to.equal('hand+derived');
+      expect(byHim.description).to.equal('Books in the library by Wolfgang Tillmans, taken from the author on each record.');
+
+      const about = { id: '9', tags: 'Wolfgang Tillmans', author_first: 'Eric', author_last: 'Doeringer' };
+      const page = bySlug([...own, about]).get('wolfgang-tillmans');
+      expect(page.bookIds).to.include('9');
+      expect(page.description).to.equal('Books in the library by or about Wolfgang Tillmans, taken from the author on each record or from a tag.');
     });
 
     it('keeps the published decade apart from the hand tag of the same decade', () => {

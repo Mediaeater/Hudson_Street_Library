@@ -21,6 +21,20 @@ describe('collection-matcher', () => {
       expect(matchesCollection(book, config)).to.be.true;
     });
 
+    it('matches two spellings of one tag by slug and alias, as the index does', () => {
+      expect(matchesCollection({ tags: 'Art, Self Portraits' }, { matchBy: { tag: 'Self-Portraits' } })).to.be.true;
+      expect(matchesCollection({ tags: 'Catalogue Raisonné' }, { matchBy: { tag: ['catalogue raisonne'] } })).to.be.true;
+      expect(matchesCollection({ tags: 'NYC' }, { matchBy: { tag: 'New York City' } })).to.be.true;
+      // Still the whole tag.
+      expect(matchesCollection({ tags: 'Self Portraits in Oil' }, { matchBy: { tag: 'Self-Portraits' } })).to.be.false;
+    });
+
+    it('claims a book for an exclusive tag in any spelling', () => {
+      const queer = { tags: 'queer-culture, Photography' };
+      expect(matchesCollection(queer, { matchBy: { tag: 'Photography' } })).to.be.false;
+      expect(matchesCollection(queer, { matchBy: { tag: 'Queer Culture' } })).to.be.true;
+    });
+
     it('rejects tag substring matches', () => {
       const book = { tags: 'Appropriation Art, Contemporary Art' };
       const config = { matchBy: { tag: 'Art' } };

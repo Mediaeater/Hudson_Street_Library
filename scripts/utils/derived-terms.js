@@ -51,11 +51,16 @@ function derivedTerms(book, wing) {
 }
 
 // The sentence under a record term's page title. `name` is the term's display
-// name ("1980s", "Wolfgang Tillmans", "Photobook").
-function describeTerm(rule, name) {
+// name ("1980s", "Wolfgang Tillmans", "Photobook"). byTagAlone is true when a
+// member of a person's page came by tag and not from its author columns: that
+// book is about the person, not by them.
+function describeTerm(rule, name, byTagAlone = false) {
   if (rule === 'published') {
     const from = parseInt(name, 10);
     return `Books in the library published between ${from} and ${from + 9}, taken from the publication year on each record.`;
+  }
+  if (rule === 'person' && byTagAlone) {
+    return `Books in the library by or about ${name}, taken from the author on each record or from a tag.`;
   }
   if (rule === 'person') return `Books in the library by ${name}, taken from the author on each record.`;
   return `Books in the library catalogued as ${name}, by classification or by tag.`;

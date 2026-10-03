@@ -34,6 +34,7 @@ const termSlug = tag => slugifyTag(resolveAlias(tag));
 
 // Throws on config mistakes only. Catalogue data never throws here: CI runs
 // nothing but the build, so a tag typed into a CSV must not be able to fail it.
+// A generated page that would land on a redirect stub is skipped with a warning.
 function buildIndex(input, options = {}) {
   const { books = [], curated: rawCurated = [], staticEntries = [], redirects = [] } = input;
   const coverCheck = options.hasCover || hasCover;
@@ -55,6 +56,10 @@ function buildIndex(input, options = {}) {
     ['slug', 'title', 'matchBy'].forEach(key => {
       if (!cfg[key]) throw new Error(`curated collection "${cfg.slug || cfg.title || '?'}": missing ${key}`);
     });
+    const keys = Object.keys(cfg.matchBy);
+    if (keys.length !== 1) {
+      throw new Error(`curated collection "${cfg.slug}": matchBy takes exactly one rule, found ${keys.length ? keys.join(', ') : 'none'}`);
+    }
     if ('coversTags' in cfg) {
       throw new Error(`curated collection "${cfg.slug}": coversTags is retired. A config owns a tag only by naming it in matchBy.tag`);
     }
@@ -95,6 +100,13 @@ function buildIndex(input, options = {}) {
   });
   const tagCollections = [];
 
+  // The permalink is part of the page so collections.njk stays wing-agnostic.
+  const permalinkOf = cfg => cfg.wing === defaultWing
+    ? `collections/${cfg.slug}.html`
+    : `${cfg.wing}/collections/${cfg.slug}.html`;
+  const urlOf = cfg => `/${permalinkOf(cfg)}`;
+  const redirectOuts = new Set(redirects.map(r => r.out));
+
   // Who owns a tag term within a wing, in order: a curated config that names
   // the tag in matchBy.tag; a curated config whose slug is the term's slug; a
   // static page with that slug (art wing only); otherwise the generated page.
@@ -117,33 +129,34 @@ function buildIndex(input, options = {}) {
     (tagTier.get(wing.slug) || []).forEach(tc => {
       if (owner.has(tc.slug)) return;
       if (hasStaticPage(wing.slug, tc.slug)) return;
+      // A retired URL keeps its redirect stub. The tag falls back to the search
+      // link, as a tag below the threshold does.
+      if (redirectOuts.has(urlOf(tc))) {
+        console.warn(`--- collectionConfigs: "${tc.title}" (${tc.bookCount} books) not generated: ${urlOf(tc)} is a redirect stub in redirects.json. Remove that row to publish the page.`);
+        return;
+      }
       tagCollections.push({ ...tc, listed: true });
     });
   });
 
   const liveCurated = curated.filter(cfg => !hasStaticPage(cfg.wing, cfg.slug));
 
-  // The permalink is part of the page so collections.njk stays wing-agnostic.
   // `scope` is what the template filters books by: the config's wing, or every
   // wing when the config declares allWings (the page still publishes under the
   // config's own wing namespace).
-  const permalinkOf = cfg => cfg.wing === defaultWing
-    ? `collections/${cfg.slug}.html`
-    : `${cfg.wing}/collections/${cfg.slug}.html`;
-  const urlOf = cfg => `/${permalinkOf(cfg)}`;
   const pages = [...liveCurated, ...tagCollections].map(cfg => (
     { ...cfg, scope: cfg.allWings ? '*' : cfg.wing, permalink: permalinkOf(cfg), url: urlOf(cfg) }
   ));
 
   markListing(pages, books, defaultWing);
 
-  const redirectOuts = new Set(redirects.map(r => r.out));
   const pageByUrl = new Map();
   pages.forEach(page => {
     if (pageByUrl.has(page.url)) {
       throw new Error(`two collections publish at ${page.url}: "${pageByUrl.get(page.url).title}" and "${page.title}"`);
     }
-    // The redirect stub and the page would be written to the same file.
+    // The redirect stub and the page would be written to the same file. Only a
+    // curated config reaches here: a generated page on a stub was skipped above.
     if (redirectOuts.has(page.url)) {
       throw new Error(`collection "${page.title}" publishes at ${page.url}, which redirects.json also writes: remove the redirect row for ${page.url} or the alias that retired it`);
     }
@@ -222,17 +235,25 @@ function buildIndex(input, options = {}) {
     listings[wing.slug] = groups.filter(g => g.items.length);
   });
 
-  // Every hand tag in a wing, however few books carry it, for /tags/. The count
-  // is the books carrying the tag after aliases and exclusivity, so for a term
-  // the record also feeds (Photobook) it is smaller than the count on its page.
-  // url is the term's link target, or null when it has no page. Threshold 1
-  // and no derive: the same grouping as the pages, with nothing dropped.
+  // Every hand tag in a wing, however few books carry it, for /tags/. url is the
+  // term's link target, or null when it has no page. count is the number of
+  // books that page lists, so the number beside a link is the number behind it;
+  // a term with no page has no count. handCount is the books carrying the tag
+  // after aliases and exclusivity. Threshold 1 and no derive: the same grouping
+  // as the pages, with nothing dropped.
   const handTerms = buildTagCollectionsByWing(books, { defaultWing, threshold: 1, hasCover: () => false });
   const termsByWing = {};
   wings.forEach(wing => {
     termsByWing[wing.slug] = (handTerms.get(wing.slug) || []).map(t => {
       const target = tagTargets[wing.slug].get(t.slug);
-      return { name: t.title, slug: t.slug, count: t.bookCount, facet: t.facet, url: target ? target.url : null };
+      return {
+        name: t.title,
+        slug: t.slug,
+        handCount: t.bookCount,
+        count: target ? target.ids.size : null,
+        facet: t.facet,
+        url: target ? target.url : null,
+      };
     });
   });
 
@@ -314,13 +335,14 @@ function tagUrl(tag, book, index = getIndex()) {
 // The 'From the record' row on a book page: the book's classification, then its
 // published decade and its author when a page exists for them and lists the
 // book. The classification always shows, as text when no page lists the book.
+// A person is labelled with the name on the page the link opens.
 function recordLinks(book, index = getIndex()) {
   const links = [];
   const classification = (book.classification || '').trim();
   if (classification) links.push({ rule: 'form', label: classification, url: tagUrl(classification, book, index) });
   derivedTerms(book).forEach(term => {
     const url = tagUrl(term.slug || term.name, book, index);
-    if (url) links.push({ rule: term.rule, label: term.title || term.name, url });
+    if (url) links.push({ rule: term.rule, label: term.title || resolveAlias(term.name), url });
   });
   return links;
 }

@@ -105,10 +105,29 @@ describe('collections-index', () => {
       expect(() => buildIndex(input, noCovers)).to.throw(/two collections publish at \/collections\/zines\.html/);
     });
 
-    it('throws when a page would overwrite a redirect stub', () => {
-      const input = fixture({ redirects: [{ from: '/collections/punk.html', to: '/collections/zines.html', out: '/collections/punk.html' }] });
+    it('throws when a curated page would overwrite a redirect stub', () => {
+      const input = fixture({ redirects: [{ from: '/collections/zines.html', to: '/collections/punk.html', out: '/collections/zines.html' }] });
       expect(() => buildIndex(input, noCovers))
-        .to.throw('remove the redirect row for /collections/punk.html or the alias that retired it');
+        .to.throw('remove the redirect row for /collections/zines.html or the alias that retired it');
+    });
+
+    it('skips a generated page whose URL is a redirect stub, with a warning and no throw', () => {
+      const input = fixture({ redirects: [{ from: '/collections/punk.html', to: '/collections/zines.html', out: '/collections/punk.html' }] });
+      const warn = console.warn;
+      const warnings = [];
+      console.warn = msg => warnings.push(msg);
+      let index;
+      try {
+        index = buildIndex(input, noCovers);
+      } finally {
+        console.warn = warn;
+      }
+      expect(index.pages.map(p => p.url)).to.deep.equal(['/collections/zines.html', '/cryptology/collections/ciphers.html']);
+      // The tag falls back to the search, as a tag below the threshold does.
+      expect(index.tagTargets.art.has('punk')).to.be.false;
+      expect(index.termsByWing.art.find(t => t.slug === 'punk')).to.include({ url: null, count: null });
+      expect(warnings).to.have.length(1);
+      expect(warnings[0]).to.include('/collections/punk.html').and.to.include('redirects.json');
     });
 
     it('throws on a curated config without slug, title or matchBy', () => {
@@ -120,6 +139,15 @@ describe('collections-index', () => {
       ['slug', 'title', 'matchBy'].forEach((key, i) => {
         expect(() => buildIndex(fixture({ curated: [broken[i]] }), noCovers)).to.throw(`missing ${key}`);
       });
+    });
+
+    it('throws on a matchBy that does not hold exactly one rule', () => {
+      const two = { slug: 'two', title: 'Two', matchBy: { tag: 'Punk', collection_grouping: 'Shelf' } };
+      const none = { slug: 'none', title: 'None', matchBy: {} };
+      expect(() => buildIndex(fixture({ curated: [two] }), noCovers))
+        .to.throw('curated collection "two": matchBy takes exactly one rule, found tag, collection_grouping');
+      expect(() => buildIndex(fixture({ curated: [none] }), noCovers))
+        .to.throw('curated collection "none": matchBy takes exactly one rule, found none');
     });
 
     it('does not throw on catalogue data', () => {
@@ -151,6 +179,14 @@ describe('collections-index', () => {
       const index = buildIndex(input, noCovers);
       expect(index.pages.map(p => p.url)).to.deep.equal(['/collections/the-city.html']);
       expect(index.tagTargets.art.get('new-york-city').url).to.equal('/collections/the-city.html');
+    });
+
+    it('puts a config that names the tag ahead of a config that shares its slug', () => {
+      const index = buildIndex(fixture({ curated: [
+        { slug: 'punk', title: 'Punk Shelf', matchBy: { collection_grouping: 'Shelf' } },
+        { slug: 'loud', title: 'Loud', matchBy: { tag: 'Punk' } },
+      ] }), noCovers);
+      expect(index.tagTargets.art.get('punk').url).to.equal('/collections/loud.html');
     });
 
     it('makes a curated config the link target of the tag that shares its slug', () => {
@@ -255,6 +291,15 @@ describe('collections-index', () => {
         ]);
       });
 
+      it('labels a person with the name on the page the link opens, not the author cells', () => {
+        const corte = many(8, 1, 'art', '', by('Alex', 'DA Corte'));
+        const aliased = buildIndex({ books: corte, wings, curated: [], staticSlugs: [], redirects: [] }, noCovers);
+        expect(aliased.pageByUrl.get('/collections/alex-da-corte.html').title).to.equal('Alex Da Corte');
+        expect(recordLinks(corte[0], aliased)).to.deep.equal([
+          { rule: 'person', label: 'Alex Da Corte', url: '/collections/alex-da-corte.html' },
+        ]);
+      });
+
       it('omits a decade or author that has no page, and a year it cannot read', () => {
         expect(links(301)).to.deep.equal([]); // Richard Prince: a static page owns the slug
         expect(links(101)).to.deep.equal([]);
@@ -270,6 +315,47 @@ describe('collections-index', () => {
       });
       expect(page('/collections/matsuda.html').listed).to.be.true;
       expect(page('/collections/matsuda.html')).to.not.have.property('sameAs');
+    });
+
+    describe('same set among generated pages', () => {
+      const twins = buildIndex({
+        books: [
+          // One author, one tag, the same fifteen books: a hand page and a record page.
+          ...many(15, 1, 'art', 'Glass', by('Ann', 'Author')),
+          // Two tags on the same fifteen books. Zeta is read first.
+          ...many(15, 101, 'art', 'Zeta, Alpha'),
+          ...many(30, 201, 'art', 'Punk'),
+        ],
+        wings,
+        curated: [],
+        staticSlugs: [],
+        redirects: [],
+      }, noCovers);
+      const twin = url => twins.pageByUrl.get(url);
+
+      it('lists the hand tag page ahead of the record page', () => {
+        expect(twin('/collections/glass.html')).to.include({ origin: 'hand', listed: true });
+        expect(twin('/collections/glass.html')).to.not.have.property('sameAs');
+        expect(twin('/collections/ann-author.html')).to.include({ origin: 'derived', listed: false });
+        expect(twin('/collections/ann-author.html').sameAs).to.deep.equal({ title: 'Glass', url: '/collections/glass.html' });
+      });
+
+      it('lists the first by title when the origins are equal', () => {
+        expect(twin('/collections/alpha.html')).to.include({ origin: 'hand', listed: true });
+        expect(twin('/collections/zeta.html')).to.include({ origin: 'hand', listed: false });
+        expect(twin('/collections/zeta.html').sameAs).to.deep.equal({ title: 'Alpha', url: '/collections/alpha.html' });
+      });
+    });
+
+    it('treats exactly 90% of the wing as whole-wing', () => {
+      const edge = buildIndex({
+        books: [...many(18, 1, 'art', 'Punk'), ...many(2, 101, 'art', '')],
+        wings,
+        curated: [],
+        staticSlugs: [],
+        redirects: [],
+      }, noCovers);
+      expect(edge.pageByUrl.get('/collections/punk.html')).to.include({ bookCount: 18, listed: false, unlistedReason: 'whole-wing' });
     });
 
     it('builds but does not list a generated page covering 90% of its wing', () => {
@@ -310,6 +396,12 @@ describe('collections-index', () => {
     it('links a tag to the page that lists the book', () => {
       expect(tagUrl('Photography', byId('1'), index)).to.equal('/collections/photography.html');
       expect(tagUrl('photography', byId('1'), index)).to.equal('/collections/photography.html');
+    });
+
+    it('resolves an alias before looking the tag up', () => {
+      const nyc = run(1, 'NYC');
+      const aliased = buildIndex(fixture({ books: nyc, curated: [], staticSlugs: [] }), noCovers);
+      expect(tagUrl('NYC', nyc[0], aliased)).to.equal('/collections/new-york-city.html');
     });
 
     it('links a Collage-tagged book outside the Collage shelf to the generated Collage page', () => {
@@ -367,17 +459,23 @@ describe('collections-index', () => {
 
     it('lists every hand tag in a live wing, below the threshold too', () => {
       expect(index.termsByWing.cryptology.map(t => t.slug).sort()).to.deep.equal(['ciphers', 'punk']);
-      expect(term('cryptology', 'punk')).to.deep.equal({ name: 'Punk', slug: 'punk', count: 1, facet: 'theme', url: null });
+      expect(term('cryptology', 'punk')).to.deep.equal({ name: 'Punk', slug: 'punk', handCount: 1, count: null, facet: 'theme', url: null });
       expect(index.termsByWing).to.not.have.property('drafts');
     });
 
     it('gives a term the URL of the page that owns it, generated or curated', () => {
-      expect(term('art', 'punk')).to.include({ count: 16, url: '/collections/punk.html' });
-      expect(term('art', 'zines')).to.include({ count: 15, url: '/collections/zines.html' });
+      expect(term('art', 'punk')).to.include({ url: '/collections/punk.html' });
+      expect(term('art', 'zines')).to.include({ url: '/collections/zines.html' });
     });
 
-    it('gives no URL to a term only a static page owns', () => {
-      expect(term('art', 'magazines')).to.include({ count: 15, url: null });
+    it('counts the books the linked page lists, not the books carrying the tag', () => {
+      expect(term('art', 'punk')).to.include({ count: 16, handCount: 16 });
+      // Fifteen books are tagged Zines; the curated Zines page lists the two on its shelf.
+      expect(term('art', 'zines')).to.include({ count: 2, handCount: 15 });
+    });
+
+    it('gives no URL and no count to a term only a static page owns', () => {
+      expect(term('art', 'magazines')).to.include({ count: null, handCount: 15, url: null });
     });
   });
 

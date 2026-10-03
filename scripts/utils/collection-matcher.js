@@ -4,6 +4,8 @@
 // title or author (BUTT, Purple, Richard Prince) are identity pages, not
 // subject pages, and are not affected. Rule set 2026-09-13: a book tagged
 // Queer Culture shows only in the Queer Culture collection.
+const { slugifyTag, resolveAlias } = require('./tag-vocabulary');
+
 const EXCLUSIVE_TAGS = ['Queer Culture'];
 
 const SUBJECT_RULES = ['tag', 'collection_grouping'];
@@ -12,17 +14,22 @@ const SUBJECT_RULES = ['tag', 'collection_grouping'];
 // substring or keyword rule: both swept in books that only mentioned the word.
 const RULES = ['collection_grouping', 'tag', 'authorLast', 'titleRegex'];
 
+// Two spellings are one tag when they resolve to the same slug, the key the
+// index uses for ownership. Still an exact match on the whole tag.
+const tagKey = tag => slugifyTag(resolveAlias(String(tag).trim()));
+const tagKeys = tags => [].concat(tags || []).map(tagKey).filter(Boolean);
+
 function splitTags(book) {
-  return (book.tags || '').split(',').map(t => t.trim().toLowerCase()).filter(Boolean);
+  return tagKeys((book.tags || '').split(','));
 }
 
 // True when the book carries an exclusive tag that this config does not name.
 function claimedElsewhere(book, rule) {
   if (!SUBJECT_RULES.some(k => rule[k])) return false;
   const bookTags = splitTags(book);
-  const owned = EXCLUSIVE_TAGS.map(t => t.toLowerCase()).filter(t => bookTags.includes(t));
+  const owned = tagKeys(EXCLUSIVE_TAGS).filter(t => bookTags.includes(t));
   if (!owned.length) return false;
-  const wanted = (Array.isArray(rule.tag) ? rule.tag : rule.tag ? [rule.tag] : []).map(t => t.toLowerCase());
+  const wanted = tagKeys(rule.tag);
   return !owned.some(t => wanted.includes(t));
 }
 
@@ -39,7 +46,7 @@ function matchesCollection(book, config) {
     // Exact match against the comma-split tag list. Substring matching here
     // sweeps in wrong books ("Art" would match "Appropriation Art").
     // Accepts a string or an array of variants (tag aliases).
-    const wanted = (Array.isArray(rule.tag) ? rule.tag : [rule.tag]).map(t => t.toLowerCase());
+    const wanted = tagKeys(rule.tag);
     const bookTags = splitTags(book);
     return wanted.some(w => bookTags.includes(w));
   }

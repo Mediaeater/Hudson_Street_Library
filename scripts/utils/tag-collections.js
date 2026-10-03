@@ -119,7 +119,7 @@ function buildTagCollections(books, options = {}) {
     collections.push({
       slug: g.term && g.term.slug ? key : slugifyTag(display),
       title: (g.term && g.term.title) || display,
-      description: g.term ? describeTerm(rule, display) : `Every book in the library tagged “${display}.”`,
+      description: g.term ? describeTerm(rule, display, g.hand.some(id => !g.derived.includes(id))) : `Every book in the library tagged “${display}.”`,
       // A page fed by the record has no tag rule that reproduces it; its
       // members are bookIds.
       ...(g.term ? {} : { matchBy: { tag: sourceTags } }),

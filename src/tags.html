@@ -2,7 +2,7 @@
 layout: collection.njk
 permalink: /tags/index.html
 title: Tags A-Z
-description: Every tag in the art and photography wing that two or more books carry, listed A to Z with the number of books under each.
+description: Every tag in the art and photography wing that two or more books carry, listed A to Z. A tag with a collection page shows how many books that page lists.
 ---
 {#
   The A-Z tag list, read from the collections index (src/_data/tagIndex.js).
@@ -120,7 +120,7 @@ description: Every tag in the art and photography wing that two or more books ca
         padding: 0;
     }
 
-    /* A tag is text with its count beside it. No fill, no border. */
+    /* A tag is text, with its page's count beside it when it has a page. No fill, no border. */
     .tag-pill {
         text-decoration: none;
         color: var(--color-ink);
@@ -152,8 +152,9 @@ description: Every tag in the art and photography wing that two or more books ca
             <div class="page-label">Tag Index</div>
             <h1 class="page-title">Tags A-Z</h1>
             <p class="page-intro">
-                Every tag in the art and photography wing that two or more books carry. The
-                number beside a tag is how many books carry it.
+                Every tag in the art and photography wing that two or more books carry. A
+                number beside a tag is how many books its collection page lists. A tag
+                without a number opens the search.
             </p>
             <div class="tags-count">{{ tagIndex.count | commafy }} tags</div>
             <div class="tags-links">
@@ -170,7 +171,7 @@ description: Every tag in the art and photography wing that two or more books ca
                         {% if term.url %}
                             <a href="{{ term.url }}" class="tag-pill">{{ term.name }}<span class="tag-pill-count">{{ term.count | commafy }}</span></a>
                         {% else %}
-                            <a href="/aggregate-view/?filter=tag&amp;value={{ term.name | urlencode }}" class="tag-pill" rel="nofollow">{{ term.name }}<span class="tag-pill-count">{{ term.count | commafy }}</span></a>
+                            <a href="/aggregate-view/?filter=tag&amp;value={{ term.name | urlencode }}" class="tag-pill" rel="nofollow">{{ term.name }}</a>
                         {% endif %}
                     </li>
                 {% endfor %}
