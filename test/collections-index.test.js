@@ -335,6 +335,26 @@ describe('collections-index', () => {
     });
   });
 
+  describe('termsByWing', () => {
+    const index = buildIndex(fixture(), noCovers);
+    const term = (wing, slug) => index.termsByWing[wing].find(t => t.slug === slug);
+
+    it('lists every hand tag in a live wing, below the threshold too', () => {
+      expect(index.termsByWing.cryptology.map(t => t.slug).sort()).to.deep.equal(['ciphers', 'punk']);
+      expect(term('cryptology', 'punk')).to.deep.equal({ name: 'Punk', slug: 'punk', count: 1, facet: 'theme', url: null });
+      expect(index.termsByWing).to.not.have.property('drafts');
+    });
+
+    it('gives a term the URL of the page that owns it, generated or curated', () => {
+      expect(term('art', 'punk')).to.include({ count: 16, url: '/collections/punk.html' });
+      expect(term('art', 'zines')).to.include({ count: 15, url: '/collections/zines.html' });
+    });
+
+    it('gives no URL to a term only a static page owns', () => {
+      expect(term('art', 'magazines')).to.include({ count: 15, url: null });
+    });
+  });
+
   describe('curated card fields', () => {
     const cfg = { slug: 'shelf', title: 'Shelf', matchBy: { collection_grouping: 'Shelf' } };
     const covers = { hasCover: () => true, coverSrc: b => `/covers/${b.id}.jpg` };

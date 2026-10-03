@@ -1,7 +1,7 @@
 // The one place that decides which collection pages exist, what books each
 // lists, and where each lives. The _data modules (collectionConfigs,
-// exploreCollections, tagPages, wingPages) are slices of this index, so a count
-// on a card and the page behind it cannot disagree.
+// exploreCollections, tagIndex, tagPages, wingPages) are slices of this index,
+// so a count on a card and the page behind it cannot disagree.
 //
 // buildIndex is a pure function of its input and is what the tests call.
 // getIndex loads the real catalogue once per build and memoises the result;
@@ -222,10 +222,25 @@ function buildIndex(input, options = {}) {
     listings[wing.slug] = groups.filter(g => g.items.length);
   });
 
+  // Every hand tag in a wing, however few books carry it, for /tags/. The count
+  // is the books carrying the tag after aliases and exclusivity, so for a term
+  // the record also feeds (Photobook) it is smaller than the count on its page.
+  // url is the term's link target, or null when it has no page. Threshold 1
+  // and no derive: the same grouping as the pages, with nothing dropped.
+  const handTerms = buildTagCollectionsByWing(books, { defaultWing, threshold: 1, hasCover: () => false });
+  const termsByWing = {};
+  wings.forEach(wing => {
+    termsByWing[wing.slug] = (handTerms.get(wing.slug) || []).map(t => {
+      const target = tagTargets[wing.slug].get(t.slug);
+      return { name: t.title, slug: t.slug, count: t.bookCount, facet: t.facet, url: target ? target.url : null };
+    });
+  });
+
   return {
     pages,
     pageByUrl,
     tagTargets,
+    termsByWing,
     listings,
     curated,
     tagTier,
