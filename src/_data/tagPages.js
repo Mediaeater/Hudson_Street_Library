@@ -1,6 +1,4 @@
-const { loadCatalogSync, loadWings } = require('../../scripts/utils/catalog');
-const { buildTagCollectionsByWing } = require('../../scripts/utils/tag-collections');
-const collectionConfigs = require('./collectionConfigs');
+const { getIndex } = require('../../scripts/utils/collections-index');
 
 // wing slug -> { lowercase tag -> URL of the static collection page for it }.
 // book.njk links a tag here when it can, and to the JS search only when it
@@ -14,17 +12,15 @@ const collectionConfigs = require('./collectionConfigs');
 // that). The one exception is a tag a curated config absorbs through
 // coversTags, which lives at that config's URL instead.
 module.exports = function() {
-  const wings = loadWings().filter(w => w.isDefault || w.live);
-  const defaultWing = wings.find(w => w.isDefault).slug;
+  const { pages: configs, tagTier: tagByWing, wings, defaultWing } = getIndex();
 
   const covering = {};
-  collectionConfigs().forEach(cfg => {
+  configs.forEach(cfg => {
     (cfg.coversTags || []).forEach(t => {
       (covering[cfg.wing] = covering[cfg.wing] || {})[t.toLowerCase()] = `/${cfg.permalink}`;
     });
   });
 
-  const tagByWing = buildTagCollectionsByWing(loadCatalogSync().data, { defaultWing });
   const pages = {};
   wings.forEach(wing => {
     const covered = covering[wing.slug] || {};

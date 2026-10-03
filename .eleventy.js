@@ -6,6 +6,7 @@ const slugify = require("slugify");
 const Image = require("@11ty/eleventy-img").default;
 const { loadCatalog, writeMergedCsv, writeBooksJson, loadWings } = require("./scripts/utils/catalog");
 const { coverSrc, hasCover, existingCoverPath } = require("./scripts/utils/cover-path");
+const { resetIndex } = require("./scripts/utils/collections-index");
 const { verifiedRowDates } = require("./scripts/utils/row-dates");
 
 const { exec } = require("child_process");
@@ -112,6 +113,10 @@ module.exports = function(eleventyConfig) {
   //     });
   //   }
   // });
+
+  // The collections index is memoised for the length of one build. Drop it
+  // before each build so --serve sees catalogue and config edits.
+  eleventyConfig.on("eleventy.before", () => resetIndex());
 
   // Disable reserved data property checking to allow custom collections
   eleventyConfig.setFreezeReservedData(false);
@@ -322,6 +327,11 @@ module.exports = function(eleventyConfig) {
   // --- Filter: books that belong to a collection (by config) ---
   eleventyConfig.addFilter("booksInCollection", function(books, collectionConfig) {
     if (!books || !collectionConfig) return [];
+    // A page from the collections index already knows its members.
+    if (collectionConfig.bookIds) {
+      const ids = new Set(collectionConfig.bookIds);
+      return books.filter(b => ids.has(b.id));
+    }
     return books.filter(b => matchesCollection(b, collectionConfig));
   });
 

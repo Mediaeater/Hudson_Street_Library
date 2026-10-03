@@ -1,6 +1,5 @@
 const { loadCatalogSync, loadWings } = require('../../scripts/utils/catalog');
-const { matchesCollection } = require('../../scripts/utils/collection-matcher');
-const collectionConfigs = require('./collectionConfigs');
+const { getIndex } = require('../../scripts/utils/collections-index');
 
 // Pagination source for src/wings.njk — one landing page per wing that is not
 // the default and has gone live. A wing stays unpublished until its `live` flag
@@ -12,15 +11,13 @@ const collectionConfigs = require('./collectionConfigs');
 // and itemCount are resolved once here rather than in two templates.
 module.exports = function() {
   const books = loadCatalogSync().data;
-  const configs = collectionConfigs();
+  const configs = getIndex().pages;
 
   const wings = loadWings().filter(w => !w.isDefault && w.live);
 
   const pages = wings.map(wing => {
     const wingBooks = books.filter(b => b.collection === wing.slug);
 
-    // Auto tag collections already carry a count; curated configs don't, so
-    // count them the same way the explore page does.
     const wingCollections = configs
       .filter(c => c.wing === wing.slug)
       .map(c => ({
@@ -29,9 +26,7 @@ module.exports = function() {
         description: c.description || '',
         url: `/${c.permalink}`,
         image: c.image || null,
-        count: c.bookCount != null
-          ? c.bookCount
-          : wingBooks.filter(b => matchesCollection(b, c)).length,
+        count: c.bookCount,
       }))
       .sort((a, b) => b.count - a.count);
 

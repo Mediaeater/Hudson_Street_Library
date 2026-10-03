@@ -1,8 +1,8 @@
 // Builds auto-generated tag collections from the books data.
 // A tag qualifies for its own collection page when enough books carry it.
-// Pure function of (books, options) so it is unit-testable; the Eleventy
-// data file (src/_data/collectionConfigs.js) wires it to books.csv and
-// dedupes against curated configs and legacy static pages.
+// Pure function of (books, options) so it is unit-testable;
+// scripts/utils/collections-index.js wires it to the catalogue and dedupes
+// against curated configs and legacy static pages.
 
 const { THRESHOLD, TAG_ALIASES, slugifyTag, resolveAlias, facetOf } = require('./tag-vocabulary');
 const { EXCLUSIVE_TAGS } = require('./collection-matcher');
@@ -25,6 +25,7 @@ function buildTagCollections(books, options = {}) {
   const threshold = options.threshold || THRESHOLD;
   const aliases = options.aliases || TAG_ALIASES;
   const hasCover = options.hasCover || hasImageUrl;
+  const coverOf = options.coverSrc || (book => book.image_url);
 
   // key (slug of the canonical name) -> { books, casings: Counter, sourceTags: Set, aliasTarget }
   const groups = new Map();
@@ -82,8 +83,11 @@ function buildTagCollections(books, options = {}) {
       sourceTags,
       sortBy: 'authorAsc',
       coversFirst: true,
+      // Members in catalogue order. The index and the page template read this
+      // list, so the count and the page cannot drift apart.
+      bookIds: g.books.map(b => b.id),
       bookCount: g.books.length,
-      image: withCover ? withCover.image_url : null,
+      image: withCover ? coverOf(withCover) : null,
       featured: false,
       category: 'subject',
       facet: facetOf(display),
