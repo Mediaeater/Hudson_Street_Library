@@ -69,11 +69,11 @@ Outside the art wing these pages are also left out of the sitemap. In the art wi
 
 ## Links
 
-A tag or record term on a book page links to a collection only when that collection lists the book. Otherwise a tag links to the search (`/aggregate-view/?filter=tag&value=...`) with `rel="nofollow"`, a classification shows as plain text, and a decade or author with no page is left off. `tagUrl` and `recordLinks` in the index enforce this, and `scripts/verify-views.js` checks the built pages.
+A tag or record term on a book page links to a collection only when that collection lists the book. Otherwise a tag links to the search (`/aggregate-view/?filter=tag&value=...`) with `rel="nofollow"`, a classification shows as plain text, and a decade or author with no page is left off. `tagUrl` and `recordLinks` in the index enforce this, and `scripts/verify-views.js` opens each built collection page a tag links to and checks the book is on it.
 
-The search matches a tag as a whole value, in any letter case. It does not know the alias map, so a link carrying a merged name finds only the books typed with that spelling.
+The search matches a tag as a whole value, in any letter case. It runs over every wing and ignores exclusive tags. It does not know the alias map, so a link carrying a merged name finds only the books typed with that spelling. For those three reasons it can return more or fewer books than the index counts for the same tag.
 
-`/tags/` lists every art-wing hand tag that two or more books carry, under its first letter. A tag with a page links to it. The rest link to the search.
+`/tags/` lists every art-wing hand tag that two or more books carry, under its first letter. The two-book cutoff counts books in the art wing after aliases and exclusive tags. A tag with a page links to it and shows the number of books that page lists. The rest link to the search and show no number.
 
 ## Curated configs
 
@@ -86,7 +86,7 @@ One JSON file per collection in `src/_data/collections/`. Fields: `slug`, `title
 - `{ "titleRegex": "^BUTT Magazine" }`: identity collections only. Anchor it with `^`.
 - `{ "authorLast": "Prince" }`: exact `author_last`.
 
-Any other key fails the build with the config's name. `keywords`, `titleContains` and `coversTags` no longer exist.
+Two rules in one config, no rule, or any other key fails the build with the config's name. `keywords`, `titleContains` and `coversTags` no longer exist.
 
 `sortBy`: `authorAsc` (default), `titleAsc`, `publicationYearDesc`, `issueNumberDesc`, `issueNumberAsc`. Issue numbers are read from "Issue 5", "#5", "No. 5" or "N°5".
 
@@ -98,7 +98,7 @@ A few hand-built pages remain in `src/collections/` (Richard Prince, the magazin
 
 ## URLs do not disappear
 
-`test/collection-permalinks.test.js` checks a frozen list of published collection URLs, kept in `test/fixtures/collection-permalinks.json`. Each must still build or have a row in `src/_data/redirects.json`. The list is append-only: add new URLs to it, never remove one. When an alias merge moves a page, add the redirect row in the same commit. Never add a redirect for a page that still builds. The build stops and names the row.
+`test/collection-permalinks.test.js` checks a frozen list of published collection URLs, kept in `test/fixtures/collection-permalinks.json`. Each must still build or have a row in `src/_data/redirects.json`. The list is append-only: add new URLs to it, never remove one. When an alias merge moves a page, add the redirect row in the same commit. Never add a redirect for a page that still builds. For a curated config the build stops and names the row. A generated page in that position is skipped with a warning in the build log: the stub stays, and the tag links to the search until the redirect row is removed.
 
 ## How to
 

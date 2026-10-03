@@ -73,7 +73,7 @@ Hudson_Street_Library/
 ## Key Features
 
 ### Automated Content Management
-- **Smart Categorization**: Books automatically assigned to collections based on keywords
+- **Collections**: Built from curated configs (exact `matchBy` rules) and from tags and record terms that reach the publish threshold. No keyword matching. See `docs/COLLECTIONS-GUIDE.md`.
 - **Missing Cover Detection**: APIs automatically find and download missing book covers
 - **News Generation**: New acquisitions automatically generate announcements
 - **Responsive Images**: All images automatically optimized for web with multiple sizes
