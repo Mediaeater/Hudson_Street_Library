@@ -236,34 +236,51 @@
             margin-bottom: 2.5rem;
         }
 
-        .tags {
+        .tags,
+        .record-terms {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
+            align-items: baseline;
+            gap: 0.5rem 1.5rem;
         }
 
-        .tag {
-            display: inline-block;
-            padding: 0.35rem 0.75rem;
-            background: #f5f5f5;
-            color: #525252;
-            font-size: 12px;
-            font-weight: 400;
-            border-radius: 4px;
+        /* Hand tags and record terms are text, not chips: Literata over a hairline. */
+        .tag,
+        .record-term {
+            font-family: 'Literata', Georgia, serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #0A0A0A;
             text-decoration: none;
-            transition: all 0.2s ease;
         }
 
-        .tag:hover {
-            background: #e5e5e5;
-            color: #000;
+        a.tag,
+        a.record-term {
+            border-bottom: 1px solid rgba(10, 10, 10, 0.12);
+            transition: border-color 0.2s ease;
         }
 
-        .classification {
+        a.tag:hover,
+        a.record-term:hover {
+            border-bottom-color: #8B7355;
+        }
+
+        /* Terms computed from the catalogue record sit on their own labelled row. */
+        .record-terms {
+            margin-top: 1.5rem;
+        }
+
+        .tags-section > .record-terms:first-child {
+            margin-top: 0;
+        }
+
+        .record-label {
+            font-family: 'Archivo Narrow', sans-serif;
             font-size: 11px;
-            color: #a3a3a3;
-            letter-spacing: 0.02em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: #8B7355;
         }
 
         /* Related Books */
@@ -624,13 +641,14 @@
     </div>
     {% endif %}
 
-    {% if book.tags or book.classification %}
+    {% set record = book | recordLinks %}
+    {% if book.tags or record.length %}
     <hr class="separator">
 
     <!-- Tags -->
     <div class="tags-section">
-        <h2 class="section-heading">Tags</h2>
         {% if book.tags %}
+        <h2 class="section-heading">Tags</h2>
         <div class="tags">
             {% set tag_list = book.tags.split(',') %}
             {% for tag in tag_list %}
@@ -645,8 +663,16 @@
             {% endfor %}
         </div>
         {% endif %}
-        {% if book.classification %}
-        <div class="classification">{{ book.classification }}</div>
+        {# Terms read off the catalogue record (classification, decade, author) get their own row, so they never pass for tags someone typed. #}
+        {% if record.length %}
+        <div class="record-terms">
+            <span class="record-label">From the record</span>
+            {% for term in record %}
+            {% if term.url %}<a href="{{ term.url }}" class="record-term">{{ term.label }}</a>
+            {% else %}<span class="record-term">{{ term.label }}</span>
+            {% endif %}
+            {% endfor %}
+        </div>
         {% endif %}
     </div>
     {% endif %}
@@ -677,10 +703,14 @@
             </a>
             {% endfor %}
         </div>
-        {% if totalByAuthor > 12 %}
-        {% set curatedAuthorPage = authorCollectionPages[book.author_last] %}
+        {# A hand-listed author page first, then the author's own collection page when it lists this book. The count is by surname, so it is left off a link to one person's page. #}
+        {% set person = null %}
+        {% for term in record %}{% if term.rule == 'person' %}{% set person = term %}{% endif %}{% endfor %}
+        {% set handAuthorPage = authorCollectionPages[book.author_last] %}
+        {% set curatedAuthorPage = handAuthorPage or (person.url if person else '') %}
+        {% if curatedAuthorPage or totalByAuthor > 12 %}
         <a href="{% if curatedAuthorPage %}{{ curatedAuthorPage }}{% else %}/static-demo/?author={{ book.author_last | urlencode }}{% endif %}" class="view-all-link"{% if not curatedAuthorPage %} rel="nofollow"{% endif %}>
-            View all {{ totalByAuthor }} books by {{ book.author_full_name }} →
+            {% if person and not handAuthorPage %}View all books by {{ person.label }}{% else %}View all {{ totalByAuthor }} books by {{ book.author_full_name }}{% endif %} →
         </a>
         {% endif %}
     </div>

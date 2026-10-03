@@ -311,6 +311,20 @@ function tagUrl(tag, book, index = getIndex()) {
   return target && target.ids.has(book.id) ? target.url : '';
 }
 
+// The 'From the record' row on a book page: the book's classification, then its
+// published decade and its author when a page exists for them and lists the
+// book. The classification always shows, as text when no page lists the book.
+function recordLinks(book, index = getIndex()) {
+  const links = [];
+  const classification = (book.classification || '').trim();
+  if (classification) links.push({ rule: 'form', label: classification, url: tagUrl(classification, book, index) });
+  derivedTerms(book).forEach(term => {
+    const url = tagUrl(term.slug || term.name, book, index);
+    if (url) links.push({ rule: term.rule, label: term.title || term.name, url });
+  });
+  return links;
+}
+
 let memo = null;
 
 function getIndex() {
@@ -325,4 +339,4 @@ function resetIndex() {
   memo = null;
 }
 
-module.exports = { buildIndex, getIndex, resetIndex, tagUrl };
+module.exports = { buildIndex, getIndex, resetIndex, tagUrl, recordLinks };

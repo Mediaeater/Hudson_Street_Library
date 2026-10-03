@@ -6,7 +6,7 @@ const slugify = require("slugify");
 const Image = require("@11ty/eleventy-img").default;
 const { loadCatalog, writeMergedCsv, writeBooksJson, loadWings } = require("./scripts/utils/catalog");
 const { coverSrc, hasCover, existingCoverPath } = require("./scripts/utils/cover-path");
-const { resetIndex, tagUrl } = require("./scripts/utils/collections-index");
+const { resetIndex, tagUrl, recordLinks } = require("./scripts/utils/collections-index");
 const { FACETS } = require("./scripts/utils/tag-vocabulary");
 const { verifiedRowDates } = require("./scripts/utils/row-dates");
 
@@ -346,6 +346,8 @@ module.exports = function(eleventyConfig) {
 
   // --- Filter: the collection page a book's tag links to, '' when none lists the book ---
   eleventyConfig.addFilter("tagUrl", (tag, book) => tagUrl(tag, book));
+  // --- Filter: a book's record terms as [{rule, label, url}]; url is '' when no page lists the book ---
+  eleventyConfig.addFilter("recordLinks", book => recordLinks(book));
 
   // --- Filter: group books into sections per config ---
   eleventyConfig.addFilter("groupBySections", function(books, collectionConfig) {

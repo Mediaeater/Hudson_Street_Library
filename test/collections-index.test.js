@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const { buildIndex, tagUrl } = require('../scripts/utils/collections-index');
+const { buildIndex, tagUrl, recordLinks } = require('../scripts/utils/collections-index');
 
 const book = (id, collection, tags, extra = {}) => ({ id: String(id), collection, tags, title: `Book ${id}`, ...extra });
 
@@ -234,6 +234,32 @@ describe('collections-index', () => {
 
     it('gives a record page a link target holding every member', () => {
       expect([...index.tagTargets.art.get('published-1980s').ids]).to.deep.equal(page('/collections/published-1980s.html').bookIds);
+    });
+
+    describe('recordLinks', () => {
+      const links = id => recordLinks(books.find(b => b.id === String(id)), index);
+
+      it('gives classification, decade and author, each linked to a page that lists the book', () => {
+        expect(links(401)).to.deep.equal([{ rule: 'form', label: 'Manual', url: '/cryptology/collections/manual.html' }]);
+        expect(links(1)).to.deep.equal([
+          { rule: 'form', label: 'Photobook', url: '' },
+          { rule: 'published', label: 'Published in the 1980s', url: '/collections/published-1980s.html' },
+          { rule: 'person', label: 'Mitsuhiro Matsuda', url: '/collections/mitsuhiro-matsuda.html' },
+        ]);
+      });
+
+      it('keeps the author link on an exclusive book and drops its decade', () => {
+        expect(links(201)).to.deep.equal([
+          { rule: 'form', label: 'Photobook', url: '' },
+          { rule: 'person', label: 'Peter Hujar', url: '/collections/peter-hujar.html' },
+        ]);
+      });
+
+      it('omits a decade or author that has no page, and a year it cannot read', () => {
+        expect(links(301)).to.deep.equal([]); // Richard Prince: a static page owns the slug
+        expect(links(101)).to.deep.equal([]);
+        expect(links(450)).to.deep.equal([{ rule: 'form', label: 'Photobook', url: '' }]);
+      });
     });
 
     it('builds but does not list a page with the same books as a higher-ranked one', () => {
