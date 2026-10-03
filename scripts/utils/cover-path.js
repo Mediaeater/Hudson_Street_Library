@@ -38,6 +38,14 @@ function isSet(value) {
 }
 
 /**
+ * 11 rows (Oct 2026) carry the placeholder file itself in image_url. The file
+ * is on disk, but it is not a cover.
+ */
+function isPlaceholder(url) {
+    return /\/placeholder-book[^/]*\.svg$/.test(String(url || ''));
+}
+
+/**
  * The path the cover *would* have under the naming convention, whether or not
  * a file is there: {author_last}_{title}_{isbn}.jpg, non-alphanumerics folded
  * to underscores, truncated to 100 characters.
@@ -99,7 +107,7 @@ function coverFileExists(url, srcDir = SRC) {
 function existingCoverPath(book, options = {}) {
     if (!book) return '';
     const srcDir = options.srcDir || SRC;
-    if (coverFileExists(book.image_url, srcDir)) return book.image_url;
+    if (!isPlaceholder(book.image_url) && coverFileExists(book.image_url, srcDir)) return book.image_url;
     const derived = derivedCoverPath(book);
     return coverFileExists(derived, srcDir) ? derived : '';
 }

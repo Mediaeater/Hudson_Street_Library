@@ -126,6 +126,19 @@ describe('cover-path', () => {
       expect(coverSrc(stale, { srcDir })).to.equal(PLACEHOLDER);
     });
 
+    it('does not count the placeholder file in image_url as a cover', () => {
+      const simple = '/assets/images/placeholder-book-simple.svg';
+      [PLACEHOLDER, simple].forEach(url => {
+        fs.writeFileSync(path.join(srcDir, `.${url}`), '<svg/>');
+        const row = { ...absent, image_url: url };
+        expect(hasCover(row, { srcDir }), url).to.equal(false);
+        expect(existingCoverPath(row, { srcDir }), url).to.equal('');
+        expect(coverSrc(row, { srcDir }), url).to.equal(PLACEHOLDER);
+      });
+      // A cover on disk under the conventional name still counts.
+      expect(coverSrc({ ...held, image_url: PLACEHOLDER }, { srcDir })).to.equal('/assets/images/books/Frere_Jones_123.jpg');
+    });
+
     it('handles no book at all', () => {
       expect(coverSrc(null)).to.equal(PLACEHOLDER);
       expect(hasCover(null)).to.equal(false);
