@@ -39,10 +39,20 @@ describe('collection-matcher', () => {
       expect(matchesCollection(book, config)).to.be.true;
     });
 
-    it('matches by titleContains (case-insensitive)', () => {
-      const book = { title: 'Apartamento Issue 36' };
-      const config = { matchBy: { titleContains: 'apartamento' } };
-      expect(matchesCollection(book, config)).to.be.true;
+    it('matches an anchored titleRegex only at the start of the title', () => {
+      const config = { matchBy: { titleRegex: '^AFM\\b' } };
+      expect(matchesCollection({ title: 'AFM Issue 2' }, config)).to.be.true;
+      expect(matchesCollection({ title: 'afm no. 3' }, config)).to.be.true;
+      expect(matchesCollection({ title: 'Jon Rafman' }, config)).to.be.false;
+      expect(matchesCollection({ title: 'AFMagazine' }, config)).to.be.false;
+    });
+
+    it('throws on an unknown matchBy rule', () => {
+      const book = { title: 'Apartamento Issue 36', tags: 'Magazines' };
+      expect(() => matchesCollection(book, { slug: 'apartamento', matchBy: { titleContains: 'apartamento' } }))
+        .to.throw('collection "apartamento": unknown matchBy rule "titleContains"');
+      expect(() => matchesCollection(book, { slug: 'gay', matchBy: { keywords: ['gay'] } }))
+        .to.throw('unknown matchBy rule "keywords"');
     });
 
     it('matches by titleRegex', () => {
@@ -69,14 +79,14 @@ describe('collection-matcher', () => {
         expect(matchesCollection(queer, { matchBy: { tag: ['Magazines'] } })).to.be.false;
       });
 
-      it('is excluded from grouping and keyword collections', () => {
+      it('is excluded from grouping collections', () => {
         expect(matchesCollection(queer, { matchBy: { collection_grouping: 'Magazines' } })).to.be.false;
-        expect(matchesCollection(queer, { matchBy: { keywords: ['gay'] } })).to.be.false;
+        const plain = { ...queer, tags: 'Photography, Magazines' };
+        expect(matchesCollection(plain, { matchBy: { collection_grouping: 'Magazines' } })).to.be.true;
       });
 
       it('still matches identity collections (title, author)', () => {
         expect(matchesCollection(queer, { matchBy: { titleRegex: '^BUTT Magazine' } })).to.be.true;
-        expect(matchesCollection(queer, { matchBy: { titleContains: 'butt' } })).to.be.true;
         expect(matchesCollection(queer, { matchBy: { authorLast: 'Jonkers' } })).to.be.true;
       });
 

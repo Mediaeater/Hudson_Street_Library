@@ -1,12 +1,16 @@
 // Tags that own their books outright. A book carrying one of these appears in
-// that tag's collection and in no other subject collection (tag, grouping or
-// keyword driven, curated or auto-generated). Collections that name a specific
+// that tag's collection and in no other subject collection (tag or grouping
+// driven, curated or auto-generated). Collections that name a specific
 // title or author (BUTT, Purple, Richard Prince) are identity pages, not
 // subject pages, and are not affected. Rule set 2026-09-13: a book tagged
 // Queer Culture shows only in the Queer Culture collection.
 const EXCLUSIVE_TAGS = ['Queer Culture'];
 
-const SUBJECT_RULES = ['tag', 'collection_grouping', 'keywords'];
+const SUBJECT_RULES = ['tag', 'collection_grouping'];
+
+// Every rule matches one column exactly, or the title by regex. There is no
+// substring or keyword rule: both swept in books that only mentioned the word.
+const RULES = ['collection_grouping', 'tag', 'authorLast', 'titleRegex'];
 
 function splitTags(book) {
   return (book.tags || '').split(',').map(t => t.trim().toLowerCase()).filter(Boolean);
@@ -24,6 +28,9 @@ function claimedElsewhere(book, rule) {
 
 function matchesCollection(book, config) {
   const rule = config.matchBy || {};
+  for (const k of Object.keys(rule)) {
+    if (!RULES.includes(k)) throw new Error(`collection "${config.slug}": unknown matchBy rule "${k}"`);
+  }
   if (claimedElsewhere(book, rule)) return false;
   if (rule.collection_grouping) {
     return (book.collection_grouping || '').trim() === rule.collection_grouping;
@@ -39,16 +46,8 @@ function matchesCollection(book, config) {
   if (rule.authorLast) {
     return (book.author_last || '').trim() === rule.authorLast;
   }
-  if (rule.titleContains) {
-    return (book.title || '').toLowerCase().includes(rule.titleContains.toLowerCase());
-  }
   if (rule.titleRegex) {
     return new RegExp(rule.titleRegex, 'i').test(book.title || '');
-  }
-  if (rule.keywords) {
-    const hay = [book.title, book.tags, book.classification, book.description, book.collection_grouping]
-      .map(s => (s || '').toLowerCase()).join(' ');
-    return rule.keywords.some(k => hay.includes(k.toLowerCase()));
   }
   return false;
 }

@@ -328,7 +328,11 @@ module.exports = function(eleventyConfig) {
   // --- Filter: group books into sections per config ---
   eleventyConfig.addFilter("groupBySections", function(books, collectionConfig) {
     if (!books) return [];
-    const sections = (collectionConfig.sections || []).map(s => ({ ...s, books: [] }));
+    // No sections: one unlabelled group, so the page prints no heading.
+    if (!collectionConfig.sections || !collectionConfig.sections.length) {
+      return books.length ? [{ label: null, books: [...books] }] : [];
+    }
+    const sections = collectionConfig.sections.map(s => ({ ...s, books: [] }));
     const otherSection = { label: 'Other', books: [] };
 
     books.forEach(b => {
@@ -342,9 +346,6 @@ module.exports = function(eleventyConfig) {
     });
 
     const result = sections.filter(s => s.books.length > 0);
-    if (otherSection.books.length > 0 && !collectionConfig.sections) {
-      return [otherSection];
-    }
     if (otherSection.books.length > 0) result.push(otherSection);
     return result;
   });
@@ -354,11 +355,12 @@ module.exports = function(eleventyConfig) {
     if (!books) return [];
     const list = [...books];
     const issueNum = b => {
-      const m = (b.title || '').match(/Issue #?(\d+)/i);
+      const m = (b.title || '').match(/(?:Issue|No\.?|N°|#)\s*#?\s*(\d+)/i);
       return m ? parseInt(m[1], 10) : 0;
     };
-    if (sortBy === 'issueNumberDesc') return list.sort((a,b) => issueNum(b) - issueNum(a));
-    if (sortBy === 'issueNumberAsc') return list.sort((a,b) => issueNum(a) - issueNum(b));
+    const byTitle = (a,b) => (a.title||'').localeCompare(b.title||'');
+    if (sortBy === 'issueNumberDesc') return list.sort((a,b) => issueNum(b) - issueNum(a) || byTitle(a,b));
+    if (sortBy === 'issueNumberAsc') return list.sort((a,b) => issueNum(a) - issueNum(b) || byTitle(a,b));
     if (sortBy === 'publicationYearDesc') return list.sort((a,b) => (parseInt(b.publication_year,10)||0) - (parseInt(a.publication_year,10)||0));
     if (sortBy === 'titleAsc') return list.sort((a,b) => (a.title||'').localeCompare(b.title||''));
     if (sortBy === 'authorAsc') return list.sort((a,b) => (a.author_last||'').localeCompare(b.author_last||'') || (a.title||'').localeCompare(b.title||''));
@@ -368,7 +370,7 @@ module.exports = function(eleventyConfig) {
   // --- Filter: move books without cover images to the end (stable) ---
   eleventyConfig.addFilter("coversFirst", function(books) {
     if (!books) return [];
-    return [...books.filter(b => b.image_url), ...books.filter(b => !b.image_url)];
+    return [...books.filter(b => hasCover(b)), ...books.filter(b => !hasCover(b))];
   });
 
   // --- Count books by author ---
