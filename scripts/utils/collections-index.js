@@ -12,6 +12,7 @@ const path = require('path');
 const { loadCatalogSync, loadWings } = require('./catalog');
 const { buildTagCollectionsByWing } = require('./tag-collections');
 const { matchesCollection } = require('./collection-matcher');
+const { slugifyTag, resolveAlias } = require('./tag-vocabulary');
 const { hasCover, coverSrc } = require('./cover-path');
 
 const DATA_DIR = path.join(__dirname, '..', '..', 'src', '_data');
@@ -25,6 +26,9 @@ const STATIC_DIR = path.join(__dirname, '..', '..', 'src', 'collections');
 //   staticSlugs slugs of the hand-built pages in src/collections/
 //   redirects   redirects.json rows ({ from, to, out })
 //
+// Two spellings are one term when they resolve to the same slug.
+const termSlug = tag => slugifyTag(resolveAlias(tag));
+
 // Throws on config mistakes only. Catalogue data never throws here: CI runs
 // nothing but the build, so a tag typed into a CSV must not be able to fail it.
 function buildIndex(input, options = {}) {
@@ -46,6 +50,9 @@ function buildIndex(input, options = {}) {
     ['slug', 'title', 'matchBy'].forEach(key => {
       if (!cfg[key]) throw new Error(`curated collection "${cfg.slug || cfg.title || '?'}": missing ${key}`);
     });
+    if ('coversTags' in cfg) {
+      throw new Error(`curated collection "${cfg.slug}": coversTags is retired. A config owns a tag only by naming it in matchBy.tag`);
+    }
   });
 
   // A curated config belongs to the art wing unless its JSON says otherwise.
@@ -59,9 +66,6 @@ function buildIndex(input, options = {}) {
     return { ...cfg, bookIds, bookCount: bookIds.length, facet: cfg.facet || null, origin: 'curated', listed: true };
   });
 
-  // Dedupe the tag tier per wing: a curated config or static page owns its slug
-  // within its wing, and a curated config can declare coversTags to suppress a
-  // redundant auto page.
   const tagTier = buildTagCollectionsByWing(books, {
     defaultWing,
     hasCover: options.hasCover || hasCover,
@@ -69,16 +73,28 @@ function buildIndex(input, options = {}) {
   });
   const tagCollections = [];
 
+  // Who owns a tag term within a wing, in order: a curated config that names
+  // the tag in matchBy.tag; a curated config whose slug is the term's slug; a
+  // static page with that slug (art wing only); otherwise the generated page.
+  // owners: wing slug -> Map(term slug -> curated config).
+  const owners = {};
   wings.forEach(wing => {
     const wingCurated = curated.filter(c => c.wing === wing.slug);
-    const curatedSlugs = new Set(wingCurated.map(c => c.slug));
-    const coveredTags = new Set();
-    wingCurated.forEach(c => (c.coversTags || []).forEach(t => coveredTags.add(t.toLowerCase())));
+    const owner = owners[wing.slug] = new Map(wingCurated.map(c => [c.slug, c]));
+    const named = new Map();
+    wingCurated.forEach(c => {
+      [].concat(c.matchBy.tag || []).map(termSlug).filter(Boolean).forEach(slug => {
+        if (named.has(slug) && named.get(slug) !== c) {
+          throw new Error(`curated collections "${named.get(slug).slug}" and "${c.slug}" both name the tag "${slug}" in matchBy.tag`);
+        }
+        named.set(slug, c);
+      });
+    });
+    named.forEach((c, slug) => owner.set(slug, c));
 
     (tagTier.get(wing.slug) || []).forEach(tc => {
-      if (curatedSlugs.has(tc.slug)) return;
+      if (owner.has(tc.slug)) return;
       if (hasStaticPage(wing.slug, tc.slug)) return;
-      if (tc.sourceTags.some(t => coveredTags.has(t.toLowerCase()))) return;
       tagCollections.push({ ...tc, listed: true });
     });
   });
@@ -89,12 +105,13 @@ function buildIndex(input, options = {}) {
   // `scope` is what the template filters books by: the config's wing, or every
   // wing when the config declares allWings (the page still publishes under the
   // config's own wing namespace).
-  const pages = [...liveCurated, ...tagCollections].map(cfg => {
-    const permalink = cfg.wing === defaultWing
-      ? `collections/${cfg.slug}.html`
-      : `${cfg.wing}/collections/${cfg.slug}.html`;
-    return { ...cfg, scope: cfg.allWings ? '*' : cfg.wing, permalink, url: `/${permalink}` };
-  });
+  const permalinkOf = cfg => cfg.wing === defaultWing
+    ? `collections/${cfg.slug}.html`
+    : `${cfg.wing}/collections/${cfg.slug}.html`;
+  const urlOf = cfg => `/${permalinkOf(cfg)}`;
+  const pages = [...liveCurated, ...tagCollections].map(cfg => (
+    { ...cfg, scope: cfg.allWings ? '*' : cfg.wing, permalink: permalinkOf(cfg), url: urlOf(cfg) }
+  ));
 
   const redirectOuts = new Set(redirects.map(r => r.out));
   const pageByUrl = new Map();
@@ -109,9 +126,25 @@ function buildIndex(input, options = {}) {
     pageByUrl.set(page.url, page);
   });
 
+  // Where a tag on a book page may link: the page that owns the term, with the
+  // ids it lists. A config shadowed by a static page has no page of its own, so
+  // its terms get no target; nor does a term only a static page owns, because
+  // nothing here knows which books that page lists.
+  const tagTargets = {};
+  wings.forEach(wing => {
+    const targets = tagTargets[wing.slug] = new Map();
+    const add = (slug, page) => targets.set(slug, { url: page.url, ids: new Set(page.bookIds) });
+    tagCollections.filter(tc => tc.wing === wing.slug)
+      .forEach(tc => add(tc.slug, pageByUrl.get(urlOf(tc))));
+    owners[wing.slug].forEach((cfg, slug) => {
+      if (liveCurated.includes(cfg)) add(slug, pageByUrl.get(urlOf(cfg)));
+    });
+  });
+
   return {
     pages,
     pageByUrl,
+    tagTargets,
     curated,
     tagTier,
     wings,
@@ -136,6 +169,16 @@ function loadInput() {
   };
 }
 
+// The collection page a tag on this book's page links to, or '' when there is
+// none. A tag links only to a page that lists the book: a term's page can leave
+// the book out (an exclusive tag claimed it, or a curated shelf was hand-picked),
+// and a link to a page without the book reads as a broken promise.
+function tagUrl(tag, book, index = getIndex()) {
+  const targets = index.tagTargets[book.collection || index.defaultWing];
+  const target = targets && targets.get(termSlug(tag));
+  return target && target.ids.has(book.id) ? target.url : '';
+}
+
 let memo = null;
 
 function getIndex() {
@@ -150,4 +193,4 @@ function resetIndex() {
   memo = null;
 }
 
-module.exports = { buildIndex, getIndex, resetIndex };
+module.exports = { buildIndex, getIndex, resetIndex, tagUrl };

@@ -106,12 +106,30 @@ const onPage = (html, book) => markers(book).some(m => html.includes(m));
     if (!built(r.to)) fail(`redirect ${r.from} points at a page that does not exist: ${r.to}`);
   }
 
-  // Book pages link a tag to its collection page by computed URL (tagPages.js).
+  // Every tag that has a collection page to link to (tagPages.js).
   console.log('Tag links on book pages land on a built collection page:');
   const tagPages = require('../src/_data/tagPages.js')();
   for (const [wing, map] of Object.entries(tagPages)) {
     for (const [tag, url] of Object.entries(map)) {
       if (!built(url)) fail(`tag "${tag}" (${wing}) links to a page that does not exist: ${url}`);
+    }
+  }
+
+  // A tag links to a collection only when that collection lists the book.
+  console.log('Tag links on book pages land on a page that lists the book:');
+  const { getIndex, tagUrl } = require('./utils/collections-index');
+  const { loadCatalogSync } = require('./utils/catalog');
+  const { pageByUrl } = getIndex();
+  for (const book of loadCatalogSync().data) {
+    for (const tag of (book.tags || '').split(',').map(t => t.trim()).filter(Boolean)) {
+      const url = tagUrl(tag, book);
+      if (!url) continue;
+      const page = pageByUrl.get(url);
+      if (!page || !page.bookIds.includes(book.id)) {
+        fail(`book ${book.id} tag "${tag}" links to ${url}, which does not list it`);
+      } else if (!built(url)) {
+        fail(`book ${book.id} tag "${tag}" links to a page that does not exist: ${url}`);
+      }
     }
   }
 

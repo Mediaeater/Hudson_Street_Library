@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const { buildIndex } = require('../scripts/utils/collections-index');
+const { buildIndex, tagUrl } = require('../scripts/utils/collections-index');
 
 const book = (id, collection, tags, extra = {}) => ({ id: String(id), collection, tags, title: `Book ${id}`, ...extra });
 
@@ -54,7 +54,6 @@ describe('collections-index', () => {
 
     it('generates no page for a slug a static page owns in the art wing', () => {
       expect(urls).to.not.include('/collections/magazines.html');
-      // The tag tier still knows the tag, so tagPages can link to the static page.
       expect(index.tagTier.get('art').map(c => c.slug)).to.include('magazines');
     });
 
@@ -127,6 +126,99 @@ describe('collections-index', () => {
       const input = fixture();
       input.books.push(book(900, 'art', ',,, !!!, Punk'), { id: '901', collection: 'art' }, book(902, 'nowhere', 'Punk'));
       expect(() => buildIndex(input, noCovers)).to.not.throw();
+    });
+  });
+
+  describe('tag ownership', () => {
+    const run = (from, tags, extra) => Array.from({ length: 15 }, (_, i) => book(from + i, 'art', tags, extra));
+
+    it('gives a tag to the curated config that names it in matchBy.tag, at any count', () => {
+      const input = fixture({ curated: [{ slug: 'loud', title: 'Loud', matchBy: { tag: ['Punk', 'Noise'] } }] });
+      input.books.push(book(210, 'art', 'noise'));
+      const index = buildIndex(input, noCovers);
+      expect(index.pageByUrl.has('/collections/punk.html')).to.be.false;
+      expect(index.tagTargets.art.get('punk').url).to.equal('/collections/loud.html');
+      expect(index.tagTargets.art.get('noise').url).to.equal('/collections/loud.html');
+      // Ownership is per wing: cryptology's lone Punk book has nowhere to link.
+      expect(index.tagTargets.cryptology.has('punk')).to.be.false;
+    });
+
+    it('compares tags by alias and slug, not by spelling', () => {
+      const input = fixture({
+        books: run(1, 'NYC'),
+        curated: [{ slug: 'the-city', title: 'The City', matchBy: { tag: 'new york city' } }],
+      });
+      const index = buildIndex(input, noCovers);
+      expect(index.pages.map(p => p.url)).to.deep.equal(['/collections/the-city.html']);
+      expect(index.tagTargets.art.get('new-york-city').url).to.equal('/collections/the-city.html');
+    });
+
+    it('makes a curated config the link target of the tag that shares its slug', () => {
+      const index = buildIndex(fixture(), noCovers);
+      const zines = index.tagTargets.art.get('zines');
+      expect(zines.url).to.equal('/collections/zines.html');
+      expect([...zines.ids]).to.deep.equal(['200', '201']);
+    });
+
+    it('gives no link target to a tag whose slug a static page owns', () => {
+      const index = buildIndex(fixture(), noCovers);
+      expect(index.tagTargets.art.has('magazines')).to.be.false;
+    });
+
+    it('throws when a config still carries coversTags', () => {
+      const input = fixture({ curated: [{ slug: 'zines', title: 'Zines', matchBy: { collection_grouping: 'Shelf' }, coversTags: ['Zines'] }] });
+      expect(() => buildIndex(input, noCovers)).to.throw('curated collection "zines": coversTags is retired');
+    });
+
+    it('throws when two configs in a wing name the same tag', () => {
+      const input = fixture({ curated: [
+        { slug: 'one', title: 'One', matchBy: { tag: 'Punk' } },
+        { slug: 'two', title: 'Two', matchBy: { tag: ['Zines', 'punk'] } },
+      ] });
+      expect(() => buildIndex(input, noCovers)).to.throw('"one" and "two" both name the tag "punk"');
+    });
+  });
+
+  describe('tagUrl', () => {
+    const run = (from, tags, extra) => Array.from({ length: 15 }, (_, i) => book(from + i, 'art', tags, extra));
+    const books = [
+      ...run(1, 'Photography, Collage', { collection_grouping: 'Collage' }),
+      ...run(101, 'Photography'),
+      book(200, 'art', 'Collage, Photography'),
+      book(201, 'art', 'Queer Culture, Photography, Collage', { collection_grouping: 'Collage' }),
+      book(300, 'cryptology', 'Photography'),
+    ];
+    const index = buildIndex(fixture({
+      books,
+      curated: [
+        { slug: 'collage-collections', title: 'Collage', matchBy: { collection_grouping: 'Collage' } },
+        { slug: 'queer-culture', title: 'Queer Culture', matchBy: { tag: 'Queer Culture' } },
+      ],
+      staticSlugs: [],
+    }), noCovers);
+    const byId = id => books.find(b => b.id === id);
+
+    it('links a tag to the page that lists the book', () => {
+      expect(tagUrl('Photography', byId('1'), index)).to.equal('/collections/photography.html');
+      expect(tagUrl('photography', byId('1'), index)).to.equal('/collections/photography.html');
+    });
+
+    it('links a Collage-tagged book outside the Collage shelf to the generated Collage page', () => {
+      expect(index.pageByUrl.get('/collections/collage-collections.html').bookIds).to.not.include('200');
+      expect(tagUrl('Collage', byId('200'), index)).to.equal('/collections/collage.html');
+    });
+
+    it('returns no link for the other tags of a Queer Culture book', () => {
+      const queer = byId('201');
+      expect(tagUrl('Queer Culture', queer, index)).to.equal('/collections/queer-culture.html');
+      expect(tagUrl('Photography', queer, index)).to.equal('');
+      expect(tagUrl('Collage', queer, index)).to.equal('');
+    });
+
+    it('returns no link for a tag with no page in the book\'s wing', () => {
+      expect(tagUrl('Photography', byId('300'), index)).to.equal('');
+      expect(tagUrl('Nothing', byId('1'), index)).to.equal('');
+      expect(tagUrl('!!!', byId('1'), index)).to.equal('');
     });
   });
 });

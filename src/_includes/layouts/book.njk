@@ -636,8 +636,8 @@
             {% for tag in tag_list %}
             {% set cleanTag = tag.trim() %}
             {% if cleanTag and cleanTag.length <= 60 and cleanTag.indexOf('http') === -1 and cleanTag.indexOf(';') === -1 %}
-            {# A tag with its own collection page links there; the rest fall back to the JS search, nofollow so the query URLs stay out of the crawl (see tagPages.js). #}
-            {% set tagPage = (tagPages[book.collection] or {})[cleanTag | lower] %}
+            {# A tag links to its collection page only when that page lists this book; the rest fall back to the JS search, nofollow so the query URLs stay out of the crawl (see tagUrl in collections-index.js). #}
+            {% set tagPage = cleanTag | tagUrl(book) %}
             {% if tagPage %}<a href="{{ tagPage }}" class="tag">{{ cleanTag }}</a>
             {% else %}<a href="/aggregate-view/?filter=tag&value={{ cleanTag | urlencode }}" class="tag" rel="nofollow">{{ cleanTag }}</a>
             {% endif %}
