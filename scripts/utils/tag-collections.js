@@ -23,6 +23,14 @@ function hasImageUrl(book) {
   return book.image_url && book.image_url !== 'NULL' && book.image_url.trim() !== '';
 }
 
+// The book whose cover stands for a collection on a card: the newest that has
+// one. The id breaks ties so the image is the same on every build.
+function newestWithCover(books, hasCover = hasImageUrl) {
+  return [...books]
+    .sort((a, b) => bookDate(b) - bookDate(a) || Number(b.id) - Number(a.id))
+    .find(hasCover);
+}
+
 // options.derive(book) returns the book's record terms (see derived-terms.js).
 // They join the same groups as hand tags, so a classification "Photobook" and a
 // tag "Photobook" make one page. Without it only hand tags are read.
@@ -104,9 +112,7 @@ function buildTagCollections(books, options = {}) {
     const facet = g.term ? g.term.facet : facetOf(display);
     if (g.books.length < (options.threshold || FACET_THRESHOLD[facet] || THRESHOLD)) return;
 
-    // Newest first; the id breaks ties so the image is the same on every build.
-    const sorted = [...g.books].sort((a, b) => bookDate(b) - bookDate(a) || Number(b.id) - Number(a.id));
-    const withCover = sorted.find(hasCover);
+    const withCover = newestWithCover(g.books, hasCover);
     const sourceTags = [...g.sourceTags];
     const rule = g.term && g.term.rule;
 
@@ -161,4 +167,4 @@ function buildTagCollectionsByWing(books, options = {}) {
   return out;
 }
 
-module.exports = { buildTagCollections, buildTagCollectionsByWing, slugifyTag, TAG_ALIASES, THRESHOLD };
+module.exports = { buildTagCollections, buildTagCollectionsByWing, newestWithCover, slugifyTag, TAG_ALIASES, THRESHOLD };

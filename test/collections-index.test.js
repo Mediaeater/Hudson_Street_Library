@@ -304,4 +304,50 @@ describe('collections-index', () => {
       expect(tagUrl('!!!', byId('1'), index)).to.equal('');
     });
   });
+
+  describe('listings', () => {
+    const staticEntries = [{ id: 'magazines', name: 'Magazines', slug: 'magazines', description: 'Hand-built.', category: 'magazines', featured: true, image: null, path: '/collections/magazines.html' }];
+    const index = buildIndex(fixture({ staticEntries }), noCovers);
+    const group = (wing, facet) => index.listings[wing].find(g => g.facet === facet);
+
+    it('groups each wing\'s listed pages by facet, in FACETS order, curated last', () => {
+      expect(index.listings.art.map(g => g.facet)).to.deep.equal(['theme', 'format', 'curated']);
+      expect(index.listings.art.map(g => g.label)).to.deep.equal(['Themes', 'Formats', 'Curated collections']);
+      expect(group('art', 'theme').items.map(i => [i.name, i.url, i.count])).to.deep.equal([['Punk', '/collections/punk.html', 16]]);
+    });
+
+    it('links a term a curated config owns to that config\'s page, with the page\'s count', () => {
+      expect(group('art', 'format').items).to.have.length(1);
+      expect(group('art', 'format').items[0]).to.include({ name: 'Zines', url: '/collections/zines.html', count: 2, origin: 'curated', facet: 'format' });
+    });
+
+    it('puts static entries in the default wing\'s curated group, without a count, featured last', () => {
+      const items = group('art', 'curated').items;
+      expect(items.map(i => i.slug)).to.deep.equal(['zines', 'magazines']);
+      expect(items[1]).to.include({ origin: 'static', url: '/collections/magazines.html', featured: true });
+      expect(items[1]).to.not.have.property('count');
+    });
+
+    it('leaves out a page that is built but not listed', () => {
+      // Ciphers is on 15 of the 16 cryptology books, so its page is whole-wing.
+      expect(index.pageByUrl.get('/cryptology/collections/ciphers.html').listed).to.equal(false);
+      expect(index.listings.cryptology).to.deep.equal([]);
+    });
+  });
+
+  describe('curated card fields', () => {
+    const cfg = { slug: 'shelf', title: 'Shelf', matchBy: { collection_grouping: 'Shelf' } };
+    const covers = { hasCover: () => true, coverSrc: b => `/covers/${b.id}.jpg` };
+    const page = (extra, options) => buildIndex(fixture({ curated: [{ ...cfg, ...extra }] }), options).pageByUrl.get('/collections/shelf.html');
+
+    it('keeps the config\'s own image, featured and category', () => {
+      expect(page({ image: '/hero.jpg', featured: true, category: 'art' }, covers))
+        .to.include({ image: '/hero.jpg', featured: true, category: 'art' });
+    });
+
+    it('computes an image from the members when the config has none', () => {
+      expect(page({}, covers)).to.include({ image: '/covers/201.jpg', featured: false, category: null });
+      expect(page({}, noCovers).image).to.equal(null);
+    });
+  });
 });

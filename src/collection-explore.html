@@ -546,13 +546,13 @@ permalink: /collection-explore.html
                     <div class="collection-overlay">
                         <div class="collection-overlay-text">{{ collection.description }}</div>
                     </div>
-                    <div class="collection-category">{{ collection.category }}</div>
+                    {% if collection.category %}<div class="collection-category">{{ collection.category }}</div>{% endif %}
                 </div>
                 <div class="collection-info">
                     <div class="collection-number">Lot {% if loop.index < 10 %}00{% elif loop.index < 100 %}0{% endif %}{{ loop.index }}</div>
                     <h2 class="collection-name">{{ collection.name }}</h2>
                     <p class="collection-description">{{ collection.description }}</p>
-                    <div class="collection-count">{{ collection.bookCount or 0 }} Items</div>
+                    {% if collection.bookCount is defined %}<div class="collection-count">{{ collection.bookCount }} Items</div>{% endif %}
                 </div>
             </a>
             {% endfor %}

@@ -10,9 +10,9 @@
 const fs = require('fs');
 const path = require('path');
 const { loadCatalogSync, loadWings } = require('./catalog');
-const { buildTagCollectionsByWing } = require('./tag-collections');
+const { buildTagCollectionsByWing, newestWithCover } = require('./tag-collections');
 const { matchesCollection } = require('./collection-matcher');
-const { slugifyTag, resolveAlias, WING_CEILING } = require('./tag-vocabulary');
+const { slugifyTag, resolveAlias, WING_CEILING, FACETS } = require('./tag-vocabulary');
 const { derivedTerms } = require('./derived-terms');
 const { hasCover, coverSrc } = require('./cover-path');
 
@@ -20,12 +20,14 @@ const DATA_DIR = path.join(__dirname, '..', '..', 'src', '_data');
 const CONFIG_DIR = path.join(DATA_DIR, 'collections');
 const STATIC_DIR = path.join(__dirname, '..', '..', 'src', 'collections');
 
-// input: { books, wings, curated, staticSlugs, redirects }
-//   books       every catalogue row, stamped with `collection` (its wing)
-//   wings       wings.json as loaded; only the default and live wings get pages
-//   curated     the parsed src/_data/collections/*.json configs
-//   staticSlugs slugs of the hand-built pages in src/collections/
-//   redirects   redirects.json rows ({ from, to, out })
+// input: { books, wings, curated, staticSlugs, staticEntries, redirects }
+//   books         every catalogue row, stamped with `collection` (its wing)
+//   wings         wings.json as loaded; only the default and live wings get pages
+//   curated       the parsed src/_data/collections/*.json configs
+//   staticSlugs   slugs of the hand-built pages in src/collections/
+//   staticEntries libraryCollections.json `collections`: the hand-built pages
+//                 that are listed as collections but have no config
+//   redirects     redirects.json rows ({ from, to, out })
 //
 // Two spellings are one term when they resolve to the same slug.
 const termSlug = tag => slugifyTag(resolveAlias(tag));
@@ -33,7 +35,9 @@ const termSlug = tag => slugifyTag(resolveAlias(tag));
 // Throws on config mistakes only. Catalogue data never throws here: CI runs
 // nothing but the build, so a tag typed into a CSV must not be able to fail it.
 function buildIndex(input, options = {}) {
-  const { books = [], curated: rawCurated = [], redirects = [] } = input;
+  const { books = [], curated: rawCurated = [], staticEntries = [], redirects = [] } = input;
+  const coverCheck = options.hasCover || hasCover;
+  const coverOf = options.coverSrc || coverSrc;
   const staticSlugs = new Set(input.staticSlugs || []);
 
   // Only published wings get collection pages. An unpublished wing has no
@@ -59,12 +63,25 @@ function buildIndex(input, options = {}) {
   // A curated config belongs to the art wing unless its JSON says otherwise.
   // Members are counted for every config, including one still shadowed by a
   // static page: the explore card for that page takes its count from here.
+  // The card fields (image, featured, category) are the config's own; a config
+  // without an image gets its newest cover, as a generated page does.
   const curated = rawCurated.map(raw => {
     const cfg = { wing: defaultWing, ...raw };
-    const bookIds = books
-      .filter(b => (cfg.allWings || b.collection === cfg.wing) && matchesCollection(b, cfg))
-      .map(b => b.id);
-    return { ...cfg, bookIds, bookCount: bookIds.length, facet: cfg.facet || null, origin: 'curated', listed: true };
+    const members = books
+      .filter(b => (cfg.allWings || b.collection === cfg.wing) && matchesCollection(b, cfg));
+    const bookIds = members.map(b => b.id);
+    const cover = cfg.image ? null : newestWithCover(members, coverCheck);
+    return {
+      ...cfg,
+      bookIds,
+      bookCount: bookIds.length,
+      image: cfg.image || (cover ? coverOf(cover) : null),
+      featured: Boolean(cfg.featured),
+      category: cfg.category || null,
+      facet: cfg.facet || null,
+      origin: 'curated',
+      listed: true,
+    };
   });
 
   // Record terms are read against the book's own wing: a classification counts
@@ -73,8 +90,8 @@ function buildIndex(input, options = {}) {
   const tagTier = buildTagCollectionsByWing(books, {
     defaultWing,
     derive: book => derivedTerms(book, wingBySlug.get(book.collection || defaultWing)),
-    hasCover: options.hasCover || hasCover,
-    coverSrc: options.coverSrc || coverSrc,
+    hasCover: coverCheck,
+    coverSrc: coverOf,
   });
   const tagCollections = [];
 
@@ -148,10 +165,68 @@ function buildIndex(input, options = {}) {
     });
   });
 
+  // What the explore page, the wing landings and the JSON endpoint list, per
+  // wing: one group per facet in FACETS order, then the curated group. Listed
+  // pages only. A term a curated config owns appears in its facet too, linking
+  // to that config's page, so the Themes list does not lose Queer Culture just
+  // because its page is curated.
+  const listItem = (page, term) => ({
+    name: term ? term.title : page.title,
+    slug: page.slug,
+    url: page.url,
+    description: page.description || '',
+    image: page.image || null,
+    count: page.bookCount,
+    featured: page.featured,
+    category: page.category,
+    facet: term ? term.facet : page.facet,
+    origin: page.origin,
+  });
+  const listings = {};
+  wings.forEach(wing => {
+    const listed = pages.filter(p => p.wing === wing.slug && p.listed);
+    const terms = tagTier.get(wing.slug) || [];
+
+    const groups = FACETS.map(facet => {
+      const items = listed.filter(p => p.autoGenerated && p.facet === facet.id).map(p => listItem(p));
+      terms.filter(tc => tc.facet === facet.id).forEach(tc => {
+        const cfg = owners[wing.slug].get(tc.slug);
+        // No page when a static page shadows the config.
+        const page = cfg && pageByUrl.get(urlOf(cfg));
+        // A config naming two tags of one facet is listed once, under the larger.
+        if (page && !items.some(i => i.url === page.url)) items.push(listItem(page, tc));
+      });
+      items.sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+      return { facet: facet.id, label: facet.label, items };
+    });
+
+    // The static entries are art-wing pages. They carry no count: nothing here
+    // knows which books a hand-built page lists.
+    const curatedItems = listed.filter(p => !p.autoGenerated).map(p => listItem(p));
+    if (wing.slug === defaultWing) {
+      staticEntries.forEach(e => curatedItems.push({
+        name: e.name,
+        slug: e.slug,
+        url: e.path,
+        description: e.description || '',
+        image: e.image || null,
+        featured: Boolean(e.featured),
+        category: e.category || null,
+        facet: null,
+        origin: 'static',
+      }));
+    }
+    curatedItems.sort((a, b) => a.featured - b.featured || a.name.localeCompare(b.name));
+    groups.push({ facet: 'curated', label: 'Curated collections', items: curatedItems });
+
+    listings[wing.slug] = groups.filter(g => g.items.length);
+  });
+
   return {
     pages,
     pageByUrl,
     tagTargets,
+    listings,
     curated,
     tagTier,
     wings,
@@ -206,6 +281,7 @@ function loadInput() {
     wings: loadWings(),
     curated: jsonIn(CONFIG_DIR).map(f => readJson(path.join(CONFIG_DIR, f))),
     staticSlugs,
+    staticEntries: readJson(path.join(DATA_DIR, 'libraryCollections.json')).collections,
     redirects: readJson(path.join(DATA_DIR, 'redirects.json')),
   };
 }
