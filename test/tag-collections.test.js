@@ -65,6 +65,77 @@ describe('tag-collections', () => {
       expect(out[0].image).to.equal('/b.jpg');
     });
 
+    it('breaks an image tie on date with the highest id', () => {
+      const books = [
+        book(1, 'Punk', { image_url: '/a.jpg', accession_no: '2026-08-01' }),
+        book(3, 'Punk', { image_url: '/c.jpg', accession_no: '2026-01-05' }),
+        book(2, 'Punk', { image_url: '/b.jpg', accession_no: '2026-08-09' }),
+      ];
+      const out = buildTagCollections(books, { threshold: 3, aliases: {} });
+      expect(out[0].image).to.equal('/c.jpg');
+    });
+
+    it('takes the cover test from options.hasCover', () => {
+      const books = [
+        book(1, 'Punk', { image_url: '/a.jpg' }),
+        book(2, 'Punk', { image_url: '/missing.jpg' }),
+      ];
+      const out = buildTagCollections(books, {
+        threshold: 2, aliases: {}, hasCover: b => b.image_url !== '/missing.jpg',
+      });
+      expect(out[0].image).to.equal('/a.jpg');
+    });
+
+    it('groups spellings that share a slug', () => {
+      const books = [
+        book(1, 'Black and White'),
+        book(2, 'black-and-white'),
+        book(3, 'Black and White'),
+      ];
+      const out = buildTagCollections(books, { threshold: 3, aliases: {} });
+      expect(out).to.have.length(1);
+      expect(out[0].title).to.equal('Black and White');
+      expect(out[0].slug).to.equal('black-and-white');
+      expect(out[0].matchBy.tag).to.have.members(['Black and White', 'black-and-white']);
+    });
+
+    it('breaks a casing tie the same way whatever the row order', () => {
+      const a = buildTagCollections([book(1, 'collage'), book(2, 'Collage')], { threshold: 2, aliases: {} });
+      const b = buildTagCollections([book(1, 'Collage'), book(2, 'collage')], { threshold: 2, aliases: {} });
+      expect(a[0].title).to.equal(b[0].title);
+    });
+
+    it('files Exhibition Catalogue under Exhibition Catalog with the default aliases', () => {
+      const books = [
+        book(1, 'Exhibition Catalogue'),
+        book(2, 'Exhibition Catalog'),
+        book(3, 'exhibition catalogs'),
+      ];
+      const out = buildTagCollections(books, { threshold: 3 });
+      expect(out).to.have.length(1);
+      expect(out[0].title).to.equal('Exhibition Catalog');
+      expect(out[0].slug).to.equal('exhibition-catalog');
+      expect(out[0].facet).to.equal('format');
+    });
+
+    it('displays the alias target when only variants are present', () => {
+      const books = [book(1, 'Portraits'), book(2, 'portrait'), book(3, 'Portrait Photography')];
+      const out = buildTagCollections(books, { threshold: 3 });
+      expect(out).to.have.length(1);
+      expect(out[0].title).to.equal('Portraiture');
+      expect(out[0].slug).to.equal('portraiture');
+      expect(out[0].bookCount).to.equal(3);
+    });
+
+    it('stamps a facet and a hand origin on every collection', () => {
+      const books = [book(1, 'Photography, Skiing'), book(2, 'Photography, Skiing')];
+      const out = buildTagCollections(books, { threshold: 2 });
+      const byTitle = Object.fromEntries(out.map(c => [c.title, c]));
+      expect(byTitle.Photography.facet).to.equal('medium');
+      expect(byTitle.Skiing.facet).to.equal('theme');
+      expect(out.every(c => c.origin === 'hand' && c.category === 'subject')).to.equal(true);
+    });
+
     it('sorts collections by book count descending', () => {
       const books = [
         book(1, 'Art, Punk'), book(2, 'Art, Punk'), book(3, 'Art'),
@@ -144,7 +215,22 @@ describe('tag-collections', () => {
     });
   });
 
+  describe('exclusive tags', () => {
+    it('recognises the exclusive tag by slug, not by casing', () => {
+      const books = [book(1, 'Photography, queer culture'), book(2, 'Photography')];
+      const out = buildTagCollections(books, { threshold: 1, aliases: {} });
+      const photography = out.find(c => c.title === 'Photography');
+      expect(photography.bookCount).to.equal(1);
+    });
+  });
+
   describe('slugifyTag', () => {
+    it('drops accents instead of hyphenating them', () => {
+      expect(slugifyTag('Comme des Garçons')).to.equal('comme-des-garcons');
+    });
+    it('transliterates letters that have no accent to drop', () => {
+      expect(slugifyTag('Torbjørn Rødland')).to.equal('torbjorn-rodland');
+    });
     it('lowercases and hyphenates', () => {
       expect(slugifyTag('New York City')).to.equal('new-york-city');
     });
