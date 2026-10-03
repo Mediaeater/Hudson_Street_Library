@@ -97,6 +97,7 @@ const TAG_ALIASES = {
   "artists' books": 'Artist Book',      // also covers Artists'-Books and Artist's Books (same slug)
   'black and white': 'Black-and-White Photography',
   'black and white photography': 'Black-and-White Photography',
+  'african american photographers': 'Black Photographers',
   'self-portrait': 'Self-Portraiture',
   'video': 'Video Art',
   'conceptual': 'Conceptual Art',
