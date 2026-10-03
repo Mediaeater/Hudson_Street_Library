@@ -203,14 +203,6 @@ Generates small thumbnails (150px, 300px) optimized for quick loading.
    author: "Author Name" %}
 ```
 
-#### Collection Hero Component
-```njk
-{% include "components/collection-hero.njk", 
-   image: "src/assets/images/collections/hero.jpg", 
-   title: "Collection Name", 
-   description: "Collection description" %}
-```
-
 ## 📁 File Organization
 
 ### Recent Reorganization (January 2025)
@@ -365,17 +357,6 @@ const presets = {
     <p>{{ author }}</p>
   </div>
 </article>
-```
-
-### Collection Hero Section
-
-```njk
-<section class="collection-hero">
-  {% include "components/collection-hero.njk",
-     image: "src/assets/images/collections/nyc-hero.jpg",
-     title: "NYC Photobooks",
-     description: "Documenting the visual culture of New York City through photography books." %}
-</section>
 ```
 
 ### Responsive Gallery Image

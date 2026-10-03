@@ -66,7 +66,8 @@ src/
 │       ├── book-thumbnail.njk        # Book thumbnail component
 │       ├── site-header.njk           # Global header
 │       ├── site-footer.njk           # Global footer
-│       └── collection-hero.njk       # Collection hero section
+│       ├── collection-section.njk    # One group of books on a collection page
+│       └── collection-card.njk       # One book in that group
 └── _data/
     └── books.csv                     # Book data source
 ```

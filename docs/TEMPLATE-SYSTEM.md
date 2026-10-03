@@ -7,7 +7,7 @@ The Hudson Street Library project uses **Nunjucks** as its primary templating la
 **Key Technologies:**
 - **Template Engine**: Nunjucks (with support for Liquid, HTML, and Markdown)
 - **Build Tool**: Eleventy 11ty
-- **Data Source**: CSV files (books.csv) and JSON files (news.json, libraryCollections.json)
+- **Data Source**: CSV files (books.csv and the wing CSVs), news.json, and the collections index (`scripts/utils/collections-index.js`, see `docs/COLLECTIONS-GUIDE.md`)
 - **Image Processing**: @11ty/eleventy-img for responsive images
 - **Configuration**: `.eleventy.js`
 
@@ -123,22 +123,13 @@ Reusable template fragments that can be included in layouts or pages.
 {% include "components/optimized-image.njk", src: "/assets/images/photo.jpg", alt: "Description", className: "w-full" %}
 ```
 
-#### `collection-hero.njk`
-**Purpose**: Large hero image for collection pages
+#### `collection-section.njk` and `collection-card.njk`
+**Purpose**: One labelled group of books on a collection page, and one book in it
 
-**Parameters:**
-- `image` (optional) - Hero image path
-- `title` (optional) - Collection title
-- `description` (optional) - Collection description
-- `className` (optional) - Additional classes
-
-**Usage:**
-```nunjucks
-{% include "components/collection-hero.njk",
-   image: "/assets/hero.jpg",
-   title: "Photography Collection",
-   description: "Rare and vintage photography books" %}
-```
+Both are included by `src/collections.njk` and carry no styles of their own:
+the classes they use are defined in that template's `<style>` block, so they
+only render correctly there. `collection-section.njk` expects `section`
+(`label`, `subtitle`, `books`); a null `label` prints no heading.
 
 ### 3. Pages
 
@@ -166,7 +157,7 @@ eleventyConfig.addGlobalData("books", bookData);
 **Available Data:**
 - `{{ books }}` - Array of all books from books.csv
 - `{{ news }}` - Array from news.json
-- `{{ libraryCollections }}` - Array from libraryCollections.json
+- `{{ collectionConfigs }}`, `{{ exploreListings }}`, `{{ exploreCollections }}`, `{{ wingPages }}`, `{{ tagIndex }}` - slices of the collections index (`scripts/utils/collections-index.js`). Collections are no longer listed from libraryCollections.json, which now names only the two static pages without a config and the endpoint's categories
 
 ### CSV Data Structure
 

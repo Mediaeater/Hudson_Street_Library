@@ -21,7 +21,7 @@ build reads these files and writes static HTML and JSON.
 ```
 src/_data/
 ├── books.csv                       # PRIMARY: all book records (1,722 rows)
-├── libraryCollections.json         # Collection metadata
+├── libraryCollections.json         # The two static collection pages + endpoint categories
 ├── news.json                       # News/announcements
 ├── site.json                       # Site-wide config
 └── collections/
@@ -91,8 +91,11 @@ the validation in `scripts/utils/csv-handler.js` and produce backups under
 
 ### `libraryCollections.json`
 
-Top-level collection metadata used to render the collections index. See
-`src/_data/collections/_schema.md` for the per-collection shape.
+No longer the list of collections. It names the two hand-built pages that have
+no config (Richard Prince, Magazines) so the explore page can list them, and
+holds the `categories` array the JSON endpoint publishes. Every other
+collection, with its count and URL, comes from the index in
+`scripts/utils/collections-index.js`. See `docs/COLLECTIONS-GUIDE.md`.
 
 ### `news.json`
 
@@ -116,8 +119,23 @@ Site-wide config (URL, title, links) consumed by templates as `{{ site.* }}`.
 
 ### `src/_data/collections/*.json`
 
-One JSON per data-driven collection page. The schema is documented in
+One JSON per curated collection page. The schema is documented in
 `src/_data/collections/_schema.md` and the renderer is `src/collections.njk`.
+
+### Collection data modules
+
+The `.js` files in `src/_data/` are slices of one memoised index
+(`scripts/utils/collections-index.js`), which decides which collection pages
+exist, what each lists and where it lives:
+
+| Module | What it returns |
+|---|---|
+| `collectionConfigs.js` | every collection page (curated and generated); the pagination source for `src/collections.njk` |
+| `exploreListings.js` | the art wing's listed collections grouped by facet, for `/collection-explore.html` |
+| `exploreCollections.js` | the same list flattened, for the JSON endpoint |
+| `wingPages.js` | each live wing's landing page data, with its collections by facet |
+| `tagIndex.js` | the art wing's hand tags (two books or more) by letter, for `/tags/` |
+| `tagPages.js` | tag to collection URL per wing; read only by `scripts/verify-views.js` |
 
 ---
 
@@ -236,13 +254,13 @@ is_signed_inscribed = value === 'true' || value === '1' || value === 1
 
 ## Published Data URLs
 
-Eleventy passthrough copy publishes the source data files unchanged so the
-site exposes a small read-only data API:
+Eleventy publishes a small read-only data API. `books.csv` and `news.json` are
+copied unchanged; the collections file is generated at build:
 
 | URL | Source | Emitted by |
 |---|---|---|
 | `/cms/data/books.csv` | `src/_data/books.csv` | `.eleventy.js` passthrough |
-| `/cms/data/libraryCollections.json` | `src/_data/libraryCollections.json` | `.eleventy.js` passthrough |
+| `/cms/data/libraryCollections.json` | the collections index (`src/_data/exploreCollections.js`) plus `categories` from `src/_data/libraryCollections.json` | `src/cms-collections.njk` |
 | `/cms/data/news.json` | `src/_data/news.json` | `.eleventy.js` passthrough |
 
 The `/cms/` URL prefix is historical; despite the name, no CMS source code
