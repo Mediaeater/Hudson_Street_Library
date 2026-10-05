@@ -82,11 +82,10 @@ When encountering corrupted CSV files, the handler:
 
 The following modules have been updated to use the enhanced CSV handler:
 
-1. **acquire-covers.js** - Uses `readBooks()` for better error handling
-2. **check-missing-covers.js** - Simplified using the unified interface
-3. **image-pipeline.js** - Uses enhanced read/write with backup creation
-4. **fix-csv-formatting.js** - Leverages built-in validation and cleaning
-5. **.eleventy.js** - Uses `readBooksSync()` for synchronous loading
+1. **scripts/covers/attach.js** - Sets `image_url` with `updateBook()`
+2. **scripts/covers/report.js** - Reads every wing through `loadCatalogSync()`
+3. **fix-csv-formatting.js** - Leverages built-in validation and cleaning
+4. **.eleventy.js** - Uses `readBooksSync()` for synchronous loading
 
 ## Benefits
 

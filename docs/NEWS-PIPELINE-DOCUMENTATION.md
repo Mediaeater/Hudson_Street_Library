@@ -228,9 +228,8 @@ const newsCategories = {
    - News items reference collection pages
    - Automatic linking and cross-references
 
-3. **Image Pipeline** (`scripts/image-pipeline/`)
-   - Coordinated with cover image processing
-   - Automatic image optimization for news items
+3. **Covers** (`scripts/covers/`)
+   - The news pipeline does not process images. Covers are attached with `scripts/covers/attach.js`
 
 4. **Site Building** (Eleventy)
    - News data feeds into site templates

@@ -29,12 +29,9 @@ Hudson Street Library is a specialized photography book collection website built
 
 ### 3. Automated Pipelines
 
-#### Image Processing Pipeline (`scripts/image-pipeline/`)
-4-stage automated workflow:
-1. **Upload/Add** - Handle incoming images from various sources
-2. **API Integration** - Find missing book covers via Open Library, Google Books APIs
-3. **Optimization** - Generate responsive WebP/JPEG variants (300w, 600w, 900w, 1200w)
-4. **Categorization** - Auto-organize by collection using keyword matching
+#### Covers (`scripts/covers/`)
+A row names its cover in `image_url`. `report.js` lists rows without one and files
+no row uses. `attach.js` puts one image on one row.
 
 #### News Generation Pipeline (`scripts/news-pipeline/`)
 7-step automated workflow:
@@ -64,7 +61,7 @@ Hudson_Street_Library/
 │   ├── collections/       # Collection showcase pages
 │   └── pages/             # Static pages
 ├── scripts/               # Automation tools
-│   ├── image-pipeline/    # 4-stage image processing system
+│   ├── covers/            # Cover report and attach
 │   └── news-pipeline/     # Automated news generation
 ├── docs/                  # Documentation
 └── .github/workflows/     # GitHub Actions CI/CD

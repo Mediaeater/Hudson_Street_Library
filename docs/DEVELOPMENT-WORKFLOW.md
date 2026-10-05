@@ -83,9 +83,8 @@ Hudson_Street_Library/
 │   └── *.html, *.njk      # Page templates
 ├── _site/                   # Build output (auto-generated, DON'T EDIT)
 ├── scripts/                 # Utility scripts and automation
-│   ├── image-pipeline/     # Image processing
 │   ├── news-pipeline/      # News generation
-│   ├── covers/             # Cover acquisition
+│   ├── covers/             # Cover report and attach
 │   ├── generators/         # Page generators
 │   └── utils/              # Shared utilities (csv-handler, image-core, etc.)
 ├── docs/                    # Documentation (YOU ARE HERE)
@@ -322,21 +321,19 @@ node scripts/add-books-to-db.js
 # or allow you to import from a file
 ```
 
-### Method 3: Acquire Book Covers (Automated)
+### Method 3: Add a Cover to an Existing Row
 
 ```bash
-# ONLY USE THIS SCRIPT for acquiring covers
-node scripts/covers/acquire-covers.js --limit 50
+# Rows with no cover (scope with --wing, --tag, --grouping, --ids)
+node scripts/covers/report.js
 
-# This script:
-# - Reads books.csv
-# - Searches Google Books API
-# - Downloads covers with exact naming pattern
-# - Saves to src/assets/images/books/
-
-# Check progress
-ls -1 src/assets/images/books/*.jpg | wc -l
+# One row, one image, from a file or a URL
+node scripts/covers/attach.js <id> <file-or-url>
 ```
+
+`attach.js` checks the bytes are an image, names the file, saves it to
+`src/assets/images/books/` and sets `image_url`. It refuses a row that already
+has a cover unless you pass `--overwrite`.
 
 ### Adding Book Data Fields
 
@@ -933,8 +930,9 @@ Author_Name_Book_Title_ISBN.jpg
 # Example
 src/assets/images/books/Berenice_Abbott_Documenting_Science_9783869304311.jpg
 
-# Automated acquisition
-node scripts/covers/acquire-covers.js --limit 50
+# What is missing, then attach one
+node scripts/covers/report.js
+node scripts/covers/attach.js <id> <file-or-url>
 ```
 
 #### Other Images
@@ -955,9 +953,6 @@ src/assets/images/news/
 ```bash
 # Optimize all images in a directory
 node scripts/optimize-all-images.js --dir src/assets/images/news
-
-# Or use image pipeline
-node scripts/image-pipeline/cli.js optimize --path src/assets/images/
 ```
 
 #### Using Images in Templates
@@ -1729,8 +1724,9 @@ npm run build
 # Clean build
 npm run clean
 
-# Add book covers
-node scripts/covers/acquire-covers.js --limit 50
+# Covers: what is missing, then attach one
+node scripts/covers/report.js
+node scripts/covers/attach.js <id> <file-or-url>
 
 # Git workflow
 git add .
@@ -1763,8 +1759,7 @@ Assets:
   src/assets/images/        - Images
 
 Scripts:
-  scripts/image-pipeline/   - Image processing
-  scripts/covers/           - Cover acquisition
+  scripts/covers/           - Cover report and attach
   scripts/generators/       - Page generators
   scripts/utils/            - Utilities (csv-handler, image-core, etc.)
 ```

@@ -1,5 +1,9 @@
 # Hudson Street Library - Complete Image System Documentation
 
+> **Retired 5 Oct 2026.** The tools this document describes were removed. Covers now go through
+> two commands, `scripts/covers/report.js` and `scripts/covers/attach.js`. See
+> [`scripts/covers/README.md`](../scripts/covers/README.md). What follows is history.
+
 This document provides comprehensive documentation for the complete image management system at Hudson Street Library, covering both the automated processing pipeline and the optimization system. Implemented in January 2025, this system transforms manual image management into an automated, intelligent, and scalable digital asset management platform.
 
 ## 🚀 Quick Start

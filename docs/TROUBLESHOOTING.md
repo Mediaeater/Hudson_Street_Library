@@ -240,9 +240,6 @@ npm run build
   "build": "node --max-old-space-size=4096 node_modules/.bin/eleventy"
 }
 
-# Process images in smaller batches
-node scripts/image-pipeline/cli.js optimize --path ./covers --batch-size 10
-
 # Check for memory leaks
 node --trace-warnings node_modules/.bin/eleventy
 ```
@@ -1327,46 +1324,26 @@ npm run build
 
 ---
 
-#### 3. Image Pipeline Not Finding Covers
+#### 3. A Book Page Shows No Cover
 
 **Symptom:**
-- `node scripts/image-pipeline/cli.js find --missing` returns 0 results
-- API lookups failing
-- Covers exist but marked as missing
+- The page shows the placeholder, or the image 404s
 
 **Cause:**
-- ISBN not in CSV
-- API rate limiting
-- Network issues
-- Wrong API credentials
+- The row's `image_url` is blank
+- `image_url` names a file that is not on disk, or lacks its leading slash
 
 **Solution:**
 
 ```bash
-# Check API status
-node scripts/image-pipeline/cli.js status
+# What the row says and whether the file exists
+node scripts/covers/report.js --ids <id>
 
-# Test specific ISBN
-node scripts/image-pipeline/cli.js find --isbn 9783869304311
+# Every path that would 404 (exit 1 if any)
+node scripts/covers/report.js --check
 
-# Check CSV has ISBNs
-awk -F',' '{print $14}' src/_data/catalog/art.csv | head -20
-# Column 14 is isbn_asin
-
-# Test APIs directly
-node -e "
-const BookAPIClient = require('./scripts/utils/book-api-client');
-const client = new BookAPIClient();
-client.findBookCover('9783869304311').then(console.log);
-"
-
-# Check rate limiting
-# Open Library: 100 requests/5 minutes
-# Google Books: 1000 requests/day
-
-# Wait and retry
-sleep 60
-node scripts/image-pipeline/cli.js find --missing --limit 10
+# Attach a cover
+node scripts/covers/attach.js <id> <file-or-url>
 ```
 
 ---
@@ -1542,10 +1519,6 @@ async function fetchWithDelay(url, delay = 1000) {
   await new Promise(resolve => setTimeout(resolve, delay));
   return fetch(url);
 }
-
-// Use batch processing with limits
-node scripts/image-pipeline/cli.js find --missing --limit 10
-# Process 10 at a time, then wait
 
 // Check API limits:
 // Open Library: 100 req/5 min
@@ -1884,9 +1857,6 @@ module.exports = function(eleventyConfig) {
   }
 };
 
-// Use smaller image batches
-node scripts/image-pipeline/cli.js optimize --batch-size 10
-
 // Increase Node memory
 export NODE_OPTIONS="--max-old-space-size=4096"
 
@@ -1961,9 +1931,6 @@ ls -lh _site/cms/data/
 # Inspect the on-disk API cache (JSON, not SQLite)
 ls -lh data/image-cache.json
 jq '. | length' data/image-cache.json
-
-# Process in smaller batches
-node scripts/image-pipeline/cli.js find --missing --limit 10
 
 # Delays are built into book-api-client.js; tune via its CLI flags.
 ```
@@ -2209,9 +2176,6 @@ npm run build  # Full build with optimization
 
 # For dev, use:
 npm start  # Faster incremental builds
-
-# Optimize images separately
-node scripts/image-pipeline/cli.js optimize
 ```
 
 ### Data Questions
@@ -2276,14 +2240,11 @@ Check:
 **Q: How do I acquire missing covers?**
 
 ```bash
-# Find books missing covers
-node scripts/image-pipeline/cli.js find --missing
+# Rows with no cover (scope with --wing, --tag, --grouping, --ids)
+node scripts/covers/report.js
 
-# Download covers (limited to avoid rate limits)
-node scripts/image-pipeline/cli.js find --missing --download --limit 10
-
-# Check specific ISBN
-node scripts/image-pipeline/cli.js find --isbn 9783869304311
+# Put one cover on one row, from a file or a URL
+node scripts/covers/attach.js <id> <file-or-url>
 ```
 
 ---
@@ -2366,9 +2327,6 @@ npm run clean && npm run build
 # Test CSV
 node -e "require('./scripts/utils/csv-handler').read('src/_data/catalog/art.csv').then(r => console.log(r.stats));"
 npm run test:csv
-
-# Test API
-node scripts/image-pipeline/cli.js status
 ```
 
 ### Debugging

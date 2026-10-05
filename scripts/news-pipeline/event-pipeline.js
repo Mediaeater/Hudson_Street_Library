@@ -3,7 +3,6 @@ const fs = require('fs').promises;
 const path = require('path');
 const { parse } = require('csv-parse/sync');
 const NewsGenerator = require('./news-generator');
-const ImagePipeline = require('../image-pipeline/image-pipeline');
 
 class BookEventPipeline {
   constructor(config = {}) {
@@ -19,7 +18,6 @@ class BookEventPipeline {
     };
     
     this.newsGenerator = new NewsGenerator();
-    this.imagePipeline = new ImagePipeline();
   }
 
   async processNewBook(bookData, options = {}) {
@@ -324,36 +322,10 @@ permalink: /books/${placement.collection}/${title?.replace(/[^a-zA-Z0-9]/g, '-')
 </html>`;
   }
 
+  // The image pipeline this called was removed in Oct 2026. Covers are attached
+  // one row at a time with scripts/covers/attach.js, so there is nothing to do here.
   async processBookImages(bookData) {
-    console.log(`🖼️  Processing book images...`);
-    
-    try {
-      // Use image pipeline to find/process images
-      const results = {
-        found: [],
-        optimized: [],
-        missing: false
-      };
-
-      // Try to find existing image
-      const imageResult = await this.imagePipeline.finder.findBookImage(bookData.isbn);
-      
-      if (imageResult) {
-        results.found.push(imageResult);
-        
-        // Optimize the found image
-        const optimized = await this.imagePipeline.optimizer.optimizeImage(imageResult.localPath);
-        results.optimized.push(optimized);
-      } else {
-        results.missing = true;
-      }
-
-      return results;
-      
-    } catch (error) {
-      console.log(`⚠️  Image processing failed: ${error.message}`);
-      return { error: error.message };
-    }
+    return { skipped: true, missing: !bookData.image_url };
   }
 
   async updateCollectionIndexes(bookData, placement) {

@@ -1,5 +1,9 @@
 # Book Cover Acquisition Guide
 
+> **Retired 5 Oct 2026.** The tools this document describes were removed. Covers now go through
+> two commands, `scripts/covers/report.js` and `scripts/covers/attach.js`. See
+> [`scripts/covers/README.md`](../scripts/covers/README.md). What follows is history.
+
 This document consolidates all cover acquisition documentation for the Hudson Street Library project.
 
 ## Table of Contents
