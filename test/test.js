@@ -6,13 +6,13 @@ const csv = require('csv-parse/sync');
 describe('Hudson Street Library Smoke Tests', function () {
 
   describe('Data Integrity', function () {
-    const booksCsvPath = path.join(__dirname, '../src/_data/books.csv');
+    const booksCsvPath = path.join(__dirname, '../src/_data/catalog/art.csv');
 
-    it('books.csv should exist', function () {
-      assert.ok(fs.existsSync(booksCsvPath), 'books.csv file missing');
+    it('catalog/art.csv should exist', function () {
+      assert.ok(fs.existsSync(booksCsvPath), 'catalog/art.csv file missing');
     });
 
-    it('books.csv should have valid headers', function () {
+    it('catalog/art.csv should have valid headers', function () {
       const fileContent = fs.readFileSync(booksCsvPath, 'utf8');
       const records = csv.parse(fileContent, {
         columns: true,

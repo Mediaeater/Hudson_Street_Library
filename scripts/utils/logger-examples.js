@@ -213,7 +213,7 @@ class ExampleCSVHandler {
 
   async updateBooksCSV(imagePath, context) {
     const { metadata, bookInfo, category } = context;
-    const csvPath = require('path').join(__dirname, '../../src/_data/books.csv');
+    const csvPath = require('path').join(__dirname, '../../src/_data/catalog/art.csv');
 
     this.logger.debug('Updating books CSV', {
       csvPath,

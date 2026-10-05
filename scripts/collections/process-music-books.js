@@ -2,7 +2,7 @@ const fs = require('fs');
 
 // Read the Music CSV
 const musicCsvPath = '/Users/m/Downloads/Music - Rare Books - Sheet1.csv';
-const mainCsvPath = './src/_data/books.csv';
+const mainCsvPath = './src/_data/catalog/art.csv';
 
 const musicData = fs.readFileSync(musicCsvPath, 'utf-8');
 const mainCsvData = fs.readFileSync(mainCsvPath, 'utf-8');

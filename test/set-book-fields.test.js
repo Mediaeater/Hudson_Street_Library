@@ -6,7 +6,7 @@ const { stringify } = require('csv-stringify/sync');
 const { setBookFields, SetFieldsError } = require('../scripts/set-book-fields');
 const { listCatalogFiles } = require('../scripts/utils/catalog');
 
-const HEADER = fs.readFileSync(path.join(__dirname, 'fixtures', 'catalog', 'ok', 'books.csv'), 'utf8')
+const HEADER = fs.readFileSync(path.join(__dirname, 'fixtures', 'catalog', 'ok', 'catalog', 'art.csv'), 'utf8')
   .split('\n')[0].replace(/"/g, '').split(',');
 
 const row = (fields) => HEADER.map(c => (fields[c] === undefined ? '' : fields[c]));
@@ -29,7 +29,7 @@ describe('set-book-fields', () => {
     dir = fs.mkdtempSync(path.join(os.tmpdir(), 'set-book-fields-'));
     fs.copyFileSync(path.join(__dirname, 'fixtures', 'catalog', 'ok', 'wings.json'), path.join(dir, 'wings.json'));
     fs.mkdirSync(path.join(dir, 'catalog'));
-    booksFile = path.join(dir, 'books.csv');
+    booksFile = path.join(dir, 'catalog', 'art.csv');
     fs.writeFileSync(booksFile, stringify([HEADER, ...ROWS], { header: false, quoted: true, quoted_empty: false }));
     fs.writeFileSync(path.join(dir, 'catalog', 'zz.csv'), stringify([HEADER, row({ id: '10001', title: 'ZZ One' })], { header: false, quoted: true, quoted_empty: false }));
   });
@@ -71,7 +71,7 @@ describe('set-book-fields', () => {
     expect(rows.every(r => r.length === HEADER.length)).to.equal(true);
   });
 
-  it('edits a row in another wing file and leaves books.csv alone', () => {
+  it('edits a row in another wing file and leaves the art wing alone', () => {
     const original = before();
     const res = setBookFields(10001, { tags: 'Codes' }, { dataDir: dir });
     expect(path.basename(res.file)).to.equal('zz.csv');

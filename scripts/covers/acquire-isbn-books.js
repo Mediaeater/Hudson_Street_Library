@@ -13,7 +13,7 @@ const { BookAPIClient } = require('../utils/book-api-client');
 const path = require('path');
 const fs = require('fs');
 
-const csvPath = path.join(__dirname, 'src/_data/books.csv');
+const csvPath = path.join(__dirname, 'src/_data/catalog/art.csv');
 const IMAGES_DIR = path.join(__dirname, 'src/assets/images/books');
 const LOG_FILE = path.join(__dirname, 'isbn-acquisition-log.json');
 

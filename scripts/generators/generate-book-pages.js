@@ -10,7 +10,7 @@ const path = require('path');
 const CSVHandler = require('../utils/csv-handler');
 
 // Paths
-const CSV_PATH = path.join(__dirname, '../../src/_data/books.csv');
+const CSV_PATH = path.join(__dirname, '../../src/_data/catalog/art.csv');
 const TEMPLATE_PATH = path.join(__dirname, '../../_site/books/templates/BOOK-TEMPLATE/index.html');
 const OUTPUT_DIR = path.join(__dirname, '../../_site/books');
 

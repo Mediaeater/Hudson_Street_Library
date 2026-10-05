@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Run the de-slop scanner over the catalogue's descriptions — every wing, not
-// just books.csv.
+// just the art wing.
 //
 //   node scripts/deslop-descriptions.js 1503 1505     # named rows
 //   node scripts/deslop-descriptions.js --all         # every row with a description

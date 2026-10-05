@@ -123,7 +123,7 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.setFreezeReservedData(false);
 
   // --- Load catalogue data ---
-  // books.csv (art) + src/_data/catalog/*.csv, merged, each row stamped with
+  // Every src/_data/catalog/*.csv (art first), merged, each row stamped with
   // `collection` from its filename. A structural problem in any file throws,
   // failing the build rather than publishing a partial catalogue.
   eleventyConfig.addGlobalData("books", async () => {
@@ -582,7 +582,7 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addFilter("xmlUrl", url => encodeURI(String(url)).replace(/&/g, "&amp;"));
 
   // --- Plain text from an HTML description, for meta tags / JSON-LD ---
-  // books.csv descriptions are HTML (<p class="mt-6">, <em>); any text-only
+  // Catalogue descriptions are HTML (<p class="mt-6">, <em>); any text-only
   // surface must strip tags BEFORE truncating or the markup prints literally.
   eleventyConfig.addFilter("stripHtml", function(text) {
     if (!text) return '';
@@ -727,10 +727,13 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/identity/avatar");
 
   // Copy data files for search functionality.
-  // books.csv stays at its public path (documented in api-documentation.njk
-  // and .well-known/api-catalog); the client-rendered catalog pages fetch the
-  // merged, collection-stamped cms/data/catalog.csv written below.
-  eleventyConfig.addPassthroughCopy({"src/_data/books.csv": "cms/data/books.csv"});
+  // cms/data/books.csv is an alias of the art wing, kept at its public path
+  // (documented in api-documentation.njk and .well-known/api-catalog) for one
+  // release after the Oct 2026 rename of books.csv to catalog/art.csv, so the
+  // live page and cached clients keep working. The client-rendered catalog
+  // pages fetch the merged, collection-stamped cms/data/catalog.csv written
+  // below.
+  eleventyConfig.addPassthroughCopy({"src/_data/catalog/art.csv": "cms/data/books.csv"});
   // directories.output is the real output dir, --output included; dir.output
   // is the configured one.
   eleventyConfig.on("eleventy.after", ({ dir, directories }) => {

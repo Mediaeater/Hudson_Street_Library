@@ -1,10 +1,10 @@
 #!/bin/sh
 # Pre-commit hook to validate the catalogue before commit
 
-# Check if any catalogue file (books.csv, src/_data/catalog/*.csv) or the wing
+# Check if any catalogue file (src/_data/catalog/*.csv) or the wing
 # registry is being committed. The validator checks every file plus the
 # cross-file rules (37 columns, unique ids, id blocks).
-if git diff --cached --name-only | grep -qE '^src/_data/(books\.csv|catalog/[^/]+\.csv|wings\.json)$'; then
+if git diff --cached --name-only | grep -qE '^src/_data/(catalog/[^/]+\.csv|wings\.json)$'; then
   echo "📋 Validating catalogue CSV structure..."
 
   # Run the robust validator
@@ -16,9 +16,9 @@ if git diff --cached --name-only | grep -qE '^src/_data/(books\.csv|catalog/[^/]
     echo "   The CSV has structural errors that must be fixed before committing."
     echo ""
     echo "To fix:"
-    echo "  1. Run: node scripts/fix-csv-formatting.js src/_data/books.csv src/_data/books_fixed.csv"
+    echo "  1. Run: node scripts/fix-csv-formatting.js src/_data/catalog/art.csv src/_data/books_fixed.csv"
     echo "  2. Run: node scripts/validate-csv-robust.js"
-    echo "  3. If valid: cp src/_data/books_fixed.csv src/_data/books.csv"
+    echo "  3. If valid: cp src/_data/books_fixed.csv src/_data/catalog/art.csv"
     echo "  4. Try committing again"
     echo ""
     exit 1

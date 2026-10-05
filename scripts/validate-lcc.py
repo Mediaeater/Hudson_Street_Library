@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Validate Library of Congress Classification (LCC) format in books.csv.
+Validate Library of Congress Classification (LCC) format in the art wing (catalog/art.csv).
 
 LCC format patterns:
 - Starts with 1-3 capital letters (A-Z)
@@ -195,13 +195,13 @@ def print_report(results: list[LCCValidationResult], stats: LCCStats) -> None:
 
 def main() -> None:
     """Main entry point."""
-    # Determine path to books.csv
+    # Determine path to the art wing's CSV
     script_dir = Path(__file__).parent
     project_root = script_dir.parent
-    csv_path = project_root / 'src' / '_data' / 'books.csv'
+    csv_path = project_root / 'src' / '_data' / 'catalog' / 'art.csv'
 
     if not csv_path.exists():
-        print(f"Error: Could not find books.csv at {csv_path}")
+        print(f"Error: Could not find catalog/art.csv at {csv_path}")
         sys.exit(1)
 
     print(f"Validating LCC entries in: {csv_path}")

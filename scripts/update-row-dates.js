@@ -33,11 +33,24 @@ function isoDate(d) {
  */
 function historyDates(file) {
     const rel = path.relative(ROOT, file);
-    const log = execFileSync('git', ['log', '--reverse', '--format=%H %ct', '--', rel], { cwd: ROOT, encoding: 'utf8' });
-    const versions = log.trim().split('\n').filter(Boolean).map(l => {
-        const [sha, ct] = l.split(' ');
-        return { date: isoDate(new Date(Number(ct) * 1000)), text: () => execFileSync('git', ['show', `${sha}:${rel}`], { cwd: ROOT, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 }) };
-    });
+    // --follow, because the art wing was src/_data/books.csv until Oct 2026 and
+    // its row history lives under that name. --name-only gives the path the
+    // file had at each commit. Reversed here rather than with --reverse, which
+    // makes --follow start from the oldest commit and lose the rename.
+    const log = execFileSync('git', ['log', '--follow', '--format=%H %ct', '--name-only', '--', rel], { cwd: ROOT, encoding: 'utf8' });
+    const versions = [];
+    let commit = null;
+    for (const line of log.split('\n')) {
+        if (/^[0-9a-f]{40} \d+$/.test(line)) {
+            const [sha, ct] = line.split(' ');
+            commit = { sha, date: isoDate(new Date(Number(ct) * 1000)) };
+        } else if (line && commit) {
+            const { sha, date } = commit;
+            versions.push({ date, text: () => execFileSync('git', ['show', `${sha}:${line}`], { cwd: ROOT, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 }) });
+            commit = null;
+        }
+    }
+    versions.reverse();
     versions.push({ date: isoDate(new Date()), text: () => fs.readFileSync(file, 'utf8') });
 
     const last = {};   // id -> hash in the previous parsable version

@@ -7,7 +7,7 @@ class NewsGenerator {
   constructor(config = {}) {
     this.config = {
       newsDataPath: path.join(__dirname, '../../src/_data/news.json'),
-      booksDataPath: path.join(__dirname, '../../src/_data/books.csv'),
+      booksDataPath: path.join(__dirname, '../../src/_data/catalog/art.csv'),
       maxNewsId: 100, // Start high to avoid conflicts
       ...config
     };

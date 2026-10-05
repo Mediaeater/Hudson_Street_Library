@@ -77,7 +77,7 @@ const __dirname = dirname(__filename);
 const PROJECT_ROOT = resolve(__dirname, '../..');
 
 const CONFIG = {
-  csvFile: resolve(PROJECT_ROOT, 'src/_data/books.csv'),
+  csvFile: resolve(PROJECT_ROOT, 'src/_data/catalog/art.csv'),
   outputFile: resolve(PROJECT_ROOT, 'src/collections/richard-prince.html'),
   outputDir: resolve(PROJECT_ROOT, 'src/collections'),
   pageTitle: 'Richard Prince Collection',

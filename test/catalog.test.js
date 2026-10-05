@@ -134,7 +134,7 @@ describe('catalog loader', () => {
 
     it('wingFile takes a slug or a wing object', () => {
       expect(wingFile('zz', dir)).to.equal(path.join(dir, 'catalog', 'zz.csv'));
-      expect(wingFile(resolveWing('art', dir), dir)).to.equal(path.join(dir, 'books.csv'));
+      expect(wingFile(resolveWing('art', dir), dir)).to.equal(path.join(dir, 'catalog', 'art.csv'));
     });
 
     it('wingForId reads the id blocks, including allowLegacyIds', () => {
@@ -175,7 +175,7 @@ describe('catalog loader', () => {
       expect(fileForIdentifier(2, { dataDir: dir }).slug).to.equal('art');
 
       const anIsbn = loadCatalogSync().data.find(b => b.isbn_asin)?.isbn_asin;
-      expect(fileForIdentifier(anIsbn).file).to.match(/books\.csv$/);
+      expect(fileForIdentifier(anIsbn).file).to.match(/catalog\/art\.csv$/);
       expect(fileForIdentifier('nosuchisbn')).to.equal(null);
     });
   });

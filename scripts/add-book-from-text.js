@@ -348,7 +348,7 @@ function describeIntake(wing) {
  * Which wing this add is filed under. An explicit --wing wins; otherwise the
  * research record may name one; otherwise the default wing. An unknown slug
  * throws (catalog.js lists the valid ones) rather than silently landing the
- * row in books.csv.
+ * row in the art wing.
  */
 function resolveTargetWing(recordWing) {
   const slug = wingArg || recordWing || defaultWing().slug;
@@ -618,7 +618,7 @@ async function processBook(text) {
         console.log('  2. Run: npm test (full test suite)');
         console.log('  3. Run: npm run build');
         console.log('  4. Commit changes');
-        console.log('\n💡 Tip: CSV validation ran automatically. If you manually edit books.csv later,');
+        console.log('\n💡 Tip: CSV validation ran automatically. If you manually edit a catalogue CSV later,');
         console.log('   always run: node scripts/validate-csv-structure.js\n');
       } else {
         console.log('\n❌ Cancelled - no changes made\n');

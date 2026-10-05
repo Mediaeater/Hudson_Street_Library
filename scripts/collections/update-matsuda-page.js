@@ -43,7 +43,7 @@ matsudaLines.forEach((line) => {
 });
 
 // Read the books CSV to get IDs
-const booksCSV = fs.readFileSync('./src/_data/books.csv', 'utf-8');
+const booksCSV = fs.readFileSync('./src/_data/catalog/art.csv', 'utf-8');
 const lines = booksCSV.split('\n');
 
 // Find Matsuda catalogs (IDs 1404-1439)

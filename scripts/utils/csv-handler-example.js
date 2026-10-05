@@ -56,7 +56,7 @@ async function demonstrateCSVHandler() {
 
         // 5. Show CSV stats
         console.log('\n5. CSV File Statistics...');
-        const stats = await CSVHandler.getStats(path.join(__dirname, '../../src/_data/books.csv'));
+        const stats = await CSVHandler.getStats(path.join(__dirname, '../../src/_data/catalog/art.csv'));
         console.log(`   📈 Total rows: ${stats.rowCount}`);
         console.log(`   📋 Columns: ${stats.columns.length} (${stats.columns.slice(0, 5).join(', ')}...)`);
         console.log(`   💾 File size: ${Math.round(stats.fileSize / 1024)} KB`);

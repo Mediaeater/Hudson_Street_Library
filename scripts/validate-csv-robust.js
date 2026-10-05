@@ -4,7 +4,7 @@
  * Properly handles multi-line fields and quote escaping.
  *
  * With no argument it validates every catalogue file declared in
- * src/_data/wings.json (books.csv + src/_data/catalog/*.csv) and then runs the
+ * src/_data/wings.json (src/_data/catalog/*.csv) and then runs the
  * cross-file checks from scripts/utils/catalog.js: 37 columns everywhere, one
  * shared header, unique ids, ids inside their wing's block. Pass a path to
  * check one file on its own (no cross-file pass).

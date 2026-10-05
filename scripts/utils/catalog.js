@@ -3,12 +3,13 @@
  * Catalog loader — the one place that knows the catalogue is several CSV files.
  *
  * The library is split into "wings" (art, cryptology, ephemera, …), declared in
- * src/_data/wings.json. Each wing is one CSV under src/_data/ sharing the same
- * 37-column schema:
+ * src/_data/wings.json. Each wing is one CSV under src/_data/catalog/ sharing
+ * the same 37-column schema:
  *
- *   src/_data/books.csv            → wing "art" (the original catalogue; the
- *                                    rename to catalog/art.csv is deferred)
  *   src/_data/catalog/<slug>.csv   → wing "<slug>"
+ *
+ * The art wing (catalog/art.csv) is the original catalogue and the default
+ * wing; until Oct 2026 it lived at src/_data/books.csv.
  *
  * Every row gets `collection` stamped from the wing it came from. There is no
  * collection column in the files; the registry + filename are the source of
@@ -22,7 +23,7 @@
  *     wing's block (unless listed in the wing's allowLegacyIds)
  *
  * Eleventy (.eleventy.js), the _data modules, and scripts all go through
- * loadCatalog() / loadCatalogSync() rather than reading books.csv directly.
+ * loadCatalog() / loadCatalogSync() rather than reading a wing file directly.
  */
 
 const fs = require('fs');
@@ -60,7 +61,7 @@ class CatalogError extends Error {
 
 /**
  * Read wings.json. Order in the file is load order; entry 0 must be the
- * default wing (books.csv today).
+ * default wing (catalog/art.csv).
  * @param {string} [dataDir]
  * @returns {Object[]}
  */
@@ -84,7 +85,7 @@ function loadWings(dataDir = DATA_DIR) {
         if (slugs.has(w.slug)) throw new CatalogError(`${rel(file)}: duplicate wing slug "${w.slug}"`);
         slugs.add(w.slug);
         if (w.idBlock[0] > w.idBlock[1]) throw new CatalogError(`${rel(file)}: wing "${w.slug}" idBlock lo > hi`);
-        if (w.slug !== 'art' && w.file !== `catalog/${w.slug}.csv`) {
+        if (w.file !== `catalog/${w.slug}.csv`) {
             throw new CatalogError(`${rel(file)}: wing "${w.slug}" must use file catalog/${w.slug}.csv (slug = filename)`);
         }
     }
@@ -247,7 +248,7 @@ function loadCatalogSync(options = {}) {
 
 /**
  * Look a wing up by slug. Throws rather than falling back to the default wing:
- * a typo'd --wing must not quietly file a cryptology book in books.csv.
+ * a typo'd --wing must not quietly file a cryptology book in the art wing.
  * @param {string} slug
  * @param {string} [dataDir]
  * @returns {Object}

@@ -54,7 +54,7 @@ async function main() {
     console.log('Scraping Apartamento issue details...\n');
 
     // Read existing CSV using CSVHandler
-    const csvPath = './src/_data/books.csv';
+    const csvPath = './src/_data/catalog/art.csv';
     const csvResult = CSVHandler.readBooksSync(csvPath);
     const books = csvResult.data;
 

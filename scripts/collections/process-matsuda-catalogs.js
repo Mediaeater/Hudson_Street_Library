@@ -3,7 +3,7 @@ const path = require('path');
 
 // Read the Matsuda CSV
 const matsudaCsvPath = '/Users/m/Downloads/Matsuda Catalogs - Sheet1.csv';
-const mainCsvPath = './src/_data/books.csv';
+const mainCsvPath = './src/_data/catalog/art.csv';
 
 const matsudaData = fs.readFileSync(matsudaCsvPath, 'utf-8');
 const mainCsvData = fs.readFileSync(mainCsvPath, 'utf-8');

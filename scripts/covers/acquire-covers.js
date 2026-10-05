@@ -105,7 +105,7 @@ Examples:
 }
 
 // Configuration
-const CSV_PATH = './src/_data/books.csv';
+const CSV_PATH = './src/_data/catalog/art.csv';
 const IMAGES_DIR = './src/assets/images/books';
 const USER_AGENT = 'Hudson Street Library Cover Acquisition Tool';
 

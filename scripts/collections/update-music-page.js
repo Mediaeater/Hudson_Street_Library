@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 // Read the books CSV to get music book IDs
-const booksCSV = fs.readFileSync('./src/_data/books.csv', 'utf-8');
+const booksCSV = fs.readFileSync('./src/_data/catalog/art.csv', 'utf-8');
 const lines = booksCSV.split('\n');
 
 // Find Music Photobooks (IDs 1440-1484)

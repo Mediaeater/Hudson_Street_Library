@@ -8,7 +8,7 @@ const ImagePipeline = require('../image-pipeline/image-pipeline');
 class BookEventPipeline {
   constructor(config = {}) {
     this.config = {
-      booksDataPath: path.join(__dirname, '../../src/_data/books.csv'),
+      booksDataPath: path.join(__dirname, '../../src/_data/catalog/art.csv'),
       collectionsDir: path.join(__dirname, '../../src/books/collections'),
       alphaDir: path.join(__dirname, '../../src/books/alpha'),
       generalDir: path.join(__dirname, '../../src/books/general'),

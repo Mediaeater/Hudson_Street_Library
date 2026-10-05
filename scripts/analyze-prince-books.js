@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const { parse } = require('csv-parse/sync');
 
-const csvPath = path.join(__dirname, '../src/_data/books.csv');
+const csvPath = path.join(__dirname, '../src/_data/catalog/art.csv');
 const csvContent = fs.readFileSync(csvPath, 'utf-8');
 
 const records = parse(csvContent, {

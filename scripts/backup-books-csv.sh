@@ -4,9 +4,10 @@
 #
 # This script creates multiple backup copies of the catalogue CSVs with
 # timestamps and rotates old backups to prevent disk space issues. The
-# catalogue is src/_data/books.csv (the art wing) plus one
-# src/_data/catalog/<wing>.csv per wing; wing copies are named
-# catalog_<wing>_… alongside the books_… copies.
+# catalogue is one src/_data/catalog/<wing>.csv per wing (art.csv is the art
+# wing); copies are named catalog_<wing>_…. Until Oct 2026 the art wing was
+# src/_data/books.csv and its copies were named books_…; those older copies
+# keep their names and are still rotated below.
 #
 # Backup locations:
 # 1. Local project backups directory (src/_data/backups/)
@@ -18,11 +19,11 @@
 #   ./scripts/backup-books-csv.sh --no-git   # copies only, no commit
 #
 # --no-git is what the scheduled LaunchAgent uses. Unattended, the git step
-# would commit whatever mid-edit state books.csv happens to be in, and it uses
+# would commit whatever mid-edit state a CSV happens to be in, and it uses
 # --no-verify, which skips the pre-commit hook that validates CSV structure.
 # That is the one gate protecting against a structural break, so the scheduled
 # run does not touch git. Git snapshots still happen on every push, via the
-# "Backup books.csv" GitHub Actions workflow.
+# "Backup catalogue CSVs" GitHub Actions workflow.
 #
 # Scheduled by: ~/Library/LaunchAgents/com.hudsonstreetlibrary.backup.plist
 # Log:          logs/backup.log
@@ -39,7 +40,7 @@ done
 
 # Configuration
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-CSV_FILE="$PROJECT_DIR/src/_data/books.csv"
+CSV_FILE="$PROJECT_DIR/src/_data/catalog/art.csv"
 CATALOG_DIR="$PROJECT_DIR/src/_data/catalog"
 LOCAL_BACKUP_DIR="$PROJECT_DIR/src/_data/backups"
 SAFE_BACKUP_DIR="$HOME/.hudson-library-backups"
@@ -76,9 +77,9 @@ warning() {
     echo -e "${YELLOW}[WARNING]${NC} $1"
 }
 
-# Check if CSV file exists
+# Check if the art wing's CSV exists
 if [[ ! -f "$CSV_FILE" ]]; then
-    error "books.csv not found at $CSV_FILE"
+    error "catalog/art.csv not found at $CSV_FILE"
     exit 1
 fi
 
@@ -86,7 +87,8 @@ fi
 FILE_SIZE=$(stat -f%z "$CSV_FILE" 2>/dev/null || stat -c%s "$CSV_FILE" 2>/dev/null)
 RECORD_COUNT=$(wc -l < "$CSV_FILE")
 
-log "Starting backup of books.csv"
+log "Starting backup of the catalogue CSVs"
+log "  Art wing: catalog/art.csv"
 log "  File size: $FILE_SIZE bytes"
 log "  Records: $RECORD_COUNT lines"
 
@@ -94,61 +96,18 @@ log "  Records: $RECORD_COUNT lines"
 mkdir -p "$LOCAL_BACKUP_DIR"
 mkdir -p "$SAFE_BACKUP_DIR"/{hourly,daily,weekly}
 
-# ============================================
-# Backup 1: Local project directory
-# ============================================
-LOCAL_BACKUP="$LOCAL_BACKUP_DIR/books_backup_${DATE_ONLY}.csv"
-
-if [[ -f "$LOCAL_BACKUP" ]]; then
-    # File already exists for today, create timestamped version
-    LOCAL_BACKUP="$LOCAL_BACKUP_DIR/books_backup_${TIMESTAMP}.csv"
-fi
-
-cp "$CSV_FILE" "$LOCAL_BACKUP"
-log "Local backup: $LOCAL_BACKUP"
-
-# Verify backup
-if [[ ! -f "$LOCAL_BACKUP" ]]; then
-    error "Local backup failed!"
-    exit 1
-fi
-
-BACKUP_SIZE=$(stat -f%z "$LOCAL_BACKUP" 2>/dev/null || stat -c%s "$LOCAL_BACKUP" 2>/dev/null)
-if [[ "$BACKUP_SIZE" -ne "$FILE_SIZE" ]]; then
-    error "Local backup size mismatch! Original: $FILE_SIZE, Backup: $BACKUP_SIZE"
-    exit 1
-fi
-
-# ============================================
-# Backup 2: Safe directory (outside project)
-# ============================================
-
-# Hourly backup (with full timestamp)
-HOURLY_BACKUP="$SAFE_BACKUP_DIR/hourly/books_${TIMESTAMP}.csv"
-cp "$CSV_FILE" "$HOURLY_BACKUP"
-log "Safe hourly backup: $HOURLY_BACKUP"
-
-# Daily backup (one per day)
-DAILY_BACKUP="$SAFE_BACKUP_DIR/daily/books_${DATE_ONLY}.csv"
-if [[ ! -f "$DAILY_BACKUP" ]]; then
-    cp "$CSV_FILE" "$DAILY_BACKUP"
-    log "Safe daily backup: $DAILY_BACKUP"
-fi
-
-# Weekly backup (one per week)
 WEEK_NUMBER=$(date +"%Y-W%V")
-WEEKLY_BACKUP="$SAFE_BACKUP_DIR/weekly/books_${WEEK_NUMBER}.csv"
-if [[ ! -f "$WEEKLY_BACKUP" ]]; then
-    cp "$CSV_FILE" "$WEEKLY_BACKUP"
-    log "Safe weekly backup: $WEEKLY_BACKUP"
-fi
 
 # ============================================
-# Backup 1b + 2b: the per-wing files (src/_data/catalog/*.csv)
+# Backup 1 + 2: every wing file (src/_data/catalog/*.csv)
 # ============================================
-# Same three copies as books.csv, prefixed catalog_<wing>_ so the rotation
-# below can keep each file's history separately.
+# 1. Local project directory (one per day, timestamped after the first)
+# 2. Safe directory outside the project (hourly, daily, weekly)
+# Copies are prefixed catalog_<wing>_ so the rotation below can keep each
+# file's history separately.
 CATALOG_COUNT=0
+LOCAL_BACKUP=""
+HOURLY_BACKUP=""
 for wing_file in "$CATALOG_DIR"/*.csv; do
     [[ -e "$wing_file" ]] || continue
     wing="catalog_$(basename "$wing_file" .csv)"
@@ -163,6 +122,12 @@ for wing_file in "$CATALOG_DIR"/*.csv; do
     fi
 
     cp "$wing_file" "$SAFE_BACKUP_DIR/hourly/${wing}_${TIMESTAMP}.csv"
+    if [[ "$wing_file" == "$CSV_FILE" ]]; then
+        LOCAL_BACKUP="$wing_local"
+        HOURLY_BACKUP="$SAFE_BACKUP_DIR/hourly/${wing}_${TIMESTAMP}.csv"
+        log "Local backup: $LOCAL_BACKUP"
+        log "Safe hourly backup: $HOURLY_BACKUP"
+    fi
     [[ -f "$SAFE_BACKUP_DIR/daily/${wing}_${DATE_ONLY}.csv" ]] || cp "$wing_file" "$SAFE_BACKUP_DIR/daily/${wing}_${DATE_ONLY}.csv"
     [[ -f "$SAFE_BACKUP_DIR/weekly/${wing}_${WEEK_NUMBER}.csv" ]] || cp "$wing_file" "$SAFE_BACKUP_DIR/weekly/${wing}_${WEEK_NUMBER}.csv"
 done
@@ -175,7 +140,7 @@ cd "$PROJECT_DIR"
 
 if [[ $SKIP_GIT -eq 1 ]]; then
     log "Git backup skipped (--no-git)"
-elif git diff --quiet -- "$CSV_FILE" "$CATALOG_DIR"; then
+elif git diff --quiet -- "$CATALOG_DIR"; then
     log "No changes in the catalogue CSVs since last commit"
 else
     log "Changes detected in the catalogue CSVs"
@@ -183,13 +148,13 @@ else
     # Check if we're in a git repo
     if git rev-parse --git-dir > /dev/null 2>&1; then
         # Create automatic backup commit
-        git add -- "$CSV_FILE" "$CATALOG_DIR"
+        git add -- "$CATALOG_DIR"
 
         # Get stats for commit message
-        ADDITIONS=$(git diff --cached --numstat -- "$CSV_FILE" "$CATALOG_DIR" | awk '{s+=$1} END {print s+0}')
-        DELETIONS=$(git diff --cached --numstat -- "$CSV_FILE" "$CATALOG_DIR" | awk '{s+=$2} END {print s+0}')
+        ADDITIONS=$(git diff --cached --numstat -- "$CATALOG_DIR" | awk '{s+=$1} END {print s+0}')
+        DELETIONS=$(git diff --cached --numstat -- "$CATALOG_DIR" | awk '{s+=$2} END {print s+0}')
 
-        COMMIT_MSG="Automatic backup: catalogue CSVs updated (books.csv $RECORD_COUNT lines)
+        COMMIT_MSG="Automatic backup: catalogue CSVs updated (catalog/art.csv $RECORD_COUNT lines)
 
 Automated backup commit
 Timestamp: $TIMESTAMP
@@ -215,9 +180,11 @@ fi
 
 log "Rotating old backups..."
 
-# Every copied file has a prefix: "books" for books.csv, "catalog_<wing>" for
-# each wing file. Count-based rotation runs per prefix so a run that copies
-# seven files does not push the older books.csv copies out early.
+# Every copied file has a prefix: "catalog_<wing>" for each wing file. "books"
+# is the art wing's prefix from before the Oct 2026 rename; nothing writes it
+# any more, and it stays in the list so those copies rotate as they always did.
+# Count-based rotation runs per prefix so one wing's copies do not push
+# another's out early.
 PREFIXES=("books")
 for wing_file in "$CATALOG_DIR"/*.csv; do
     [[ -e "$wing_file" ]] && PREFIXES+=("catalog_$(basename "$wing_file" .csv)")

@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# Setup Automated Backups for books.csv
+# Setup Automated Backups for the catalogue CSVs
 #
-# This script configures a cron job to automatically back up books.csv
+# This script configures a cron job to automatically back up the catalogue CSVs
 # at regular intervals.
 #
 # Usage:

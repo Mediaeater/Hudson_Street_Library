@@ -3,7 +3,7 @@ const path = require('path');
 const { parse } = require('csv-parse/sync');
 
 // Read and parse CSV
-const csvPath = path.join(__dirname, 'src/_data/books.csv');
+const csvPath = path.join(__dirname, 'src/_data/catalog/art.csv');
 const csvContent = fs.readFileSync(csvPath, 'utf-8');
 const books = parse(csvContent, {
     columns: true,

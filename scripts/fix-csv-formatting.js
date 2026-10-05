@@ -49,7 +49,7 @@ async function fixCsvFormatting(inputFile, outputFile) {
 // Run if called directly
 if (require.main === module) {
   const inputFile = process.argv[2] || 'src/_data/HSL-CLEAN.csv';
-  const outputFile = process.argv[3] || 'src/_data/books.csv';
+  const outputFile = process.argv[3] || 'src/_data/catalog/art.csv';
 
   fixCsvFormatting(inputFile, outputFile).catch(console.error);
 }

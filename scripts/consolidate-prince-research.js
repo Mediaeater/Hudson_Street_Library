@@ -14,7 +14,7 @@ const BATCH_DIRS = Array.from({ length: 17 }, (_, i) =>
   `/tmp/prince-research-batch${i + 1}`
 );
 
-const CSV_PATH = path.join(__dirname, '../src/_data/books.csv');
+const CSV_PATH = path.join(__dirname, '../src/_data/catalog/art.csv');
 const BACKUP_PATH = path.join(__dirname, `../books-backup-${Date.now()}.csv`);
 
 console.log('=== Richard Prince Research Consolidation ===\n');

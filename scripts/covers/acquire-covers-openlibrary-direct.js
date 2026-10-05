@@ -92,7 +92,7 @@ async function main() {
     console.log(`Rate Limit: 100 requests per 5 minutes`);
     console.log(`Processing up to ${limit} books\n`);
 
-    const CSV_PATH = path.join(__dirname, 'src/_data/books.csv');
+    const CSV_PATH = path.join(__dirname, 'src/_data/catalog/art.csv');
     const IMAGES_DIR = path.join(__dirname, 'src/assets/images/books');
 
     // Read books

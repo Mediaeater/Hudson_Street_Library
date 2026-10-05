@@ -1,12 +1,14 @@
-name: Backup books.csv
+name: Backup catalogue CSVs
 
-# The entire site is generated from the catalogue CSVs: src/_data/books.csv
-# (the art wing) plus one src/_data/catalog/<wing>.csv per wing, declared in
+# The entire site is generated from the catalogue CSVs: one
+# src/_data/catalog/<wing>.csv per wing (art.csv is the art wing), declared in
 # src/_data/wings.json. This workflow keeps durable, GitHub-hosted backups that
 # do not depend on any local machine:
 #   1. A validated, timestamped snapshot of each changed file is committed to
-#      csv-backups/ (books_<stamp>.csv, catalog_<wing>_<stamp>.csv): permanent,
-#      browsable restore points in the repo history.
+#      csv-backups/ (catalog_<wing>_<stamp>.csv): permanent, browsable restore
+#      points in the repo history. Snapshots named books_<stamp>.csv are the
+#      art wing from before Oct 2026, when it was src/_data/books.csv; they
+#      keep their names and are never pruned.
 #   2. The current files are also uploaded as a workflow artifact with
 #      90-day retention (a fallback if the commit step is ever blocked).
 
@@ -15,7 +17,6 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "src/_data/books.csv"
       - "src/_data/catalog/*.csv"
   # Daily safety net (only commits if the catalog actually changed).
   schedule:
@@ -57,10 +58,8 @@ jobs:
       - name: Upload catalogue artifact (90-day retention)
         uses: actions/upload-artifact@v7
         with:
-          name: books-csv-backup
-          path: |
-            src/_data/books.csv
-            src/_data/catalog/*.csv
+          name: catalogue-csv-backup
+          path: src/_data/catalog/*.csv
           retention-days: 90
 
       # Create a new committed snapshot only when the catalog has actually
@@ -85,7 +84,6 @@ jobs:
               created=true
             fi
           }
-          snapshot src/_data/books.csv books
           for f in src/_data/catalog/*.csv; do
             [ -e "$f" ] || continue
             snapshot "$f" "catalog_$(basename "$f" .csv)"
@@ -96,7 +94,6 @@ jobs:
       - name: Prune old snapshots
         if: steps.snapshot.outputs.created == 'true'
         run: |
-          ls -1 csv-backups/books_*.csv | sort | head -n -90 | xargs -r rm -v
           for f in src/_data/catalog/*.csv; do
             [ -e "$f" ] || continue
             prefix="catalog_$(basename "$f" .csv)"

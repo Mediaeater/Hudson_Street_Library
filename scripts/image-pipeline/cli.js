@@ -123,7 +123,7 @@ class ImagePipelineCLI {
       
     } else if (options.missing) {
       // Load books data and find missing images
-      const booksPath = path.join(__dirname, '../../src/_data/books.csv');
+      const booksPath = path.join(__dirname, '../../src/_data/catalog/art.csv');
       
       try {
         const csvContent = await fs.readFile(booksPath, 'utf8');

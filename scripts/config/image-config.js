@@ -57,7 +57,7 @@ const createImageConfig = () => {
     // ===== DIRECTORY STRUCTURE =====
     directories: {
       // Source directories
-      csvPath: path.join(PROJECT_ROOT, 'src/_data/books.csv'),
+      csvPath: path.join(PROJECT_ROOT, 'src/_data/catalog/art.csv'),
       assets: path.join(PROJECT_ROOT, 'src/assets/images'),
       books: path.join(PROJECT_ROOT, 'src/assets/images/books'),
 

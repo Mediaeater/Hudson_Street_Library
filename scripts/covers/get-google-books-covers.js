@@ -11,7 +11,7 @@ if (!GOOGLE_API_KEY) {
     process.exit(1);
 }
 
-const booksCSV = fs.readFileSync('./src/_data/books.csv', 'utf-8');
+const booksCSV = fs.readFileSync('./src/_data/catalog/art.csv', 'utf-8');
 const lines = booksCSV.split('\n');
 
 // Create directory if it doesn't exist

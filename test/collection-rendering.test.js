@@ -12,7 +12,7 @@ describe('CSV-driven rendering', function() {
   });
 
   it('generates one detail page per CSV row', () => {
-    const rows = parse(fs.readFileSync('src/_data/books.csv','utf8'),
+    const rows = parse(fs.readFileSync('src/_data/catalog/art.csv','utf8'),
       { columns: true, relax_quotes: true, relax_column_count: true });
     const bookDirs = fs.readdirSync('_site/books')
       .filter(f => fs.statSync(path.join('_site/books', f)).isDirectory());

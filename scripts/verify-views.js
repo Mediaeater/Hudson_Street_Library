@@ -2,7 +2,7 @@
 /**
  * verify-views.js — post-change sanity check for the built site.
  *
- * Cross-checks books.csv against the built Recently Added / Recently
+ * Cross-checks the catalogue against the built Recently Added / Recently
  * Catalogued pages and validates cover files. Run after any change that
  * touches book data, templates, or filters:
  *

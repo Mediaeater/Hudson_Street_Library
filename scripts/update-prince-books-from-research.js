@@ -9,7 +9,7 @@ const { stringify } = require('csv-stringify/sync');
  * Update Richard Prince books in CSV with researched metadata and improved tags
  */
 
-const CSV_PATH = path.join(__dirname, '../src/_data/books.csv');
+const CSV_PATH = path.join(__dirname, '../src/_data/catalog/art.csv');
 const RESEARCH_DIR = '/tmp';
 const BACKUP_DIR = path.join(__dirname, '../backups');
 

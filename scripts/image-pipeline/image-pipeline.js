@@ -239,7 +239,7 @@ class ImagePipeline {
 
   async updateBooksCSV(imagePath, context) {
     const { metadata, bookInfo, category } = context;
-    const csvPath = path.join(__dirname, '../../src/_data/books.csv');
+    const csvPath = path.join(__dirname, '../../src/_data/catalog/art.csv');
     
     try {
       // Read existing CSV using enhanced handler

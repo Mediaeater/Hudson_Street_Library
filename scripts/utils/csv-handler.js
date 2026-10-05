@@ -10,7 +10,7 @@ const { stringify: stringifySync } = require('csv-stringify/sync');
  * Consolidates all CSV operations in one place with validation and error recovery
  */
 
-// Expected schema for books.csv
+// Expected schema for every catalogue CSV
 const BOOKS_SCHEMA = {
     required: ['id', 'title', 'author_full_name'],
     optional: ['author_last', 'author_first', 'publisher', 'publication_year', 'isbn_asin', 'image_url', 'description'],
@@ -675,12 +675,12 @@ class CSVHandler {
      */
 
     /**
-     * Read books.csv with specific handling
-     * @param {string} csvPath - Path to books.csv (optional, defaults to standard location)
+     * Read a catalogue CSV with specific handling
+     * @param {string} csvPath - Path to a catalogue CSV (optional, defaults to the art wing)
      * @returns {Promise<Object>} - Books data with metadata
      */
     static async readBooks(csvPath = null) {
-        const booksPath = csvPath || path.join(__dirname, '../../src/_data/books.csv');
+        const booksPath = csvPath || path.join(__dirname, '../../src/_data/catalog/art.csv');
         const result = await this.read(booksPath);
 
         // Add books-specific processing
@@ -706,7 +706,7 @@ class CSVHandler {
      * this module, so a top-level require would be circular.
      *
      * With no explicit path, the id (or ISBN) decides the file — id 10042 is a
-     * cryptology record and belongs in catalog/cryptology.csv, not books.csv.
+     * cryptology record and belongs in catalog/cryptology.csv, not catalog/art.csv.
      * An unresolvable identifier falls back to the default wing so the caller
      * still gets the familiar "Book not found" rather than a loader throw.
      * @param {string} identifier
@@ -715,7 +715,7 @@ class CSVHandler {
      */
     static resolveCatalogFile(identifier, csvPath = null) {
         if (csvPath) return csvPath;
-        const fallback = path.join(__dirname, '../../src/_data/books.csv');
+        const fallback = path.join(__dirname, '../../src/_data/catalog/art.csv');
         try {
             const { fileForIdentifier } = require('./catalog');
             return fileForIdentifier(identifier)?.file || fallback;
@@ -812,7 +812,7 @@ class CSVHandler {
             // stays exactly what callers have always seen.
             csvPath = byFile.keys().next().value || null;
         }
-        const booksPath = csvPath || path.join(__dirname, '../../src/_data/books.csv');
+        const booksPath = csvPath || path.join(__dirname, '../../src/_data/catalog/art.csv');
         const readResult = await this.readBooks(booksPath);
 
         const results = {
@@ -869,7 +869,7 @@ class CSVHandler {
 
     /**
      * Find books missing covers
-     * @param {string} csvPath - Path to books.csv (optional)
+     * @param {string} csvPath - Path to a catalogue CSV (optional, defaults to the art wing)
      * @returns {Promise<Array>} - Books without cover images
      */
     static async findBooksWithoutCovers(csvPath = null) {
@@ -884,7 +884,7 @@ class CSVHandler {
     /**
      * Get books by author
      * @param {string} authorName - Author name (partial match)
-     * @param {string} csvPath - Path to books.csv (optional)
+     * @param {string} csvPath - Path to a catalogue CSV (optional, defaults to the art wing)
      * @returns {Promise<Array>} - Matching books
      */
     static async getBooksByAuthor(authorName, csvPath = null) {
@@ -908,7 +908,7 @@ class CSVHandler {
      * @returns {Object} - {data: Array, errors: Array, stats: Object}
      */
     static readBooksSync(csvPath = null) {
-        const booksPath = csvPath || path.join(__dirname, '../../src/_data/books.csv');
+        const booksPath = csvPath || path.join(__dirname, '../../src/_data/catalog/art.csv');
 
         try {
             const content = fs.readFileSync(booksPath, 'utf8');

@@ -7,7 +7,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const CSV_PATH = path.join(__dirname, '..', 'src', '_data', 'books.csv');
+const CSV_PATH = path.join(__dirname, '..', 'src', '_data', 'catalog', 'art.csv');
 const EXPECTED_COLUMNS = 34;
 
 function parseCSVLine(line) {

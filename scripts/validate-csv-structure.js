@@ -6,7 +6,7 @@
  * (validate-csv-robust.js) is the full pass.
  *
  * With no argument it checks every file declared in src/_data/wings.json
- * (books.csv + src/_data/catalog/*.csv). Pass a path to check one file.
+ * (src/_data/catalog/*.csv). Pass a path to check one file.
  */
 
 const fs = require('fs');

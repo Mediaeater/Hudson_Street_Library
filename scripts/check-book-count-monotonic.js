@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// Pre-commit guard: the book count in books.csv must never decrease.
+// Pre-commit guard: the book count in the art wing (catalog/art.csv) must
+// never decrease.
 //
 // History audit (2026-07-23) found 29 count drops across 431 commits; most were
 // legitimate dedupes, but one unrelated commit silently destroyed 7 books that
@@ -11,7 +12,7 @@
 const { execSync } = require('child_process');
 const { parse } = require('csv-parse/sync');
 
-const CSV_PATH = 'src/_data/books.csv';
+const CSV_PATH = 'src/_data/catalog/art.csv';
 
 function countRecords(source) {
   let content;

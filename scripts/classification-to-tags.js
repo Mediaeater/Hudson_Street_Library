@@ -18,7 +18,7 @@ const path = require('path');
 const csv = require('csv-parse/sync');
 const { stringify } = require('csv-stringify/sync');
 
-const BOOKS_CSV = path.join(__dirname, '../src/_data/books.csv');
+const BOOKS_CSV = path.join(__dirname, '../src/_data/catalog/art.csv');
 
 /**
  * Parse classification string and convert to tags
