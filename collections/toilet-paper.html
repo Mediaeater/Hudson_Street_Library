@@ -4,9 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toilet Paper Magazine | Hudson Street Library</title>
+    <title>Toilet Paper | Hudson Street Library</title>
     <link rel="canonical" href="https://hudsonstreetlibrary.com/collections/toilet-paper.html">
 
+    
+    <meta name="description" content="An artists&#39; magazine created by Maurizio Cattelan and Pierpaolo Ferrari, featuring provocative photography and surreal imagery. Since 2010, Toilet Paper...">
     
     <link rel="stylesheet" href="/assets/css/tailwind.css">
     <link rel="stylesheet" href="/assets/css/design-system.css">
@@ -32,8 +34,9 @@
 {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  "name": "Toilet Paper Magazine",
+  "name": "Toilet Paper",
   "url": "https://hudsonstreetlibrary.com/collections/toilet-paper.html",
+  "description": "An artists&#39; magazine created by Maurizio Cattelan and Pierpaolo Ferrari, featuring provocative photography and surreal imagery. Since 2010, Toilet Paper has combined commercial photography with twisted narrative tableaux, challenging the limits of the contemporary art economy.",
   "isPartOf": {
     "@type": "WebSite",
     "name": "Hudson Street Library",
@@ -62,7 +65,7 @@
     {
       "@type": "ListItem",
       "position": 3,
-      "name": "Toilet Paper Magazine",
+      "name": "Toilet Paper",
       "item": "https://hudsonstreetlibrary.com/collections/toilet-paper.html"
     }
   ]
@@ -239,7 +242,7 @@
                    About
                 </a>
                 <a href="/collection-explore.html"
-                   class="nav-link nav-link-active">
+                   class="nav-link ">
                    Collections
                 </a>
                 <a href="/static-demo/"
@@ -309,376 +312,702 @@ function toggleMobileMenu() {
 
 
 
+<style>
+    .collection-page {
+        --color-ink: #0A0A0A;
+        --color-brown: #8B7355;
+        --color-border: rgba(10, 10, 10, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    /* Running prose reads from the left; a one-line blurb stays centred. */
+    .collection-intro { text-align: left; }
+    .collection-intro .collection-description + .collection-description { margin-top: 1.25rem; }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-brown); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-brown); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-brown);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    .collection-section-head h2 a { color: inherit; text-decoration: none; }
+    .collection-section-head h2 a:hover { color: var(--color-ink); }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(10, 10, 10, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-brown);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(10, 10, 10, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+
+
+
+
+
+
 <main>
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+    <div class="collection-page">
 
-            <!-- Collection Header -->
-            <div class="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-                <h1 class="text-4xl sm:text-5xl font-bold title-font mb-4 text-gray-900">Toilet Paper Magazine</h1>
-                <div class="line-divider inline-block"></div>
-                <p class="text-base sm:text-lg text-gray-600 leading-relaxed mt-4">
-                    An artists' magazine created by Maurizio Cattelan and Pierpaolo Ferrari, featuring provocative photography and surreal imagery. Since 2010, Toilet Paper has combined commercial photography with twisted narrative tableaux, challenging the limits of the contemporary art economy.
-                </p>
-                <div class="mt-8">
-                    <a href="/collections/magazines.html" class="text-sm text-primary-700 hover:text-primary-700 transition-colors">
-                        <i class="fas fa-arrow-left mr-1"></i> Back to Magazines
-                    </a>
-                </div>
+        <div class="collection-masthead">
+            
+            <div class="collection-eyebrow">Collection
             </div>
-
-            <!-- All Issues Grid -->
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">All Issues</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 md:gap-8 mb-16">
-
-                <!-- Issue 20 -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/magazines/toilet-paper/toilet-paper-20.html" class="block">
-                        <div class="relative overflow-hidden aspect-3/4 bg-gray-200">
-                            <img src="/assets/images/magazines/toilet-paper/toilet-paper-20.png"
-                                 alt="Toilet Paper Issue 20" loading="lazy"
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-sm font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Issue 20</h3>
-                            <p class="text-xs text-gray-500 mt-1">October 2023</p>
-                        </div>
-                    </a>
-                </article>
-
-                <!-- Issue 19 -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/magazines/toilet-paper/toilet-paper-19.html" class="block">
-                        <div class="relative overflow-hidden aspect-3/4 bg-gray-200">
-                            <img src="/assets/images/magazines/toilet-paper/toilet-paper-19.png"
-                                 alt="Toilet Paper Issue 19" loading="lazy"
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-sm font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Issue 19</h3>
-                            <p class="text-xs text-gray-500 mt-1">November 2022</p>
-                        </div>
-                    </a>
-                </article>
-
-                <!-- Issue 18 -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/magazines/toilet-paper/toilet-paper-18.html" class="block">
-                        <div class="relative overflow-hidden aspect-3/4 bg-gray-200">
-                            <img src="/assets/images/magazines/toilet-paper/toilet-paper-18.png"
-                                 alt="Toilet Paper Issue 18" loading="lazy"
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-sm font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Issue 18</h3>
-                            <p class="text-xs text-gray-500 mt-1">June 2022</p>
-                        </div>
-                    </a>
-                </article>
-
-                <!-- Issue 17 -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/magazines/toilet-paper/toilet-paper-17.html" class="block">
-                        <div class="relative overflow-hidden aspect-3/4 bg-gray-200">
-                            <img src="/assets/images/magazines/toilet-paper/toilet-paper-17.jpg"
-                                 alt="Toilet Paper Issue 17" loading="lazy"
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-sm font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Issue 17</h3>
-                            <p class="text-xs text-gray-500 mt-1">May 2019</p>
-                        </div>
-                    </a>
-                </article>
-
-                <!-- Issue 16 -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/magazines/toilet-paper/toilet-paper-16.html" class="block">
-                        <div class="relative overflow-hidden aspect-3/4 bg-gray-200">
-                            <img src="/assets/images/magazines/toilet-paper/toilet-paper-16.jpg"
-                                 alt="Toilet Paper Issue 16" loading="lazy"
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-sm font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Issue 16</h3>
-                            <p class="text-xs text-gray-500 mt-1">September 2018</p>
-                        </div>
-                    </a>
-                </article>
-
-                <!-- Issue 15 -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/magazines/toilet-paper/toilet-paper-15.html" class="block">
-                        <div class="relative overflow-hidden aspect-3/4 bg-gray-200">
-                            <img src="/assets/images/magazines/toilet-paper/toilet-paper-15.jpg"
-                                 alt="Toilet Paper Issue 15" loading="lazy"
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-sm font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Issue 15</h3>
-                            <p class="text-xs text-gray-500 mt-1">November 2017</p>
-                        </div>
-                    </a>
-                </article>
-
-                <!-- Issue 14 -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/magazines/toilet-paper/toilet-paper-14.html" class="block">
-                        <div class="relative overflow-hidden aspect-3/4 bg-gray-200">
-                            <img src="/assets/images/magazines/toilet-paper/toilet-paper-14.jpg"
-                                 alt="Toilet Paper Issue 14" loading="lazy"
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-sm font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Issue 14</h3>
-                            <p class="text-xs text-gray-500 mt-1">April 2017</p>
-                        </div>
-                    </a>
-                </article>
-
-                <!-- Issue 13 -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/magazines/toilet-paper/toilet-paper-13.html" class="block">
-                        <div class="relative overflow-hidden aspect-3/4 bg-gray-200">
-                            <img src="/assets/images/magazines/toilet-paper/toilet-paper-13.jpg"
-                                 alt="Toilet Paper Issue 13" loading="lazy"
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-sm font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Issue 13</h3>
-                            <p class="text-xs text-gray-500 mt-1">September 2016</p>
-                        </div>
-                    </a>
-                </article>
-
-                <!-- Issue 12 -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/magazines/toilet-paper/toilet-paper-12.html" class="block">
-                        <div class="relative overflow-hidden aspect-3/4 bg-gray-200">
-                            <img src="/assets/images/magazines/toilet-paper/toilet-paper-12.jpg"
-                                 alt="Toilet Paper Issue 12" loading="lazy"
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-sm font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Issue 12</h3>
-                            <p class="text-xs text-gray-500 mt-1">March 2016</p>
-                        </div>
-                    </a>
-                </article>
-
-                <!-- Issue 11 -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/magazines/toilet-paper/toilet-paper-11.html" class="block">
-                        <div class="relative overflow-hidden aspect-3/4 bg-gray-200">
-                            <img src="/assets/images/magazines/toilet-paper/toilet-paper-11.jpg"
-                                 alt="Toilet Paper Issue 11" loading="lazy"
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-sm font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Issue 11</h3>
-                            <p class="text-xs text-gray-500 mt-1">2015</p>
-                        </div>
-                    </a>
-                </article>
-
-                <!-- Issue 10 -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/magazines/toilet-paper/toilet-paper-10.html" class="block">
-                        <div class="relative overflow-hidden aspect-3/4 bg-gray-200">
-                            <img src="/assets/images/magazines/toilet-paper/toilet-paper-10.jpg"
-                                 alt="Toilet Paper Issue 10" loading="lazy"
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-sm font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Issue 10</h3>
-                            <p class="text-xs text-gray-500 mt-1">October 2014</p>
-                        </div>
-                    </a>
-                </article>
-
-                <!-- Issue 9 -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/magazines/toilet-paper/toilet-paper-9.html" class="block">
-                        <div class="relative overflow-hidden aspect-3/4 bg-gray-200">
-                            <img src="/assets/images/magazines/toilet-paper/toilet-paper-9.jpg"
-                                 alt="Toilet Paper Issue 9" loading="lazy"
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-sm font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Issue 9</h3>
-                            <p class="text-xs text-gray-500 mt-1">May 2014</p>
-                        </div>
-                    </a>
-                </article>
-
-                <!-- Issue 8 -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/magazines/toilet-paper/toilet-paper-8.html" class="block">
-                        <div class="relative overflow-hidden aspect-3/4 bg-gray-200">
-                            <img src="/assets/images/magazines/toilet-paper/toilet-paper-8.jpg"
-                                 alt="Toilet Paper Issue 8" loading="lazy"
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-sm font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Issue 8</h3>
-                            <p class="text-xs text-gray-500 mt-1">October 2013</p>
-                        </div>
-                    </a>
-                </article>
-
-                <!-- Issue 7 -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/magazines/toilet-paper/toilet-paper-7.html" class="block">
-                        <div class="relative overflow-hidden aspect-3/4 bg-gray-200">
-                            <img src="/assets/images/magazines/toilet-paper/toilet-paper-7.jpg"
-                                 alt="Toilet Paper Issue 7" loading="lazy"
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-sm font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Issue 7</h3>
-                            <p class="text-xs text-gray-500 mt-1">March 2013</p>
-                        </div>
-                    </a>
-                </article>
-
-                <!-- Issue 6 -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/magazines/toilet-paper/toilet-paper-6.html" class="block">
-                        <div class="relative overflow-hidden aspect-3/4 bg-gray-200">
-                            <img src="/assets/images/magazines/toilet-paper/toilet-paper-6.jpg"
-                                 alt="Toilet Paper Issue 6" loading="lazy"
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-sm font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Issue 6</h3>
-                            <p class="text-xs text-gray-500 mt-1">October 2012</p>
-                        </div>
-                    </a>
-                </article>
-
-                <!-- Issue 5 -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/magazines/toilet-paper/toilet-paper-5.html" class="block">
-                        <div class="relative overflow-hidden aspect-3/4 bg-gray-200">
-                            <img src="/assets/images/magazines/toilet-paper/toilet-paper-5.jpg"
-                                 alt="Toilet Paper Issue 5" loading="lazy"
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-sm font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Issue 5</h3>
-                            <p class="text-xs text-gray-500 mt-1">May 2012</p>
-                        </div>
-                    </a>
-                </article>
-
-                <!-- Issue 4 -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/magazines/toilet-paper/toilet-paper-4.html" class="block">
-                        <div class="relative overflow-hidden aspect-3/4 bg-gray-200">
-                            <img src="/assets/images/magazines/toilet-paper/toilet-paper-4.jpg"
-                                 alt="Toilet Paper Issue 4" loading="lazy"
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-sm font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Issue 4</h3>
-                            <p class="text-xs text-gray-500 mt-1">November 2011</p>
-                        </div>
-                    </a>
-                </article>
-
-                <!-- Issue 3 -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/magazines/toilet-paper/toilet-paper-3.html" class="block">
-                        <div class="relative overflow-hidden aspect-3/4 bg-gray-200">
-                            <img src="/assets/images/magazines/toilet-paper/toilet-paper-3.jpg"
-                                 alt="Toilet Paper Issue 3" loading="lazy"
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-sm font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Issue 3</h3>
-                            <p class="text-xs text-gray-500 mt-1">September 2011</p>
-                        </div>
-                    </a>
-                </article>
-
-                <!-- Issue 2 -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/magazines/toilet-paper/toilet-paper-2.html" class="block">
-                        <div class="relative overflow-hidden aspect-3/4 bg-gray-200">
-                            <img src="/assets/images/magazines/toilet-paper/toilet-paper-2.jpg"
-                                 alt="Toilet Paper Issue 2" loading="lazy"
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-sm font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Issue 2</h3>
-                            <p class="text-xs text-gray-500 mt-1">July 2011</p>
-                        </div>
-                    </a>
-                </article>
-
-                <!-- Issue 1 -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <a href="/books/magazines/toilet-paper/toilet-paper-1.html" class="block">
-                        <div class="relative overflow-hidden aspect-3/4 bg-gray-200">
-                            <img src="/assets/images/magazines/toilet-paper/toilet-paper-1.jpg"
-                                 alt="Toilet Paper Issue 1" loading="lazy"
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-sm font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Issue 1</h3>
-                            <p class="text-xs text-gray-500 mt-1">June 2010</p>
-                        </div>
-                    </a>
-                </article>
-
-            </div>
-
-            <!-- Books Section -->
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">Collected Volumes</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 md:gap-8 mb-12">
-
-                <!-- Deluxe Volume -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <div class="relative overflow-hidden aspect-3/4 bg-gray-200">
-                        <img src="/assets/images/magazines/toilet-paper/toilet-paper-deluxe-volume.png"
-                             alt="Toilet Paper Deluxe Volume" loading="lazy"
-                             class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-4">
-                        <h3 class="text-sm font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Toilet Paper (Deluxe Volume)</h3>
-                        <p class="text-xs text-gray-500 mt-1">2012 • Freedman|Damiani</p>
-                        <p class="text-xs text-gray-400 mt-1">Issues 1-5 collected</p>
-                    </div>
-                </article>
-
-                <!-- Diamond Collection -->
-                <article class="item-card group bg-white rounded-lg overflow-hidden border border-gray-100">
-                    <div class="relative overflow-hidden aspect-3/4 bg-gray-200">
-                        <img src="/assets/images/magazines/toilet-paper/toilet-paper-diamond-collection.png"
-                             alt="Toilet Paper Diamond Collection" loading="lazy"
-                             class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-4">
-                        <h3 class="text-sm font-semibold text-gray-800 group-hover:text-primary-700 transition-colors">Diamond Collection</h3>
-                        <p class="text-xs text-gray-500 mt-1">2014 • Limited Edition</p>
-                        <p class="text-xs text-gray-400 mt-1">1,000 numbered copies</p>
-                    </div>
-                </article>
-
-            </div>
-
-            <!-- About Section -->
-            <div class="max-w-3xl mx-auto bg-gray-100 rounded-lg p-8">
-                <h2 class="text-xl font-bold text-gray-900 mb-4">About Toilet Paper</h2>
-                <p class="text-gray-600 mb-4">
-                    Founded in June 2010 by Italian artist Maurizio Cattelan and photographer Pierpaolo Ferrari, Toilet Paper is a picture-based magazine with no text. Each image springs from an idea and becomes the materialization of the artists' mental outbursts through complex orchestration.
-                </p>
-                <p class="text-gray-600">
-                    The magazine combines commercial photography aesthetics with surrealistic imagery and twisted narrative tableaux. By using an accessible magazine format with wide distribution, Toilet Paper functions as a work of art that challenges the limits of the contemporary art economy.
-                </p>
-            </div>
-
+            <h1 class="collection-title">Toilet Paper</h1>
+            
+            
+                <p class="collection-description">An artists&#39; magazine created by Maurizio Cattelan and Pierpaolo Ferrari, featuring provocative photography and surreal imagery. Since 2010, Toilet Paper has combined commercial photography with twisted narrative tableaux, challenging the limits of the contemporary art economy.</p>
+            
+            <div class="collection-count">22 books</div>
+            
+            
+            
+            
         </div>
-    </main>
+
+        
+
+        
+            
+<section class="collection-section">
+    
+    <div class="collection-section-head">
+        <h2>Issues</h2>
+        
+    </div>
+    
+    <div class="collection-books">
+        
+            
+<a href="/books/toilet-paper_toilet-paper-issue-20_2478/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/toilet-paper/toilet-paper-20.png" alt="Toilet Paper Issue 20" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Toilet Paper Magazine</div>
+    
+    <div class="collection-book-title">Toilet Paper Issue 20</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2023</div>
+    
+</a>
+
+        
+            
+<a href="/books/toilet-paper_toilet-paper-issue-19_2477/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/toilet-paper/toilet-paper-19.png" alt="Toilet Paper Issue 19" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Toilet Paper Magazine</div>
+    
+    <div class="collection-book-title">Toilet Paper Issue 19</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2022</div>
+    
+</a>
+
+        
+            
+<a href="/books/toilet-paper_toilet-paper-issue-18_2476/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/toilet-paper/toilet-paper-18.png" alt="Toilet Paper Issue 18" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Toilet Paper Magazine</div>
+    
+    <div class="collection-book-title">Toilet Paper Issue 18</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2022</div>
+    
+</a>
+
+        
+            
+<a href="/books/toilet-paper_toilet-paper-issue-17_2475/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/toilet-paper/toilet-paper-17.jpg" alt="Toilet Paper Issue 17" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Toilet Paper Magazine</div>
+    
+    <div class="collection-book-title">Toilet Paper Issue 17</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2019</div>
+    
+</a>
+
+        
+            
+<a href="/books/toilet-paper_toilet-paper-issue-16_2474/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/toilet-paper/toilet-paper-16.jpg" alt="Toilet Paper Issue 16" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Toilet Paper Magazine</div>
+    
+    <div class="collection-book-title">Toilet Paper Issue 16</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2018</div>
+    
+</a>
+
+        
+            
+<a href="/books/toilet-paper_toilet-paper-issue-15_2473/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/toilet-paper/toilet-paper-15.jpg" alt="Toilet Paper Issue 15" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Toilet Paper Magazine</div>
+    
+    <div class="collection-book-title">Toilet Paper Issue 15</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2017</div>
+    
+</a>
+
+        
+            
+<a href="/books/toilet-paper_toilet-paper-issue-14_2472/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/toilet-paper/toilet-paper-14.jpg" alt="Toilet Paper Issue 14" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Toilet Paper Magazine</div>
+    
+    <div class="collection-book-title">Toilet Paper Issue 14</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2017</div>
+    
+</a>
+
+        
+            
+<a href="/books/toilet-paper_toilet-paper-issue-13_2471/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/toilet-paper/toilet-paper-13.jpg" alt="Toilet Paper Issue 13" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Toilet Paper Magazine</div>
+    
+    <div class="collection-book-title">Toilet Paper Issue 13</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2016</div>
+    
+</a>
+
+        
+            
+<a href="/books/toilet-paper_toilet-paper-issue-12_2470/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/toilet-paper/toilet-paper-12.jpg" alt="Toilet Paper Issue 12" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Toilet Paper Magazine</div>
+    
+    <div class="collection-book-title">Toilet Paper Issue 12</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2016</div>
+    
+</a>
+
+        
+            
+<a href="/books/toilet-paper_toilet-paper-issue-11_2469/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">Toilet Paper Magazine</div>
+    
+    <div class="collection-book-title">Toilet Paper Issue 11</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2015</div>
+    
+</a>
+
+        
+            
+<a href="/books/toilet-paper_toilet-paper-issue-10_2468/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/toilet-paper/toilet-paper-10.jpg" alt="Toilet Paper Issue 10" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Toilet Paper Magazine</div>
+    
+    <div class="collection-book-title">Toilet Paper Issue 10</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2014</div>
+    
+</a>
+
+        
+            
+<a href="/books/toilet-paper_toilet-paper-issue-9_2467/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/toilet-paper/toilet-paper-9.jpg" alt="Toilet Paper Issue 9" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Toilet Paper Magazine</div>
+    
+    <div class="collection-book-title">Toilet Paper Issue 9</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2014</div>
+    
+</a>
+
+        
+            
+<a href="/books/toilet-paper_toilet-paper-issue-8_2466/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/toilet-paper/toilet-paper-8.jpg" alt="Toilet Paper Issue 8" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Toilet Paper Magazine</div>
+    
+    <div class="collection-book-title">Toilet Paper Issue 8</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2013</div>
+    
+</a>
+
+        
+            
+<a href="/books/toilet-paper_toilet-paper-issue-7_2465/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/toilet-paper/toilet-paper-7.jpg" alt="Toilet Paper Issue 7" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Toilet Paper Magazine</div>
+    
+    <div class="collection-book-title">Toilet Paper Issue 7</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2013</div>
+    
+</a>
+
+        
+            
+<a href="/books/toilet-paper_toilet-paper-issue-6_2464/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/toilet-paper/toilet-paper-6.jpg" alt="Toilet Paper Issue 6" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Toilet Paper Magazine</div>
+    
+    <div class="collection-book-title">Toilet Paper Issue 6</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2012</div>
+    
+</a>
+
+        
+            
+<a href="/books/toilet-paper_toilet-paper-issue-5_2463/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/toilet-paper/toilet-paper-5.jpg" alt="Toilet Paper Issue 5" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Toilet Paper Magazine</div>
+    
+    <div class="collection-book-title">Toilet Paper Issue 5</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2012</div>
+    
+</a>
+
+        
+            
+<a href="/books/toilet-paper_toilet-paper-issue-4_2462/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/toilet-paper/toilet-paper-4.jpg" alt="Toilet Paper Issue 4" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Toilet Paper Magazine</div>
+    
+    <div class="collection-book-title">Toilet Paper Issue 4</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2011</div>
+    
+</a>
+
+        
+            
+<a href="/books/toilet-paper_toilet-paper-issue-3_2461/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/toilet-paper/toilet-paper-3.jpg" alt="Toilet Paper Issue 3" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Toilet Paper Magazine</div>
+    
+    <div class="collection-book-title">Toilet Paper Issue 3</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2011</div>
+    
+</a>
+
+        
+            
+<a href="/books/toilet-paper_toilet-paper-issue-2_2460/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/toilet-paper/toilet-paper-2.jpg" alt="Toilet Paper Issue 2" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Toilet Paper Magazine</div>
+    
+    <div class="collection-book-title">Toilet Paper Issue 2</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2011</div>
+    
+</a>
+
+        
+            
+<a href="/books/toilet-paper_toilet-paper-issue-1_2459/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/toilet-paper/toilet-paper-1.jpg" alt="Toilet Paper Issue 1" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Toilet Paper Magazine</div>
+    
+    <div class="collection-book-title">Toilet Paper Issue 1</div>
+    
+        <div class="collection-book-meta">Damiani &middot; 2011</div>
+    
+</a>
+
+        
+    </div>
+</section>
+
+        
+            
+<section class="collection-section">
+    
+    <div class="collection-section-head">
+        <h2>Collected Volumes</h2>
+        
+    </div>
+    
+    <div class="collection-books">
+        
+            
+<a href="/books/toilet-paper_toilet-paper-deluxe-volume_2479/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/toilet-paper/toilet-paper-deluxe-volume.png" alt="Toilet Paper (Deluxe Volume)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Toilet Paper Magazine</div>
+    
+    <div class="collection-book-title">Toilet Paper (Deluxe Volume)</div>
+    
+        <div class="collection-book-meta">Freedman Damiani &middot; 2012</div>
+    
+</a>
+
+        
+            
+<a href="/books/toilet-paper_toilet-paper-diamond-collection_2480/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/magazines/toilet-paper/toilet-paper-diamond-collection.png" alt="Toilet Paper: Diamond Collection" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Toilet Paper Magazine</div>
+    
+    <div class="collection-book-title">Toilet Paper: Diamond Collection</div>
+    
+        <div class="collection-book-meta">2014</div>
+    
+</a>
+
+        
+    </div>
+</section>
+
+        
+
+        
+
+    </div>
+</main>
+
 
 
 
