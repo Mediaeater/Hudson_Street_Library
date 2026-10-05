@@ -91,6 +91,25 @@ describe('collections-index', () => {
       expect(page.bookCount).to.equal(17);
     });
 
+    it('gives an allWings config its tag in every wing, in place of a wing-only page', () => {
+      const input = fixture({ curated: [{ slug: 'ciphers-all', title: 'Ciphers All', matchBy: { tag: 'Ciphers' }, allWings: true }] });
+      const index = buildIndex(input, noCovers);
+      expect(index.pages.map(p => p.url)).to.not.include('/cryptology/collections/ciphers.html');
+      expect(index.tagTargets.cryptology.get('ciphers').url).to.equal('/collections/ciphers-all.html');
+      expect(tagUrl('Ciphers', input.books.find(b => b.id === '301'), index)).to.equal('/collections/ciphers-all.html');
+      const listed = index.listings.cryptology.flatMap(g => g.items);
+      expect(listed.map(i => i.url)).to.include('/collections/ciphers-all.html');
+    });
+
+    it('lets a wing\'s own config keep a tag an allWings config of another wing also names', () => {
+      const input = fixture({ curated: [
+        { slug: 'ciphers-all', title: 'Ciphers All', matchBy: { tag: 'Ciphers' }, allWings: true },
+        { slug: 'ciphers-here', title: 'Ciphers Here', wing: 'cryptology', matchBy: { tag: 'Ciphers' } },
+      ] });
+      const index = buildIndex(input, noCovers);
+      expect(index.tagTargets.cryptology.get('ciphers').url).to.equal('/cryptology/collections/ciphers-here.html');
+    });
+
     it('uses the cover helpers it is given for a tag page image', () => {
       const withCovers = buildIndex(fixture(), { hasCover: b => b.id === '3', coverSrc: b => `/covers/${b.id}.jpg` });
       expect(withCovers.pageByUrl.get('/collections/punk.html').image).to.equal('/covers/3.jpg');

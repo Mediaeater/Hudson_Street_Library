@@ -107,16 +107,16 @@ function buildIndex(input, options = {}) {
   const urlOf = cfg => `/${permalinkOf(cfg)}`;
   const redirectOuts = new Set(redirects.map(r => r.out));
 
-  // Who owns a tag term within a wing, in order: a curated config that names
-  // the tag in matchBy.tag; a curated config whose slug is the term's slug; a
-  // static page with that slug (art wing only); otherwise the generated page.
+  // Who owns a tag term within a wing, in order: a curated config of that wing
+  // that names the tag in matchBy.tag; an allWings config of another wing that
+  // names it (its page lists this wing's books too, so the tag links there
+  // instead of to a second, wing-only page); a curated config whose slug is the
+  // term's slug; a static page with that slug (art wing only); otherwise the
+  // generated page.
   // owners: wing slug -> Map(term slug -> curated config).
-  const owners = {};
-  wings.forEach(wing => {
-    const wingCurated = curated.filter(c => c.wing === wing.slug);
-    const owner = owners[wing.slug] = new Map(wingCurated.map(c => [c.slug, c]));
+  const namedBy = configs => {
     const named = new Map();
-    wingCurated.forEach(c => {
+    configs.forEach(c => {
       [].concat(c.matchBy.tag || []).map(termSlug).filter(Boolean).forEach(slug => {
         if (named.has(slug) && named.get(slug) !== c) {
           throw new Error(`curated collections "${named.get(slug).slug}" and "${c.slug}" both name the tag "${slug}" in matchBy.tag`);
@@ -124,6 +124,14 @@ function buildIndex(input, options = {}) {
         named.set(slug, c);
       });
     });
+    return named;
+  };
+  const owners = {};
+  wings.forEach(wing => {
+    const wingCurated = curated.filter(c => c.wing === wing.slug);
+    const visiting = curated.filter(c => c.allWings && c.wing !== wing.slug);
+    const owner = owners[wing.slug] = new Map(wingCurated.map(c => [c.slug, c]));
+    const named = new Map([...namedBy(visiting), ...namedBy(wingCurated)]);
     named.forEach((c, slug) => owner.set(slug, c));
 
     (tagTier.get(wing.slug) || []).forEach(tc => {

@@ -50,7 +50,7 @@ If a rule would need a guess, it produces nothing.
 - 15 books in its wing. 8 for the person facet. The constants are `THRESHOLD` and `FACET_THRESHOLD` in `tag-vocabulary.js`.
 - URL: `/collections/<slug>.html` in the art wing, `/<wing>/collections/<slug>.html` elsewhere. The slug is `slugifyTag(name)`, except for a decade, which is `published-<decade>`.
 - Only the art wing and wings marked `live` in `wings.json` get pages.
-- Who owns a slug, in order: a curated config that names the tag in `matchBy.tag`; a curated config with the same slug; a static page in `src/collections/` with the same slug (art wing only); otherwise the generated page.
+- Who owns a slug, in order: a curated config of the wing that names the tag in `matchBy.tag`; an `allWings` config of another wing that names it (Surveillance Index and Ephemera: one page for every wing, so no wing-only page is built and the tag links to the shared page from any wing); a curated config with the same slug; a static page in `src/collections/` with the same slug (art wing only); otherwise the generated page.
 
 A term a static page owns has no generated page and no link target, because the index cannot know which books a hand-built page lists. Today that is Richard Prince and Magazines in the art wing.
 

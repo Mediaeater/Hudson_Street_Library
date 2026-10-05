@@ -68,8 +68,8 @@ const TAG_FACETS = {
   ],
   period: ['1960s', '1970s', '1980s', '1990s', '2000s', '2010s', '20th Century Photography', 'World War II'],
   person: ['Richard Prince', 'Peter Hujar'],
-  series: ['Surveillance Index', 'Surveillance Index Edition One', 'Nazraeli Press',
-           'One Picture Book', 'Purple Magazine', 'ARN'],
+  series: ['Surveillance Index', 'Surveillance Index Edition One', 'Surveillance Index Edition Two',
+           'Nazraeli Press', 'One Picture Book', 'Purple Magazine', 'ARN'],
 };
 
 // variant -> canonical display name. Merges near-duplicate tags without

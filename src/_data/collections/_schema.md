@@ -35,8 +35,11 @@ configs in one wing naming the same tag also fail the build.
   page publishes at `/collections/<slug>.html` in the art wing and at
   `/<wing>/collections/<slug>.html` elsewhere.
 - `allWings`: `true` to match books from every wing, not just the config's own.
-  The page still publishes under the config's wing. Used by `ephemera`, whose
-  tag spans the art wing and the Ephemera wing.
+  The page still publishes under the config's wing. With `matchBy.tag`, the
+  config is the page for that tag in every wing: no wing builds its own page
+  for the tag, and the tag links here from any book. A wing's own config naming
+  the same tag keeps it for that wing. Used by `ephemera`, `surveillance-index`
+  and `surveillance-index-edition-two`.
 - `sortBy`: `"authorAsc"` (default) | `"titleAsc"` | `"publicationYearDesc"` |
   `"issueNumberDesc"` | `"issueNumberAsc"`. Issue numbers are read from
   "Issue 5", "#5", "No. 5" or "N°5" in the title.
