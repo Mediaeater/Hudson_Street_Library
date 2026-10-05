@@ -78,6 +78,10 @@ eleventyComputed:
         margin: 0 auto;
     }
 
+    /* Running prose reads from the left; a one-line blurb stays centred. */
+    .collection-intro { text-align: left; }
+    .collection-intro .collection-description + .collection-description { margin-top: 1.25rem; }
+
     .collection-count,
     .collection-source {
         font-family: 'Archivo Narrow', sans-serif;
@@ -178,6 +182,9 @@ eleventyComputed:
     }
 
     .collection-section-head span { letter-spacing: 0.12em; }
+
+    .collection-section-head h2 a { color: inherit; text-decoration: none; }
+    .collection-section-head h2 a:hover { color: var(--color-ink); }
 
     /* Related pages: a list of names, set as text. */
     .collection-related {
@@ -292,7 +299,15 @@ eleventyComputed:
                 {{ facetLabel or 'Collection' }}
             </div>
             <h1 class="collection-title">{{ collectionConfig.title }}</h1>
-            {% if collectionConfig.description %}
+            {# A config's intro is its long form, paragraph by paragraph, and may
+               carry inline markup. The description stays the card blurb. #}
+            {% if collectionConfig.intro %}
+                <div class="collection-intro">
+                {%- for para in collectionConfig.intro %}
+                    <p class="collection-description">{{ para | safe }}</p>
+                {%- endfor %}
+                </div>
+            {% elif collectionConfig.description %}
                 <p class="collection-description">{{ collectionConfig.description }}</p>
             {% endif %}
             <div class="collection-count">{{ matched.length | commafy }} {{ noun }}{% if matched.length != 1 %}s{% endif %}</div>

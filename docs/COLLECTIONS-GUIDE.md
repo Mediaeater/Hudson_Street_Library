@@ -52,7 +52,7 @@ If a rule would need a guess, it produces nothing.
 - Only the art wing and wings marked `live` in `wings.json` get pages.
 - Who owns a slug, in order: a curated config of the wing that names the tag in `matchBy.tag`; an `allWings` config of another wing that names it (Surveillance Index and Ephemera: one page for every wing, so no wing-only page is built and the tag links to the shared page from any wing); a curated config with the same slug; a static page in `src/collections/` with the same slug (art wing only); otherwise the generated page.
 
-A term a static page owns has no generated page and no link target, because the index cannot know which books a hand-built page lists. Today that is Richard Prince and Magazines in the art wing.
+A term a static page owns has no generated page and no link target, because the index cannot know which books a hand-built page lists. No static page owns a term today: Richard Prince and Magazines are configs.
 
 ## Built versus listed
 
@@ -77,7 +77,7 @@ The search matches a tag as a whole value, in any letter case. It runs over ever
 
 ## Curated configs
 
-One JSON file per collection in `src/_data/collections/`. Fields: `slug`, `title`, `description`, `matchBy`, and optionally `wing`, `allWings`, `sections`, `sortBy`, `coversFirst`, `image`, `featured`, `category`, `headerImage`, `relatedLinks`, `externalUrl`. `src/_data/collections/_schema.md` describes each one.
+One JSON file per collection in `src/_data/collections/`. Fields: `slug`, `title`, `description`, `matchBy`, and optionally `wing`, `allWings`, `sections`, `sortBy`, `intro`, `coversFirst`, `image`, `featured`, `category`, `headerImage`, `relatedLinks`, `externalUrl`. `src/_data/collections/_schema.md` describes each one.
 
 `matchBy` takes exactly one rule:
 
@@ -85,16 +85,17 @@ One JSON file per collection in `src/_data/collections/`. Fields: `slug`, `title
 - `{ "collection_grouping": "Collage" }`: exact shelf.
 - `{ "titleRegex": "^BUTT Magazine" }`: identity collections only. Anchor it with `^`.
 - `{ "authorLast": "Prince" }`: exact `author_last`.
+- `{ "person": "Richard Prince" }`: by or about one person. The author columns spell the name exactly, or a tag does.
 
 Two rules in one config, no rule, or any other key fails the build with the config's name. `keywords`, `titleContains` and `coversTags` no longer exist.
 
-`sortBy`: `authorAsc` (default), `titleAsc`, `publicationYearDesc`, `issueNumberDesc`, `issueNumberAsc`. Issue numbers are read from "Issue 5", "#5", "No. 5" or "N°5".
+`sortBy`: `authorAsc` (default), `titleAsc`, `publicationYearDesc`, `issueNumberDesc`, `issueNumberAsc`, `newestFirst`. Issue numbers are read from "Issue 5", "#5", "No. 5" or "N°5".
 
-`sections` split a page into labelled groups. A config without sections renders one unlabelled group. "Other" appears only when a sectioned config has leftovers.
+`sections` split a page into labelled groups. A config without sections renders one unlabelled group. "Other" appears only when a sectioned config has leftovers. A section with a `url` links its heading to that page (the Magazines page links each run to its own collection).
 
 ## Static pages
 
-A few hand-built pages remain in `src/collections/` (Richard Prince, the magazines hub, Toilet Paper and others). They keep their URLs and the index generates nothing on top of them. The two that the explore page lists without a config, Richard Prince and Magazines, are named in `src/_data/libraryCollections.json`. The same file holds the `categories` list that the JSON endpoint publishes. It is no longer the list of collections. Do not add new static pages. Write a config.
+Only the three Recently pages remain in `src/collections/`. Every collection page is a config or is generated. Richard Prince, the magazines hub, Toilet Paper, Esopus and Le Petit Voyeur were ported in October 2026 at the same URLs, and the magazine issues that had hand-built pages under `src/books/magazines/` became catalogue rows with redirects from the old issue URLs. The `collections` list in `src/_data/libraryCollections.json` is empty and stays only for a future hand-built page. The same file holds the `categories` list that the JSON endpoint publishes. Do not add new static pages. Write a config.
 
 ## URLs do not disappear
 

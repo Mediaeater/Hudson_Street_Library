@@ -12,7 +12,7 @@ const SUBJECT_RULES = ['tag', 'collection_grouping'];
 
 // Every rule matches one column exactly, or the title by regex. There is no
 // substring or keyword rule: both swept in books that only mentioned the word.
-const RULES = ['collection_grouping', 'tag', 'authorLast', 'titleRegex'];
+const RULES = ['collection_grouping', 'tag', 'authorLast', 'person', 'titleRegex'];
 
 // Two spellings are one tag when they resolve to the same slug, the key the
 // index uses for ownership. Still an exact match on the whole tag.
@@ -52,6 +52,12 @@ function matchesCollection(book, config) {
   }
   if (rule.authorLast) {
     return (book.author_last || '').trim() === rule.authorLast;
+  }
+  if (rule.person) {
+    // By or about one person: the author columns spell the name, or a hand tag
+    // does. The same two sources as a generated author page (derived-terms).
+    const author = `${(book.author_first || '').trim()} ${(book.author_last || '').trim()}`;
+    return author === rule.person || splitTags(book).includes(tagKey(rule.person));
   }
   if (rule.titleRegex) {
     return new RegExp(rule.titleRegex, 'i').test(book.title || '');

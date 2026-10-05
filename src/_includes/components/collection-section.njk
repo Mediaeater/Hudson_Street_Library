@@ -1,9 +1,10 @@
-{# Expects: section (label, subtitle, books). A null label prints no heading.
+{# Expects: section (label, subtitle, url, books). A url links the heading to
+   the section's own collection page. A null label prints no heading.
    Styles live in src/collections.njk. #}
 <section class="collection-section">
     {% if section.label %}
     <div class="collection-section-head">
-        <h2>{{ section.label }}</h2>
+        <h2>{% if section.url %}<a href="{{ section.url }}">{{ section.label }}</a>{% else %}{{ section.label }}{% endif %}</h2>
         {% if section.subtitle %}<span>{{ section.subtitle }}</span>{% endif %}
     </div>
     {% endif %}

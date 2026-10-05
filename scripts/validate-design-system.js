@@ -64,7 +64,6 @@ const NO_TAILWIND_OK = new Set([
   'browse-gallery-demo/index.html',
   'design-system/index.html',
   'discover.html',
-  'collections/queering-the-collection.html',
   'books/collections/queer/Louis-Fratino-Satura/index.html',
   'books/collections/queer/Paul_Thek-Peter_Hujar-Stay_Away_From_Nothing/index.html',
   'books/collections/queer/Vince_Aletti-Physique/index.html',

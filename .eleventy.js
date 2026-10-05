@@ -386,6 +386,8 @@ module.exports = function(eleventyConfig) {
     if (sortBy === 'issueNumberDesc') return list.sort((a,b) => issueNum(b) - issueNum(a) || byTitle(a,b));
     if (sortBy === 'issueNumberAsc') return list.sort((a,b) => issueNum(a) - issueNum(b) || byTitle(a,b));
     if (sortBy === 'publicationYearDesc') return list.sort((a,b) => (parseInt(b.publication_year,10)||0) - (parseInt(a.publication_year,10)||0));
+    // Catalogue order reversed: the latest rows entered lead the page.
+    if (sortBy === 'newestFirst') return list.reverse();
     if (sortBy === 'titleAsc') return list.sort((a,b) => (a.title||'').localeCompare(b.title||''));
     if (sortBy === 'authorAsc') return list.sort((a,b) => (a.author_last||'').localeCompare(b.author_last||'') || (a.title||'').localeCompare(b.title||''));
     return list;

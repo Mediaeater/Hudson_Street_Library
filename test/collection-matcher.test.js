@@ -69,6 +69,18 @@ describe('collection-matcher', () => {
         .to.throw('unknown matchBy rule "keywords"');
     });
 
+    it('matches a person by the author columns or a same-name hand tag', () => {
+      const config = { matchBy: { person: 'Richard Prince' } };
+      expect(matchesCollection({ author_first: 'Richard', author_last: 'Prince' }, config)).to.be.true;
+      expect(matchesCollection({ author_first: 'Roy', author_last: 'Lichtenstein', tags: 'Pop Art, Richard Prince' }, config)).to.be.true;
+    });
+
+    it('does not match a person on the surname or a mention alone', () => {
+      const config = { matchBy: { person: 'Richard Prince' } };
+      expect(matchesCollection({ author_first: 'Seth', author_last: 'Price', title: 'After Richard Prince' }, config)).to.be.false;
+      expect(matchesCollection({ author_first: 'Harry', author_last: 'Prince' }, config)).to.be.false;
+    });
+
     it('matches by titleRegex', () => {
       const book = { title: 'Purple Fashion Magazine Issue 17 (Volume III)' };
       const config = { matchBy: { titleRegex: '^Purple (Fashion Magazine|Magazine Issue)' } };

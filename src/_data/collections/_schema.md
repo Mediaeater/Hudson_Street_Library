@@ -24,6 +24,9 @@ The build fails, naming the config, when `slug`, `title` or `matchBy` is missing
 - `{ "titleRegex": "^Purple (Fashion|Magazine)" }`: case-insensitive regex on
   the title. For identity collections (a magazine run). Anchor it with `^`.
 - `{ "authorLast": "Prince" }`: exact match on `author_last`.
+- `{ "person": "Richard Prince" }`: books by or about one person. Matches when
+  `author_first` + `author_last` spell the name exactly, or when a tag does.
+  A book that only mentions the name in its title or contributors needs the tag.
 
 Any other key fails the build with `collection "<slug>": unknown matchBy rule
 "<key>"`. `keywords`, `titleContains` and `coversTags` no longer exist. Two
@@ -41,8 +44,12 @@ configs in one wing naming the same tag also fail the build.
   the same tag keeps it for that wing. Used by `ephemera`, `surveillance-index`
   and `surveillance-index-edition-two`.
 - `sortBy`: `"authorAsc"` (default) | `"titleAsc"` | `"publicationYearDesc"` |
-  `"issueNumberDesc"` | `"issueNumberAsc"`. Issue numbers are read from
+  `"issueNumberDesc"` | `"issueNumberAsc"` | `"newestFirst"` (catalogue order
+  reversed). Issue numbers are read from
   "Issue 5", "#5", "No. 5" or "N°5" in the title.
+- `intro`: array of paragraphs shown under the title in place of `description`,
+  for a page that needs more than a blurb. Inline HTML (`<em>`) is allowed.
+  `description` is still required: it stays the text on the explore page.
 - `coversFirst`: `true` to move books without a cover file to the end.
 - `sections`: ordered array, see below. When absent, the page is one grid with
   no heading.
@@ -73,6 +80,9 @@ configs in one wing naming the same tag also fail the build.
 whose `filter` matches. Books that match no section fall into a trailing
 `"Other"` section, which appears only when there are such books.
 
+An optional `url` links the section heading to another page, for a section
+that has a collection page of its own.
+
 ## Exclusive tags
 
 `EXCLUSIVE_TAGS` in `scripts/utils/collection-matcher.js` (currently `Queer Culture`)
@@ -80,6 +90,6 @@ lists tags that claim their books outright. A book carrying one appears in that 
 collection and in no other subject collection, whether curated (`matchBy.tag`,
 `collection_grouping`) or generated from a tag, a publication decade or a
 classification. It still appears in identity collections that name a title or an
-author (`titleRegex`, `authorLast`, a generated author page), such as the BUTT page.
+author (`titleRegex`, `authorLast`, `person`, a generated author page), such as the BUTT page.
 The generated tier applies the same rule when it counts books toward the threshold,
 so a page's count matches what it renders.
