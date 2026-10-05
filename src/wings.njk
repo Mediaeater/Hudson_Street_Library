@@ -7,11 +7,11 @@ pagination:
   addAllPagesToCollections: true
 permalink: "{{ wingPage.permalink }}"
 eleventyComputed:
-  title: "{{ wingPage.name }}"
-  # `| safe` because this string is escaped again where it is used — in the meta
-  # description and in the CollectionPage JSON-LD. Without it an apostrophe in
-  # the intro ships as a literal &#39; on the page. The value is plain text from
-  # wings.json, never markup.
+  # `| safe` because these strings are escaped again where they are used — in
+  # the <title>, the meta description and the CollectionPage JSON-LD. Without it
+  # an ampersand in the name ships as a literal &amp;amp; and an apostrophe in
+  # the intro as &#39;. The values are plain text from wings.json, never markup.
+  title: "{{ wingPage.name | safe }}"
   description: "{{ wingPage.intro | safe }}"
 ---
 {#
