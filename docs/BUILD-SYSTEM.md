@@ -66,7 +66,7 @@ The build system loads book data from CSV at build time:
 
 ```javascript
 const CSVHandler = require("./scripts/utils/csv-handler");
-const csvPath = path.join(__dirname, "src/_data/books.csv");
+const csvPath = path.join(__dirname, "src/_data/catalog/art.csv");
 const csvResult = CSVHandler.readBooksSync(csvPath);
 const bookData = csvResult.data;
 
@@ -185,7 +185,7 @@ eleventyConfig.addPassthroughCopy("src/assets");
 
 // Publish CSV / JSON as static data endpoints
 eleventyConfig.addPassthroughCopy({
-  "src/_data/books.csv": "cms/data/books.csv"
+  "src/_data/catalog/art.csv": "cms/data/books.csv"
 });
 
 // GitHub Pages configuration
@@ -196,7 +196,7 @@ eleventyConfig.addPassthroughCopy(".nojekyll");
 **Result:**
 - `src/assets/css/design-system.css` → `_site/assets/css/design-system.css`
 - `src/assets/js/shared.js` → `_site/assets/js/shared.js`
-- `src/_data/books.csv` → `_site/cms/data/books.csv`
+- `src/_data/catalog/art.csv` → `_site/cms/data/books.csv`
 
 ### CSS Pipeline
 

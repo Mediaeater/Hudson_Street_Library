@@ -2,9 +2,14 @@
 
 ## Critical Rules
 
-### ⚠️ NEVER Manually Edit books.csv
+### ⚠️ NEVER Manually Edit a catalogue CSV
 
-**Why:** CSV files with 36 columns and complex multi-line descriptions are error-prone. Manual edits frequently break CSV structure due to:
+The catalogue is one file per wing under `src/_data/catalog/`, declared in
+`src/_data/wings.json`. `art.csv` is the art wing; until Oct 2026 it was
+`src/_data/books.csv`. The examples below use `art.csv`, and the same rules
+apply to every wing file.
+
+**Why:** CSV files with 37 columns and complex multi-line descriptions are error-prone. Manual edits frequently break CSV structure due to:
 - Improper quote escaping
 - Literal newlines in fields
 - Column misalignment
@@ -24,7 +29,7 @@ node scripts/validate-csv-robust.js
 
 **Fixing corrupted CSV:**
 ```bash
-node scripts/fix-csv-formatting.js src/_data/books.csv src/_data/books_fixed.csv
+node scripts/fix-csv-formatting.js src/_data/catalog/art.csv src/_data/books_fixed.csv
 ```
 
 ## How CSV Errors Happen
@@ -61,7 +66,7 @@ Note: Quotes within fields must be doubled (`""` not `"`).
 
 ### Problem 3: Column Count Mismatch
 
-books.csv has **exactly 36 columns**. Every row must have 36 fields. Missing or extra commas break the structure.
+Every catalogue CSV has **exactly 37 columns**. Every row must have 37 fields. Missing or extra commas break the structure.
 
 ## The CSVHandler Solution
 
@@ -100,7 +105,7 @@ A git hook now prevents committing broken CSV:
 
 ```bash
 $ git commit -m "Add book"
-📋 Validating books.csv structure...
+📋 Validating catalogue CSV structure...
 ❌ CSV validation failed!
 ```
 
@@ -112,20 +117,22 @@ If this happens:
 
 ## Emergency Recovery
 
-If books.csv gets corrupted:
+If a catalogue CSV gets corrupted (art shown here):
 
 ```bash
 # Option 1: Use the automated backups
+# Copies are named catalog_<wing>_<date>.csv. Art-wing copies from before
+# 2026-10-05 are named books_<date>.csv.
 ls -lt ~/.hudson-library-backups/daily/
-cp ~/.hudson-library-backups/daily/books_2026-04-29.csv src/_data/books.csv
+cp ~/.hudson-library-backups/daily/catalog_art_2026-10-05.csv src/_data/catalog/art.csv
 
 # Option 2: Use git history
-git show HEAD:src/_data/books.csv > src/_data/books.csv
+git show HEAD:src/_data/catalog/art.csv > src/_data/catalog/art.csv
 
 # Option 3: Fix in place
-node scripts/fix-csv-formatting.js src/_data/books.csv src/_data/books_fixed.csv
+node scripts/fix-csv-formatting.js src/_data/catalog/art.csv src/_data/books_fixed.csv
 node scripts/validate-csv-robust.js
-cp src/_data/books_fixed.csv src/_data/books.csv
+cp src/_data/books_fixed.csv src/_data/catalog/art.csv
 ```
 
 ## Testing Your Changes

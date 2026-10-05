@@ -17,7 +17,7 @@ Hudson Street Library is a specialized photography book collection website built
 ## Core System Components
 
 ### 1. Data Layer
-- **Books Database**: `src/_data/books.csv` - Master catalog of all books
+- **Books Database**: `src/_data/catalog/art.csv` - Master catalog of all books
 - **News Feed**: `src/_data/news.json` - Library announcements and acquisitions
 - **Collections**: Curated thematic groupings (fashion, photography, art, etc.)
 
@@ -93,7 +93,7 @@ Hudson_Street_Library/
 ## Data Flow
 
 ### Book Addition Workflow
-1. **Manual Entry**: Book metadata added to `src/_data/books.csv`
+1. **Manual Entry**: Book metadata added to `src/_data/catalog/art.csv`
 2. **Pipeline Trigger**: News pipeline detects new entry
 3. **Auto-Processing**: 
    - Collection assignment based on keywords

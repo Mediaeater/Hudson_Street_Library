@@ -12,7 +12,7 @@ Before you start, please be aware of these strict constraints to ensure data int
 2.  **File Naming is Strict**: Covers MUST be named `Author_Name_Book_Title_ISBN.jpg`.
     *   The frontend JavaScript relies on this exact pattern.
     *   Do not manually rename files without updating the database logic.
-3.  **Data Source of Truth**: `src/_data/books.csv` is the master database.
+3.  **Data Source of Truth**: `src/_data/catalog/art.csv` is the master database.
     *   Do not edit derived JSON files manually if they are generated from this CSV.
 
 ## Development Workflow

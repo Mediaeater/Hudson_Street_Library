@@ -5,7 +5,7 @@ Scripts for generating static pages and collections from book data.
 ## Active Scripts
 
 **generate-book-pages.js** - Main book page generator
-- Generates individual book pages from `src/_data/books.csv`
+- Generates individual book pages from `src/_data/catalog/art.csv`
 - Creates book detail pages with metadata and cover images
 - Usage: `npm run build:books` or `node scripts/generators/generate-book-pages.js`
 

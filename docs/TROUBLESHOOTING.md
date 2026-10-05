@@ -68,8 +68,8 @@ npm list --depth=0              # Check installed packages
 # Check file integrity
 git status                       # See what changed
 git diff                         # Review changes
-ls -la src/_data/books.csv      # Verify data file exists
-head src/_data/books.csv        # Check CSV format
+ls -la src/_data/catalog/art.csv      # Verify data file exists
+head src/_data/catalog/art.csv        # Check CSV format
 
 # Clean slate
 npm run clean                    # Remove build directory
@@ -130,7 +130,7 @@ Template render error: (unknown path)
 ```
 CSV Error: Invalid Record Length: expect 28, got 27
 CSV had 15 warnings/errors
-Error parsing CSV: src/_data/books.csv
+Error parsing CSV: src/_data/catalog/art.csv
 ```
 
 **Cause:**
@@ -145,7 +145,7 @@ Error parsing CSV: src/_data/books.csv
 # Check CSV integrity
 node -e "
 const CSVHandler = require('./scripts/utils/csv-handler');
-CSVHandler.read('src/_data/books.csv').then(result => {
+CSVHandler.read('src/_data/catalog/art.csv').then(result => {
   console.log('Valid rows:', result.stats.validRows);
   console.log('Invalid rows:', result.stats.invalidRows);
   console.log('Errors:', result.errors.slice(0, 5));
@@ -475,7 +475,7 @@ npm run build | grep "CSV had"
 # Test CSV directly
 node -e "
 const CSVHandler = require('./scripts/utils/csv-handler');
-CSVHandler.readBooksSync('src/_data/books.csv');
+CSVHandler.readBooksSync('src/_data/catalog/art.csv');
 "
 ```
 
@@ -526,19 +526,19 @@ CSVHandler.readBooksSync('src/_data/books.csv');
 # - Any plain text editor
 
 # Fix encoding
-iconv -f UTF-8 -t UTF-8 -c src/_data/books.csv > temp.csv
-mv temp.csv src/_data/books.csv
+iconv -f UTF-8 -t UTF-8 -c src/_data/catalog/art.csv > temp.csv
+mv temp.csv src/_data/catalog/art.csv
 
 # Fix line endings
-dos2unix src/_data/books.csv  # Convert CRLF to LF
+dos2unix src/_data/catalog/art.csv  # Convert CRLF to LF
 # or
-sed -i 's/\r$//' src/_data/books.csv
+sed -i 's/\r$//' src/_data/catalog/art.csv
 
 # Run CSV fixer script
 node scripts/fix-csv-formatting.js
 
 # Restore from backup if corrupted
-cp src/_data/books_backup_migration_*.csv src/_data/books.csv
+cp src/_data/books_backup_migration_*.csv src/_data/catalog/art.csv
 ```
 
 **Prevention:**
@@ -602,7 +602,7 @@ npm run build
 # Find invalid ISBNs in CSV
 node -e "
 const CSVHandler = require('./scripts/utils/csv-handler');
-CSVHandler.read('src/_data/books.csv').then(result => {
+CSVHandler.read('src/_data/catalog/art.csv').then(result => {
   const invalid = result.data.filter(book => {
     const isbn = book.isbn_asin;
     return isbn && !/^[0-9]{10}([0-9]{3})?$/.test(isbn.replace(/[-\s]/g, ''));
@@ -1248,8 +1248,8 @@ Issues with book covers, image optimization, and the image pipeline.
 ls -la src/assets/images/books/
 
 # Check image path in CSV
-head -1 src/_data/books.csv  # Headers
-grep "9783869304311" src/_data/books.csv  # Specific book
+head -1 src/_data/catalog/art.csv  # Headers
+grep "9783869304311" src/_data/catalog/art.csv  # Specific book
 
 # Check built site
 ls -la _site/assets/images/books/
@@ -1350,7 +1350,7 @@ node scripts/image-pipeline/cli.js status
 node scripts/image-pipeline/cli.js find --isbn 9783869304311
 
 # Check CSV has ISBNs
-awk -F',' '{print $14}' src/_data/books.csv | head -20
+awk -F',' '{print $14}' src/_data/catalog/art.csv | head -20
 # Column 14 is isbn_asin
 
 # Test APIs directly
@@ -1417,7 +1417,7 @@ ls -lh _site/assets/images/optimized/
 
 ### Category Overview
 
-Problems with `src/_data/books.csv` — parsing, validation, or stale entries.
+Problems with `src/_data/catalog/art.csv` — parsing, validation, or stale entries.
 The CSV is the single source of truth; there is no runtime database.
 
 ### Common CSV Issues
@@ -1442,14 +1442,14 @@ The CSV is the single source of truth; there is no runtime database.
 npm run test:csv
 
 # Inspect a specific row
-awk -F',' 'NR==145' src/_data/books.csv
+awk -F',' 'NR==145' src/_data/catalog/art.csv
 
 # Confirm column count is 36
-head -1 src/_data/books.csv | awk -F',' '{print NF}'
+head -1 src/_data/catalog/art.csv | awk -F',' '{print NF}'
 
 # Restore from a recent backup if needed (most recent first)
 ls -t src/_data/books_backup_*.csv | head
-cp src/_data/books_backup_<timestamp>.csv src/_data/books.csv
+cp src/_data/books_backup_<timestamp>.csv src/_data/catalog/art.csv
 ```
 
 ---
@@ -1465,7 +1465,7 @@ cp src/_data/books_backup_<timestamp>.csv src/_data/books.csv
 # Find duplicates with the CSV handler
 node -e "
 const { CSVHandler } = require('./scripts/utils/csv-handler');
-CSVHandler.read('src/_data/books.csv').then(result => {
+CSVHandler.read('src/_data/catalog/art.csv').then(result => {
   const ids = result.data.map(b => b.id);
   const dups = ids.filter((id, i) => ids.indexOf(id) !== i);
   console.log('Duplicate IDs:', [...new Set(dups)]);
@@ -1501,7 +1501,7 @@ time npm run build
 # Sort rows by description length to find outliers
 node -e "
 const { CSVHandler } = require('./scripts/utils/csv-handler');
-CSVHandler.read('src/_data/books.csv').then(r => {
+CSVHandler.read('src/_data/catalog/art.csv').then(r => {
   r.data
     .map(b => ({ id: b.id, title: b.title, len: (b.description||'').length }))
     .sort((a,b)=>b.len-a.len)
@@ -1709,7 +1709,7 @@ npm run build
 
 # 5. CSV issues
 # Validate CSV before pushing
-node -e "require('./scripts/utils/csv-handler').read('src/_data/books.csv').then(r => console.log(r.stats));"
+node -e "require('./scripts/utils/csv-handler').read('src/_data/catalog/art.csv').then(r => console.log(r.stats));"
 ```
 
 ---
@@ -2018,7 +2018,7 @@ console.log("--- Building with", books.length, "books");
 # Validate CSV
 node -e "
 const CSVHandler = require('./scripts/utils/csv-handler');
-CSVHandler.read('src/_data/books.csv').then(result => {
+CSVHandler.read('src/_data/catalog/art.csv').then(result => {
   console.log('Stats:', result.stats);
   console.log('First 3 errors:', result.errors.slice(0, 3));
   console.log('Sample book:', result.data[0]);
@@ -2026,10 +2026,10 @@ CSVHandler.read('src/_data/books.csv').then(result => {
 "
 
 # Check specific row
-awk -F',' 'NR==145' src/_data/books.csv
+awk -F',' 'NR==145' src/_data/catalog/art.csv
 
 # Count columns
-head -1 src/_data/books.csv | awk -F',' '{print NF}'
+head -1 src/_data/catalog/art.csv | awk -F',' '{print NF}'
 ```
 
 ### Git Debugging
@@ -2053,7 +2053,7 @@ npm run build           # Test each one
 git bisect good/bad     # Mark result
 
 # Restore previous version
-git checkout HEAD~1 -- src/_data/books.csv
+git checkout HEAD~1 -- src/_data/catalog/art.csv
 ```
 
 ### Network Debugging
@@ -2218,7 +2218,7 @@ node scripts/image-pipeline/cli.js optimize
 
 **Q: How do I add a new book?**
 
-1. Edit `src/_data/books.csv` in text editor (NOT Excel)
+1. Edit `src/_data/catalog/art.csv` in text editor (NOT Excel)
 2. Add row with all required fields: id, title, author_full_name
 3. Save with UTF-8 encoding
 4. Test: `npm run build`
@@ -2229,10 +2229,10 @@ node scripts/image-pipeline/cli.js optimize
 ```bash
 # Restore from backup
 ls -la src/_data/books_backup_*.csv
-cp src/_data/books_backup_migration_*.csv src/_data/books.csv
+cp src/_data/books_backup_migration_*.csv src/_data/catalog/art.csv
 
 # Or restore from git
-git checkout HEAD -- src/_data/books.csv
+git checkout HEAD -- src/_data/catalog/art.csv
 
 # Or run fixer
 node scripts/fix-csv-formatting.js
@@ -2364,7 +2364,7 @@ npm run deploy:check   # Check deployment status
 npm run clean && npm run build
 
 # Test CSV
-node -e "require('./scripts/utils/csv-handler').read('src/_data/books.csv').then(r => console.log(r.stats));"
+node -e "require('./scripts/utils/csv-handler').read('src/_data/catalog/art.csv').then(r => console.log(r.stats));"
 npm run test:csv
 
 # Test API

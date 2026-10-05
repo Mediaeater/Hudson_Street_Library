@@ -291,7 +291,7 @@ git push origin feature/your-feature-name
 1. **Open the CSV file:**
    ```bash
    # File location
-   src/_data/books.csv
+   src/_data/catalog/art.csv
    ```
 
 2. **Add new row with book data:**
@@ -367,7 +367,7 @@ ls -1 src/assets/images/books/*.jpg | wc -l
 
 1. **Commit the changes:**
    ```bash
-   git add src/_data/books.csv
+   git add src/_data/catalog/art.csv
    git commit -m "Add [book title] to collection"
    git push origin main
    ```
@@ -896,7 +896,7 @@ function filterByTag(tag) {
 
 ```bash
 # 1. Open CSV
-nano src/_data/books.csv
+nano src/_data/catalog/art.csv
 # or use Excel, Numbers, Google Sheets
 
 # 2. Make changes
@@ -1200,7 +1200,7 @@ ls src/assets/images/books/[filename].jpg
 # Test CSV parsing
 node -e "
 const CSVHandler = require('./scripts/utils/csv-handler');
-const result = CSVHandler.readBooksSync('./src/_data/books.csv');
+const result = CSVHandler.readBooksSync('./src/_data/catalog/art.csv');
 console.log(result.stats);
 console.log(result.errors.slice(0, 5));
 "
@@ -1750,7 +1750,7 @@ Configuration:
   package.json              - Project config
 
 Data:
-  src/_data/books.csv       - Book catalog
+  src/_data/catalog/art.csv       - Book catalog
   src/_data/news.json       - News items
 
 Templates:

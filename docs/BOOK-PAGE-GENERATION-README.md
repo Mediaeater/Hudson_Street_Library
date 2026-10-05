@@ -10,7 +10,7 @@ The `generate-book-pages.js` script automatically creates individual book detail
 
 - **Script**: `scripts/generators/generate-book-pages.js`
 - **Template**: `_site/books/templates/BOOK-TEMPLATE/index.html`
-- **Data Source**: `src/_data/books.csv`
+- **Data Source**: `src/_data/catalog/art.csv`
 - **Output Directory**: `_site/books/`
 
 ## Features
@@ -75,7 +75,7 @@ npm install csv-parser
 
 ### Output
 The script will:
-1. Read all books from `src/_data/books.csv`
+1. Read all books from `src/_data/catalog/art.csv`
 2. Load the template from `_site/books/templates/BOOK-TEMPLATE/`
 3. Generate individual HTML files in `_site/books/{slug}/index.html`
 4. Report progress every 50 books
@@ -84,7 +84,7 @@ The script will:
 ### Example Output
 ```
 Starting book page generation...
-Reading CSV from: /Users/imac/Projects/Hudson_Street_Library/src/_data/books.csv
+Reading CSV from: /Users/imac/Projects/Hudson_Street_Library/src/_data/catalog/art.csv
 Reading template from: /Users/imac/Projects/Hudson_Street_Library/_site/books/templates/BOOK-TEMPLATE/index.html
 Output directory: /Users/imac/Projects/Hudson_Street_Library/_site/books
 Template loaded successfully.
@@ -127,12 +127,12 @@ To modify the book page layout:
 ## Maintenance
 
 ### Adding New Books
-1. Add book data to `src/_data/books.csv`
+1. Add book data to `src/_data/catalog/art.csv`
 2. Run `node scripts/generators/generate-book-pages.js`
 3. New pages will be generated automatically
 
 ### Updating Existing Books
-1. Edit book data in `src/_data/books.csv`
+1. Edit book data in `src/_data/catalog/art.csv`
 2. Run `node scripts/generators/generate-book-pages.js`
 3. Pages will be regenerated with updated data
 
@@ -195,7 +195,7 @@ npm install csv-parser
 Ensure `_site/books/templates/BOOK-TEMPLATE/index.html` exists
 
 ### CSV Not Found
-Ensure `src/_data/books.csv` exists and is readable
+Ensure `src/_data/catalog/art.csv` exists and is readable
 
 ### Permission Issues
 Ensure write permissions for `_site/books/` directory

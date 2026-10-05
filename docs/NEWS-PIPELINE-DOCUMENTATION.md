@@ -49,7 +49,7 @@ graph TD
 
 ### Step-by-Step Process
 
-1. **Database Addition**: Book metadata added to `_data/books.csv`
+1. **Database Addition**: Book metadata added to `_data/catalog/art.csv`
 2. **Collection Assignment**: Automatic categorization based on subjects/keywords
 3. **Page Creation**: Generate individual book page using template
 4. **Image Processing**: Handle cover images and optimization
@@ -151,7 +151,7 @@ node scripts/news-pipeline/cli.js generate-single \
 
 # Process CSV file
 node scripts/news-pipeline/cli.js process-csv \
-  --file "_data/books.csv" \
+  --file "_data/catalog/art.csv" \
   --start-row 10
 
 # Test with sample data
@@ -220,7 +220,7 @@ const newsCategories = {
 
 ### With Existing Systems
 
-1. **CSV Source** (`src/_data/books.csv`)
+1. **CSV Source** (`src/_data/catalog/art.csv`)
    - Primary source of book metadata
    - Automatic news generation on new entries
 
@@ -240,7 +240,7 @@ const newsCategories = {
 
 ```
 src/_data/news.json              # Primary news data store
-src/_data/books.csv              # Book metadata source
+src/_data/catalog/art.csv              # Book metadata source
 scripts/news-pipeline/           # Core pipeline modules
 src/news.html                    # News page template
 src/_includes/layouts/news.njk   # Individual news item layout

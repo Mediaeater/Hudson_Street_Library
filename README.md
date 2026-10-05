@@ -72,7 +72,7 @@ See [ADD-BOOK-GUIDE.md](docs/ADD-BOOK-GUIDE.md) for complete instructions.
 
 - **Total Books**: 1,722 photography books
 - **Collections**: 15+ curated collections (see `src/_data/collections/`)
-- **Source of Truth**: `src/_data/books.csv` (36 columns, validated by `npm run test:csv`)
+- **Source of Truth**: `src/_data/catalog/art.csv` (36 columns, validated by `npm run test:csv`)
 
 ## 📁 Project Structure
 
@@ -127,7 +127,7 @@ See [DEPLOYMENT.md](docs/DEPLOYMENT.md) for detailed deployment information.
 ## 📝 Working with Content
 
 ### Adding/Editing Books
-Edit the CSV file at `src/_data/books.csv`. Ensure proper CSV formatting:
+Edit the CSV file at `src/_data/catalog/art.csv`. Ensure proper CSV formatting:
 - Use double quotes for fields containing commas
 - Escape quotes by doubling them (`""`)
 - Keep consistent column count
@@ -169,7 +169,7 @@ node scripts/image-pipeline/cli.js find --missing --download --limit 10
 node scripts/news-pipeline/cli.js generate-single --title "Book Title" --author "Author"
 
 # Process CSV updates
-node scripts/news-pipeline/cli.js process-csv --file _data/books.csv
+node scripts/news-pipeline/cli.js process-csv --file _data/catalog/art.csv
 ```
 
 ## 🔧 Local Development

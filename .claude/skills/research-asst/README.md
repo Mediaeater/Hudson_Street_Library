@@ -337,7 +337,7 @@ node scripts/add-book-from-text.js --json book_data_condo_1759.json
 2. Maps to CSV column format
 3. Downloads cover image if not already present
 4. Validates CSV structure (36 columns)
-5. Adds to books.csv with next sequential ID
+5. Adds to the wing's CSV (`src/_data/catalog/<wing>.csv`) with next sequential ID
 
 ### CSV Column Mapping
 

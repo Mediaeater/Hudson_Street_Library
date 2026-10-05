@@ -56,7 +56,7 @@ Take whatever the user gave: `Author: Title`, publisher and year, a URL, an ISBN
 ask for details that research can find.
 
 The catalogue is one CSV per wing, declared in `src/_data/wings.json`. Art and photography
-go to the default wing, `art` (`books.csv`). Read `wings.json` for the current slugs and
+go to the default wing, `art` (`catalog/art.csv`). Read `wings.json` for the current slugs and
 pick one now. Step 4 passes it explicitly, so the script default never decides.
 
 ### 2. Research
@@ -274,7 +274,7 @@ with `set-book-fields.js --overwrite`. Both columns take `YYYY-MM-DD`; a season 
 - **Title reads "X: Expanded Edition" or repeats itself.** `subtitle` held an edition or a paraphrase. Fix the row with `set-book-fields.js --overwrite`, and mind the URL change above.
 - **Cover 404s on the book page.** `image_url` lacks the leading slash, or does not match the filename on disk. `verify-views.js` reports the second case.
 - **Auto-crop reported success, border still there.** It fails on drop shadows and non-white grounds. Check the corners of the result.
-- **Row landed in `books.csv` instead of a wing.** `--wing` was omitted and the JSON had no `wing`. Ids are fixed by wing block, so the row cannot be moved by editing. Follow *Undoing an add*, then ingest with the right `--wing`.
+- **Row landed in `catalog/art.csv` instead of the intended wing.** `--wing` was omitted and the JSON had no `wing`. Ids are fixed by wing block, so the row cannot be moved by editing. Follow *Undoing an add*, then ingest with the right `--wing`.
 
 ## Batch Adds
 

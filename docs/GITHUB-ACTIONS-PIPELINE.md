@@ -130,7 +130,7 @@ graph TD
 **Solution:**
 - Ensure all referenced assets exist in `src/assets/`
 - Check image paths in HTML files
-- Verify CSV data file exists at `src/_data/books.csv`
+- Verify CSV data file exists at `src/_data/catalog/art.csv`
 
 #### 4. Deployment Failures
 **Error:** Pages deployment fails

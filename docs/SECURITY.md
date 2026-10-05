@@ -37,7 +37,7 @@ Hudson Street Library is a **static site** built with Eleventy and deployed to G
 - **No User Authentication**: Currently a public catalog (no login system)
 - **Build-Time Processing**: All data processing happens during build
 - **External API Integration**: Uses Google Books API and Open Library
-- **Plain-Text Data Store**: `src/_data/books.csv` plus a handful of JSON files; no runtime database
+- **Plain-Text Data Store**: `src/_data/catalog/art.csv` plus a handful of JSON files; no runtime database
 
 ### Security Principles
 
@@ -355,7 +355,7 @@ function validateCSVUpload(file) {
 
 ### Data Store Security
 
-The project has no runtime database. Authoritative data is `src/_data/books.csv`
+The project has no runtime database. Authoritative data is `src/_data/catalog/art.csv`
 plus a small set of JSON files; the build reads these and emits static HTML.
 
 CSV write paths (`npm run add`, manual edits) go through
@@ -394,7 +394,7 @@ static validateAndCleanRecord(record, rowIndex) {
 ### CSV Write Validation
 
 `scripts/utils/csv-handler.js` validates and normalizes every row appended
-to `src/_data/books.csv` (via `npm run add` or any script that uses the
+to `src/_data/catalog/art.csv` (via `npm run add` or any script that uses the
 handler):
 
 ```javascript

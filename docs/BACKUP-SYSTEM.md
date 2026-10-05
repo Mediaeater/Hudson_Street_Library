@@ -1,5 +1,13 @@
 # Hudson Street Library - Backup System
 
+> **Naming changed 2026-10-05.** The art wing moved from `src/_data/books.csv`
+> to `src/_data/catalog/art.csv`, and its backup copies are now named
+> `catalog_art_…` like every other wing's (`catalog_<wing>_…`). Copies named
+> `books_…` are the art wing from before that date and keep their names. The
+> examples below that show `books_…` files apply to those older copies; for a
+> newer one substitute `catalog_art_…`. In git, use `git log --follow` on the
+> new path, and `<commit>:src/_data/books.csv` for commits before the rename.
+
 ## Overview
 
 Comprehensive multi-layered backup system for the critical `books.csv` file with automated scheduling, multiple backup locations, and intelligent rotation.
@@ -117,7 +125,7 @@ Balances protection with reasonable storage:
 ls -lt ~/.hudson-library-backups/hourly/
 
 # Restore from specific time
-cp ~/.hudson-library-backups/hourly/books_2026-03-28_143000.csv src/_data/books.csv
+cp ~/.hudson-library-backups/hourly/books_2026-03-28_143000.csv src/_data/catalog/art.csv
 ```
 
 ### Last Few Days
@@ -127,7 +135,7 @@ cp ~/.hudson-library-backups/hourly/books_2026-03-28_143000.csv src/_data/books.
 ls -lt ~/.hudson-library-backups/daily/
 
 # Restore from specific date
-cp ~/.hudson-library-backups/daily/books_2026-03-25.csv src/_data/books.csv
+cp ~/.hudson-library-backups/daily/books_2026-03-25.csv src/_data/catalog/art.csv
 ```
 
 ### Weeks Ago
@@ -137,21 +145,21 @@ cp ~/.hudson-library-backups/daily/books_2026-03-25.csv src/_data/books.csv
 ls -lt ~/.hudson-library-backups/weekly/
 
 # Restore from specific week
-cp ~/.hudson-library-backups/weekly/books_2026-W12.csv src/_data/books.csv
+cp ~/.hudson-library-backups/weekly/books_2026-W12.csv src/_data/catalog/art.csv
 ```
 
 ### From Git History
 
 ```bash
 # View git log
-git log --oneline src/_data/books.csv
+git log --oneline --follow -- src/_data/catalog/art.csv
 
 # Restore from specific commit
-git checkout <commit-hash> src/_data/books.csv
+git checkout <commit-hash> src/_data/catalog/art.csv
 
 # Or restore from specific date
-git log --since="2026-03-20" --until="2026-03-21" -- src/_data/books.csv
-git checkout <commit-hash> src/_data/books.csv
+git log --since="2026-03-20" --until="2026-03-21" -- src/_data/catalog/art.csv
+git checkout <commit-hash> src/_data/catalog/art.csv
 ```
 
 ## Verification
@@ -172,10 +180,10 @@ git checkout <commit-hash> src/_data/books.csv
 
 ```bash
 # Compare current with backup
-diff src/_data/books.csv ~/.hudson-library-backups/daily/books_2026-03-28.csv
+diff src/_data/catalog/art.csv ~/.hudson-library-backups/daily/books_2026-03-28.csv
 
 # Count records in both
-wc -l src/_data/books.csv ~/.hudson-library-backups/daily/books_2026-03-28.csv
+wc -l src/_data/catalog/art.csv ~/.hudson-library-backups/daily/books_2026-03-28.csv
 ```
 
 ### Backup Statistics

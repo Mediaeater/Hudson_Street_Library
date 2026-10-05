@@ -877,7 +877,7 @@ module.exports = function(eleventyConfig) {
 
     // Copy data files
     eleventyConfig.addPassthroughCopy({
-        "src/_data/books.csv": "cms/data/books.csv"
+        "src/_data/catalog/art.csv": "cms/data/books.csv"
     });
 
     // Image processing
@@ -1605,7 +1605,7 @@ npm run build
 ```
 
 **Solutions:**
-- Verify CSV file exists at `src/_data/books.csv`
+- Verify CSV file exists at `src/_data/catalog/art.csv`
 - Check CSV format (headers, encoding)
 - Review CSVHandler errors in build output
 - Ensure books are accessible in template scope

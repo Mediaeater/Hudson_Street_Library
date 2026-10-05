@@ -8,7 +8,7 @@ The repository currently contains several CSV files with "book" data, leading to
 
 ### File Inventory
 
-1.  **`src/_data/books.csv`** (541 KB)
+1.  **`src/_data/catalog/art.csv`** (541 KB)
     *   **Status**: **Active / Source of Truth**.
     *   **Description**: This is the primary data file used by `generate-book-pages.js` to build the site. It is also the file targeted by the `fix-data-quality-issues.py` script. It contains the most complete and up-to-date dataset.
 
@@ -26,12 +26,12 @@ The repository currently contains several CSV files with "book" data, leading to
 
 5.  **`cms/uploads/d45adaf8-4eff-40a8-b0c5-0cef4b33eb28.csv`** (343 KB)
     *   **Status**: **CMS Export / Fragment**.
-    *   **Description**: This file is significantly smaller (approx. 63% of `books.csv`) and has different headers (e.g., "Author, Last" instead of "author_last"). It appears to be a raw export or a source upload for the CMS. **Warning**: Replacing `src/_data/books.csv` with this file would likely result in significant data loss and break the build due to header mismatches.
+    *   **Description**: This file is significantly smaller (approx. 63% of `books.csv`) and has different headers (e.g., "Author, Last" instead of "author_last"). It appears to be a raw export or a source upload for the CMS. **Warning**: Replacing `src/_data/catalog/art.csv` with this file would likely result in significant data loss and break the build due to header mismatches.
 
 ## Recommended Strategy
 
 ### 1. Consolidation
-*   **Source of Truth**: Maintain **`src/_data/books.csv`** as the single, authoritative source of truth for the website build.
+*   **Source of Truth**: Maintain **`src/_data/catalog/art.csv`** as the single, authoritative source of truth for the website build.
 *   **Modifications**: All automated scripts (`fix-data-quality-issues.py`, etc.) should read from and write to this file (safely, with backups).
 
 ### 2. Cleanup & Archiving
@@ -44,11 +44,11 @@ To reduce clutter and confusion:
 *   **Improvement**: Modify the script to save timestamped backups to a dedicated `src/_data/backups/` directory. This keeps the main data directory clean while preserving safety.
 
 ### 4. CMS Integration
-*   **Workflow**: If the CMS uploads new CSVs (like the one in `cms/uploads/`), a data normalization step is required to map the CMS headers (e.g., "Author, Last") to the site's expected schema ("author_last") before merging into `src/_data/books.csv`.
+*   **Workflow**: If the CMS uploads new CSVs (like the one in `cms/uploads/`), a data normalization step is required to map the CMS headers (e.g., "Author, Last") to the site's expected schema ("author_last") before merging into `src/_data/catalog/art.csv`.
 *   **Caution**: Do not overwrite `books.csv` with raw CMS uploads without validation and mapping.
 
 ## Implementation Plan
 
 1.  Refactor `fix-data-quality-issues.py` to use `src/_data/backups/`.
 2.  Create `src/_data/archive/` and move old static CSVs there.
-3.  Verify the build process continues to work with `src/_data/books.csv`.
+3.  Verify the build process continues to work with `src/_data/catalog/art.csv`.

@@ -187,11 +187,11 @@ Field tiers:
 - **Expected** (fill when sources exist): `cover_image`, `contributors`, `pages`, `dimensions`, `language`, `loc_data`, `description.extended`, `description.artist_bio`, `distributors`, `artist_links`
 - **Optional** (omit or null when not applicable): `subtitle`, `images`, `edition`, `print_run`, `exhibition`, `description.exhibition_context`, `related_exhibitions`, `notes`
 
-**CSV-mapped enrichment fields** — top-level, all optional; add-book's `--json` ingest maps each 1:1 to a `books.csv` column, so a complete record lands in one `--json --yes` run with no manual patching. Fill whatever you know:
+**CSV-mapped enrichment fields** — top-level, all optional; add-book's `--json` ingest maps each 1:1 to a catalogue CSV column, so a complete record lands in one `--json --yes` run with no manual patching. Fill whatever you know:
 - `height_cm`, `width_cm`, `depth_cm`, `weight_g` — numbers. **Supply cm explicitly**; the ingest never parses the `dimensions` string (publishers list H×W and W×H inconsistently, so parsing transposes them). Keep the human-readable `dimensions` string too.
 - `signed` (boolean → `is_signed_inscribed`), `edition` (→ `edition_printrun`)
 - `designer`, `editor` (or tag a `contributors[]` entry with `role: "Design"` / `"Editor"` — the ingest routes by role; remaining contributors land in the `contributors` column)
-- `collection_grouping`, `classification` — curatorial; match sibling records already in `books.csv` (e.g. `"Individual Photographer Monographs"`, `"Magazines"`, grouping `"Art"`)
+- `collection_grouping`, `classification` — curatorial; match sibling records already in the wing's CSV (e.g. `"Individual Photographer Monographs"`, `"Magazines"`, grouping `"Art"`)
 
 See **`references/json-schema.md`** for the full annotated JSON example (a complete worked record). Fill every field a source provides; use `null` for the rest.
 
@@ -232,7 +232,7 @@ voice and de-slop pull the same direction: state what the work is, drop the flou
 - **NEVER save price data** — pricing policy prohibits storing prices in any form
 - **Tags in JSON are an array** — the add-book script converts to comma-separated for CSV export
 - **Verify all URLs** — check that links return 200 before including
-- **Back up books.csv** — before running add-book script
+- **Back up the catalogue CSVs** — before running add-book script
 
 ## Gotchas
 

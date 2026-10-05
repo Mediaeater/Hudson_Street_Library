@@ -124,7 +124,7 @@ npm test
 npm run build
 
 # 6. Commit
-git add src/_data/books.csv src/assets/images/books/
+git add src/_data/catalog/art.csv src/assets/images/books/
 git commit -m "Add: Ayoung Kim - Synthetic Storyteller"
 git push
 ```
@@ -174,7 +174,7 @@ git push
 
 **Wrong author parsing?**
 - Complex names may split incorrectly
-- Edit CSV directly: `src/_data/books.csv`
+- Edit CSV directly: `src/_data/catalog/art.csv`
 - Look for the ID shown in output
 
 **Cover filename too long?**

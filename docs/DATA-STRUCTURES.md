@@ -40,7 +40,7 @@ the validation in `scripts/utils/csv-handler.js` and produce backups under
 
 ## Books CSV — Schema
 
-**File:** `src/_data/books.csv`
+**File:** `src/_data/catalog/art.csv`
 **Encoding:** UTF-8 with LF line endings, comma delimiter, double-quote text qualifier (`""` to escape).
 **Header row:** required; column order matters.
 
@@ -259,7 +259,7 @@ copied unchanged; the collections file is generated at build:
 
 | URL | Source | Emitted by |
 |---|---|---|
-| `/cms/data/books.csv` | `src/_data/books.csv` | `.eleventy.js` passthrough |
+| `/cms/data/books.csv` | `src/_data/catalog/art.csv` | `.eleventy.js` passthrough |
 | `/cms/data/libraryCollections.json` | the collections index (`src/_data/exploreCollections.js`) plus `categories` from `src/_data/libraryCollections.json` | `src/cms-collections.njk` |
 | `/cms/data/news.json` | `src/_data/news.json` | `.eleventy.js` passthrough |
 

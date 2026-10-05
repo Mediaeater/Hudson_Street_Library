@@ -870,7 +870,7 @@ return {
 ```
 
 **Solutions:**
-- Check CSV file exists at `src/_data/books.csv`
+- Check CSV file exists at `src/_data/catalog/art.csv`
 - Verify CSV parsing in `.eleventy.js` console output
 - Check for CSV syntax errors (unclosed quotes, etc.)
 - Review build logs for parsing errors

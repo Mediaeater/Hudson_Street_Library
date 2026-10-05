@@ -14,14 +14,14 @@ node scripts/add-book-from-text.js --interactive
 cp cover.jpg src/assets/images/books/Author_Title_ISBN.jpg
 
 # 3. Commit changes
-git add src/_data/books.csv src/assets/images/books/
+git add src/_data/catalog/art.csv src/assets/images/books/
 git commit -m "Add Author - Book Title"
 git push
 ```
 
 ## CSV Structure
 
-Books are stored in `/src/_data/books.csv`. The file contains 34 fields (columns):
+Books are stored in `/src/_data/catalog/art.csv`. The file contains 34 fields (columns):
 
 ### Core Identification (Fields 1-7)
 
@@ -323,7 +323,7 @@ Signed books show "Signed: Yes" on:
    node scripts/add-book-from-text.js --interactive
 
    # Or edit CSV directly
-   vim src/_data/books.csv
+   vim src/_data/catalog/art.csv
    ```
 
 2. **Add cover image**
@@ -334,7 +334,7 @@ Signed books show "Signed: Yes" on:
 
 3. **Stage changes**
    ```bash
-   git add src/_data/books.csv
+   git add src/_data/catalog/art.csv
    git add src/assets/images/books/
    ```
 

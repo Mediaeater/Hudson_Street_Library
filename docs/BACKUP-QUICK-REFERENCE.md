@@ -1,5 +1,13 @@
 # Backup System - Quick Reference
 
+> **Naming changed 2026-10-05.** The art wing moved from `src/_data/books.csv`
+> to `src/_data/catalog/art.csv`, and its backup copies are now named
+> `catalog_art_…` like every other wing's (`catalog_<wing>_…`). Copies named
+> `books_…` are the art wing from before that date and keep their names. The
+> examples below that show `books_…` files apply to those older copies; for a
+> newer one substitute `catalog_art_…`. In git, use `git log --follow` on the
+> new path, and `<commit>:src/_data/books.csv` for commits before the rename.
+
 > **Critical**: books.csv is your most important file. Automated backups run every 6 hours.
 
 ## Status Check
@@ -35,7 +43,7 @@ echo "Weekly: $(ls ~/.hudson-library-backups/weekly/*.csv 2>/dev/null | wc -l)"
 ls -lt ~/.hudson-library-backups/hourly/
 
 # Restore specific backup
-cp ~/.hudson-library-backups/hourly/books_2026-03-28_193228.csv src/_data/books.csv
+cp ~/.hudson-library-backups/hourly/books_2026-03-28_193228.csv src/_data/catalog/art.csv
 ```
 
 ### Yesterday or Last Week
@@ -45,7 +53,7 @@ cp ~/.hudson-library-backups/hourly/books_2026-03-28_193228.csv src/_data/books.
 ls -lt ~/.hudson-library-backups/daily/
 
 # Restore from 3 days ago
-cp ~/.hudson-library-backups/daily/books_2026-03-25.csv src/_data/books.csv
+cp ~/.hudson-library-backups/daily/books_2026-03-25.csv src/_data/catalog/art.csv
 ```
 
 ### Weeks Ago
@@ -55,20 +63,20 @@ cp ~/.hudson-library-backups/daily/books_2026-03-25.csv src/_data/books.csv
 ls -lt ~/.hudson-library-backups/weekly/
 
 # Restore from 2 weeks ago
-cp ~/.hudson-library-backups/weekly/books_2026-W11.csv src/_data/books.csv
+cp ~/.hudson-library-backups/weekly/books_2026-W11.csv src/_data/catalog/art.csv
 ```
 
 ### From Git History
 
 ```bash
 # See recent commits
-git log --oneline -20 src/_data/books.csv
+git log --oneline -20 --follow -- src/_data/catalog/art.csv
 
 # Restore from specific commit
-git checkout <commit-hash> src/_data/books.csv
+git checkout <commit-hash> src/_data/catalog/art.csv
 
 # Or by date
-git log --since="2026-03-20" --until="2026-03-21" -- src/_data/books.csv
+git log --since="2026-03-20" --until="2026-03-21" -- src/_data/catalog/art.csv
 ```
 
 ## Backup Locations
@@ -114,10 +122,10 @@ tail -50 logs/backup.log
 
 ```bash
 # Compare current with backup
-diff src/_data/books.csv ~/.hudson-library-backups/daily/books_$(date +%Y-%m-%d).csv
+diff src/_data/catalog/art.csv ~/.hudson-library-backups/daily/books_$(date +%Y-%m-%d).csv
 
 # Check file sizes
-ls -lh src/_data/books.csv ~/.hudson-library-backups/daily/books_*.csv
+ls -lh src/_data/catalog/art.csv ~/.hudson-library-backups/daily/books_*.csv
 ```
 
 ## Recovery Workflow
@@ -127,10 +135,10 @@ ls -lh src/_data/books.csv ~/.hudson-library-backups/daily/books_*.csv
 3. **List available backups**: `ls -lt ~/.hudson-library-backups/hourly/`
 4. **Copy backup to staging**: `cp backup.csv /tmp/restore_test.csv`
 5. **Verify backup**: `wc -l /tmp/restore_test.csv` (should be ~1800 lines)
-6. **Restore**: `cp /tmp/restore_test.csv src/_data/books.csv`
+6. **Restore**: `cp /tmp/restore_test.csv src/_data/catalog/art.csv`
 7. **Validate**: `node scripts/validate-csv-structure.js`
 8. **Test**: Check a few book pages on the site
-9. **Commit**: `git add src/_data/books.csv && git commit -m "Restore from backup"`
+9. **Commit**: `git add src/_data/catalog/art.csv && git commit -m "Restore from backup"`
 
 ## Emergency Contact
 
@@ -138,7 +146,7 @@ ls -lh src/_data/books.csv ~/.hudson-library-backups/daily/books_*.csv
 
 1. Local backups (30 days): `src/_data/backups/`
 2. Safe directory (3 months): `~/.hudson-library-backups/`
-3. Git history (forever): `git log src/_data/books.csv`
+3. Git history (forever): `git log --follow -- src/_data/catalog/art.csv`
 4. GitHub remote (if pushed): `git pull origin main`
 
 ## Key Numbers

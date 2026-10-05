@@ -130,11 +130,11 @@ npm run test:coverage:html
 
 ## Pre-Commit Hook
 
-A pre-commit hook validates `src/_data/books.csv` before each commit, catching structural errors in the collection's source of truth before they land. It lives in `.githooks/pre-commit` and is active automatically via `core.hooksPath` — no install step.
+A pre-commit hook validates `src/_data/catalog/art.csv` before each commit, catching structural errors in the collection's source of truth before they land. It lives in `.githooks/pre-commit` and is active automatically via `core.hooksPath` — no install step.
 
 ### How It Works
 
-The hook only runs when a commit includes `src/_data/books.csv`:
+The hook only runs when a commit includes `src/_data/catalog/art.csv`:
 
 1. Detects whether `books.csv` is staged
 2. If so, runs `node scripts/validate-csv-robust.js`
@@ -144,10 +144,10 @@ The hook only runs when a commit includes `src/_data/books.csv`:
 If validation fails, fix the CSV before retrying:
 
 ```bash
-node scripts/fix-csv-formatting.js src/_data/books.csv src/_data/books_fixed.csv
+node scripts/fix-csv-formatting.js src/_data/catalog/art.csv src/_data/books_fixed.csv
 node scripts/validate-csv-robust.js
 # if valid:
-cp src/_data/books_fixed.csv src/_data/books.csv
+cp src/_data/books_fixed.csv src/_data/catalog/art.csv
 ```
 
 ### Bypassing the Hook

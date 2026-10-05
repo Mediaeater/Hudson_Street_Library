@@ -39,7 +39,7 @@ live is 1–3 minutes.
 
 ```bash
 # 1. Make your changes
-npm run add                # or edit src/_data/books.csv directly
+npm run add                # or edit src/_data/catalog/art.csv directly
 
 # 2. Build locally and test
 npm run build
