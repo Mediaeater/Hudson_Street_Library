@@ -96,24 +96,10 @@ function parseAccessionDate(dateStr) {
 module.exports = function(eleventyConfig) {
   console.log("--- Running Eleventy configuration ---");
 
-  // Cover acquisition removed from build for performance
-  // Run manually when needed: node scripts/covers/acquire-covers.js --limit 50
-  // This saves 15+ seconds on every build and avoids rate limiting
-  //
-  // To re-enable in development only, uncomment:
-  // eleventyConfig.on("beforeBuild", () => {
-  //   if (process.env.NODE_ENV !== 'production') {
-  //     console.log("--- Acquiring book covers ---");
-  //     exec("node scripts/covers/acquire-covers.js --limit 10 --strict", (error, stdout, stderr) => {
-  //       if (error) {
-  //         console.error(`exec error: ${error}`);
-  //         return;
-  //       }
-  //       console.log(`stdout: ${stdout}`);
-  //       console.error(`stderr: ${stderr}`);
-  //     });
-  //   }
-  // });
+  // The build never fetches covers. A page shows the file its row's image_url
+  // names, or the placeholder (scripts/utils/cover-path.js).
+  // What is missing: node scripts/covers/report.js
+  // Add one:         node scripts/covers/attach.js <id> <file-or-url>
 
   // The collections index is memoised for the length of one build. Drop it
   // before each build so --serve sees catalogue and config edits.

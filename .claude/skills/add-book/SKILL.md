@@ -142,9 +142,10 @@ ls -lh src/assets/images/books/<filename>.jpg && file src/assets/images/books/<f
 - `file` reports `JPEG image data`. Size is typically 50KB–500KB. Under 2KB is a failed download.
 - The filename follows the convention in `references/add-book-reference.md`, with no trailing space.
 - Look at the image with Read. A cover runs edge to edge with no frame, border, or shadow.
-- If it is a product shot, run `python3 scripts/auto-crop-covers.py --input <path> --overwrite`, then look again. The script prints success even when it leaves a shadowed or non-white background in place. When that happens, crop by hand.
+- If it is a product shot, run `python3 scripts/auto-crop-covers.py --input <path> --overwrite` and check its exit status. 0 means a clean crop. 3 means nothing was cropped. 4 means it refused and left the file alone (the backdrop is not white, or the corners disagree). 5 means it cropped but a shadow or soft edge is still in the frame. On anything but 0, look at the file and crop by hand if it needs it.
 - If `file` reports PNG or WebP, convert it (`sips -s format jpeg <in> --out <out>.jpg`). Renaming the extension is not conversion.
-- If no cover was found, tell the user the path to drop one at, and ask whether to hold the push or ship without it.
+- If no cover was found, ask whether to hold the push or ship without it. A cover that turns up later goes on with `node scripts/covers/attach.js <id> <file-or-url>`, which checks the bytes, names the file and sets `image_url`. Never write `image_url` by hand for this.
+- `node scripts/covers/report.js --ids <id>` confirms the row and the file agree. `--wing`, `--tag` and `--grouping` list every row still missing a cover.
 
 Then the description. Read the row's `description` and confirm it:
 

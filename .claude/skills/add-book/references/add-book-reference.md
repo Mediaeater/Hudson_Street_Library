@@ -63,7 +63,8 @@ fischer_marc_who_shares_the_restroom_code_with_ice_agents.jpg
 - All lowercase
 - Remove all special characters
 - Convert spaces to underscores
-- Truncate at 50 chars per section
+- Title capped at 120 characters
+- No ISBN: the year takes its place, or nothing
 - ISBN without hyphens
 - Always `.jpg` extension
 
@@ -114,7 +115,9 @@ that `image_url` matches the file on disk exactly.
 - `scripts/set-book-fields.js`: One-row edit after ingest
 - `scripts/verify-views.js`: Checks the built site (Recently pages, covers, redirects)
 - `scripts/deslop-descriptions.js`: Prose scan, one description per document
-- `scripts/auto-crop-covers.py`: Trims product-shot borders; check its result by eye
+- `scripts/auto-crop-covers.py`: Trims product-shot borders. Exit 0 is a clean crop; 3, 4 and 5 mean look at the file
+- `scripts/covers/report.js`: Rows without a cover, broken paths, small files, orphan files. Reads `image_url`, writes nothing
+- `scripts/covers/attach.js`: Puts a cover on an existing row: `<id> <file-or-url>`
 - `scripts/utils/catalog.js`: Loads and merges every wing
 - `src/_data/wings.json`: Wing registry (file, id block, intake mode)
 - `scripts/utils/book-metadata-aggregator.js`: Multi-source search (text modes)

@@ -13,7 +13,7 @@ const {
 } = require('../scripts/utils/cover-path');
 
 // The naming convention these tests pin is shared by three things that must
-// agree: the acquire-covers scripts write files by it, the generateCoverPath
+// agree: the old bulk acquirers wrote files by it, the generateCoverPath
 // filter renders <img src> from it, and /data/books.json resolves cover_url
 // with it.
 describe('cover-path', () => {

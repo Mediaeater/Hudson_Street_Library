@@ -19,8 +19,10 @@
  *                       swap the placeholder in — a request and a flash of
  *                       broken image per cover the library doesn't hold.
  *
- * The convention itself (the acquire-covers scripts write files by it) lives in
- * derivedCoverPath so the three cannot drift apart.
+ * derivedCoverPath is the legacy filename the old bulk acquirers wrote. It only
+ * finds files already on disk. New covers are named by
+ * conventionalCoverFilename and always written into image_url
+ * (scripts/covers/attach.js), so nothing has to guess.
  */
 const fs = require('fs');
 const path = require('path');
@@ -69,6 +71,38 @@ function derivedCoverPath(book) {
         .substring(0, 100);
 
     return `/assets/images/books/${sanitized}.jpg`;
+}
+
+/**
+ * The filename a NEW cover gets (the convention in .claude/CLAUDE.md):
+ * {author_last}_{author_first}_{title}_{isbn}.jpg, all lowercase, underscores
+ * for spaces, nothing but a-z, 0-9 and underscores. A row with no ISBN ends in
+ * its publication year instead, or in nothing when it has neither.
+ *
+ * This is not derivedCoverPath. That one describes the mixed-case names the
+ * old acquirers wrote and is only ever used to find files already on disk.
+ * @param {Object} book
+ * @returns {string}
+ */
+function conventionalCoverFilename(book) {
+    const part = value => String(isSet(value) ? value : '')
+        .normalize('NFKD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/['\u2018\u2019]/g, '')
+        .replace(/[^a-z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '');
+
+    const isbn = String(isSet(book.isbn_asin) ? book.isbn_asin : '').replace(/[^0-9Xx]/g, '').toLowerCase();
+    const year = (String(book.publication_year || '').match(/\d{4}/) || [''])[0];
+    const stem = [
+        part(book.author_last) || 'unknown',
+        part(book.author_first),
+        part(book.title).substring(0, 120).replace(/_+$/, '') || 'untitled',
+        isbn || year,
+    ].filter(Boolean).join('_');
+
+    return `${stem}.jpg`;
 }
 
 /**
@@ -137,6 +171,9 @@ function hasCover(book, options = {}) {
 module.exports = {
     PLACEHOLDER,
     derivedCoverPath,
+    conventionalCoverFilename,
+    isSet,
+    isPlaceholder,
     resolveCoverPath,
     coverFileExists,
     existingCoverPath,

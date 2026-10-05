@@ -6,12 +6,13 @@ Thank you for your interest in contributing to the Hudson Street Library project
 
 Before you start, please be aware of these strict constraints to ensure data integrity and build stability:
 
-1.  **Do Not Create New Acquisition Scripts**: Use the existing consolidated script `scripts/covers/acquire-covers.js`.
-    *   Usage: `node scripts/covers/acquire-covers.js --limit 50`
-    *   This script enforces the specific file naming conventions required by the site.
-2.  **File Naming is Strict**: Covers MUST be named `Author_Name_Book_Title_ISBN.jpg`.
-    *   The frontend JavaScript relies on this exact pattern.
-    *   Do not manually rename files without updating the database logic.
+1.  **Covers go through one path. Do not write new cover scripts.**
+    *   What is missing: `npm run covers:report` (`node scripts/covers/report.js`, flags `--wing`, `--tag`, `--grouping`, `--ids`).
+    *   Put a cover on a row: `npm run covers:attach -- <id> <file-or-url>` (`node scripts/covers/attach.js`). One row and one image per run. It checks the bytes are an image, names the file, saves it and sets `image_url`.
+    *   There is no bulk downloader. A cover is chosen and looked at by a person, one book at a time.
+2.  **The row names its cover.** A page shows the file in the row's `image_url`, which starts with a slash.
+    *   New files are named `{author_last}_{author_first}_{title}_{isbn}.jpg`, lowercase with underscores. `attach.js` does this for you.
+    *   Do not rename a cover file without updating `image_url` in the same commit.
 3.  **Data Source of Truth**: `src/_data/catalog/art.csv` is the master database.
     *   Do not edit derived JSON files manually if they are generated from this CSV.
 

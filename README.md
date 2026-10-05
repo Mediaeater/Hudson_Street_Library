@@ -98,7 +98,7 @@ lib/                # Project-specific libraries
 └── csv-handler.js   # CSV parsing utility
 
 scripts/            # Utility scripts and automation
-├── image-pipeline/ # Automated image processing system
+├── covers/         # Cover report and attach (the one cover workflow)
 └── news-pipeline/  # Automated news generation system
 .github/            # GitHub Actions workflows
 └── workflows/      # Automated build and deploy
@@ -153,15 +153,23 @@ Edit `src/_data/news.json` with the news item structure:
 
 ### Using Automated Pipelines
 
-#### Image Pipeline
+#### Covers
 ```bash
-# Process new images
-node scripts/image-pipeline/cli.js upload --path ./new-images --recursive
-node scripts/image-pipeline/cli.js process
+# Which rows have no cover, which covers are suspect, which files no row uses
+npm run covers:report
+node scripts/covers/report.js --wing hacking --summary
+node scripts/covers/report.js --tag "Photography" --grouping Magazines --ids 1300-1400
 
-# Find missing book covers
-node scripts/image-pipeline/cli.js find --missing --download --limit 10
+# Put a cover on one row, from a local file or a URL
+npm run covers:attach -- 1234 ~/Projects/covers/scan.jpg
+node scripts/covers/attach.js 1234 https://publisher.example/cover.jpg --dry-run
+
+# Trim a product shot to the book. Exit 0 only when the crop is clean
+python3 scripts/auto-crop-covers.py --input src/assets/images/books/<file>.jpg --overwrite
 ```
+
+The report reads each row's `image_url` and checks the file on disk. It writes nothing.
+`attach.js` refuses a row that already has a cover unless you pass `--overwrite`.
 
 #### News Pipeline
 ```bash
@@ -196,7 +204,7 @@ npm run clean
 - **Fast Development**: Live reload during local development
 - **Modern Structure**: Organized source files in `src/` directory
 - **Comprehensive Docs**: Everything documented in `docs/`
-- **Image Pipeline**: Automated 4-stage image processing (Upload → API → Optimize → Categorize)
+- **Covers**: One report and one attach command (`scripts/covers/`)
 - **News Pipeline**: Automated news generation for new book acquisitions
 - **Performance Optimized**: Responsive images with WebP format and lazy loading
 - **Clickable Metadata**: Click any publisher, year, tag, or collection to see related books
