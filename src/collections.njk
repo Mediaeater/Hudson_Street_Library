@@ -345,7 +345,7 @@ eleventyComputed:
                 <div class="collection-section-head"><h2>Related Pages</h2></div>
                 <ul class="collection-related">
                     {% for link in collectionConfig.relatedLinks %}
-                        <li><a href="{{ link.url }}" target="_blank" rel="noopener">{{ link.label }}</a>{% if link.source %}<span class="source">{{ link.source }}</span>{% endif %}</li>
+                        <li><a href="{{ link.url }}"{% if link.url[0] != "/" %} target="_blank" rel="noopener"{% endif %}>{{ link.label }}</a>{% if link.source %}<span class="source">{{ link.source }}</span>{% endif %}</li>
                     {% endfor %}
                 </ul>
             </section>

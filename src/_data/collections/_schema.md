@@ -63,7 +63,7 @@ configs in one wing naming the same tag also fail the build.
 - `externalUrl`: a link shown under the description (e.g. `"https://purple.fr"`).
 - `headerImage`: `{ "src", "alt", "caption" }`, a figure under the masthead.
 - `relatedLinks`: array of `{ "label", "url", "source" }`, listed at the foot of
-  the page.
+  the page. A `url` starting with `/` opens in the same tab.
 
 ## Section object
 
