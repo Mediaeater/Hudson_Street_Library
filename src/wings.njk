@@ -337,10 +337,17 @@ eleventyComputed:
         </section>
         {% endif %}
 
+        {# A wing whose rows came in from the shelf has no accession dates, so
+           recentlyAdded is empty; show its newest catalogued rows instead. #}
         {% set recent = books | inWing(wingPage.slug) | recentlyAdded(12) %}
+        {% set recentHeading = "Recently Added" %}
+        {% if not recent.length %}
+            {% set recent = books | inWing(wingPage.slug) | recentlyCatalogued(12) %}
+            {% set recentHeading = "Recently Catalogued" %}
+        {% endif %}
         {% if recent.length %}
         <section class="wing-section">
-            <h2>Recently Added</h2>
+            <h2>{{ recentHeading }}</h2>
             <div class="wing-books">
                 {% for book in recent %}
                     <a href="/books/{{ book.author_last | slugify }}_{{ book.title | slugify }}_{{ book.id }}/" class="wing-book">

@@ -452,6 +452,18 @@ module.exports = function(eleventyConfig) {
     return limit ? sorted.slice(0, limit) : sorted;
   });
 
+  // Newest rows by cataloged_date, for a wing whose books entered the digital
+  // catalogue from the shelf (blank accession_no) and so never reach
+  // recentlyAdded. Rows with no parseable cataloged_date are left out.
+  eleventyConfig.addFilter("recentlyCatalogued", function(books, limit) {
+    if (!Array.isArray(books)) return [];
+    const dated = books
+      .map(b => ({ ...b, parsedDate: parseAccessionDate(b.cataloged_date) }))
+      .filter(b => b.parsedDate !== null)
+      .sort((a, b) => b.parsedDate - a.parsedDate);
+    return limit ? dated.slice(0, limit) : dated;
+  });
+
   // --- Filter books by cataloged date (backfill work) ---
   // Returns books cataloged recently but acquired earlier (library digitization work)
   eleventyConfig.addFilter("recentlyCatalogued", function(books, limit) {
