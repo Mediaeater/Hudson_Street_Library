@@ -3,6 +3,7 @@ permalink: /collections/recently_catalogued.html
 layout: collection.njk
 title: Recently Catalogued
 currentPage: recently-catalogued
+description: Books from the physical library newly catalogued for the online collection, most recent first.
 ---
 {#
   RECENTLY CATALOGED PAGE
@@ -35,7 +36,7 @@ currentPage: recently-catalogued
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
 
-{% set cataloguedBooks = books | inWing(wing) | recentlyCatalogued %}
+{% set cataloguedBooks = books | inWing(wing) | recentlyCatalogued(120) %}
 {% if cataloguedBooks.length == 0 %}
                     <div class="col-span-full text-center py-12">
                         <p class="text-neutral-600">No recently catalogued books. Check back as we continue digitizing the collection.</p>
