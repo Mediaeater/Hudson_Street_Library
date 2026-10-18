@@ -103,7 +103,8 @@ Run this once, with the wing chosen in step 1:
 node scripts/add-book-from-text.js --json book_data_{slug}.json --wing <slug> --yes
 ```
 
-`--wing` beats a `"wing"` field in the JSON, which beats the default. The ingest:
+Add `--intake acquired|catalogued` only when this one book runs against its wing's
+intake mode (see *Intake Dating*). `--wing` beats a `"wing"` field in the JSON, which beats the default. The ingest:
 
 1. checks the whole catalogue for a duplicate (ISBN, or title + surname)
 2. downloads the cover only when `cover_image.url` is set and `local_path` is not
@@ -262,8 +263,11 @@ Each wing sets its mode with `intake` in `wings.json`: `acquired` is the default
 `catalogued` is declared on wings being entered off the shelves. The ingest applies it and
 prints the `Intake:` line.
 
-Patch only when one book runs against its wing's mode. Move the date to the other column
-with `set-book-fields.js --overwrite`. Both columns take `YYYY-MM-DD`; a season string
+When one book runs against its wing's mode, pass `--intake acquired` or
+`--intake catalogued` to the ingest and it is dated that way at step 4 (added 2026-10-18;
+this is the only route for `hacking.csv` and `media-theory.csv`, which refuse row edits).
+If the row already exists, move the date to the other column with
+`set-book-fields.js --overwrite`. Both columns take `YYYY-MM-DD`; a season string
 ("Fall 2025") hides the row from both Recently pages.
 
 ## Gotchas

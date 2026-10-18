@@ -52,6 +52,7 @@ let inputJson = '';
 let interactive = false;
 let assumeYes = false;
 let wingArg = '';
+let intakeArg = '';
 
 for (let i = 0; i < args.length; i++) {
   if (args[i] === '--text') {
@@ -62,6 +63,12 @@ for (let i = 0; i < args.length; i++) {
     inputJson = args[++i];
   } else if (args[i] === '--wing') {
     wingArg = args[++i];
+  } else if (args[i] === '--intake') {
+    intakeArg = args[++i];
+    if (!['acquired', 'catalogued'].includes(intakeArg)) {
+      console.error(`--intake must be "acquired" or "catalogued", got "${intakeArg}"`);
+      process.exit(1);
+    }
   } else if (args[i] === '--interactive') {
     interactive = true;
   } else if (args[i] === '--yes' || args[i] === '-y') {
@@ -84,6 +91,10 @@ Options:
   --wing <slug>           Catalogue wing to file under (default: the JSON
                           record's "wing", else art). The wing decides both
                           the target CSV and the id block.
+  --intake <mode>         Date this one add as "acquired" (accession_no,
+                          Recently Added) or "catalogued" (cataloged_date,
+                          Recently Catalogued) regardless of the wing's
+                          intake mode. Default: the wing's mode.
   --interactive           Interactive mode with prompts
   --yes, -y               Skip the confirmation prompt (for --json; scriptable)
   --help                  Show this help
@@ -352,7 +363,10 @@ function describeIntake(wing) {
  */
 function resolveTargetWing(recordWing) {
   const slug = wingArg || recordWing || defaultWing().slug;
-  return resolveWing(slug);
+  const wing = resolveWing(slug);
+  // --intake overrides the wing's mode for this one add (a new arrival filed
+  // into a wing being entered off the shelves, or the reverse).
+  return intakeArg ? { ...wing, intake: intakeArg } : wing;
 }
 
 /**
