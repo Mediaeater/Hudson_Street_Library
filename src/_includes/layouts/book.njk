@@ -678,8 +678,8 @@
     {% endif %}
 
     <!-- Other Books by Same Author -->
-    {% set wingBooks = books | inWing(book.collection) %}{% set authorBooks = wingBooks | otherBooksByAuthor(book.author_last, book.id) %}
-    {% set totalByAuthor = wingBooks | countByAuthor(book.author_last, book.id) %}
+    {% set wingBooks = books | inWing(book.collection) %}{% set authorBooks = wingBooks | otherBooksByAuthor(book.author_last, book.id, book.author_first) %}
+    {% set totalByAuthor = wingBooks | countByAuthor(book.author_last, book.id, book.author_first) %}
 
     {% if authorBooks.length > 0 %}
     <hr class="separator">

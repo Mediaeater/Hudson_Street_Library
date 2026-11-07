@@ -175,23 +175,26 @@ module.exports = function(eleventyConfig) {
   });
 
   // --- Filter books by same author (excluding current book) ---
-  eleventyConfig.addFilter("otherBooksByAuthor", function(books, authorLast, currentId) {
+  // Same author = same surname AND same first name. Surname alone put Michael
+  // Williams in Christopher Williams's "More by" row. A row with no first name
+  // (mononyms, collectives) still matches on surname. The title fallback looks
+  // for the full name, so "Michael Williams: …" no longer matches any Williams.
+  function sameAuthor(b, authorLast, authorFirst) {
+    const norm = s => String(s || '').trim().toLowerCase();
+    const last = norm(authorLast), first = norm(authorFirst);
+    if (norm(b.author_last) === last) {
+      const bf = norm(b.author_first);
+      if (!first || !bf || bf === first) return true;
+    }
+    const name = first ? `${first} ${last}` : last;
+    return name.length >= 4 && norm(b.title).includes(name);
+  }
+
+  eleventyConfig.addFilter("otherBooksByAuthor", function(books, authorLast, currentId, authorFirst) {
     if (!books || !authorLast) return [];
-
-    // Get unique books that either match author_last OR have author's name in title
-    const matchedBooks = books.filter(b => {
-      if (String(b.id) === String(currentId)) return false;
-
-      // Match by author last name
-      if (b.author_last === authorLast) return true;
-
-      // Match by author name in title (skip short names like "Ma" to avoid false positives)
-      if (authorLast.length >= 4 && b.title && b.title.toLowerCase().includes(authorLast.toLowerCase())) return true;
-
-      return false;
-    });
-
-    return matchedBooks.slice(0, 12);
+    return books
+      .filter(b => String(b.id) !== String(currentId) && sameAuthor(b, authorLast, authorFirst))
+      .slice(0, 12);
   });
 
   // --- Filter: scope a book list to one wing ---
@@ -386,20 +389,9 @@ module.exports = function(eleventyConfig) {
   });
 
   // --- Count books by author ---
-  eleventyConfig.addFilter("countByAuthor", function(books, authorLast, currentId) {
+  eleventyConfig.addFilter("countByAuthor", function(books, authorLast, currentId, authorFirst) {
     if (!books || !authorLast) return 0;
-
-    return books.filter(b => {
-      if (String(b.id) === String(currentId)) return false;
-
-      // Match by author last name
-      if (b.author_last === authorLast) return true;
-
-      // Match by author name in title (skip short names like "Ma" to avoid false positives)
-      if (authorLast.length >= 4 && b.title && b.title.toLowerCase().includes(authorLast.toLowerCase())) return true;
-
-      return false;
-    }).length;
+    return books.filter(b => String(b.id) !== String(currentId) && sameAuthor(b, authorLast, authorFirst)).length;
   });
 
   // --- Filter books by accession/catalog date ---
