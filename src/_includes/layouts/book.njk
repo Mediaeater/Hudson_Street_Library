@@ -105,6 +105,63 @@
             margin-bottom: 2.5rem;
         }
 
+        /* Interiors: photographs of the object, keyed by id in _data/interiors.json */
+        .interiors {
+            margin-bottom: 2.5rem;
+        }
+
+        .interiors-heading {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: #5B6B84;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px solid rgba(19, 22, 27, 0.12);
+            margin-bottom: 1.5rem;
+        }
+
+        .interiors-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 2rem 1.25rem;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .interiors-grid figure {
+            margin: 0;
+        }
+
+        .interiors-grid a {
+            display: block;
+        }
+
+        .interiors-grid img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border: 1px solid rgba(19, 22, 27, 0.12);
+        }
+
+        .interiors-grid figcaption {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            line-height: 1.5;
+            color: #5B6B84;
+            margin-top: 0.6rem;
+        }
+
+        @media (max-width: 640px) {
+            .interiors-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
         /* Separator */
         .separator {
             border: 0;
@@ -479,6 +536,26 @@
     <div class="description">
         {{ book.description | safe }}
     </div>
+    {% endif %}
+
+    {% set interiorImages = interiors[book.id] %}
+    {% if interiorImages %}
+    <!-- Interiors -->
+    <section class="interiors" aria-labelledby="interiors-heading">
+        <h2 class="interiors-heading" id="interiors-heading">Inside</h2>
+        <ul class="interiors-grid">
+            {% for img in interiorImages %}
+            <li>
+                <figure>
+                    <a href="{{ img.src }}" target="_blank" rel="noopener">
+                        <img src="{{ img.thumb or img.src }}" alt="{{ book.title }}: {{ img.caption }}" loading="lazy">
+                    </a>
+                    <figcaption>{{ img.caption }}</figcaption>
+                </figure>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
     {% endif %}
 
     <hr class="separator">
