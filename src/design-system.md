@@ -56,10 +56,10 @@ status-available #065f46 on #d1fae5
 
 ### Neutrals
 
-Warm, not Tailwind's default greys. `--neutral-50` is the page background.
+Cool, blue-leaning, not Tailwind's default greys. `--neutral-50` is the page background.
 
 ```css
---neutral-50:  #faf9f6;   --neutral-500: #737373;
+--neutral-50:  #F6F7F9;   --neutral-500: #737373;
 --neutral-100: #f5f5f5;   --neutral-600: #525252;
 --neutral-200: #e5e5e5;   --neutral-700: #404040;
 --neutral-300: #d4d4d4;   --neutral-800: #262626;

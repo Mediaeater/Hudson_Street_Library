@@ -24,7 +24,7 @@ eleventyExcludeFromCollections: true
      the top of the page lets you calibrate it against a bank card. The measured
      value is written to --mm on <html> and kept in localStorage. */
   --mm:3.7795px;
-  --paper:#F8F7F4; --ink:#0A0A0A; --brown:#8B7355;
+  --paper:#F4F5F7; --ink:#13161B; --slate:#5B6B84;
   /* the second ink — the same green the site renders, not a print-only
      variant. design-system.css sets --primary-700 to this value and the
      mark carries it on screen (the class reads .text-teal-900, but
@@ -36,7 +36,7 @@ eleventyExcludeFromCollections: true
      mark stop being the same mark. Match to a Pantone chip drawn down on
      the running stock before the run. */
   --seal:#034706;
-  --rule:rgba(10,10,10,.14);
+  --rule:rgba(19, 22, 27,.14);
   /* ---- THE INK SYSTEM (artwork only; --rule above is screen furniture) ----
      Two inks: solid black (--ink) and solid green (--seal). Everything else is
      a screen of the black, and only these four values exist. They were nine
@@ -50,8 +50,8 @@ eleventyExcludeFromCollections: true
        20 %  ruling floor — ledger ruling, column rules, the lightest ink used
      Nothing lighter than 20 % is drawn anywhere: below that a screen on
      uncoated wove breaks up and prints as a dirty smudge rather than a line. */
-  --t60:rgba(10,10,10,.6); --t50:rgba(10,10,10,.5);
-  --t30:rgba(10,10,10,.3); --t20:rgba(10,10,10,.2);
+  --t60:rgba(19, 22, 27,.6); --t50:rgba(19, 22, 27,.5);
+  --t30:rgba(19, 22, 27,.3); --t20:rgba(19, 22, 27,.2);
   /* every rule in the artwork is this weight — 0.25 mm (0.71 pt), stated in
      millimetres like every other dimension on the sheet. It was 1px, a screen
      unit that does not scale with --mm and means nothing to a printer. */
@@ -64,7 +64,7 @@ eleventyExcludeFromCollections: true
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 /* Page furniture follows /identity/: paper ground, Literata body, Archivo
-   Narrow eyebrows in brown. The artwork below keeps its own metrics — every
+   Narrow eyebrows in slate. The artwork below keeps its own metrics — every
    sheet resets line-height to what it inherited before the page had one. */
 body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--serif);line-height:1.6;-webkit-font-smoothing:antialiased}
 .sheet,.env,.marks .box{line-height:normal}
@@ -73,7 +73,7 @@ body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var
    to <html>, which body then inherits when this class is off. */
 body.fit{--mm:1.55px}
 .wrap{max-width:1000px;margin:0 auto;padding:6rem 2rem 0}
-.eyebrow{font-family:var(--label);font-size:.75rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--brown)}
+.eyebrow{font-family:var(--label);font-size:.75rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--slate)}
 
 /* ---- viewing controls. Presentation furniture: hidden in print like the rest. ---- */
 .scalebar{margin:2.5rem 0 0;padding:1rem 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
@@ -81,10 +81,10 @@ body.fit{--mm:1.55px}
 .scalebar .grp{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .scalebar .cap{white-space:nowrap}
 .scalebar button{font-family:var(--label);font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
-  background:none;color:var(--brown);border:1px solid var(--rule);padding:6px 12px;cursor:pointer}
+  background:none;color:var(--slate);border:1px solid var(--rule);padding:6px 12px;cursor:pointer}
 .scalebar button:hover{color:var(--ink);border-color:var(--ink)}
 .scalebar button.on{color:var(--paper);background:var(--ink);border-color:var(--ink)}
-.scalebar .cap{font-family:var(--label);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--brown)}
+.scalebar .cap{font-family:var(--label);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--slate)}
 .scalebar output{font-family:var(--mono);font-size:11px;color:var(--ink);min-width:11ch}
 .scalebar input[type=range]{width:160px;accent-color:var(--seal)}
 /* The calibration gauge, drawn at the current scale so it resizes as you drag.
@@ -94,9 +94,9 @@ body.fit{--mm:1.55px}
 .cardref{width:calc(85.6*var(--mm));height:24px;flex:none;position:relative;
   border-left:1px solid var(--ink);border-right:1px solid var(--ink);
   display:flex;align-items:center;justify-content:center;
-  font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:rgba(10,10,10,.55);
+  font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:rgba(19, 22, 27,.55);
   overflow:hidden;white-space:nowrap}
-.cardref::before{content:'';position:absolute;left:0;right:0;top:50%;border-top:1px dashed rgba(10,10,10,.3)}
+.cardref::before{content:'';position:absolute;left:0;right:0;top:50%;border-top:1px dashed rgba(19, 22, 27,.3)}
 .cardref span{position:relative;background:var(--paper);padding:0 6px}
 body.fit .cal-only{display:none}
 
@@ -105,22 +105,22 @@ body.fit .cal-only{display:none}
 .masthead h1{font-family:var(--serif);font-size:clamp(3rem,8vw,4.5rem);font-weight:700;line-height:1;letter-spacing:-.02em;margin:0 0 2rem}
 .masthead p{max-width:680px;line-height:1.8;color:var(--ink);font-size:1.1875rem;margin:0 0 1.75rem}
 nav.jump{margin-top:2rem;display:flex;gap:24px;flex-wrap:wrap;font-family:var(--label);font-size:.8125rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
-nav.jump a{color:var(--brown);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:2px}
-nav.jump a:hover{border-bottom-color:var(--brown)}
+nav.jump a{color:var(--slate);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:2px}
+nav.jump a:hover{border-bottom-color:var(--slate)}
 
 .sec-head{display:flex;align-items:baseline;gap:18px;border-bottom:1px solid var(--ink);padding-bottom:.75rem;margin:5rem 0 2rem}
-.sec-head .n{font-family:var(--label);font-size:.75rem;font-weight:700;color:var(--brown);letter-spacing:.2em}
+.sec-head .n{font-family:var(--label);font-size:.75rem;font-weight:700;color:var(--slate);letter-spacing:.2em}
 .sec-head h2{font-family:var(--serif);font-weight:700;font-size:1.75rem;letter-spacing:-.01em;line-height:1.2;margin:0}
-.sec-head .meta{margin-left:auto;font-family:var(--label);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(10,10,10,.55)}
+.sec-head .meta{margin-left:auto;font-family:var(--label);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(19, 22, 27,.55)}
 .note{max-width:680px;line-height:1.8;color:var(--ink);font-size:1.0625rem;margin:0 0 1.5rem}
 .note b{color:var(--ink);font-weight:600}
-.lbl{font-family:var(--label);font-size:.8125rem;letter-spacing:.04em;line-height:1.6;color:rgba(10,10,10,.62);margin:12px 0 0}
+.lbl{font-family:var(--label);font-size:.8125rem;letter-spacing:.04em;line-height:1.6;color:rgba(19, 22, 27,.62);margin:12px 0 0}
 figure{margin:0}
 
 /* outline, not border: a border would eat 1 px off each side of a sheet
    drawn to the millimetre */
 .sheet,.env{background:var(--paper);color:var(--ink);position:relative;overflow:hidden;
-  outline:1px solid var(--rule);box-shadow:0 1px 4px rgba(10,10,10,.07)}
+  outline:1px solid var(--rule);box-shadow:0 1px 4px rgba(19, 22, 27,.07)}
 
 /* ============================================================
    THE MARK — one component, one set of proportions, three sizes.
@@ -160,8 +160,8 @@ figure{margin:0}
    which is the rule stated on the right. A spine is 0.10 of the seal, so the
    padding must be a tenth of --s: 3 mm at --s:30. Drawn enlarged because at the
    real 15 mm the offset is 1.5 mm and shows nothing. */
-.marks .cs{position:relative;display:inline-block;outline:1px dashed rgba(10,10,10,.4)}
-.marks .cap{font-family:var(--label);font-size:.75rem;letter-spacing:.08em;color:rgba(10,10,10,.62);margin:12px 0 0;line-height:1.7}
+.marks .cs{position:relative;display:inline-block;outline:1px dashed rgba(19, 22, 27,.4)}
+.marks .cap{font-family:var(--label);font-size:.75rem;letter-spacing:.08em;color:rgba(19, 22, 27,.62);margin:12px 0 0;line-height:1.7}
 .marks .cap b{display:block;color:var(--ink);font-weight:700;letter-spacing:.14em}
 .rules{margin-left:auto;max-width:34ch;font-size:.9375rem;line-height:1.7;color:var(--ink);border-left:1px solid var(--rule);padding-left:30px}
 .rules li{margin-bottom:11px}
@@ -190,11 +190,11 @@ figure{margin:0}
 .env .flapb{position:absolute;left:0;right:0;top:0;height:calc(52*var(--mm));
   background:linear-gradient(#f4f2ee,#efece6);
   clip-path:polygon(0 0,100% 0,100% 62%,50% 100%,0 62%);
-  border-bottom:1px solid rgba(10,10,10,.10)}
+  border-bottom:1px solid rgba(19, 22, 27,.10)}
 .env .seam{position:absolute;left:0;right:0;bottom:0;height:calc(58*var(--mm));
-  border-top:1px solid rgba(10,10,10,.07)}
+  border-top:1px solid rgba(19, 22, 27,.07)}
 .env .seam::before,.env .seam::after{content:'';position:absolute;top:0;width:1px;height:100%;
-  background:rgba(10,10,10,.06)}
+  background:rgba(19, 22, 27,.06)}
 .env .seam::before{left:calc(38*var(--mm));transform:skewX(-9deg)}
 .env .seam::after{right:calc(38*var(--mm));transform:skewX(9deg)}
 .env .seal{position:absolute;right:calc(13*var(--mm));bottom:calc(13*var(--mm))}
@@ -209,7 +209,7 @@ figure{margin:0}
 
 /* ---- letterhead PAD. Glued at the head; doubles as the accession record ---- */
 .padwrap{position:relative;display:inline-block}
-.padwrap .pl{position:absolute;background:#efece5;border:1px solid rgba(10,10,10,.08)}
+.padwrap .pl{position:absolute;background:#efece5;border:1px solid rgba(19, 22, 27,.08)}
 .padwrap .pl1{top:calc(2*var(--mm));right:calc(-2*var(--mm));bottom:calc(-2*var(--mm));left:calc(2*var(--mm))}
 .padwrap .pl2{top:calc(4*var(--mm));right:calc(-4*var(--mm));bottom:calc(-4*var(--mm));left:calc(4*var(--mm))}
 .padwrap .sheet{position:relative;z-index:2}
@@ -219,9 +219,9 @@ figure{margin:0}
 .f2 .glue{position:absolute;left:0;right:0;top:0;height:calc(11*var(--mm));
   background:repeating-linear-gradient(90deg,rgba(139,115,85,.22) 0 calc(1.6*var(--mm)),
     rgba(139,115,85,.08) calc(1.6*var(--mm)) calc(3.4*var(--mm)));
-  border-bottom:1px solid rgba(10,10,10,.18)}
+  border-bottom:1px solid rgba(19, 22, 27,.18)}
 .f2 .glue span{position:absolute;right:calc(4*var(--mm));top:calc(3.6*var(--mm));font-family:var(--mono);
-  font-size:calc(1.55*var(--mm));letter-spacing:.16em;color:rgba(10,10,10,.58)}
+  font-size:calc(1.55*var(--mm));letter-spacing:.16em;color:rgba(19, 22, 27,.58)}
 .f2 .hd{display:flex;justify-content:space-between;align-items:flex-start}
 .f2 .wmk{font-size:calc(6.4*var(--mm))}
 .f2 .wmk small{font-size:calc(1.7*var(--mm));margin-top:calc(3*var(--mm))}
@@ -324,7 +324,7 @@ figure{margin:0}
 .liner{position:relative;display:inline-block;background:#e6e2d8;padding:calc(5*var(--mm));
   box-shadow:0 12px 28px -12px rgba(0,0,0,.6)}
 .liner::after{content:'RELEASE LINER';position:absolute;left:calc(5*var(--mm));bottom:calc(1.3*var(--mm));
-  font-family:var(--mono);font-size:calc(1.4*var(--mm));letter-spacing:.14em;color:rgba(10,10,10,.3)}
+  font-family:var(--mono);font-size:calc(1.4*var(--mm));letter-spacing:.14em;color:rgba(19, 22, 27,.3)}
 .liner .grid3{display:flex;gap:calc(4*var(--mm))}
 .lab{width:calc(60*var(--mm));height:calc(32*var(--mm));padding:calc(4*var(--mm)) calc(4.5*var(--mm));
   border-radius:calc(1.6*var(--mm))}
@@ -370,19 +370,19 @@ figure{margin:0}
 .spec{width:100%;border-collapse:collapse;font-family:var(--serif);font-size:.9375rem;margin-top:6px}
 .spec thead{background:none}
 /* artwork downloads — the printer is sent this page, not an attachment */
-.files{margin:34px 0 0;border-top:2px solid var(--brown);padding-top:18px}
+.files{margin:34px 0 0;border-top:2px solid var(--slate);padding-top:18px}
 .files ul{list-style:none;margin:14px 0 0;padding:0}
-.files li{display:flex;gap:14px;align-items:baseline;padding:7px 0;border-bottom:1px solid rgba(10,10,10,.12)}
+.files li{display:flex;gap:14px;align-items:baseline;padding:7px 0;border-bottom:1px solid rgba(19, 22, 27,.12)}
 .files li:last-child{border-bottom:0}
 .files a{font-family:var(--label);font-weight:600;letter-spacing:.02em;color:var(--ink);
   text-decoration:none;border-bottom:1px solid var(--green);white-space:nowrap}
 .files a:hover{color:var(--green)}
-.files .what{flex:1;color:rgba(10,10,10,.7)}
+.files .what{flex:1;color:rgba(19, 22, 27,.7)}
 .files .sz{font-family:var(--label);font-size:.8125rem;letter-spacing:.06em;
-  color:rgba(10,10,10,.55);white-space:nowrap}
+  color:rgba(19, 22, 27,.55);white-space:nowrap}
 .files .all{margin:16px 0 0}
 @media(max-width:620px){.files li{display:block}.files .sz{display:block}}
-.spec th{text-align:left;font-family:var(--label);font-weight:700;color:var(--brown);border-bottom:1px solid var(--ink);
+.spec th{text-align:left;font-family:var(--label);font-weight:700;color:var(--slate);border-bottom:1px solid var(--ink);
   padding:0 16px 10px 0;letter-spacing:.12em;text-transform:uppercase;font-size:.75rem}
 .spec td{padding:12px 16px 12px 0;border-bottom:1px solid var(--rule);color:var(--ink);vertical-align:top;line-height:1.6}
 .spec td:first-child{font-weight:600;white-space:nowrap}
@@ -803,7 +803,7 @@ bookmark in the same idiom as everything else in the family: a form you fill in.
 </table>
 </div>
 <div class="rules" style="margin:34px 0 0;max-width:none;border-left:0;padding-left:0;
-  border-top:2px solid var(--brown);padding-top:18px">
+  border-top:2px solid var(--slate);padding-top:18px">
   <b>Notes to the printer — whole job</b>
   <ul style="columns:2;column-gap:44px">
     <li><b>Quantities</b> are given on the order. Please quote each of the six items separately
@@ -878,7 +878,7 @@ bookmark in the same idiom as everything else in the family: a form you fill in.
   </ul>
   <p class="all"><a href="{{ stationery.base }}{{ stationery.zip.file }}">All six as one zip</a>
   <span class="sz">&nbsp;{{ stationery.zip.size }}</span></p>
-  <p class="all" style="font-size:.9375rem;color:rgba(10,10,10,.6)">Each file carries the
+  <p class="all" style="font-size:.9375rem;color:rgba(19, 22, 27,.6)">Each file carries the
   CGATS&nbsp;21 CRPC2 profile as its output intent, which is most of its size &mdash; the drawn
   artwork is a few kilobytes of line work. Generated from this page on
   {{ stationery.dated }}; if the design moves, the files move with it.</p>

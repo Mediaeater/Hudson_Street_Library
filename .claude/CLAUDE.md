@@ -135,21 +135,26 @@ precedent.
    (design-system.css). The `--radius-*` tokens exist for genuine circles (spinners, icon
    wells) and nothing else. Radius in the templates is Tailwind creep, not a decision.
 2. **No fills, no boxes, no buttons.** Things are separated by a 1px hairline
-   `rgba(10, 10, 10, 0.12)` or by whitespace. Never a filled chip, pill, badge or card.
+   `rgba(19, 22, 27, 0.12)` or by whitespace. Never a filled chip, pill, badge or card.
    Navigation is text. The one sanctioned button form is the hero CTA: `2px solid` ink,
    square, uppercase Archivo Narrow, inverting on hover — used twice on the whole site.
 3. **Two typefaces, fixed jobs.** Literata (serif) for titles and prose. Archivo Narrow
    uppercase, 0.12–0.2em tracking, for eyebrows, counts, labels and small metadata.
    Crimson Pro is the wordmark only.
-4. **Brown `#8B7355` is the accent** for that small tracked type. Not `gray-400`/`gray-500`.
+4. **Slate `#5B6B84` is the accent** for that small tracked type. Not `gray-400`/`gray-500`,
+   and never a saturated blue: it has to stay dull or the site reads as SaaS. (Was brown
+   `#8B7355` until Nov 2026; warm paper + brown read as the Anthropic palette.)
    Green `#034706` is the mark, not a UI colour.
-5. **Paper `#F8F7F4` is the ground.** White is for sheets that hold an object (cover tiles,
+5. **Paper `#F4F5F7` is the ground** (cool, blue-leaning; book pages sit on `neutral-50`
+   `#F6F7F9`, one step lighter). White is for sheets that hold an object (cover tiles,
    the about band), not for cards.
-6. **Section structure:** small brown uppercase heading, a hairline rule under it, then
+6. **Section structure:** small slate uppercase heading, a hairline rule under it, then
    content. Not a heading inside a panel.
 
-Palette tokens: `--color-ink #0A0A0A`, `--color-paper #F8F7F4`, `--color-vellum #EEEDE8`,
-`--color-brown #8B7355`, `--color-border rgba(10,10,10,0.12)`.
+Palette tokens: `--color-ink #13161B`, `--color-paper #F4F5F7`, `--color-vellum #E8EAEE`,
+`--color-slate #5B6B84`, `--color-border rgba(19,22,27,0.12)`. Ink tints are
+`rgba(19, 22, 27, α)`. The stationery plates and the newspaper page stay warm on purpose:
+they depict physical paper stock, not the UI ground.
 
 **Verify before saying it's done** — class names lie on this site (two CSS systems, and
 design-system.css loads last). Render over HTTP and sample computed styles:
