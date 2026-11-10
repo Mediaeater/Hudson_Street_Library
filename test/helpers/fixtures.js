@@ -6,50 +6,11 @@
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
-const Database = require('better-sqlite3');
 
 class TestFixtures {
   constructor() {
     this.tempFiles = [];
     this.tempDirs = [];
-    this.databases = [];
-  }
-
-  /**
-   * Create a temporary test database with sample book data
-   * Similar to datasette-enrichments conftest.py:14-50
-   */
-  createTestDatabase(filename = 'test.db') {
-    const tempDir = this.createTempDir();
-    const dbPath = path.join(tempDir, filename);
-    const db = new Database(dbPath);
-
-    // Create books table with test data
-    db.exec(`
-      CREATE TABLE books (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        isbn_asin TEXT,
-        title TEXT NOT NULL,
-        author_full_name TEXT,
-        publisher TEXT,
-        year_published INTEGER,
-        tags TEXT,
-        collection TEXT
-      )
-    `);
-
-    // Insert test data
-    const insert = db.prepare(`
-      INSERT INTO books (isbn_asin, title, author_full_name, publisher, year_published, tags, collection)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `);
-
-    insert.run('978-0-123456-78-9', 'Test Book One', 'Author One', 'Publisher A', 2020, 'fiction,test', null);
-    insert.run('978-0-987654-32-1', 'Test Book Two', 'Author Two', 'Publisher B', 2021, 'non-fiction', null);
-    insert.run(null, 'Book Without ISBN', 'Author Three', 'Publisher C', 2019, 'poetry', 'special-collection');
-
-    this.databases.push(db);
-    return { db, dbPath };
   }
 
   /**
@@ -130,17 +91,6 @@ class TestFixtures {
    * Similar to datasette-enrichments fixture teardown pattern
    */
   cleanup() {
-    // Close databases
-    for (const db of this.databases) {
-      try {
-        if (db.open) {
-          db.close();
-        }
-      } catch (error) {
-        console.warn(`Warning: Could not close database: ${error.message}`);
-      }
-    }
-
     // Remove temp files
     for (const file of this.tempFiles) {
       try {
@@ -164,7 +114,6 @@ class TestFixtures {
     }
 
     // Reset arrays
-    this.databases = [];
     this.tempFiles = [];
     this.tempDirs = [];
   }

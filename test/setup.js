@@ -15,7 +15,6 @@ global.PROJECT_ROOT = path.join(__dirname, '..');
 
 // Make helpers globally available (optional)
 global.createFixtures = require('./helpers/fixtures').createFixtures;
-global.asyncUtils = require('./helpers/async-utils');
 
 // Global error handlers for unhandled rejections in tests
 process.on('unhandledRejection', (reason, promise) => {
