@@ -64,21 +64,21 @@ The script will:
 - Look up ISBN via Google Books API
 - Assign sequential ID and accession date
 - Generate proper cover filename
-- Add to `books.csv` with backup
+- Add to the wing's catalogue CSV (`src/_data/catalog/<wing>.csv`) with backup
 
 See [ADD-BOOK-GUIDE.md](docs/ADD-BOOK-GUIDE.md) for complete instructions.
 
 ## 📊 Current Status
 
-- **Total Books**: 1,722 photography books
+- **Catalogue**: about 2,900 records across 12 wings (art is the largest, about 2,500)
 - **Collections**: 15+ curated collections (see `src/_data/collections/`)
-- **Source of Truth**: `src/_data/catalog/art.csv` (36 columns, validated by `npm run test:csv`)
+- **Source of Truth**: `src/_data/catalog/<wing>.csv`, one file per wing (37 columns, validated by `npm run test:csv`)
 
 ## 📁 Project Structure
 
 ```
 src/                  # All source files
-├── _data/           # Data files (books.csv, news.json)
+├── _data/           # Data files (catalog/<wing>.csv, wings.json, news.json)
 ├── _includes/       # Templates and layouts
 │   └── layouts/     # Page layouts (book.njk)
 ├── assets/          # Static assets

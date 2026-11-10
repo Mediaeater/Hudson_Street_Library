@@ -16,9 +16,9 @@ if git diff --cached --name-only | grep -qE '^src/_data/(catalog/[^/]+\.csv|wing
     echo "   The CSV has structural errors that must be fixed before committing."
     echo ""
     echo "To fix:"
-    echo "  1. Run: node scripts/fix-csv-formatting.js src/_data/catalog/art.csv src/_data/books_fixed.csv"
-    echo "  2. Run: node scripts/validate-csv-robust.js"
-    echo "  3. If valid: cp src/_data/books_fixed.csv src/_data/catalog/art.csv"
+    echo "  1. Run: node scripts/fix-csv-formatting.js src/_data/catalog/<wing>.csv /tmp/<wing>_fixed.csv"
+    echo "  2. Check the fixed copy: node scripts/validate-csv-structure.js /tmp/<wing>_fixed.csv"
+    echo "  3. If valid: cp /tmp/<wing>_fixed.csv src/_data/catalog/<wing>.csv"
     echo "  4. Try committing again"
     echo ""
     exit 1

@@ -38,7 +38,7 @@ Before you start, please be aware of these strict constraints to ensure data int
 *   **`README.md`**: High-level overview and quick start.
 *   **`docs/DEVELOPMENT-WORKFLOW.md`**: Detailed guide for developers.
 *   **`docs/BOOK_WORKFLOW_GUIDE.md`**: How to add and manage book entries.
-*   **`CSV_STRATEGY.md`**: Guidelines for maintaining the `books.csv` data file.
+*   **`docs/CSV_STRATEGY.md`**: Guidelines for maintaining the catalogue CSVs (`src/_data/catalog/<wing>.csv`).
 
 ## Code Style
 
