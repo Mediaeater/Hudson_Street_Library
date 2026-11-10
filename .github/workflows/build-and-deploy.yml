@@ -91,5 +91,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./_site
-          force_orphan: false
+          # One commit on gh-pages, replaced on every deploy. The branch had grown
+          # to 600+ commits of a full site. main holds the history that matters.
+          force_orphan: true
 
