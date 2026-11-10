@@ -743,9 +743,10 @@ module.exports = function(eleventyConfig) {
     for (const rel of s.unreadable) console.warn(`--- images: unreadable, shipped as is: ${rel}`);
   });
   eleventyConfig.addPassthroughCopy({"src/_data/news.json": "cms/data/news.json"});
-  // Working files that predate the generated endpoints. books.json is NOT here:
-  // see the eleventy.after hook above.
-  eleventyConfig.addPassthroughCopy({"data": "data"});
+  // The repo's data/ folder holds build inputs and working files
+  // (row-dates.json and others). None is fetched by a page, so it is not
+  // copied to the site. _site/data/books.json is written by the
+  // eleventy.after hook above.
 
   // Favicon files
   eleventyConfig.addPassthroughCopy({"src/favicon.ico": "favicon.ico"});
