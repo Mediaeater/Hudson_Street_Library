@@ -444,22 +444,13 @@ module.exports = function(eleventyConfig) {
     return limit ? sorted.slice(0, limit) : sorted;
   });
 
-  // Newest rows by cataloged_date, for a wing whose books entered the digital
-  // catalogue from the shelf (blank accession_no) and so never reach
-  // recentlyAdded. Rows with no parseable cataloged_date are left out.
-  eleventyConfig.addFilter("recentlyCatalogued", function(books, limit) {
-    if (!Array.isArray(books)) return [];
-    const dated = books
-      .map(b => ({ ...b, parsedDate: parseAccessionDate(b.cataloged_date) }))
-      .filter(b => b.parsedDate !== null)
-      .sort((a, b) => b.parsedDate - a.parsedDate);
-    return limit ? dated.slice(0, limit) : dated;
-  });
-
   // --- Filter books by cataloged date (backfill work) ---
   // Returns books cataloged recently but acquired earlier (library digitization work)
+  // Also the wing-page fallback (wings.njk): a wing whose books entered the
+  // digital catalogue from the shelf has blank accession_no, so recentlyAdded
+  // is empty there and every dated row passes the backfill test below.
   eleventyConfig.addFilter("recentlyCatalogued", function(books, limit) {
-    if (!books) return [];
+    if (!Array.isArray(books)) return [];
 
     // Filter for backfill: cataloged_date exists AND either there's no
     // accession_no on record (a catalogued copy with no formal accession
