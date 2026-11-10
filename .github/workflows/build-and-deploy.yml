@@ -48,6 +48,16 @@ jobs:
       - name: Clear Eleventy cache
         run: rm -rf _site .cache
 
+      # The build ships web-sized copies of oversized images
+      # (scripts/utils/web-images.js). Encoding all of them takes about a
+      # minute; with this cache only new or changed images are encoded.
+      - name: Restore resized-image cache
+        uses: actions/cache@v6
+        with:
+          path: .image-cache
+          key: web-images-${{ hashFiles('scripts/utils/web-images.js', 'src/assets/images/**') }}
+          restore-keys: web-images-
+
       - name: Build with Eleventy
         run: npm run build
 

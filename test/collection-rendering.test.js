@@ -8,7 +8,8 @@ describe('CSV-driven rendering', function() {
   this.timeout(120000);
 
   before(() => {
-    execSync('npx @11ty/eleventy --quiet', { stdio: 'pipe' });
+    // These tests read the HTML only; skip the image resize pass.
+    execSync('npx @11ty/eleventy --quiet', { stdio: 'pipe', env: { ...process.env, HSL_SKIP_WEB_IMAGES: '1' } });
   });
 
   it('generates one detail page per CSV row', () => {

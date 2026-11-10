@@ -9,6 +9,7 @@ const { coverSrc, hasCover, existingCoverPath } = require("./scripts/utils/cover
 const { resetIndex, tagUrl, recordLinks } = require("./scripts/utils/collections-index");
 const { FACETS } = require("./scripts/utils/tag-vocabulary");
 const { verifiedRowDates } = require("./scripts/utils/row-dates");
+const { shrinkImages } = require("./scripts/utils/web-images");
 
 const { exec } = require("child_process");
 
@@ -728,6 +729,18 @@ module.exports = function(eleventyConfig) {
     // with cover paths that no longer existed. There is no source file now.
     const json = writeBooksJson(path.join(outDir, "data", "books.json"));
     console.log(`--- catalog: wrote ${path.relative(__dirname, json.file)} (${json.rows} rows, ${json.bytes} bytes)`);
+  });
+  // Replace oversized images in the output with web-sized copies, same paths
+  // (scripts/utils/web-images.js). Build only: --serve reads src/assets
+  // straight from disk, so there is nothing in the output to shrink.
+  // HSL_SKIP_WEB_IMAGES=1 skips it for builds that only inspect the HTML.
+  eleventyConfig.on("eleventy.after", async ({ dir, directories, runMode }) => {
+    if (runMode !== "build" || process.env.HSL_SKIP_WEB_IMAGES) return;
+    const outDir = (directories && directories.output) || dir.output;
+    const mb = n => (n / 1e6).toFixed(0);
+    const s = await shrinkImages({ outDir: path.join(outDir, "assets", "images") });
+    console.log(`--- images: ${s.resized} of ${s.files} shipped web-sized (${s.encoded} newly checked), ${mb(s.bytesBefore)} MB -> ${mb(s.bytesAfter)} MB`);
+    for (const rel of s.unreadable) console.warn(`--- images: unreadable, shipped as is: ${rel}`);
   });
   eleventyConfig.addPassthroughCopy({"src/_data/news.json": "cms/data/news.json"});
   // Working files that predate the generated endpoints. books.json is NOT here:
