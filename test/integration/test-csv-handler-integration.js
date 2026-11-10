@@ -526,6 +526,41 @@ describe('CSV Handler Integration Tests', function() {
       const backupContent = fs.readFileSync(backupPath, 'utf8');
       assert.strictEqual(backupContent, 'id,title\n1,Test');
     });
+
+    it('should put a wing backup in backups/writes, not beside the wing file', function() {
+      const wingPath = path.join(testDir, 'catalog', 'art.csv');
+      fs.mkdirSync(path.dirname(wingPath), { recursive: true });
+      fs.writeFileSync(wingPath, 'id,title\n1,Test');
+
+      const backupPath = CSVHandler.createBackup(wingPath, { allowedDir: testDir });
+
+      assert.strictEqual(path.dirname(backupPath), path.join(testDir, 'backups', 'writes'));
+      assert.match(path.basename(backupPath), /^catalog_art_backup_\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}\.csv$/);
+      assert.deepStrictEqual(fs.readdirSync(path.dirname(wingPath)), ['art.csv']);
+    });
+
+    it('should keep only the newest backups of a file', function() {
+      const dir = path.join(testDir, 'prune');
+      fs.mkdirSync(dir, { recursive: true });
+      const csvPath = path.join(dir, 'books.csv');
+      fs.writeFileSync(csvPath, 'id,title\n1,Test');
+      const old = n => `books_backup_2020-01-${String(n).padStart(2, '0')}T00-00-00.csv`;
+      for (let n = 1; n <= CSVHandler.KEEP_BACKUPS + 4; n++) fs.writeFileSync(path.join(dir, old(n)), 'old');
+      // Not this file's backups, or not timestamped: never pruned.
+      fs.writeFileSync(path.join(dir, 'books_backup_before_cleanup.csv'), 'keep');
+      fs.writeFileSync(path.join(dir, 'other_backup_2019-01-01T00-00-00.csv'), 'keep');
+
+      const backupPath = CSVHandler.createBackup(csvPath, { allowedDir: testDir });
+
+      const left = fs.readdirSync(dir);
+      const stamped = left.filter(f => /^books_backup_\d{4}-/.test(f));
+      assert.strictEqual(stamped.length, CSVHandler.KEEP_BACKUPS);
+      assert.ok(left.includes(path.basename(backupPath)), 'the new backup survives');
+      for (let n = 1; n <= 5; n++) assert.ok(!left.includes(old(n)), `${old(n)} should be gone`);
+      assert.ok(left.includes(old(6)));
+      assert.ok(left.includes('books_backup_before_cleanup.csv'));
+      assert.ok(left.includes('other_backup_2019-01-01T00-00-00.csv'));
+    });
   });
 
   describe('Synchronous Operations', function() {

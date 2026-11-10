@@ -567,13 +567,17 @@ class CSVHandler {
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
         // A backup written beside a wing file lands in src/_data/catalog/, which
         // the catalogue loader scans — every build then fails with "has no entry
-        // in wings.json", and the stray file isn't gitignored either. Wing
-        // backups go one level up, named the way the scheduled backup job names
-        // its copies (catalog_<wing>_...).
+        // in wings.json". Wing backups go to src/_data/backups/writes/, named
+        // the way the scheduled backup job names its copies (catalog_<wing>_...).
+        // Any other file is backed up beside itself.
+        // The scheduled job's 30-day sweep of src/_data/backups/ reaches writes/ too.
         const dir = path.dirname(resolvedPath);
-        const backupPath = path.basename(dir) === 'catalog'
-            ? path.join(path.dirname(dir), `catalog_${path.basename(filePath, '.csv')}_backup_${timestamp}.csv`)
-            : filePath.replace(/\.csv$/, `_backup_${timestamp}.csv`);
+        const isWing = path.basename(dir) === 'catalog';
+        const stem = isWing
+            ? `catalog_${path.basename(resolvedPath, '.csv')}_backup_`
+            : `${path.basename(resolvedPath, '.csv')}_backup_`;
+        const backupDir = isWing ? path.join(path.dirname(dir), 'backups', 'writes') : dir;
+        const backupPath = path.join(backupDir, `${stem}${timestamp}.csv`);
 
         // Validate the generated backup path as well
         const resolvedBackup = path.resolve(backupPath);
@@ -581,8 +585,40 @@ class CSVHandler {
             throw new Error('Security: Invalid backup path generated');
         }
 
+        fs.mkdirSync(backupDir, { recursive: true });
         fs.copyFileSync(filePath, backupPath);
+        this.pruneBackups(backupDir, stem);
         return backupPath;
+    }
+
+    /**
+     * How many write backups to keep per file. Every write makes a full copy,
+     * and nothing else removes them.
+     */
+    static get KEEP_BACKUPS() {
+        return 20;
+    }
+
+    /**
+     * Delete all but the newest KEEP_BACKUPS backups of one file. Only names of
+     * the exact form `<stem><timestamp>.csv` count, so a hand-named copy
+     * (`..._backup_before_cleanup.csv`) is never touched.
+     * @param {string} backupDir - Directory the backups are in
+     * @param {string} stem - File name up to and including `_backup_`
+     * @param {number} [keep] - How many to keep
+     * @returns {string[]} - Names of the files removed
+     */
+    static pruneBackups(backupDir, stem, keep = this.KEEP_BACKUPS) {
+        const stamp = /^\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}\.csv$/;
+        const old = fs.readdirSync(backupDir)
+            .filter(name => name.startsWith(stem) && stamp.test(name.slice(stem.length)))
+            .sort()
+            .slice(0, -keep);
+        for (const name of old) {
+            // Losing an old backup must never fail the write it follows.
+            try { fs.unlinkSync(path.join(backupDir, name)); } catch { /* leave it */ }
+        }
+        return old;
     }
 
     /**
