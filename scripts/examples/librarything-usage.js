@@ -8,7 +8,7 @@
  */
 
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '..', '..', '.env') });
+try { process.loadEnvFile(path.join(__dirname, '..', '..', '.env')); } catch { /* no .env file */ }
 
 const { BookAPIClient } = require('../utils/book-api-client');
 
