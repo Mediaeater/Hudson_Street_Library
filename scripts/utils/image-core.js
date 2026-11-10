@@ -5,7 +5,6 @@
  * duplicated across multiple files:
  * - acquire-covers.js (line 444)
  * - cover-utils.js (lines 300, 353)
- * - scripts/utils/image-processor.js (lines 128-140)
  * - scripts/image-pipeline/image-pipeline.js (lines 188-204)
  *
  * Provides unified:

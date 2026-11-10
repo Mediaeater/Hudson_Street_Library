@@ -13,10 +13,6 @@ Scripts for generating static pages and collections from book data.
 - Generates pages for Apartamento magazine issues
 - Creates magazine-specific layouts and collections
 
-**generate-prince-collection-v2.js** - Prince Street collection generator
-- Current version of the Prince Street collection page generator
-- Replaces deprecated versions (see archive/)
-
 ## Archived Scripts
 
 Deprecated generators are in `scripts/archive/deprecated-generators/`:
@@ -30,7 +26,3 @@ Deprecated generators are in `scripts/archive/deprecated-generators/`:
 npm run build:books
 ```
 
-### Generate specific collection
-```bash
-node scripts/generators/generate-prince-collection-v2.js
-```

@@ -1368,8 +1368,8 @@ node scripts/covers/attach.js <id> <file-or-url>
 ls -lh src/assets/images/books/ | sort -k5 -h
 # Look for files > 500KB
 
-# Optimize images
-node scripts/optimize-all-images.js
+# The build already ships web-sized copies of anything over 1600px or 400 KB
+# (scripts/utils/web-images.js). Check the "--- images:" line in the build log.
 
 # Use image shortcode for automatic optimization
 {% image "src/assets/images/cover.jpg", "Alt text" %}
@@ -1524,11 +1524,6 @@ async function fetchWithDelay(url, delay = 1000) {
 // Open Library: 100 req/5 min
 // Google Books: 1000 req/day
 
-// Use caching
-// Image-API responses are cached on disk at data/image-cache.json
-jq '. | length' data/image-cache.json
-
-// Clear old cache by editing the file or removing entries with jq
 ```
 
 ---
@@ -1928,10 +1923,6 @@ ls -lh _site/cms/data/
 **Solution:**
 
 ```bash
-# Inspect the on-disk API cache (JSON, not SQLite)
-ls -lh data/image-cache.json
-jq '. | length' data/image-cache.json
-
 # Delays are built into book-api-client.js; tune via its CLI flags.
 ```
 

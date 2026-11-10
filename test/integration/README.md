@@ -101,10 +101,6 @@ Planned integration tests for other critical modules:
 - **logger.js** - Add file I/O tests
 - **book-api-client.js** - Add real HTTP tests (with mocked endpoints)
 
-### Medium Priority
-- **image-processor.js** - Image manipulation tests
-- **image-cache.js** - Cache operations
-- **unified-image-optimizer.js** - End-to-end optimization
 
 ## Best Practices
 

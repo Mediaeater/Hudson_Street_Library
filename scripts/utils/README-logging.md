@@ -242,15 +242,6 @@ async function processBatch(imagePaths) {
 }
 ```
 
-## Testing
-
-Run the test script to see the logger in action:
-
-```bash
-node scripts/utils/logger-test.js
-```
-
-This will demonstrate all logging features and create sample log files.
 
 ## Benefits
 

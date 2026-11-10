@@ -950,10 +950,8 @@ src/assets/images/news/
 
 #### Image Optimization
 
-```bash
-# Optimize all images in a directory
-node scripts/optimize-all-images.js --dir src/assets/images/news
-```
+Nothing to run. `npm run build` ships a web-sized copy of any image over
+1600px or 400 KB (`scripts/utils/web-images.js`). Sources stay as they are.
 
 #### Using Images in Templates
 
