@@ -4,7 +4,7 @@ const path = require("path");
 const slugify = require("slugify");
 // eleventy-img 7 is ESM-only; require() returns the namespace, the callable is .default
 const Image = require("@11ty/eleventy-img").default;
-const { loadCatalog, writeMergedCsv, writeBooksJson, loadWings } = require("./scripts/utils/catalog");
+const { loadCatalog, writeMergedCsv, writeCatalogIndexCsv, writeBooksJson, loadWings } = require("./scripts/utils/catalog");
 const { coverSrc, hasCover, existingCoverPath } = require("./scripts/utils/cover-path");
 const { resetIndex, tagUrl, recordLinks } = require("./scripts/utils/collections-index");
 const { FACETS } = require("./scripts/utils/tag-vocabulary");
@@ -722,6 +722,10 @@ module.exports = function(eleventyConfig) {
     const outDir = (directories && directories.output) || dir.output;
     const out = writeMergedCsv(path.join(outDir, "cms", "data", "catalog.csv"));
     console.log(`--- catalog: wrote ${path.relative(__dirname, out.file)} (${out.bytes} bytes)`);
+    // The browse pages fetch this instead of catalog.csv: the columns they use
+    // and a short plain-text description, about a quarter of the size.
+    const index = writeCatalogIndexCsv(path.join(outDir, "cms", "data", "catalog-index.csv"));
+    console.log(`--- catalog: wrote ${path.relative(__dirname, index.file)} (${index.bytes} bytes)`);
     // /data/books.json — the public JSON endpoint documented on
     // /api-documentation/ and listed in .well-known/api-catalog. Generated here
     // for the same reason catalog.csv is: it was a checked-in snapshot copied

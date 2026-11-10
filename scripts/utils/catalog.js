@@ -29,6 +29,7 @@
 const fs = require('fs');
 const path = require('path');
 const { parse } = require('csv-parse/sync');
+const { stringify } = require('csv-stringify/sync');
 const CSVHandler = require('./csv-handler');
 const { validateSchema } = require('./validate-schema');
 const { existingCoverPath } = require('./cover-path');
@@ -455,6 +456,69 @@ function writeBooksJson(outFile, options = {}) {
     return { file: outFile, bytes: Buffer.byteLength(json), rows: JSON.parse(json).length };
 }
 
+/**
+ * The columns the browse pages (/static-demo/, /aggregate-view/) read. They
+ * list, filter, sort and search on these and nothing else.
+ */
+const INDEX_COLUMNS = [
+    'id', 'title', 'author_full_name', 'author_last', 'publisher', 'publication_year',
+    'binding', 'page_count', 'isbn_asin', 'tags', 'collection_grouping', 'accession_no',
+    'image_url', 'description', 'collection',
+];
+// The pages show the first 240 characters of the description as plain text.
+// The index carries a little more than that, so the page still knows when to
+// add an ellipsis.
+const INDEX_DESCRIPTION_CHARS = 400;
+
+/**
+ * A description as the short plain text the browse pages show: tags out,
+ * whitespace collapsed, cut at INDEX_DESCRIPTION_CHARS without splitting an
+ * HTML entity (the page decodes entities itself).
+ * @param {string} html
+ * @returns {string}
+ */
+function indexDescription(html) {
+    if (!html || html === 'NULL') return '';
+    const plain = String(html).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    if (plain.length <= INDEX_DESCRIPTION_CHARS) return plain;
+    return plain.slice(0, INDEX_DESCRIPTION_CHARS).replace(/&[^;\s]{0,10}$/, '');
+}
+
+/**
+ * Render the slim catalogue the browse pages fetch (/cms/data/catalog-index.csv).
+ * Same rows as renderMergedCsv, but only INDEX_COLUMNS and a short plain-text
+ * description. The full descriptions are two thirds of catalog.csv and the
+ * pages only ever showed a 240-character snippet of each.
+ * @param {{dataDir?: string, includeUnpublished?: boolean}} [options]
+ * @returns {string}
+ */
+function renderCatalogIndexCsv(options = {}) {
+    const { data, wings } = loadCatalogSync(options);
+    const published = new Set(
+        wings.filter(w => options.includeUnpublished || w.isDefault || w.live).map(w => w.slug)
+    );
+    const rows = data
+        .filter(b => published.has(b.collection))
+        .map(b => INDEX_COLUMNS.map(k => {
+            if (k === 'description') return indexDescription(b[k]);
+            return b[k] == null ? '' : String(b[k]);
+        }));
+    return stringify([INDEX_COLUMNS, ...rows]);
+}
+
+/**
+ * Write renderCatalogIndexCsv() to disk, creating parent directories.
+ * @param {string} outFile
+ * @param {{dataDir?: string, includeUnpublished?: boolean}} [options]
+ * @returns {{file: string, bytes: number}}
+ */
+function writeCatalogIndexCsv(outFile, options = {}) {
+    const csv = renderCatalogIndexCsv(options);
+    fs.mkdirSync(path.dirname(outFile), { recursive: true });
+    fs.writeFileSync(outFile, csv);
+    return { file: outFile, bytes: Buffer.byteLength(csv) };
+}
+
 module.exports = {
     DATA_DIR,
     EXPECTED_COLUMNS,
@@ -472,5 +536,8 @@ module.exports = {
     renderMergedCsv,
     writeMergedCsv,
     renderBooksJson,
+    INDEX_COLUMNS,
+    renderCatalogIndexCsv,
+    writeCatalogIndexCsv,
     writeBooksJson,
 };

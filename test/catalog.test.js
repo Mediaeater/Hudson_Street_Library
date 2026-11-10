@@ -12,6 +12,9 @@ const {
   nextIdForWing,
   fileForIdentifier,
   renderBooksJson,
+  renderCatalogIndexCsv,
+  renderMergedCsv,
+  INDEX_COLUMNS,
   CatalogError,
 } = require('../scripts/utils/catalog');
 
@@ -183,6 +186,44 @@ describe('catalog loader', () => {
   // /data/books.json. Generated at build time by the eleventy.after hook; it
   // was a checked-in Nov 2025 snapshot until Sept 2026, which is exactly the
   // failure these tests exist to prevent recurring.
+  describe('renderCatalogIndexCsv', () => {
+    const { parse } = require('csv-parse/sync');
+    const rowsOf = csv => parse(csv, { columns: true });
+
+    it('emits only published wings, and only the columns the browse pages read', () => {
+      const published = rowsOf(renderCatalogIndexCsv(fixture('ok')));
+      const all = rowsOf(renderCatalogIndexCsv({ ...fixture('ok'), includeUnpublished: true }));
+      expect(published.length).to.be.greaterThan(0);
+      expect(all.length).to.be.at.least(published.length);
+      expect(Object.keys(all[0])).to.deep.equal(INDEX_COLUMNS);
+    });
+
+    it('matches the merged catalogue row for row on every column but description', () => {
+      const index = rowsOf(renderCatalogIndexCsv());
+      const full = rowsOf(renderMergedCsv());
+      expect(index.length).to.equal(full.length);
+      index.forEach((row, i) => {
+        for (const key of INDEX_COLUMNS) {
+          if (key !== 'description') expect(row[key], `${full[i].id} ${key}`).to.equal(full[i][key]);
+        }
+      });
+    });
+
+    it('carries descriptions as short plain text on one line', () => {
+      const index = rowsOf(renderCatalogIndexCsv());
+      const full = rowsOf(renderMergedCsv());
+      expect(full.some(row => /<p[ >]/.test(row.description))).to.equal(true);
+      for (const row of index) {
+        expect(row.description.length, row.id).to.be.at.most(400);
+        expect(row.description, row.id).to.not.match(/<\/?[a-z][^>]*>|\n/i);
+        expect(row.description, row.id).to.not.match(/&[^;\s]{0,10}$/);
+      }
+      // A page shows 240 characters, so anything longer must still arrive longer.
+      const long = full.find(row => row.description.replace(/<[^>]+>/g, ' ').length > 1000);
+      expect(index.find(row => row.id === long.id).description.length).to.be.greaterThan(240);
+    });
+  });
+
   describe('renderBooksJson', () => {
     it('emits only published wings, and every wing with includeUnpublished', () => {
       const published = JSON.parse(renderBooksJson(fixture('ok')));
