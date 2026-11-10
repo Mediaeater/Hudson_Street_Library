@@ -129,7 +129,17 @@ describe('covers report', () => {
   });
 
   it('prints the report and writes nothing', () => {
-    const snapshot = () => execFileSync('find', [dir, '-type', 'f', '-exec', 'stat', '-f', '%N %z %m', '{}', '+']).toString();
+    // Name, size and mtime of every file. In Node, not `stat -f`: that flag is
+    // BSD-only and the suite also runs on the Linux CI runner.
+    const snapshot = () => fs.readdirSync(dir, { recursive: true, withFileTypes: true })
+      .filter(entry => entry.isFile())
+      .map(entry => {
+        const file = path.join(entry.parentPath, entry.name);
+        const stat = fs.statSync(file);
+        return `${file} ${stat.size} ${stat.mtimeMs}`;
+      })
+      .sort()
+      .join('\n');
     const text = formatReport(auditCovers(options), { orphans: true });
     expect(text).to.match(/No cover \(image_url blank, nothing on disk\): 2/);
     expect(text).to.contain('nobody_wants_me.jpg');
