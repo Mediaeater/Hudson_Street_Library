@@ -55,7 +55,11 @@ So the browser does the layout it already does, and the pipeline reads its outpu
 3. **`build_artwork.py`** redraws that geometry in two spot inks with reportlab, then
    finalises it as PDF/X-4 with pikepdf.
 4. **`verify_artwork.py`** checks the objects, then compares the result to the browser's
-   own print output as a raster.
+   own print-media rendering as a raster.
+
+Stages 1 and 4 drive the installed Chrome, headless, through `chrome.py`: the DevTools
+protocol over `--remote-debugging-pipe`, standard library only. Set `CHROME=` to use
+another binary.
 
 The page stays the single source of truth. Change the CSS, re-run `build.sh`.
 
@@ -96,8 +100,11 @@ Separation; **no device colour operator anywhere in any content stream**; an emb
 `/Trapped`. Colorants must be exactly `Black`, `HSL Green` and `All` (registration, used
 only for the trim marks).
 
-*Raster* — both the artwork and the browser's print output rendered at 24 px/mm, cropped
-to trim, compared as ink-coverage masks dilated by the tolerance. This is a coverage
+*Raster* — the artwork is rendered at 24 px/mm and cropped to trim. The reference is a
+screenshot of each piece in print media at the same scale (`build/stationery/reference/`).
+The two are compared as ink-coverage masks dilated by the tolerance. The reference used
+to be Chromium's print PDF. Chrome 157 rasterises a CSS gradient into that PDF at
+72 px/in and drops every third line of the ledger ruling. This is a coverage
 comparison rather than a pixel diff on purpose: the browser paints in RGB and the artwork
 in a spot alternate, and the two rasterisers antialias differently, so identical geometry
 never gives identical pixels. Diff images are written to `build/stationery/verify/`
@@ -105,11 +112,10 @@ never gives identical pixels. Diff images are written to `build/stationery/verif
 
 Three residual differences are expected and are the browser's, not the artwork's:
 
-- **04 catalogue card, 2.4 %** and **01 pad, 0.4 %** — Chromium draws the ledger ruling as
-  a tiling pattern anchored in pattern space rather than to the element, so its phase
-  lands up to a pixel off and it exposes a sliver of the previous period at the top of the
-  ruled box. CSS puts no rule there and neither do we.
-- **03 envelope face, 0.5 %** — the dashed POSTAGE box. Chromium fits a whole number of
+- **04 catalogue card, 1.3 %** and **01 pad, 0.4 %** — Chromium paints a sliver of a
+  ruling line along the top edge of the ruled box, where the gradient's first period
+  starts. CSS puts no rule there and neither do we.
+- **03 envelope face, 0.2 %** — the dashed POSTAGE box. Chromium fits a whole number of
   dashes to each side; the artwork does the same, but the two fits differ on one edge.
 
 ## Colour

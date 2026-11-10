@@ -12,10 +12,10 @@
 # the publish step is a no-op until the design actually moves — at which point bump
 # ARTWORK_DATE in build_artwork.py, which is what the files are dated from.
 #
-# Two interpreters are used on purpose. The extraction stages drive a real browser,
-# so they run under an interpreter that has Playwright installed; the artwork stages
-# run in a pinned venv, so the PDF a printer receives does not change under us when
-# a library upgrades. Override either with BROWSER_PYTHON= / URL=.
+# The extraction stages drive the installed Chrome, headless, over the DevTools
+# protocol (chrome.py, standard library only). Everything runs in one pinned venv, so
+# the PDF a printer receives does not change under us when a library upgrades.
+# Override the page or the browser with URL= / CHROME=.
 set -euo pipefail
 
 cd "$(dirname "$0")/../.."
@@ -24,7 +24,6 @@ BUILD=build/stationery
 DIST=dist/stationery
 URL=${URL:-http://localhost:8899/identity/stationery/}
 PUBLISH=src/assets/stationery
-BROWSER_PYTHON=${BROWSER_PYTHON:-/opt/homebrew/bin/python3}
 
 # CRPC2 is the CGATS 21 uncoated condition, which is the stock the job is specified
 # on. Its own copyright tag grants embedding and redistribution without restriction,
@@ -41,11 +40,6 @@ if ! curl -sf -o /dev/null "$URL"; then
   exit 1
 fi
 
-if [ ! -x "$BROWSER_PYTHON" ]; then
-  echo "! BROWSER_PYTHON=$BROWSER_PYTHON not found; set it to an interpreter with playwright" >&2
-  exit 1
-fi
-
 VENV=$BUILD/venv
 if [ ! -d "$VENV" ]; then
   echo "== venv"
@@ -58,7 +52,7 @@ PY="$VENV/bin/python"
 [ -f "$ICC" ] || { echo "== output intent profile"; curl -sL -o "$ICC" "$ICC_URL"; }
 
 echo "== 1. geometry, out of the browser"
-"$BROWSER_PYTHON" "$HERE/extract_geometry.py" "$URL" "$BUILD/geometry.json"
+"$PY" "$HERE/extract_geometry.py" "$URL" "$BUILD/geometry.json"
 
 echo "== 2. font instances"
 "$PY" "$HERE/prepare_fonts.py" "$BUILD/geometry.json" "$BUILD"
@@ -68,8 +62,8 @@ echo "== 3. artwork"
       --out "$DIST" --icc "$ICC" --condition "$CONDITION"
 
 echo "== 4. verification"
-"$PY" "$HERE/verify_artwork.py" --dist "$DIST" --reference "$BUILD/reference.pdf" --render \
-      --url "$URL" --browser-python "$BROWSER_PYTHON" --condition "$CONDITION" \
+"$PY" "$HERE/verify_artwork.py" --dist "$DIST" --reference "$BUILD/reference" --render \
+      --url "$URL" --condition "$CONDITION" \
       --out "$BUILD/verify"
 
 # Last, and only if verification passed: nothing unverified reaches the website.

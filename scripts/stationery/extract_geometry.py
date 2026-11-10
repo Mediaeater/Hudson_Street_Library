@@ -15,7 +15,7 @@ Everything is emitted in millimetres from the top-left of the piece's trim.
 Run:  python extract_geometry.py <url> <out.json>
 """
 import json, sys
-from playwright.sync_api import sync_playwright
+from chrome import Page
 
 PX2MM = 25.4 / 96.0   # CSS defines an inch as 96px; print CSS pins --mm to 1mm
 
@@ -236,14 +236,10 @@ def main():
     url = sys.argv[1] if len(sys.argv) > 1 else "http://localhost:8899/identity/stationery/"
     out = sys.argv[2] if len(sys.argv) > 2 else "geometry.json"
     doc = {}
-    with sync_playwright() as p:
-        b = p.chromium.launch()
-        pg = b.new_page(viewport={"width": 1600, "height": 1200})
-        pg.goto(url, wait_until="networkidle")
-        pg.emulate_media(media="print")
-        pg.wait_for_timeout(400)
+    with Page(url, viewport=(1600, 1200)) as pg:
+        pg.print_media()
         for key, sel, label in PIECES:
-            g = pg.evaluate(JS, sel)
+            g = pg.call(JS, sel)
             if g.get("error"):
                 print(f"  !! {key}: {g['error']}"); continue
             g["label"] = label; g["selector"] = sel
@@ -252,7 +248,6 @@ def main():
                   f"{len(g['texts']):4} text  {len(g['rules']):3} rules  "
                   f"{len(g['fills']):3} fills  {len(g['boxes'])} box  {len(g['circles']):3} circles  "
                   f"{len(g['seals'])} seal  {len(g['rulings'])} ruling")
-        b.close()
     json.dump(doc, open(out, "w"), indent=1)
     print(f"\nwrote {out}")
 

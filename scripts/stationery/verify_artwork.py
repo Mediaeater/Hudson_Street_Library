@@ -11,8 +11,8 @@ Two independent checks, because each catches what the other cannot:
              whole exercise — no device colour anywhere: every mark must be laid
              down in a named Separation.
 
-  raster     Renders the generated artwork and the browser's own print output at
-             the same scale, crops both to trim, and compares ink coverage. This
+  raster     Renders the generated artwork and the browser's own print-media
+             rendering of each piece at the same scale, and compares ink coverage. This
              is the check that catches a rule drawn in the wrong place, which no
              amount of object inspection would notice.
 
@@ -21,16 +21,16 @@ the browser paints in RGB and the artwork in a spot alternate, and the two
 rasterisers antialias differently, so identical geometry never gives identical
 pixels. Ink/no-ink masks, dilated by the tolerance, do compare meaningfully.
 
-Run:  python verify_artwork.py --dist dist --reference stationery.pdf [--render]
+Run:  python verify_artwork.py --dist dist --reference reference/ [--render]
 """
 import argparse, io, os, re, subprocess, sys, tempfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_artwork import DELIVERABLES, TRIM, MARGIN, MM   # one source of truth for trim
 
-# Page order of the browser's print output = DOM order = extract_geometry.PIECES.
-# Asserted against the reference PDF's own page sizes below, so a reordering of
-# the page cannot pass silently.
+# One reference image per face, <key>.png, taken from the element that
+# extract_geometry.PIECES names for that key. compare() refuses an image whose size
+# is not the face's trim, so a selector that lands on the wrong piece cannot pass.
 REFERENCE_ORDER = [
     "01-accession-pad",
     "02-compliment-slip",
@@ -45,10 +45,9 @@ REFERENCE_ORDER = [
 DPI = 609.6          # exactly 24 px/mm, so a 10 mm margin crops on a pixel boundary
 PXMM = DPI / 25.4
 INK = 250            # a pixel darker than this in any channel counts as ink
-# Chromium's print PDF is not a fine-grained record of the layout: its content
-# stream is written in whole CSS pixels (verified — every rect in the reference is
-# integer-valued under a 0.75 scale CTM), so the browser's own output is quantised
-# to 1/96 in = 0.265 mm. The artwork is drawn in exact millimetres, which is better,
+# The browser is not a fine-grained record of the layout: it snaps borders and
+# glyph origins to whole CSS pixels, so its own output is quantised to
+# 1/96 in = 0.265 mm. The artwork is drawn in exact millimetres, which is better,
 # but it means the two can only be compared to the coarser of the two grids.
 TOL_MM = 0.27        # one CSS pixel: the browser's own positional quantum
 
@@ -190,11 +189,11 @@ def compare(gen_png, ref_png, w, h, outdir, label):
 
     gen = Image.open(gen_png).crop((m, m, m + W, m + H))
     ref = Image.open(ref_png)
-    # Chromium lays each @page out in integer CSS pixels, so its trim lands within
-    # about 0.15 mm of nominal — known, and reported in the print-readiness notes.
-    # Rescaling it onto the nominal grid keeps that from reading as a geometry error.
+    # The screenshot is a whole number of device pixels, so its edge can land a
+    # pixel off nominal trim. Rescaling it onto the nominal grid keeps that from
+    # reading as a geometry error.
     if abs(ref.width - W) > 8 or abs(ref.height - H) > 8:
-        return None, f"{label}: reference page is {ref.width}x{ref.height} px, expected {W}x{H}"
+        return None, f"{label}: reference image is {ref.width}x{ref.height} px, expected {W}x{H}"
     if (ref.width, ref.height) != (W, H):
         ref = ref.resize((W, H), Image.LANCZOS)
 
@@ -221,25 +220,29 @@ def compare(gen_png, ref_png, w, h, outdir, label):
 
 
 # ----------------------------------------------------------------------- main --
-def render_reference(url, out, browser_python):
-    script = (
-        "from playwright.sync_api import sync_playwright\n"
-        "with sync_playwright() as p:\n"
-        "    b = p.chromium.launch(); pg = b.new_page()\n"
-        f"    pg.goto({url!r}, wait_until='networkidle'); pg.emulate_media(media='print')\n"
-        f"    pg.pdf(path={out!r}, prefer_css_page_size=True, print_background=True); b.close()\n")
-    subprocess.run([browser_python, "-c", script], check=True)
+def render_reference(url, outdir):
+    """One PNG per face: the browser's print-media rendering of that element, at the
+    comparison scale. Not the browser's print PDF. Chrome 157 rasterises a CSS
+    gradient into the PDF at 72 px/in, which drops every third line of the ledger
+    ruling, so the PDF is no longer a fair picture of the design. The screen
+    rasteriser draws the same print layout at any scale asked of it."""
+    from chrome import Page
+    from extract_geometry import PIECES
+    os.makedirs(outdir, exist_ok=True)
+    with Page(url, viewport=(1600, 1200)) as pg:
+        pg.print_media()
+        for key, sel, _ in PIECES:
+            with open(os.path.join(outdir, key + ".png"), "wb") as f:
+                f.write(pg.screenshot(sel, scale=DPI / 96.0))
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dist", default="dist")
-    ap.add_argument("--reference", default="reference.pdf",
-                    help="the browser's own print output, for the raster comparison")
+    ap.add_argument("--reference", default="reference",
+                    help="folder of the browser's own renderings, for the raster comparison")
     ap.add_argument("--render", action="store_true", help="re-render the reference first")
     ap.add_argument("--url", default="http://localhost:8899/identity/stationery/")
-    ap.add_argument("--browser-python", default="/opt/homebrew/bin/python3",
-                    help="an interpreter with playwright installed")
     ap.add_argument("--condition", default="CGATS21_CRPC2")
     ap.add_argument("--out", default="verify", help="where the diff images are written")
     a = ap.parse_args()
@@ -248,7 +251,7 @@ def main():
     os.makedirs(a.out, exist_ok=True)
     if a.render or not os.path.exists(a.reference):
         print(f"rendering reference from {a.url}")
-        render_reference(a.url, a.reference, a.browser_python)
+        render_reference(a.url, a.reference)
 
     failures, rows = [], []
 
@@ -267,27 +270,21 @@ def main():
         if extra:
             failures.append(f"{key}: unexpected colorant(s) {extra}")
 
-    with pikepdf.open(a.reference) as ref:
-        if len(ref.pages) != len(REFERENCE_ORDER):
-            sys.exit(f"reference has {len(ref.pages)} pages, expected {len(REFERENCE_ORDER)}")
-        for pg, key in zip(ref.pages, REFERENCE_ORDER):
-            mb = [float(v) for v in pg.MediaBox]
-            got = ((mb[2] - mb[0]) / MM, (mb[3] - mb[1]) / MM)
-            if max(abs(g - t) for g, t in zip(got, TRIM[key])) > 0.5:
-                sys.exit(f"reference page order looks wrong: expected {key} "
-                         f"{TRIM[key]}, page is {tuple(round(v, 1) for v in got)}")
+    missing = [k for k in REFERENCE_ORDER
+               if not os.path.exists(os.path.join(a.reference, k + ".png"))]
+    if missing:
+        sys.exit(f"reference is missing {missing}; run with --render")
 
-    print("\nraster  (coverage against the browser's own print output,"
+    print("\nraster  (coverage against the browser's own print-media rendering,"
           f" {TOL_MM} mm tolerance)")
     with tempfile.TemporaryDirectory() as tmp:
-        ref_pages = render(a.reference, os.path.join(tmp, "ref"))
         print(f"  {'face':22}{'ink px':>10}{'only ours':>11}{'only browser':>14}   verdict")
         for key, title, pieces in DELIVERABLES:
             gen_pages = render(os.path.join(a.dist, key + ".pdf"),
                                os.path.join(tmp, "gen-" + key))
             for pk, gp in zip(pieces, gen_pages):
                 w, h = TRIM[pk]
-                st, err = compare(gp, ref_pages[REFERENCE_ORDER.index(pk)], w, h, a.out, pk)
+                st, err = compare(gp, os.path.join(a.reference, pk + ".png"), w, h, a.out, pk)
                 if err:
                     failures.append(err); print(f"  {pk:22} ! {err}"); continue
                 worst = max(st["pct_gen"], st["pct_ref"])
