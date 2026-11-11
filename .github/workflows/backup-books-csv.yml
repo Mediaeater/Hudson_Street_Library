@@ -112,5 +112,16 @@ jobs:
             # [skip ci] prevents this backup-only commit from triggering a
             # redundant site rebuild/deploy.
             git commit -m "backup: snapshot catalogue CSVs ($(date -u +'%Y-%m-%d')) [skip ci]"
-            git push
+            # main can move while this job runs (back-to-back pushes from a
+            # cover or add session). The concurrency group only serialises
+            # backups, not human pushes, so rebase onto the new tip and retry.
+            # The rebase is clean: this commit only adds/prunes csv-backups/.
+            for attempt in 1 2 3 4 5; do
+              if git push origin HEAD:main; then exit 0; fi
+              echo "Push rejected (attempt $attempt); rebasing onto origin/main."
+              git pull --rebase origin main
+              sleep $((attempt * 3))
+            done
+            echo "Push still rejected after 5 attempts." >&2
+            exit 1
           fi
