@@ -1,0 +1,35 @@
+name: Workflow lint
+
+# Static analysis of .github/ itself (zizmor): actions not pinned to a SHA,
+# checkouts that persist the token, broad permissions, template injection,
+# Dependabot config. The tree was brought to zero findings on 2026-11-12;
+# this keeps new workflows there. Only .github/ can change the result, so
+# catalogue and content pushes skip it.
+
+on:
+  push:
+    branches: ["main"]
+    paths: [".github/**"]
+  pull_request:
+    paths: [".github/**"]
+
+permissions:
+  contents: read
+
+jobs:
+  zizmor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Binary pinned by hand: Dependabot does not track the download URL.
+      # GH_TOKEN enables the online audits (ref and SHA checks via the API).
+      - name: Run zizmor
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          curl -sSfL "https://github.com/zizmorcore/zizmor/releases/download/v1.32.0/zizmor-x86_64-unknown-linux-gnu.tar.gz" | tar -xz zizmor
+          ./zizmor --no-progress .
