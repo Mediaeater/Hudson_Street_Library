@@ -1,0 +1,1263 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Photobooks | Hudson Street Library</title>
+    <link rel="canonical" href="https://hudsonstreetlibrary.com/collections/music-photobooks.html">
+
+    
+    <meta name="description" content="Capturing the energy, aesthetic, and personalities of music scenes and artists through the lens of photography.">
+    
+    <link rel="stylesheet" href="/assets/css/tailwind.css">
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="api-catalog" type="application/linkset+json" href="/.well-known/api-catalog">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Hudson Street Library",
+  "url": "https://hudsonstreetlibrary.com",
+  "logo": "https://hudsonstreetlibrary.com/assets/images/logo.png",
+  "description": "A curated collection of photography, art, and design books"
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Music Photobooks",
+  "url": "https://hudsonstreetlibrary.com/collections/music-photobooks.html",
+  "description": "Capturing the energy, aesthetic, and personalities of music scenes and artists through the lens of photography.",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Hudson Street Library",
+    "url": "https://hudsonstreetlibrary.com"
+  }
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://hudsonstreetlibrary.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Collections",
+      "item": "https://hudsonstreetlibrary.com/collection-explore.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Music Photobooks",
+      "item": "https://hudsonstreetlibrary.com/collections/music-photobooks.html"
+    }
+  ]
+}
+</script>
+
+</head>
+<body class="min-h-screen bg-neutral-50 text-neutral-900">
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+
+<style>
+    .site-header {
+        font-family: 'Literata', Georgia, serif;
+    }
+    .site-header .site-logo {
+        font-family: 'Crimson Pro', Georgia, serif;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        white-space: nowrap;
+    }
+    /* Book-spines mark (same drawing as the favicon). Inlined with
+       fill: currentColor rather than <img src=favicon.svg> because the
+       SVG file self-inverts to off-white in OS dark mode and would
+       disappear against the white header. */
+    .site-header .logo-mark {
+        width: 1.3em;
+        height: 1.3em;
+        display: block;
+        flex-shrink: 0;
+        fill: currentColor;
+    }
+    .site-header .nav-link {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+        font-weight: 400;
+        letter-spacing: 0.005em;
+    }
+    .site-header .nav-link[aria-current="page"],
+    .site-header .nav-link-active {
+        font-weight: 600;
+    }
+    .site-header #mobile-nav-menu a {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+    }
+
+    /*
+      Mobile menu uses self-contained, component-scoped CSS rather than
+      Tailwind utilities, so its layout can't be broken by global stylesheet
+      changes. This originally fixed an invisible-sliver bug: design-system.css
+      ships an unlayered `* { padding: 0 }` reset that beats Tailwind's layered
+      utilities and collapsed the old icon-only button. The self-contained
+      styling is kept deliberately.
+    */
+    .site-header .menu-toggle { display: none; }
+    .site-header .mobile-nav { display: none; }
+
+    /*
+      Mobile scroll-jitter fix.
+      The header ships as `sticky top-0 bg-white/95 backdrop-blur-sm`. On mobile
+      a sticky bar with backdrop-filter: blur() forces the browser to re-sample
+      and re-blur the pixels scrolling beneath it every frame; on mobile GPUs
+      that readback lags the scroll compositor and the bar (and the text passing
+      under it) shudders. Drop the blur and use an opaque background on small
+      screens — the frosted-glass effect stays desktop-only. The doubled
+      `.site-header.site-header` selector out-specifies the `bg-white/95` and
+      `backdrop-blur-sm` utility classes without needing !important.
+    */
+    @media (max-width: 900px), (hover: none) and (pointer: coarse) {
+        .site-header.site-header {
+            background-color: #ffffff;
+            -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+            /* Promote the sticky bar to its own compositor layer so it isn't
+               re-rasterized against the scrolling content every frame — this
+               is what stops the header (and the text under it) juddering on
+               mobile. Pairs with dropping the backdrop blur above. */
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            will-change: transform;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .site-header .menu-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.45rem 0.7rem;
+            border: 1px solid rgba(0, 49, 0, 0.3);
+            border-radius: 0.5rem;
+            background: #ffffff;
+            color: #003100;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .site-header .menu-toggle:hover { background: #f0f5f0; }
+        .site-header .menu-toggle:focus-visible {
+            outline: 2px solid #003100;
+            outline-offset: 2px;
+        }
+        .site-header .menu-toggle svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+            flex-shrink: 0;
+        }
+        .site-header .menu-toggle .menu-toggle-label {
+            font-family: 'Literata', Georgia, serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .site-header .menu-toggle .icon-close { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-open { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-close { display: block; }
+
+        .site-header .mobile-nav.is-open {
+            display: flex;
+            flex-direction: column;
+        }
+        .site-header .mobile-nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            padding: 0.5rem;
+            z-index: 40;
+        }
+        .site-header .mobile-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            color: #404040;
+            text-decoration: none;
+        }
+        .site-header .mobile-nav a:hover {
+            background: #f0f5f0;
+            color: #002000;
+        }
+    }
+</style>
+
+<header class="site-header sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="site-logo text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                <svg class="logo-mark" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+                    <rect x="38" y="128" width="72" height="318"/>
+                    <rect x="138" y="68" width="76" height="378"/>
+                    <rect x="242" y="100" width="72" height="346"/>
+                    <rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)"/>
+                </svg>
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link ">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Accessions
+                </a>
+                
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <!-- Icon + visible "Menu" label so the control is obvious on mobile.
+                 Sizing/visibility come from the unlayered styles above, not
+                 Tailwind utilities (see note in the <style> block). Icons are
+                 inline SVGs so the menu works on pages without an icon font. -->
+            <button class="menu-toggle"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <svg class="icon-open" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg class="icon-close" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+                <span class="menu-toggle-label">Menu</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu" class="mobile-nav" aria-label="Mobile navigation">
+        <a href="/#about">About</a>
+        <a href="/collection-explore.html">Collections</a>
+        <a href="/static-demo/">Search</a>
+        <a href="/#publications">Publications</a>
+        <a href="/news.html">News</a>
+        <a href="/collections/recently_added.html">Accessions</a>
+        
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const button = document.querySelector('button[aria-controls="mobile-nav-menu"]');
+    const willOpen = !menu.classList.contains('is-open');
+
+    menu.classList.toggle('is-open', willOpen);
+    // Icon swap (hamburger <-> X) is driven by aria-expanded in CSS.
+    if (button) button.setAttribute('aria-expanded', String(willOpen));
+}
+</script>
+
+
+
+<style>
+    .collection-page {
+        --color-ink: #13161B;
+        --color-slate: #5B6B84;
+        --color-border: rgba(19, 22, 27, 0.12);
+
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 5rem 2rem 6rem;
+        font-family: 'Literata', Georgia, serif;
+        color: var(--color-ink);
+    }
+
+    .collection-masthead {
+        text-align: center;
+        max-width: 70ch;
+        margin: 0 auto 5rem;
+    }
+
+    .collection-eyebrow {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-slate);
+        margin-bottom: 1.25rem;
+    }
+
+    .collection-eyebrow a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-eyebrow a:hover { border-bottom-color: var(--color-slate); }
+
+    .collection-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: clamp(2.25rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        /* Tailwind's base layer colours headings gray-900; state the ink. */
+        color: var(--color-ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .collection-description {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        line-height: 1.7;
+        font-weight: 300;
+        margin: 0 auto;
+    }
+
+    /* Running prose reads from the left; a one-line blurb stays centred. */
+    .collection-intro { text-align: left; }
+    .collection-intro .collection-description + .collection-description { margin-top: 1.25rem; }
+
+    .collection-count,
+    .collection-source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-slate);
+    }
+
+    .collection-count { margin-top: 1.75rem; }
+    .collection-source { margin-top: 0.5rem; font-weight: 400; }
+
+    .collection-same {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 1.25rem auto 0;
+    }
+
+    .collection-same a,
+    .collection-related a {
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-same a:hover,
+    .collection-related a:hover { border-bottom-color: var(--color-slate); }
+
+    /* Text link, not a button: the .wing-search idiom. */
+    .collection-external {
+        display: inline-block;
+        margin-top: 1.25rem;
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 2px;
+        transition: border-color 0.3s ease;
+    }
+
+    .collection-external:hover { border-bottom-color: var(--color-slate); }
+
+    .collection-figure {
+        max-width: 420px;
+        margin: 0 auto 5rem;
+        text-align: center;
+    }
+
+    .collection-figure img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .collection-figure figcaption {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-slate);
+        margin-top: 0.75rem;
+    }
+
+    /* Sections. A rule under the heading, not a box around the content. */
+    .collection-section { margin-bottom: 4.5rem; }
+    .collection-section:last-child { margin-bottom: 0; }
+
+    .collection-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.25rem 1.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--color-border);
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--color-slate);
+    }
+
+    .collection-section-head h2 {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.2em;
+    }
+
+    .collection-section-head span { letter-spacing: 0.12em; }
+
+    .collection-section-head h2 a { color: inherit; text-decoration: none; }
+    .collection-section-head h2 a:hover { color: var(--color-ink); }
+
+    /* Related pages: a list of names, set as text. */
+    .collection-related {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .collection-related li { margin-bottom: 0.75rem; font-size: 1.0625rem; }
+
+    .collection-related .source {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-slate);
+        margin-left: 0.6rem;
+    }
+
+    /* Covers sit on the paper, held by their own shadow (the .wing-books pattern). */
+    .collection-books {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 2rem 1.75rem;
+    }
+
+    .collection-book { text-decoration: none; color: var(--color-ink); display: block; }
+
+    .collection-book-cover {
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .collection-book-cover img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 12px rgba(19, 22, 27, 0.18));
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .collection-book:hover .collection-book-cover img { transform: translateY(-4px); }
+
+    .collection-book-cover .no-cover {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-slate);
+        border: 1px solid var(--color-border);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .collection-book-author {
+        font-family: 'Archivo Narrow', sans-serif;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-slate);
+        margin-bottom: 0.25rem;
+    }
+
+    .collection-book-title {
+        font-size: 0.9375rem;
+        line-height: 1.35;
+        font-weight: 400;
+    }
+
+    .collection-book-meta {
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        font-weight: 300;
+        color: rgba(19, 22, 27, 0.6);
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-page { padding: 3rem 1.5rem 4rem; }
+        .collection-masthead { margin-bottom: 3.5rem; }
+        .collection-figure { margin-bottom: 3.5rem; }
+        .collection-books { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1.5rem 1.25rem; }
+    }
+</style>
+
+
+
+
+
+
+
+
+
+<main>
+    <div class="collection-page">
+
+        <div class="collection-masthead">
+            
+            <div class="collection-eyebrow">Collection
+            </div>
+            <h1 class="collection-title">Music Photobooks</h1>
+            
+            
+                <p class="collection-description">Capturing the energy, aesthetic, and personalities of music scenes and artists through the lens of photography.</p>
+            
+            <div class="collection-count">35 books</div>
+            
+            
+            
+            
+        </div>
+
+        
+
+        
+            
+<section class="collection-section">
+    
+    <div class="collection-books">
+        
+            
+<a href="/books/broackes_david-bowie-is-museum-of-contemporary-art-chicago-exhibition-catalogues-2-copies_1403/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/broackes_victoria_david_bowie_is_museum_of_contemporary_art_chicago_exhibition_catalogues_2_copies_9781851777372.jpg" alt="David Bowie Is (Museum of Contemporary Art, Chicago: Exhibition Catalogues)   (2 copies)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Victoria Broackes</div>
+    
+    <div class="collection-book-title">David Bowie Is (Museum of Contemporary Art, Chicago: Exhibition Catalogues)   (2 copies)</div>
+    
+        <div class="collection-book-meta">V &amp; A Publishing &middot; 2013</div>
+    
+</a>
+
+        
+            
+<a href="/books/byrne_david-byrne-tribal-textiles-from-persia-neiriz-collection-in-the-ethnographical-museum-berlin-by-david-byrne-2003-hardcover_1404/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/byrne_david_david_byrne_tribal_textiles_from_persia_neiriz_collection_in_the_ethnographical_museum_berlin_by_david_byrne_2003_hardco.jpg" alt="David Byrne : Tribal Textiles from Persia: Neiriz Collection in the Ethnographical Museum Berlin by David Byrne (2003, Hardcover)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">David Byrne</div>
+    
+    <div class="collection-book-title">David Byrne : Tribal Textiles from Persia: Neiriz Collection in the Ethnographical Museum Berlin by David Byrne (2003, Hardcover)</div>
+    
+</a>
+
+        
+            
+<a href="/books/paz_dust-and-grooves-adventures-in-record-collecting_1405/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/paz_eilon_dust_grooves_adventures_in_record_collecting_9781607748694.jpg" alt="Dust &amp; Grooves: Adventures in Record Collecting" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Eilon Paz</div>
+    
+    <div class="collection-book-title">Dust &amp; Grooves: Adventures in Record Collecting</div>
+    
+        <div class="collection-book-meta">Kickstarter &middot; 2015</div>
+    
+</a>
+
+        
+            
+<a href="/books/robertson_factory-records-the-complete-graphic-album-by-matthew-robertson_1406/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/robertson_matthew_factory_records_the_complete_graphic_album_by_matthew_robertson_9780811856768.jpg" alt="Factory Records: The Complete Graphic Album by Matthew Robertson" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Matthew Robertson</div>
+    
+    <div class="collection-book-title">Factory Records: The Complete Graphic Album by Matthew Robertson</div>
+    
+        <div class="collection-book-meta">Chronicle Books &middot; 2006</div>
+    
+</a>
+
+        
+            
+<a href="/books/turcotte_fucked-up-photocopied-instant-art-of-the-punk-rock-movement_1407/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/turcotte_bryan_ray_fucked_up_photocopied_instant_art_of_the_punk_rock_movement_9781584230007.jpg" alt="Fucked Up + Photocopied: instant art of the punk rock movement" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Bryan Ray Turcotte</div>
+    
+    <div class="collection-book-title">Fucked Up + Photocopied: instant art of the punk rock movement</div>
+    
+        <div class="collection-book-meta">Gingko Press &middot; 1999</div>
+    
+</a>
+
+        
+            
+<a href="/books/turcotte_fucked-up-photocopied-instant-art-of-the-punk-rock-movement_1408/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/turcotte_bryan_ray_fucked_up_photocopied_instant_art_of_the_punk_rock_movement_9781584230830.jpg" alt="Fucked Up + Photocopied: instant art of the punk rock movement" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Bryan Ray Turcotte</div>
+    
+    <div class="collection-book-title">Fucked Up + Photocopied: instant art of the punk rock movement</div>
+    
+        <div class="collection-book-meta">Gingko Press &middot; 2000</div>
+    
+</a>
+
+        
+            
+<a href="/books/charles_god-listens-to-slayer_1409/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/charles_sanna_god_listens_to_slayer_9780956795281.jpg" alt="God Listens To Slayer" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Sanna Charles</div>
+    
+    <div class="collection-book-title">God Listens To Slayer</div>
+    
+        <div class="collection-book-meta">Ditto Press &middot; 2015</div>
+    
+</a>
+
+        
+            
+<a href="/books/cobain_journals-by-kurt-cobain_1410/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/cobain_kurt_journals_by_kurt_cobain_9781573222327.jpg" alt="Journals by Kurt Cobain" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Kurt Cobain</div>
+    
+    <div class="collection-book-title">Journals by Kurt Cobain</div>
+    
+        <div class="collection-book-meta">2002</div>
+    
+</a>
+
+        
+            
+<a href="/books/cummins_joy-division-by-kevin-cummins-bernard-sumner-three-copies-one-inscribed-one-signed-one-new_1411/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/cummins_kevin_joy_division_by_kevin_cummins_bernard_sumner_three_copies_one_inscribed_one_signed_one_new_9780847834815.jpg" alt="Joy Division by Kevin Cummins, Bernard Sumner   (Three Copies, one inscribed, one signed, one new)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Kevin Cummins</div>
+    
+    <div class="collection-book-title">Joy Division by Kevin Cummins, Bernard Sumner   (Three Copies, one inscribed, one signed, one new)</div>
+    
+        <div class="collection-book-meta">Rizzoli &middot; 2010</div>
+    
+</a>
+
+        
+            
+<a href="/books/weinberger_karlheinz-weinberger-vol-1-halbstarke-p_1412/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/weinberger_karlheinz_karlheinz_weinberger_vol_1_halbstarke_p_9783906822143.jpg" alt="Karlheinz Weinberger - Vol 1 Halbstarke P" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Karlheinz Weinberger</div>
+    
+    <div class="collection-book-title">Karlheinz Weinberger - Vol 1 Halbstarke P</div>
+    
+        <div class="collection-book-meta">Sturm &amp; Drang &middot; 2017</div>
+    
+</a>
+
+        
+            
+<a href="/books/cummins_new-order-by-kevin-cummins-signed_1413/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/cummins_kevin_new_order_by_kevin_cummins_signed_9780847843602.jpg" alt="New Order by Kevin Cummins    (signed)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Kevin Cummins</div>
+    
+    <div class="collection-book-title">New Order by Kevin Cummins    (signed)</div>
+    
+        <div class="collection-book-meta">Rizzoli &middot; 2015</div>
+    
+</a>
+
+        
+            
+<a href="/books/coley_no-wave-post-punk-underground-new-york-1976-1980_1414/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/coley_thurston_moore_and_byron_no_wave_post_punk_underground_new_york_1976_1980_9780810995437.jpg" alt="No Wave: Post-Punk. Underground. New York. 1976-1980" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Thurston Moore and Byron Coley</div>
+    
+    <div class="collection-book-title">No Wave: Post-Punk. Underground. New York. 1976-1980</div>
+    
+        <div class="collection-book-meta">Abrams Image &middot; 2008</div>
+    
+</a>
+
+        
+            
+<a href="/books/mott_oh-so-pretty-punk-in-print-1976-19801980_1415/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/mott_toby_oh_so_pretty_punk_in_print_1976_19801980_9780714872759.jpg" alt="Oh So Pretty: Punk in Print 1976-19801980" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Toby Mott</div>
+    
+    <div class="collection-book-title">Oh So Pretty: Punk in Print 1976-19801980</div>
+    
+        <div class="collection-book-meta">Phaidon Press &middot; 2016</div>
+    
+</a>
+
+        
+            
+<a href="/books/sladen_panic-attack-art-in-the-punk-years_1416/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/sladen_mark_panic_attack_art_in_the_punk_years_9781858944036.jpg" alt="Panic Attack!: Art in the Punk Years" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Mark Sladen</div>
+    
+    <div class="collection-book-title">Panic Attack!: Art in the Punk Years</div>
+    
+        <div class="collection-book-meta">Merrell Publishers &middot; 2007</div>
+    
+</a>
+
+        
+            
+<a href="/books/linn_patti-smith-1969-1976_1417/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/linn_judy_patti_smith_1969_1976_9780810998322.jpg" alt="Patti Smith 1969-1976" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Judy Linn</div>
+    
+    <div class="collection-book-title">Patti Smith 1969-1976</div>
+    
+        <div class="collection-book-meta">Harry N. Abrams &middot; 2011</div>
+    
+</a>
+
+        
+            
+<a href="/books/foreword_punk-365-365-series_1418/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/foreword_holly_george_warren_author_richard_hell_punk_365_365_series_9780810994041.jpg" alt="Punk 365 (365 Series)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Holly George-Warren (Author), Richard Hell (Foreword)</div>
+    
+    <div class="collection-book-title">Punk 365 (365 Series)</div>
+    
+        <div class="collection-book-meta">Harry N. Abrams &middot; 2007</div>
+    
+</a>
+
+        
+            
+<a href="/books/bolton_punk-chaos-to-couture_1419/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/Bolton_Punk_Chaos_to_Couture_9780300191851.jpg" alt="Punk: Chaos to Couture" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Andrew Bolton</div>
+    
+    <div class="collection-book-title">Punk: Chaos to Couture</div>
+    
+        <div class="collection-book-meta">Metropolitan Museum of Art &middot; 2013</div>
+    
+</a>
+
+        
+            
+<a href="/books/roberts_punks-and-portraits-san-francisco-1979_1420/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">John Roberts</div>
+    
+    <div class="collection-book-title">Punks &amp; Portraits San Francisco 1979</div>
+    
+        <div class="collection-book-meta">Tiny Splendor &middot; 2015</div>
+    
+</a>
+
+        
+            
+<a href="/books/director_rock-book-a-portrait-of-music_1421/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/director_david_raccuglia_creative_rock_book_a_portrait_of_music_2001.jpg" alt="Rock Book : A Portrait of Music" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">David Raccuglia [creative director]</div>
+    
+    <div class="collection-book-title">Rock Book : A Portrait of Music</div>
+    
+        <div class="collection-book-meta">No Imprint &middot; 2001</div>
+    
+</a>
+
+        
+            
+<a href="/books/gruen_rock-seen-bob-gruen_1422/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/gruen_bob_rock_seen_bob_gruen_2011.jpg" alt="Rock Seen - Bob Gruen" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Bob Gruen</div>
+    
+    <div class="collection-book-title">Rock Seen - Bob Gruen</div>
+    
+        <div class="collection-book-meta">Harry N. Abrams &middot; 2011</div>
+    
+</a>
+
+        
+            
+<a href="/books/na_rolling-stone-images-of-rock-and-roll_1423/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/na_rolling_stone_images_of_rock_roll_9780316754682.jpg" alt="Rolling Stone Images of Rock &amp; Roll" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">NA</div>
+    
+    <div class="collection-book-title">Rolling Stone Images of Rock &amp; Roll</div>
+    
+        <div class="collection-book-meta">Little Brown &middot; 1995</div>
+    
+</a>
+
+        
+            
+<a href="/books/mott_showboat-punksexbodies_1424/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/mott_toby_showboat_punk_sex_bodies_2016.jpg" alt="Showboat: Punk/Sex/Bodies" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Toby Mott</div>
+    
+    <div class="collection-book-title">Showboat: Punk/Sex/Bodies</div>
+    
+        <div class="collection-book-meta">Dashwood &middot; 2016</div>
+    
+</a>
+
+        
+            
+<a href="/books/mott_skinhead-an-archive-signed_1425/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/mott_toby_skinhead_an_archive_signed_9780956795274.jpg" alt="Skinhead: An Archive. (Signed)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Toby Mott</div>
+    
+    <div class="collection-book-title">Skinhead: An Archive. (Signed)</div>
+    
+        <div class="collection-book-meta">Ditto Press &middot; 2014</div>
+    
+</a>
+
+        
+            
+<a href="/books/roettinger_slash-a-punk-magazine-from-los-angeles-1977-1980_1426/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/roettinger_j_c_gabel_and_brian_slash_a_punk_magazine_from_los_angeles_1977_1980_9780996744720.jpg" alt="Slash: A Punk Magazine from Los Angeles: 1977-1980" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">J.C. Gabel and Brian Roettinger</div>
+    
+    <div class="collection-book-title">Slash: A Punk Magazine from Los Angeles: 1977-1980</div>
+    
+        <div class="collection-book-meta">Hat &amp; Beard Press &middot; 2016</div>
+    
+</a>
+
+        
+            
+<a href="/books/halfin_the-who-live-leather-bound_1427/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/halfin_ross_the_who_live_leather_bound_9780904351750.jpg" alt="The Who Live Leather Bound –" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Ross Halfin</div>
+    
+    <div class="collection-book-title">The Who Live Leather Bound –</div>
+    
+        <div class="collection-book-meta">Genesis Publications &middot; 2000</div>
+    
+</a>
+
+        
+            
+<a href="/books/mckenna_the-beautiful-and-the-damned-punk-photographs-by-ann-summa_1428/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/mckenna_kristine_the_beautiful_the_damned_punk_photographs_by_ann_summa_9781935202271.jpg" alt="The Beautiful &amp; The Damned: Punk Photographs by Ann Summa" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Kristine McKenna</div>
+    
+    <div class="collection-book-title">The Beautiful &amp; The Damned: Punk Photographs by Ann Summa</div>
+    
+        <div class="collection-book-meta">Foggy Notion Books/Smart Art Press &middot; 2010</div>
+    
+</a>
+
+        
+            
+<a href="/books/santelli_the-bob-dylan-scrapbook-1956-1966_1429/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/santelli_robert_the_bob_dylan_scrapbook_1956_1966_9780743228282.jpg" alt="The Bob Dylan Scrapbook 1956-1966" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Robert Santelli</div>
+    
+    <div class="collection-book-title">The Bob Dylan Scrapbook 1956-1966</div>
+    
+        <div class="collection-book-meta">Simon &amp; Schuster &middot; 2005</div>
+    
+</a>
+
+        
+            
+<a href="/books/dylan_the-definitive-dlayn-songbook_1430/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/dylan_bob_the_definitive_dlayn_songbook_9780825617744.jpg" alt="The Definitive Dlayn Songbook" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Bob Dylan</div>
+    
+    <div class="collection-book-title">The Definitive Dlayn Songbook</div>
+    
+        <div class="collection-book-meta">Amsco Publications &middot; 2001</div>
+    
+</a>
+
+        
+            
+<a href="/books/murphy_the-hollow-of-the-hand-by-pj-harvey_1431/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/murphy_pj_harvey_seamus_the_hollow_of_the_hand_by_pj_harvey_9781408865736.jpg" alt="The Hollow of the Hand by PJ Harvey" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">PJ Harvey Seamus Murphy</div>
+    
+    <div class="collection-book-title">The Hollow of the Hand by PJ Harvey</div>
+    
+        <div class="collection-book-meta">Bloomsbury USA Reader&#39;s ed. edition &middot; 2015</div>
+    
+</a>
+
+        
+            
+<a href="/books/peterson_touch-me-im-sick_1432/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/peterson_charles_touch_me_im_sick_9781576873915.jpg" alt="Touch Me I&#39;m Sick" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Charles Peterson</div>
+    
+    <div class="collection-book-title">Touch Me I&#39;m Sick</div>
+    
+        <div class="collection-book-meta">powerHouse Books &middot; 2006</div>
+    
+</a>
+
+        
+            
+<a href="/books/trillo_trillo-miguel-rockoco-imagenes-del-pop-rock-1980-1984-2000-2016_1433/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">Miguel Trillo</div>
+    
+    <div class="collection-book-title">TRILLO, Miguel. Rockoco: Imagenes del Pop-Rock 1980-1984 / 2000 – 2016.</div>
+    
+        <div class="collection-book-meta">LaFototeca &middot; 2017</div>
+    
+</a>
+
+        
+            
+<a href="/books/mccormick_u2-by-u2-signed-by-band-2-copies_1434/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/mccormick_neil_u2_by_u2_signed_by_band_2_copies_9780060776756.jpg" alt="U2 by U2  (signed by band, 2 copies)" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">Neil McCormick</div>
+    
+    <div class="collection-book-title">U2 by U2  (signed by band, 2 copies)</div>
+    
+        <div class="collection-book-meta">It Books &middot; 2006</div>
+    
+</a>
+
+        
+            
+<a href="/books/donno_yes-yes-yes-alternative-press-1966-1977-from-provo-to-punk_1435/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/donno_a_martegani_eds_e_de_yes_yes_yes_alternative_press_1966_1977_from_provo_to_punk_9788887071627.jpg" alt="Yes Yes Yes Alternative Press 1966-1977, From Provo To Punk" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">A. Martegani Eds. E. De Donno</div>
+    
+    <div class="collection-book-title">Yes Yes Yes Alternative Press 1966-1977, From Provo To Punk</div>
+    
+        <div class="collection-book-meta">a+m Bookstore &middot; 2016</div>
+    
+</a>
+
+        
+            
+<a href="/books/yamaguchi_you-can-click-away-of-whatever-you-want-thats-punk_1436/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <span class="no-cover">No cover</span>
+        
+    </div>
+    
+        <div class="collection-book-author">Herbie Yamaguchi</div>
+    
+    <div class="collection-book-title">You can click away of whatever you want: That&#39;s PUNK</div>
+    
+        <div class="collection-book-meta">Super Labo &middot; 2015</div>
+    
+</a>
+
+        
+            
+<a href="/books/hamilton_you-should-have-heard-just-what-i-seen_1437/" class="collection-book">
+    <div class="collection-book-cover">
+        
+            <img src="/assets/images/books/hamilton_james_you_should_have_heard_just_what_i_seen_9781616234959.jpg" alt="You Should Have Heard Just What I Seen" loading="lazy">
+        
+    </div>
+    
+        <div class="collection-book-author">James Hamilton</div>
+    
+    <div class="collection-book-title">You Should Have Heard Just What I Seen</div>
+    
+        <div class="collection-book-meta">Estactic Peace Library &middot; 2010</div>
+    
+</a>
+
+        
+    </div>
+</section>
+
+        
+
+        
+
+    </div>
+</main>
+
+
+
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
+        
+        <p>© 2026 Hudson Street Library · <a href="/identity/" class="text-neutral-600 underline hover:text-neutral-900">Identity</a> · <a href="/colophon.html" class="text-neutral-600 underline hover:text-neutral-900">Colophon</a></p>
+    </div>
+</footer>
+
+<script>
+    // Mobile Menu Toggle Logic
+    const mobileMenuButton = document.querySelector('button.md\\:hidden');
+    const mobileNavMenu = document.getElementById('mobile-nav-menu');
+
+    if (mobileMenuButton && mobileNavMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+            mobileNavMenu.classList.toggle('hidden');
+            mobileNavMenu.classList.toggle('flex');
+            const icon = mobileMenuButton.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            }
+        });
+    }
+
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            if (this.hash) {
+               const targetElement = document.querySelector(this.hash);
+               if (targetElement) {
+                    e.preventDefault();
+                    const headerOffset = document.querySelector('header')?.offsetHeight || 70;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                    if (mobileMenuButton && mobileMenuButton.getAttribute('aria-expanded') === 'true') {
+                         mobileMenuButton.click();
+                    }
+               }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

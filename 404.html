@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found · Hudson Street Library</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    <link rel="stylesheet" href="/assets/css/tailwind.css">
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-ink: #13161B;
+            --color-paper: #F4F5F7;
+            --color-vellum: #E8EAEE;
+            --color-slate: #5B6B84;
+            --color-border: rgba(19, 22, 27, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--color-paper);
+            color: var(--color-ink);
+            font-family: 'Literata', Georgia, serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .error-header {
+            padding: 2rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .header-link {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-slate);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .header-link:hover {
+            color: var(--color-ink);
+        }
+
+        /* Main Content */
+        .error-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .classification-label {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-slate);
+            margin-bottom: 2rem;
+        }
+
+        /* Book-spines mark (same drawing as the favicon), inlined with an
+           explicit fill because the SVG file self-inverts in OS dark mode
+           and would vanish against the paper background. */
+        .error-mark {
+            width: clamp(64px, 9vw, 92px);
+            height: auto;
+            fill: var(--color-ink);
+            margin-bottom: 1.75rem;
+        }
+
+        .error-number {
+            font-family: 'Literata', Georgia, serif;
+            font-size: clamp(6rem, 15vw, 12rem);
+            font-weight: 700;
+            line-height: 0.9;
+            letter-spacing: -0.02em;
+            color: var(--color-ink);
+            margin-bottom: 2rem;
+        }
+
+        .error-title {
+            font-family: 'Literata', Georgia, serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--color-slate);
+            margin-bottom: 1.5rem;
+        }
+
+        .error-description {
+            font-size: clamp(1rem, 2vw, 1.125rem);
+            line-height: 1.7;
+            max-width: 60ch;
+            margin: 0 auto 3rem;
+            font-weight: 300;
+            color: var(--color-ink);
+        }
+
+        /* Plate — the illustration is mounted like a figure in a book:
+           hairline mount, vellum mat, catalog-style label beneath it. */
+        .error-plate {
+            width: 100%;
+            max-width: 720px;
+            margin: 0 auto 1.25rem;
+            padding: 0.75rem;
+            background: var(--color-vellum);
+            border: 1px solid var(--color-border);
+        }
+
+        .error-plate img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .error-caption {
+            max-width: 720px;
+            margin: 0 auto;
+            text-align: left;
+            font-size: 0.8125rem;
+            line-height: 1.6;
+            color: var(--color-slate);
+            font-weight: 400;
+        }
+
+        .error-caption .fig {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-ink);
+            display: block;
+            margin-bottom: 0.35rem;
+        }
+
+        .error-caption cite {
+            font-style: italic;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .error-link {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 1rem 2rem;
+            border: 2px solid var(--color-ink);
+            color: var(--color-ink);
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            background: transparent;
+        }
+
+        .error-link:hover {
+            background: var(--color-ink);
+            color: var(--color-paper);
+            transform: translateY(-2px);
+        }
+
+        .error-link.secondary {
+            border-color: var(--color-slate);
+            color: var(--color-slate);
+        }
+
+        .error-link.secondary:hover {
+            background: var(--color-slate);
+            color: var(--color-paper);
+        }
+
+        /* Decorative Elements */
+        .decorative-line {
+            width: 200px;
+            height: 1px;
+            background: var(--color-border);
+            margin: 3rem auto;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .error-header {
+                padding: 1.5rem;
+            }
+
+            .error-content {
+                padding: 3rem 1.5rem;
+            }
+
+            .error-actions {
+                flex-direction: column;
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .error-link {
+                width: 100%;
+                text-align: center;
+            }
+
+            .error-plate {
+                padding: 0.5rem;
+            }
+
+            .error-caption {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="error-header">
+        <a href="/" class="header-link">← Hudson Street Library</a>
+    </header>
+
+    <!-- Main Content -->
+    <main class="error-content">
+        <svg class="error-mark" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+            <rect x="38" y="128" width="72" height="318"/>
+            <rect x="138" y="68" width="76" height="378"/>
+            <rect x="242" y="100" width="72" height="346"/>
+            <rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)"/>
+        </svg>
+
+        <div class="classification-label">Error Code</div>
+
+        <h1 class="error-number">404</h1>
+
+        <h2 class="error-title">Not on This Shelf</h2>
+
+        <p class="error-description">
+            The page you're after has been misshelved, deaccessioned, or was never
+            cataloged in the first place. We have looked. Optical enhancement did
+            not&nbsp;help.
+        </p>
+
+        <figure class="error-plate">
+            <img src="/assets/images/site/404-coyote.jpg" width="1200" height="675"
+                 alt="Wile E. Coyote raising a pair of ACME binoculars, scanning an empty desert highway.">
+        </figure>
+
+        <figcaption class="error-caption">
+            <span class="fig">Fig. 1 — ACME binoculars, in use. Subject unlocated.</span>
+            Still from <cite>Coyote vs. Acme</cite> (dir. Dave Green, Warner Bros.).
+        </figcaption>
+
+        <div class="decorative-line"></div>
+
+        <div class="error-actions">
+            <a href="/" class="error-link">Return Home</a>
+            <a href="/collection-explore.html" class="error-link secondary">Browse Collections</a>
+            <a href="/static-demo/" class="error-link secondary">Search Library</a>
+        </div>
+    </main>
+
+    
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
+        
+        <p>© 2026 Hudson Street Library · <a href="/identity/" class="text-neutral-600 underline hover:text-neutral-900">Identity</a> · <a href="/colophon.html" class="text-neutral-600 underline hover:text-neutral-900">Colophon</a></p>
+    </div>
+</footer>
+
+<script>
+/* Old book URLs: the trailing _<id> is stable across slug changes. If this 404
+   came from one, look the id up in the build-generated map and go there. */
+(function () {
+  var m = location.pathname.match(/^\/books\/[^\/]*_(\d+)\/?$/);
+  if (!m) return;
+  fetch('/assets/data/book-urls.json')
+    .then(function (r) { return r.json(); })
+    .then(function (map) {
+      var to = map[m[1]];
+      if (to && to !== location.pathname) location.replace(to);
+    })
+    .catch(function () {});
+})();
+</script>
+</body>
+</html>

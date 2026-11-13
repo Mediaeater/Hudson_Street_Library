@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colophon · Hudson Street Library</title>
+    <link rel="canonical" href="https://hudsonstreetlibrary.com/colophon.html">
+
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    <link rel="stylesheet" href="/assets/css/tailwind.css">
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-ink: #13161B;
+            --color-paper: #F4F5F7;
+            --color-slate: #5B6B84;
+            --color-green: #034706;
+            --color-border: rgba(19, 22, 27, 0.12);
+        }
+
+        body {
+            background: var(--color-paper);
+            color: var(--color-ink);
+            font-family: 'Literata', Georgia, serif;
+            line-height: 1.6;
+        }
+
+        .colophon-main {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 6rem 2rem 4rem;
+        }
+
+        .colophon-label {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-slate);
+            margin-bottom: 1rem;
+        }
+
+        .colophon-title {
+            font-family: 'Literata', Georgia, serif;
+            font-size: clamp(3rem, 8vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            margin-bottom: 3rem;
+        }
+
+        .colophon-main p {
+            font-size: 1.1875rem;
+            line-height: 1.8;
+            margin-bottom: 1.75rem;
+        }
+
+        .colophon-main a {
+            color: var(--color-ink);
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 3px;
+        }
+
+        .colophon-main a:hover {
+            color: var(--color-slate);
+        }
+
+        /* Book-spines mark, inlined with explicit fill: the favicon file
+           self-inverts in OS dark mode and would vanish on this paper
+           background. Filled in the library green, same as the mark in the
+           header above it. */
+        .colophon-mark {
+            width: 72px;
+            height: auto;
+            display: block;
+            fill: var(--color-green);
+            margin: 2.5rem 0 1.75rem;
+        }
+
+        .swatch {
+            display: inline-block;
+            width: 0.72em;
+            height: 0.72em;
+            background: var(--color-green);
+            margin-right: 0.35em;
+            vertical-align: baseline;
+        }
+    </style>
+</head>
+<body>
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+
+<style>
+    .site-header {
+        font-family: 'Literata', Georgia, serif;
+    }
+    .site-header .site-logo {
+        font-family: 'Crimson Pro', Georgia, serif;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        white-space: nowrap;
+    }
+    /* Book-spines mark (same drawing as the favicon). Inlined with
+       fill: currentColor rather than <img src=favicon.svg> because the
+       SVG file self-inverts to off-white in OS dark mode and would
+       disappear against the white header. */
+    .site-header .logo-mark {
+        width: 1.3em;
+        height: 1.3em;
+        display: block;
+        flex-shrink: 0;
+        fill: currentColor;
+    }
+    .site-header .nav-link {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+        font-weight: 400;
+        letter-spacing: 0.005em;
+    }
+    .site-header .nav-link[aria-current="page"],
+    .site-header .nav-link-active {
+        font-weight: 600;
+    }
+    .site-header #mobile-nav-menu a {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+    }
+
+    /*
+      Mobile menu uses self-contained, component-scoped CSS rather than
+      Tailwind utilities, so its layout can't be broken by global stylesheet
+      changes. This originally fixed an invisible-sliver bug: design-system.css
+      ships an unlayered `* { padding: 0 }` reset that beats Tailwind's layered
+      utilities and collapsed the old icon-only button. The self-contained
+      styling is kept deliberately.
+    */
+    .site-header .menu-toggle { display: none; }
+    .site-header .mobile-nav { display: none; }
+
+    /*
+      Mobile scroll-jitter fix.
+      The header ships as `sticky top-0 bg-white/95 backdrop-blur-sm`. On mobile
+      a sticky bar with backdrop-filter: blur() forces the browser to re-sample
+      and re-blur the pixels scrolling beneath it every frame; on mobile GPUs
+      that readback lags the scroll compositor and the bar (and the text passing
+      under it) shudders. Drop the blur and use an opaque background on small
+      screens — the frosted-glass effect stays desktop-only. The doubled
+      `.site-header.site-header` selector out-specifies the `bg-white/95` and
+      `backdrop-blur-sm` utility classes without needing !important.
+    */
+    @media (max-width: 900px), (hover: none) and (pointer: coarse) {
+        .site-header.site-header {
+            background-color: #ffffff;
+            -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+            /* Promote the sticky bar to its own compositor layer so it isn't
+               re-rasterized against the scrolling content every frame — this
+               is what stops the header (and the text under it) juddering on
+               mobile. Pairs with dropping the backdrop blur above. */
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            will-change: transform;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .site-header .menu-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.45rem 0.7rem;
+            border: 1px solid rgba(0, 49, 0, 0.3);
+            border-radius: 0.5rem;
+            background: #ffffff;
+            color: #003100;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .site-header .menu-toggle:hover { background: #f0f5f0; }
+        .site-header .menu-toggle:focus-visible {
+            outline: 2px solid #003100;
+            outline-offset: 2px;
+        }
+        .site-header .menu-toggle svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+            flex-shrink: 0;
+        }
+        .site-header .menu-toggle .menu-toggle-label {
+            font-family: 'Literata', Georgia, serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .site-header .menu-toggle .icon-close { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-open { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-close { display: block; }
+
+        .site-header .mobile-nav.is-open {
+            display: flex;
+            flex-direction: column;
+        }
+        .site-header .mobile-nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            padding: 0.5rem;
+            z-index: 40;
+        }
+        .site-header .mobile-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            color: #404040;
+            text-decoration: none;
+        }
+        .site-header .mobile-nav a:hover {
+            background: #f0f5f0;
+            color: #002000;
+        }
+    }
+</style>
+
+<header class="site-header sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="site-logo text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                <svg class="logo-mark" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+                    <rect x="38" y="128" width="72" height="318"/>
+                    <rect x="138" y="68" width="76" height="378"/>
+                    <rect x="242" y="100" width="72" height="346"/>
+                    <rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)"/>
+                </svg>
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link ">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Accessions
+                </a>
+                
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <!-- Icon + visible "Menu" label so the control is obvious on mobile.
+                 Sizing/visibility come from the unlayered styles above, not
+                 Tailwind utilities (see note in the <style> block). Icons are
+                 inline SVGs so the menu works on pages without an icon font. -->
+            <button class="menu-toggle"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <svg class="icon-open" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg class="icon-close" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+                <span class="menu-toggle-label">Menu</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu" class="mobile-nav" aria-label="Mobile navigation">
+        <a href="/#about">About</a>
+        <a href="/collection-explore.html">Collections</a>
+        <a href="/static-demo/">Search</a>
+        <a href="/#publications">Publications</a>
+        <a href="/news.html">News</a>
+        <a href="/collections/recently_added.html">Accessions</a>
+        
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const button = document.querySelector('button[aria-controls="mobile-nav-menu"]');
+    const willOpen = !menu.classList.contains('is-open');
+
+    menu.classList.toggle('is-open', willOpen);
+    // Icon swap (hamburger <-> X) is driven by aria-expanded in CSS.
+    if (button) button.setAttribute('aria-expanded', String(willOpen));
+}
+</script>
+
+
+<main class="colophon-main">
+    <div class="colophon-label">About This Site</div>
+    <h1 class="colophon-title">Colophon</h1>
+
+    <p>The website of Hudson Street Library is set in <a href="https://www.type-together.com/literata-font" target="_blank" rel="noopener noreferrer">Literata</a>, the typeface <a href="https://www.type-together.com/" target="_blank" rel="noopener noreferrer">TypeTogether</a> designed for long-form reading on screens. One variable font does every job on the site: its optical-size axis draws a high-contrast display cut at headline sizes and a sturdier, open cut for running text, so the largest title and the smallest excerpt are the same face at different ages.</p>
+
+    <p>The wordmark is the one exception. HUDSON STREET LIBRARY is set in <a href="https://fonts.google.com/specimen/Crimson+Pro" target="_blank" rel="noopener noreferrer">Crimson Pro</a>, Jacques Le Bailly's rework of Sebastian Kosch's Crimson Text. Crimson set every word of this site for years. It now keeps the door.</p>
+
+    <p>Dates, labels, and other small matter are set in <a href="https://fonts.google.com/specimen/Archivo+Narrow" target="_blank" rel="noopener noreferrer">Archivo Narrow</a>, from the Argentine foundry <a href="https://omnibus-type.com/" target="_blank" rel="noopener noreferrer">Omnibus-Type</a>. All three faces are free and open source.</p>
+
+    <p>The site runs on two inks. Text sits near-black on a cool paper white, and a single green does everything else: <span class="swatch" aria-hidden="true"></span><span style="font-family:'Archivo Narrow',sans-serif;letter-spacing:0.04em">#034706</span>, dark enough at eleven to one against white to read as ink rather than as decoration. It colours the mark, every link, and the seal stamped on the library's stationery, where it is matched to a spot ink rather than built from process colours. Screen and press use the same value.</p>
+
+    <p>The paler greens on the site are the same green thinned, not different colours. The ramp holds one hue across every step, which is a correction: the version before it wandered from yellow-green at the light end to a colder green at the dark end, and lost so much saturation in the middle that it read as grey.</p>
+
+    <svg class="colophon-mark" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+        <rect x="38" y="128" width="72" height="318"/>
+        <rect x="138" y="68" width="76" height="378"/>
+        <rect x="242" y="100" width="72" height="346"/>
+        <rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)"/>
+    </svg>
+
+    <p>The mark is a shelf of four spines, one leaning. It began as the favicon and now stands at the head of every page, stamped in the green. The whole drawing is four rectangles, the last one turned nine degrees. In print it is never set below seven millimetres, the size at which the leaning spine closes up and the shelf becomes a smudge.</p>
+
+    <p>The site is built with <a href="https://www.11ty.dev/" target="_blank" rel="noopener noreferrer">Eleventy</a> and published as static pages. The catalog behind it is a single CSV file, one row per book, thirty-seven columns per row, 2,963 entries, each made by hand. There is no database, which seems right for a library that argues the shelf is the text.</p>
+</main>
+
+
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
+        
+        <p>© 2026 Hudson Street Library · <a href="/identity/" class="text-neutral-600 underline hover:text-neutral-900">Identity</a> · <a href="/colophon.html" class="text-neutral-600 underline hover:text-neutral-900">Colophon</a></p>
+    </div>
+</footer>
+
+</body>
+</html>

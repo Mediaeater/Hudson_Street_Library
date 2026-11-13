@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search the Collection · Hudson Street Library</title>
+    <link rel="canonical" href="https://hudsonstreetlibrary.com/static-demo/">
+
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    <link rel="stylesheet" href="/assets/css/tailwind.css">
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="stylesheet" href="/assets/css/browse-refined.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-ink: #13161B;
+            --color-paper: #F4F5F7;
+            --color-vellum: #E8EAEE;
+            --color-slate: #5B6B84;
+            --color-border: rgba(19, 22, 27, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--color-paper);
+            color: var(--color-ink);
+            font-family: 'Literata', Georgia, serif;
+            line-height: 1.6;
+        }
+
+        /* Page Header */
+        .search-header {
+            padding: 4rem 2rem 3rem;
+            border-bottom: 1px solid var(--color-border);
+            text-align: center;
+        }
+
+        .search-label {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-slate);
+            margin-bottom: 1rem;
+        }
+
+        .search-title {
+            font-family: 'Literata', Georgia, serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            line-height: 1;
+            color: var(--color-ink);
+        }
+
+        /* Search Controls — editorial finding-aid */
+        .search-controls {
+            background: white;
+            border-top: 1px solid var(--color-ink);
+            border-bottom: 1px solid var(--color-border);
+            padding: 2.5rem 2.25rem 1.75rem;
+            margin: 2rem 0 2.5rem;
+        }
+
+        .search-row {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 1.75rem;
+            align-items: end;
+            padding-bottom: 1.75rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .control-label {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--color-slate);
+            margin-bottom: 0.55rem;
+            display: block;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.35rem 2.25rem 0.75rem 0;
+            border: none;
+            border-bottom: 1px solid var(--color-ink);
+            background: transparent;
+            font-family: 'Literata', Georgia, serif;
+            font-size: 1.625rem;
+            font-weight: 400;
+            color: var(--color-ink);
+            transition: border-color 0.3s ease;
+        }
+
+        .search-input-wrap {
+            position: relative;
+        }
+
+        .search-input-wrap::after {
+            content: '';
+            position: absolute;
+            right: 0.25rem;
+            bottom: 0.85rem;
+            width: 14px;
+            height: 14px;
+            border: 1.5px solid var(--color-ink);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .search-input-wrap::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            bottom: 0.7rem;
+            width: 6px;
+            height: 1.5px;
+            background: var(--color-ink);
+            transform: rotate(45deg);
+            transform-origin: right center;
+            pointer-events: none;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-bottom-color: var(--color-slate);
+        }
+
+        .search-input::placeholder {
+            color: rgba(19, 22, 27, 0.35);
+            font-style: italic;
+        }
+
+        .search-select {
+            width: 100%;
+            padding: 0.55rem 2rem 0.55rem 0.9rem;
+            border: 1px solid var(--color-border);
+            background: var(--color-paper);
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' fill='none' stroke='%230A0A0A' stroke-width='1.2' stroke-linecap='square'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 0.85rem center;
+            font-family: 'Literata', Georgia, serif;
+            font-size: 0.9375rem;
+            color: var(--color-ink);
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+        }
+
+        .search-select:hover {
+            border-color: var(--color-ink);
+        }
+
+        .search-select:focus {
+            outline: none;
+            border-color: var(--color-slate);
+            background-color: white;
+        }
+
+        /* auto-fit rather than repeat(3, 1fr) so the Wing filter, which is
+           hidden while the catalogue holds a single wing, can appear as a
+           fourth control without leaving a hole in the row. With three visible
+           children the rendered result is the same three equal columns. */
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.25rem;
+            padding-top: 1.5rem;
+        }
+
+        @media (max-width: 720px) {
+            .search-row { grid-template-columns: 1fr; }
+            .filter-row { grid-template-columns: 1fr; }
+        }
+
+        .controls-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+            padding-top: 1.5rem;
+            margin-top: 1.5rem;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .toggle-switch {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.65rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .toggle-switch input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .toggle-track {
+            position: relative;
+            width: 34px;
+            height: 18px;
+            border: 1px solid var(--color-ink);
+            background: var(--color-paper);
+            transition: background-color 0.25s ease;
+        }
+
+        .toggle-track::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 12px;
+            height: 12px;
+            background: var(--color-ink);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s;
+        }
+
+        .toggle-switch input:checked ~ .toggle-track {
+            background: var(--color-ink);
+        }
+
+        .toggle-switch input:checked ~ .toggle-track::after {
+            transform: translateX(16px);
+            background: var(--color-paper);
+        }
+
+        .toggle-label {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--color-ink);
+        }
+
+        .clear-filters-btn {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--color-slate);
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            border-bottom: 1px solid transparent;
+            transition: color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .clear-filters-btn:hover {
+            color: var(--color-ink);
+            border-bottom-color: var(--color-ink);
+        }
+
+        .results-count {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--color-slate);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Results Grid and Cards */
+        .results-container {
+            margin: 2rem 0;
+        }
+
+        .book-card {
+            background: white;
+            border: 1px solid var(--color-border);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .book-card:hover {
+            box-shadow: 0 12px 40px rgba(19, 22, 27, 0.12);
+            transform: translateY(-4px);
+        }
+
+        .book-title {
+            font-family: 'Literata', Georgia, serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+        }
+
+        .book-title a {
+            color: var(--color-ink);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .book-title a:hover {
+            color: var(--color-slate);
+        }
+
+        .book-author {
+            font-size: 1.0625rem;
+            color: var(--color-slate);
+            margin-bottom: 1rem;
+        }
+
+        .book-meta {
+            font-size: 0.875rem;
+            color: rgba(19, 22, 27, 0.7);
+            margin-bottom: 1rem;
+        }
+
+        .book-meta strong {
+            color: var(--color-ink);
+        }
+
+        .book-description {
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .book-tags {
+            font-size: 0.8125rem;
+            color: var(--color-slate);
+        }
+
+        /* Visual Grid */
+        .visual-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .visual-card {
+            cursor: pointer;
+        }
+
+        .visual-cover {
+            aspect-ratio: 3/4;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+            margin-bottom: 0.75rem;
+        }
+
+        .visual-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .visual-card:hover .visual-cover img {
+            transform: scale(1.05);
+        }
+
+        .visual-title {
+            font-family: 'Literata', Georgia, serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 0.25rem;
+            text-align: center;
+        }
+
+        .visual-author {
+            font-size: 0.75rem;
+            color: var(--color-slate);
+            text-align: center;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 3rem 0;
+        }
+
+        .pagination-btn {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--color-border);
+            background: white;
+            color: var(--color-ink);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: var(--color-ink);
+            color: var(--color-paper);
+            border-color: var(--color-ink);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .pagination-btn.active {
+            background: var(--color-slate);
+            color: white;
+            border-color: var(--color-slate);
+        }
+
+        /* Loading and Empty States */
+        .loading-state,
+        .empty-state,
+        .error-state {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .loading-state i {
+            font-size: 2rem;
+            color: var(--color-slate);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: rgba(19, 22, 27, 0.2);
+            margin-bottom: 1rem;
+        }
+
+        .state-title {
+            font-family: 'Literata', Georgia, serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .state-text {
+            color: rgba(19, 22, 27, 0.6);
+        }
+
+        /* Line Clamp Utilities */
+        .line-clamp-1 {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .search-header {
+                padding: 3rem 1.5rem 2rem;
+            }
+
+            .search-controls {
+                padding: 1.5rem;
+            }
+
+            .visual-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+
+<style>
+    .site-header {
+        font-family: 'Literata', Georgia, serif;
+    }
+    .site-header .site-logo {
+        font-family: 'Crimson Pro', Georgia, serif;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        white-space: nowrap;
+    }
+    /* Book-spines mark (same drawing as the favicon). Inlined with
+       fill: currentColor rather than <img src=favicon.svg> because the
+       SVG file self-inverts to off-white in OS dark mode and would
+       disappear against the white header. */
+    .site-header .logo-mark {
+        width: 1.3em;
+        height: 1.3em;
+        display: block;
+        flex-shrink: 0;
+        fill: currentColor;
+    }
+    .site-header .nav-link {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+        font-weight: 400;
+        letter-spacing: 0.005em;
+    }
+    .site-header .nav-link[aria-current="page"],
+    .site-header .nav-link-active {
+        font-weight: 600;
+    }
+    .site-header #mobile-nav-menu a {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+    }
+
+    /*
+      Mobile menu uses self-contained, component-scoped CSS rather than
+      Tailwind utilities, so its layout can't be broken by global stylesheet
+      changes. This originally fixed an invisible-sliver bug: design-system.css
+      ships an unlayered `* { padding: 0 }` reset that beats Tailwind's layered
+      utilities and collapsed the old icon-only button. The self-contained
+      styling is kept deliberately.
+    */
+    .site-header .menu-toggle { display: none; }
+    .site-header .mobile-nav { display: none; }
+
+    /*
+      Mobile scroll-jitter fix.
+      The header ships as `sticky top-0 bg-white/95 backdrop-blur-sm`. On mobile
+      a sticky bar with backdrop-filter: blur() forces the browser to re-sample
+      and re-blur the pixels scrolling beneath it every frame; on mobile GPUs
+      that readback lags the scroll compositor and the bar (and the text passing
+      under it) shudders. Drop the blur and use an opaque background on small
+      screens — the frosted-glass effect stays desktop-only. The doubled
+      `.site-header.site-header` selector out-specifies the `bg-white/95` and
+      `backdrop-blur-sm` utility classes without needing !important.
+    */
+    @media (max-width: 900px), (hover: none) and (pointer: coarse) {
+        .site-header.site-header {
+            background-color: #ffffff;
+            -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+            /* Promote the sticky bar to its own compositor layer so it isn't
+               re-rasterized against the scrolling content every frame — this
+               is what stops the header (and the text under it) juddering on
+               mobile. Pairs with dropping the backdrop blur above. */
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            will-change: transform;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .site-header .menu-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.45rem 0.7rem;
+            border: 1px solid rgba(0, 49, 0, 0.3);
+            border-radius: 0.5rem;
+            background: #ffffff;
+            color: #003100;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .site-header .menu-toggle:hover { background: #f0f5f0; }
+        .site-header .menu-toggle:focus-visible {
+            outline: 2px solid #003100;
+            outline-offset: 2px;
+        }
+        .site-header .menu-toggle svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+            flex-shrink: 0;
+        }
+        .site-header .menu-toggle .menu-toggle-label {
+            font-family: 'Literata', Georgia, serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .site-header .menu-toggle .icon-close { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-open { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-close { display: block; }
+
+        .site-header .mobile-nav.is-open {
+            display: flex;
+            flex-direction: column;
+        }
+        .site-header .mobile-nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            padding: 0.5rem;
+            z-index: 40;
+        }
+        .site-header .mobile-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            color: #404040;
+            text-decoration: none;
+        }
+        .site-header .mobile-nav a:hover {
+            background: #f0f5f0;
+            color: #002000;
+        }
+    }
+</style>
+
+<header class="site-header sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="site-logo text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                <svg class="logo-mark" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+                    <rect x="38" y="128" width="72" height="318"/>
+                    <rect x="138" y="68" width="76" height="378"/>
+                    <rect x="242" y="100" width="72" height="346"/>
+                    <rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)"/>
+                </svg>
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link ">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link nav-link-active">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link ">
+                   News
+                </a>
+                
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Accessions
+                </a>
+                
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <!-- Icon + visible "Menu" label so the control is obvious on mobile.
+                 Sizing/visibility come from the unlayered styles above, not
+                 Tailwind utilities (see note in the <style> block). Icons are
+                 inline SVGs so the menu works on pages without an icon font. -->
+            <button class="menu-toggle"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <svg class="icon-open" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg class="icon-close" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+                <span class="menu-toggle-label">Menu</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu" class="mobile-nav" aria-label="Mobile navigation">
+        <a href="/#about">About</a>
+        <a href="/collection-explore.html">Collections</a>
+        <a href="/static-demo/">Search</a>
+        <a href="/#publications">Publications</a>
+        <a href="/news.html">News</a>
+        <a href="/collections/recently_added.html">Accessions</a>
+        
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const button = document.querySelector('button[aria-controls="mobile-nav-menu"]');
+    const willOpen = !menu.classList.contains('is-open');
+
+    menu.classList.toggle('is-open', willOpen);
+    // Icon swap (hamburger <-> X) is driven by aria-expanded in CSS.
+    if (button) button.setAttribute('aria-expanded', String(willOpen));
+}
+</script>
+
+
+<main>
+    <!-- Page Header -->
+    <header class="search-header">
+        <div class="search-label">Library Catalog</div>
+        <h1 class="search-title">Search the Collection</h1>
+    </header>
+
+    <div style="max-width: 1400px; margin: 0 auto; padding: 0 2rem;">
+        <!-- Search Controls -->
+        <div class="search-controls">
+            <div class="search-row">
+                <div>
+                    <label for="search-input" class="control-label">Search the Catalogue</label>
+                    <div class="search-input-wrap">
+                        <input type="text"
+                               id="search-input"
+                               placeholder="Title, author, tag, publisher…"
+                               class="search-input"
+                               autocomplete="off">
+                    </div>
+                </div>
+                <div>
+                    <label for="sort-select" class="control-label">Order by</label>
+                    <select id="sort-select" class="search-select">
+                        <option value="date">Date Added</option>
+                        <option value="title">Title</option>
+                        <option value="author">Author</option>
+                        <option value="year">Publication Year</option>
+                        <option value="publisher">Publisher</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="filter-row">
+                <div id="wing-filter-wrap" hidden>
+                    <label for="wing-filter" class="control-label">Wing</label>
+                    <select id="wing-filter" class="search-select">
+                        <option value="">All Wings</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="publisher-filter" class="control-label">Publisher</label>
+                    <select id="publisher-filter" class="search-select">
+                        <option value="">All Publishers</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="year-filter" class="control-label">Year</label>
+                    <select id="year-filter" class="search-select">
+                        <option value="">All Years</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="collection-filter" class="control-label">Collection</label>
+                    <select id="collection-filter" class="search-select">
+                        <option value="">All Collections</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="controls-footer">
+                <div style="display: flex; align-items: center; gap: 1.75rem;">
+                    <button id="clear-filters" class="clear-filters-btn" type="button">
+                        Clear all filters
+                    </button>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="visual-browse">
+                        <span class="toggle-track" aria-hidden="true"></span>
+                        <span class="toggle-label">Visual Browse</span>
+                    </label>
+                </div>
+                <div id="results-count" class="results-count">
+                    Loading…
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Results -->
+        <div id="search-results" class="results-container">
+            <div class="loading-state">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p class="state-text">Loading collection...</p>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div id="pagination" class="pagination" style="display: none;">
+            <button id="prev-page" class="pagination-btn" disabled>
+                Previous
+            </button>
+            <div id="page-numbers" style="display: flex; gap: 0.5rem;"></div>
+            <button id="next-page" class="pagination-btn" disabled>
+                Next
+            </button>
+        </div>
+    </div>
+</main>
+<script>
+window.LIBRARY_WINGS = [{"slug": "art", "name": "Art & Photography", "isDefault": true}, {"slug": "cryptology", "name": "Cryptology", "isDefault": false}, {"slug": "hacking", "name": "Cracking & Hacking", "isDefault": false}, {"slug": "media-theory", "name": "Media Theory", "isDefault": false}, {"slug": "digital-art", "name": "Digital Art & AI", "isDefault": false}, {"slug": "art-writing", "name": "Art Writing & Lives", "isDefault": false}, {"slug": "surveillance", "name": "Surveillance & Dissent", "isDefault": false}, {"slug": "fiction", "name": "Fiction & Non-fiction", "isDefault": false}, {"slug": "ephemera", "name": "Ephemera", "isDefault": false}, {"slug": "comics", "name": "Comics", "isDefault": false}, {"slug": "posters", "name": "Posters", "isDefault": false}, {"slug": "artworks", "name": "Artworks", "isDefault": false}];
+</script>
+
+<script>
+class BookSearch {
+    constructor() {
+        this.books = [];
+        this.filteredBooks = [];
+        this.currentPage = 1;
+        this.itemsPerPage = 20;
+        this.searchTerm = '';
+        this.filters = {
+            publisher: '',
+            year: '',
+            collection: '',
+            wing: '',
+            cover: ''
+        };
+        // Resolved in populateWingFilter() once the data is in; stays '' (all
+        // wings) while the catalogue has only one wing and the facet is hidden.
+        this.defaultWingSlug = '';
+        this.visualBrowse = false;
+        this.sortBy = 'date';
+
+        this.init();
+    }
+
+    async init() {
+        await this.loadBooks();
+        this.setupEventListeners();
+        this.populateFilters();
+        this.performSearch();
+    }
+
+    async loadBooks() {
+        console.log('Starting to load books...');
+        return await this.loadBooksFromCSV();
+    }
+
+    async loadBooksFromCSV() {
+        try {
+            console.log('Fetching CSV from /cms/data/catalog-index.csv...');
+            const response = await fetch('/cms/data/catalog-index.csv');
+            console.log('CSV response status:', response.status);
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const csvText = await response.text();
+            console.log('CSV text length:', csvText.length);
+            console.log('First 200 chars:', csvText.substring(0, 200));
+
+            this.books = this.parseCSV(csvText);
+            console.log('Final books array length:', this.books.length);
+
+        } catch (error) {
+            console.error('Failed to load books data:', error);
+            this.displayError('Failed to load book collection. Please try again later.');
+        }
+    }
+
+    parseCSV(csvText) {
+        try {
+            const rows = this.parseCSVStream(csvText);
+            if (rows.length < 2) {
+                console.error('CSV has insufficient data');
+                return [];
+            }
+
+            const headers = rows[0];
+            const books = [];
+
+            for (let i = 1; i < rows.length; i++) {
+                const values = rows[i];
+                if (values.length < 5) continue;
+
+                const book = {};
+                headers.forEach((header, index) => {
+                    book[header] = values[index] !== undefined ? values[index] : '';
+                });
+
+                if (book.title && book.title !== 'NULL') {
+                    books.push(book);
+                }
+            }
+
+            console.log(`Parsed ${books.length} books from CSV`);
+            return books;
+
+        } catch (error) {
+            console.error('CSV parsing error:', error);
+            return [];
+        }
+    }
+
+    // Single-pass CSV parser that respects quoted fields containing newlines.
+    parseCSVStream(csvText) {
+        const rows = [];
+        let row = [];
+        let current = '';
+        let inQuotes = false;
+
+        for (let i = 0; i < csvText.length; i++) {
+            const char = csvText[i];
+            const nextChar = csvText[i + 1];
+
+            if (char === '"') {
+                if (inQuotes && nextChar === '"') {
+                    current += '"';
+                    i++;
+                } else {
+                    inQuotes = !inQuotes;
+                }
+            } else if (char === ',' && !inQuotes) {
+                row.push(current);
+                current = '';
+            } else if ((char === '\n' || char === '\r') && !inQuotes) {
+                if (char === '\r' && nextChar === '\n') i++;
+                row.push(current);
+                current = '';
+                if (row.length > 1 || row[0] !== '') rows.push(row);
+                row = [];
+            } else {
+                current += char;
+            }
+        }
+
+        if (current !== '' || row.length > 0) {
+            row.push(current);
+            if (row.length > 1 || row[0] !== '') rows.push(row);
+        }
+
+        return rows;
+    }
+
+    setupEventListeners() {
+        const searchInput = document.getElementById('search-input');
+        const sortSelect = document.getElementById('sort-select');
+        const publisherFilter = document.getElementById('publisher-filter');
+        const yearFilter = document.getElementById('year-filter');
+        const collectionFilter = document.getElementById('collection-filter');
+        const visualBrowseCheckbox = document.getElementById('visual-browse');
+        const clearFilters = document.getElementById('clear-filters');
+        const prevPage = document.getElementById('prev-page');
+        const nextPage = document.getElementById('next-page');
+
+        searchInput.addEventListener('input', (e) => {
+            this.searchTerm = e.target.value.toLowerCase();
+            this.currentPage = 1;
+            this.performSearch();
+        });
+
+        sortSelect.addEventListener('change', (e) => {
+            this.sortBy = e.target.value;
+            this.performSearch();
+        });
+
+        publisherFilter.addEventListener('change', (e) => {
+            this.filters.publisher = e.target.value;
+            this.currentPage = 1;
+            this.performSearch();
+        });
+
+        yearFilter.addEventListener('change', (e) => {
+            this.filters.year = e.target.value;
+            this.currentPage = 1;
+            this.performSearch();
+        });
+
+        collectionFilter.addEventListener('change', (e) => {
+            this.filters.collection = e.target.value;
+            this.currentPage = 1;
+            this.performSearch();
+        });
+
+        const wingFilter = document.getElementById('wing-filter');
+        wingFilter.addEventListener('change', (e) => {
+            this.filters.wing = e.target.value;
+            this.currentPage = 1;
+            this.performSearch();
+        });
+
+        visualBrowseCheckbox.addEventListener('change', (e) => {
+            this.visualBrowse = e.target.checked;
+            this.performSearch();
+        });
+
+        clearFilters.addEventListener('click', () => {
+            this.clearAllFilters();
+        });
+
+        prevPage.addEventListener('click', () => {
+            if (this.currentPage > 1) {
+                this.currentPage--;
+                this.performSearch();
+            }
+        });
+
+        nextPage.addEventListener('click', () => {
+            const totalPages = Math.ceil(this.filteredBooks.length / this.itemsPerPage);
+            if (this.currentPage < totalPages) {
+                this.currentPage++;
+                this.performSearch();
+            }
+        });
+    }
+
+    populateFilters() {
+        const publishers = [...new Set(this.books.map(book => book.publisher).filter(p => p))].sort();
+        const years = [...new Set(this.books.map(book => book.publication_year).filter(y => y))].sort((a, b) => b - a);
+        const collectionCounts = {};
+        this.books.forEach(book => {
+            const c = book.collection_grouping;
+            if (c) collectionCounts[c] = (collectionCounts[c] || 0) + 1;
+        });
+        const collections = Object.keys(collectionCounts).filter(c => collectionCounts[c] >= 10).sort();
+
+        this.populateSelect('publisher-filter', publishers);
+        this.populateSelect('year-filter', years);
+        this.populateSelect('collection-filter', collections);
+        this.populateWingFilter();
+    }
+
+    // The wing facet is driven by the `collection` column the catalogue loader
+    // stamps from each file. Search itself stays global — this only scopes it.
+    //
+    // The catalogue OPENS on the default wing (art), not on every wing: this is
+    // the art front door, and the other wings are reached deliberately, through
+    // the facet or from a wing landing page. "All Wings" is one selection away.
+    populateWingFilter() {
+        const wrap = document.getElementById('wing-filter-wrap');
+        const select = document.getElementById('wing-filter');
+        const slugs = [...new Set(this.books.map(book => book.collection).filter(Boolean))];
+
+        // One wing is the whole catalogue; a control offering that is noise.
+        if (slugs.length < 2) return;
+
+        const names = new Map((window.LIBRARY_WINGS || []).map(w => [w.slug, w.name]));
+        slugs
+            .sort((a, b) => (names.get(a) || a).localeCompare(names.get(b) || b))
+            .forEach(slug => {
+                const option = document.createElement('option');
+                option.value = slug;
+                option.textContent = names.get(slug) || slug;
+                select.appendChild(option);
+            });
+
+        wrap.hidden = false;
+
+        // Resolved here rather than in the constructor: with a single wing the
+        // facet never renders, this line never runs, and Clear keeps returning
+        // to the unscoped view.
+        this.defaultWingSlug = this.defaultWing();
+
+        // Wing landing pages link here with the wing preselected; ?collection=all
+        // is the escape hatch to the unscoped view. Anything else falls back to
+        // the default wing rather than filtering the page to nothing.
+        const requested = new URLSearchParams(window.location.search).get('collection');
+        const wing = requested === 'all' ? ''
+            : (requested && slugs.includes(requested)) ? requested
+            : this.defaultWingSlug;
+        select.value = wing;
+        this.filters.wing = wing;
+    }
+
+    // The registry's own default wing, if it has rows. Empty string (all wings)
+    // when the registry is missing or the default wing isn't in the data.
+    defaultWing() {
+        const slugs = new Set(this.books.map(book => book.collection).filter(Boolean));
+        const fallback = (window.LIBRARY_WINGS || []).find(w => w.isDefault);
+        return fallback && slugs.has(fallback.slug) ? fallback.slug : '';
+    }
+
+    populateSelect(selectId, options) {
+        const select = document.getElementById(selectId);
+        const currentValue = select.value;
+
+        while (select.children.length > 1) {
+            select.removeChild(select.lastChild);
+        }
+
+        options.forEach(option => {
+            const optionElement = document.createElement('option');
+            optionElement.value = option;
+            optionElement.textContent = option;
+            select.appendChild(optionElement);
+        });
+
+        select.value = currentValue;
+    }
+
+    clearAllFilters() {
+        document.getElementById('search-input').value = '';
+        document.getElementById('sort-select').value = 'date';
+        document.getElementById('publisher-filter').value = '';
+        document.getElementById('year-filter').value = '';
+        document.getElementById('collection-filter').value = '';
+        // Clear returns to the catalogue's opening state, which is the default
+        // wing — not every wing. Widening past it stays a deliberate choice.
+        document.getElementById('wing-filter').value = this.defaultWingSlug;
+        document.getElementById('visual-browse').checked = false;
+
+        this.searchTerm = '';
+        this.filters = { publisher: '', year: '', collection: '', wing: this.defaultWingSlug };
+        this.visualBrowse = false;
+        this.sortBy = 'date';
+        this.currentPage = 1;
+        this.performSearch();
+    }
+
+    performSearch() {
+        if (this.searchTerm) {
+            const escaped = this.searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const boundary = '(^|[^\\p{L}\\p{N}])';
+            this.wordPrefixPattern = new RegExp(boundary + escaped, 'u');
+            this.wholeWordPattern = new RegExp(boundary + escaped + '($|[^\\p{L}\\p{N}])', 'u');
+        }
+
+        this.filteredBooks = this.books.filter(book => {
+            if (this.searchTerm) {
+                const searchableText = [
+                    book.title,
+                    book.author_full_name,
+                    book.tags
+                ].join(' ').toLowerCase();
+
+                if (!searchableText.includes(this.searchTerm)) {
+                    return false;
+                }
+
+                // Rank: whole word ("ARN") > word start ("Arnold") > mid-word
+                // ("Warning"); see sortResults.
+                book._rank = this.wholeWordPattern.test(searchableText) ? 2
+                    : this.wordPrefixPattern.test(searchableText) ? 1 : 0;
+            }
+
+            if (this.filters.publisher && book.publisher !== this.filters.publisher) {
+                return false;
+            }
+
+            if (this.filters.year && book.publication_year !== this.filters.year) {
+                return false;
+            }
+
+            if (this.filters.collection && book.collection_grouping !== this.filters.collection) {
+                return false;
+            }
+
+            if (this.filters.wing && book.collection !== this.filters.wing) {
+                return false;
+            }
+
+            return true;
+        });
+
+        this.sortResults();
+        this.displayResults();
+        this.updatePagination();
+        this.updateResultsCount();
+    }
+
+    sortResults() {
+        this.filteredBooks.sort((a, b) => {
+            let aValue, bValue;
+
+            if (this.searchTerm && a._rank !== b._rank) {
+                return b._rank - a._rank;
+            }
+
+            switch (this.sortBy) {
+                case 'date':
+                    // Newest accession first. accession_no is free-form text
+                    // ("2026-04-19", "Summer 2023", "October 2024"), so
+                    // normalize to YYYY-MM-DD before comparing. Tie-break by id.
+                    aValue = this.normalizeAccessionDate(a.accession_no) || '0000-00-00';
+                    bValue = this.normalizeAccessionDate(b.accession_no) || '0000-00-00';
+                    if (aValue !== bValue) return bValue.localeCompare(aValue);
+                    return (parseInt(b.id) || 0) - (parseInt(a.id) || 0);
+                case 'author':
+                    aValue = a.author_full_name || '';
+                    bValue = b.author_full_name || '';
+                    break;
+                case 'year':
+                    aValue = parseInt(a.publication_year) || 0;
+                    bValue = parseInt(b.publication_year) || 0;
+                    return bValue - aValue;
+                case 'publisher':
+                    aValue = a.publisher || '';
+                    bValue = b.publisher || '';
+                    break;
+                default:
+                    aValue = a.title || '';
+                    bValue = b.title || '';
+            }
+
+            return aValue.toString().localeCompare(bValue.toString());
+        });
+    }
+
+    displayResults() {
+        const resultsContainer = document.getElementById('search-results');
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        const endIndex = startIndex + this.itemsPerPage;
+        const pageBooks = this.filteredBooks.slice(startIndex, endIndex);
+
+        if (pageBooks.length === 0) {
+            resultsContainer.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-search"></i>
+                    <h3 class="state-title">No books found</h3>
+                    <p class="state-text">Try adjusting your search terms or filters.</p>
+                </div>
+            `;
+            return;
+        }
+
+        if (this.visualBrowse) {
+            resultsContainer.innerHTML = this.renderVisualGrid(pageBooks);
+        } else {
+            resultsContainer.innerHTML = pageBooks.map(book => this.renderBookCard(book)).join('');
+        }
+    }
+
+    renderVisualGrid(books) {
+        return `
+            <div class="visual-grid">
+                ${books.map(book => this.renderVisualCard(book)).join('')}
+            </div>
+        `;
+    }
+
+    renderVisualCard(book) {
+        const imageUrl = this.generateCoverImagePath(book);
+        const hasRealCover = imageUrl !== '/assets/images/placeholder-book.svg';
+        const author = (book.author_full_name && book.author_full_name !== 'NULL') ? book.author_full_name : 'Unknown Author';
+
+        return `
+            <div class="visual-card">
+                <div class="visual-cover">
+                    <img src="${imageUrl}"
+                         alt="${this.escapeHtml(book.title)}"
+                         style="${hasRealCover ? '' : 'opacity: 0.3;'}"
+                         onerror="this.src='/assets/images/placeholder-book.svg'"
+                         loading="lazy">
+                </div>
+                <div class="visual-title line-clamp-2">
+                    ${this.escapeHtml(book.title.length > 50 ? book.title.substring(0, 50) + '...' : book.title)}
+                </div>
+                <div class="visual-author line-clamp-1">
+                    ${this.escapeHtml(author.length > 30 ? author.substring(0, 30) + '...' : author)}
+                </div>
+            </div>
+        `;
+    }
+
+    generateCoverImagePath(book) {
+        if (book.image_url &&
+            book.image_url !== 'NULL' &&
+            book.image_url !== '' &&
+            book.image_url !== null &&
+            book.image_url !== 'null') {
+            return book.image_url;
+        }
+
+        const authorLast = (book.author_last || 'Unknown').replace(/[^a-zA-Z0-9.-]/g, '_');
+        const title = (book.title || 'Untitled').replace(/[^a-zA-Z0-9.-]/g, '_');
+        const isbn = (book.isbn_asin || '').replace(/[^a-zA-Z0-9.-]/g, '_').replace(/[-\s]/g, '');
+
+        let filename;
+        if (isbn && isbn !== 'NULL' && isbn !== '' && isbn !== 'null') {
+            filename = `${authorLast}_${title}_${isbn}`;
+        } else {
+            filename = `${authorLast}_${title}_NULL`;
+        }
+
+        const sanitized = filename
+            .replace(/[^a-zA-Z0-9.-]/g, '_')
+            .replace(/_+/g, '_')
+            .replace(/^_|_$/g, '')
+            .substring(0, 100);
+
+        return `/assets/images/books/${sanitized}.jpg`;
+    }
+
+    generateBookPageUrl(book) {
+        // Match Eleventy's slugify behavior (slugify npm package with strict: true)
+        const slugifyText = (text) => {
+            return (text || '')
+                .toLowerCase()
+                .replace(/&/g, 'and')                    // & → and
+                .replace(/[^\w\s-]/g, '')                // Remove special chars (keep word chars, spaces, hyphens)
+                .replace(/\s+/g, '-')                    // Spaces → hyphens
+                .replace(/-+/g, '-')                     // Multiple hyphens → single hyphen
+                .replace(/^-+|-+$/g, '');                // Trim leading/trailing hyphens
+        };
+
+        const author = slugifyText(book.author_last || 'unknown');
+        const title = slugifyText(book.title || 'untitled');
+        const id = book.id || '';
+
+        return `/books/${author}_${title}_${id}/`;
+    }
+
+    renderBookCard(book) {
+        const imageUrl = this.generateCoverImagePath(book);
+        const hasRealCover = imageUrl !== '/assets/images/placeholder-book.svg';
+
+        const year = (book.publication_year && book.publication_year !== 'NULL') ? book.publication_year : '';
+        const pages = (book.page_count && book.page_count !== 'NULL') ? `${book.page_count} pages` : '';
+        const binding = (book.binding && book.binding !== 'NULL') ? book.binding : '';
+        const publisher = (book.publisher && book.publisher !== 'NULL') ? book.publisher : '';
+        const author = (book.author_full_name && book.author_full_name !== 'NULL') ? book.author_full_name : 'Unknown Author';
+
+        return `
+            <div class="book-card">
+                <div style="display: grid; grid-template-columns: 120px 1fr; gap: 1.5rem;">
+                    <div>
+                        <img src="${imageUrl}"
+                             alt="${this.escapeHtml(book.title)}"
+                             style="width: 100%; height: 160px; object-fit: cover; border: 1px solid var(--color-border); ${hasRealCover ? '' : 'opacity: 0.3;'}"
+                             onerror="this.src='/assets/images/placeholder-book.svg'"
+                             loading="lazy">
+                    </div>
+                    <div>
+                        <h3 class="book-title">
+                            <a href="${this.generateBookPageUrl(book)}">
+                                ${this.escapeHtml(book.title)}
+                            </a>
+                        </h3>
+                        <p class="book-author">
+                            ${this.escapeHtml(author)}
+                        </p>
+                        <div class="book-meta">
+                            ${publisher ? `<span><strong>Publisher:</strong> ${this.escapeHtml(publisher)}</span> · ` : ''}
+                            ${year ? `<span><strong>Year:</strong> ${year}</span> · ` : ''}
+                            ${binding ? `<span><strong>Format:</strong> ${this.escapeHtml(binding)}</span> · ` : ''}
+                            ${pages ? `<span><strong>Pages:</strong> ${pages}</span>` : ''}
+                        </div>
+                        ${(() => {
+                            const plain = this.stripHtml(book.description);
+                            if (!plain || plain === 'NULL') return '';
+                            const snippet = plain.length > 240 ? this.escapeHtml(plain.substring(0, 240)) + '…' : this.escapeHtml(plain);
+                            return `<p class="book-description line-clamp-3">${snippet}</p>`;
+                        })()}
+                        ${book.tags && book.tags !== 'NULL' ? `
+                            <p class="book-tags">
+                                ${this.escapeHtml(book.tags)}
+                            </p>
+                        ` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    updatePagination() {
+        const totalPages = Math.ceil(this.filteredBooks.length / this.itemsPerPage);
+        const paginationContainer = document.getElementById('pagination');
+        const prevButton = document.getElementById('prev-page');
+        const nextButton = document.getElementById('next-page');
+        const pageNumbers = document.getElementById('page-numbers');
+
+        if (totalPages <= 1) {
+            paginationContainer.style.display = 'none';
+            return;
+        }
+
+        paginationContainer.style.display = 'flex';
+
+        prevButton.disabled = this.currentPage <= 1;
+        nextButton.disabled = this.currentPage >= totalPages;
+
+        pageNumbers.innerHTML = '';
+        const maxVisiblePages = 5;
+        let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+        if (endPage - startPage + 1 < maxVisiblePages) {
+            startPage = Math.max(1, endPage - maxVisiblePages + 1);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            const pageButton = document.createElement('button');
+            pageButton.textContent = i;
+            pageButton.className = `pagination-btn ${i === this.currentPage ? 'active' : ''}`;
+            pageButton.addEventListener('click', () => {
+                this.currentPage = i;
+                this.performSearch();
+            });
+            pageNumbers.appendChild(pageButton);
+        }
+    }
+
+    updateResultsCount() {
+        const resultsCount = document.getElementById('results-count');
+        const total = this.filteredBooks.length;
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage + 1;
+        const endIndex = Math.min(startIndex + this.itemsPerPage - 1, total);
+
+        if (total === 0) {
+            resultsCount.textContent = 'No results found';
+        } else if (total <= this.itemsPerPage) {
+            resultsCount.textContent = `Showing ${total} book${total === 1 ? '' : 's'}`;
+        } else {
+            resultsCount.textContent = `Showing ${startIndex}-${endIndex} of ${total} books`;
+        }
+    }
+
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Descriptions in the CSV contain editorial HTML (<p>, <em>, etc.);
+    // strip tags and collapse whitespace before rendering as body copy.
+    stripHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.innerHTML = text;
+        return (div.textContent || div.innerText || '').replace(/\s+/g, ' ').trim();
+    }
+
+    // accession_no in the CSV is inconsistently formatted: some entries are
+    // ISO dates ("2026-04-19"), others use month names ("October 29, 2025"),
+    // month-year ("October 2024"), or seasons ("Summer 2023"). Normalize to
+    // YYYY-MM-DD so string comparison gives correct chronological order.
+    normalizeAccessionDate(v) {
+        if (!v || v === 'NULL') return null;
+        const s = String(v).trim();
+        if (!s) return null;
+
+        const pad = n => String(n).padStart(2, '0');
+        const monthIndex = name => {
+            const months = ['january','february','march','april','may','june',
+                            'july','august','september','october','november','december'];
+            const short = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+            const lc = name.toLowerCase();
+            let i = months.indexOf(lc);
+            if (i < 0) i = short.indexOf(lc);
+            return i >= 0 ? i + 1 : null;
+        };
+        const seasons = { spring: 3, summer: 6, fall: 9, autumn: 9, winter: 12 };
+
+        let m;
+        if ((m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/))) {
+            return `${m[1]}-${pad(m[2])}-${pad(m[3])}`;
+        }
+        if ((m = s.match(/^([A-Za-z]+)\s+(\d{1,2}),?\s+(\d{4})$/))) {
+            const mi = monthIndex(m[1]);
+            if (mi) return `${m[3]}-${pad(mi)}-${pad(m[2])}`;
+        }
+        if ((m = s.match(/^([A-Za-z]+)\s+(\d{4})$/))) {
+            const mi = monthIndex(m[1]);
+            if (mi) return `${m[2]}-${pad(mi)}-01`;
+            const si = seasons[m[1].toLowerCase()];
+            if (si) return `${m[2]}-${pad(si)}-01`;
+        }
+        if ((m = s.match(/^(\d{4})$/))) {
+            return `${m[1]}-01-01`;
+        }
+        return null;
+    }
+
+    displayError(message) {
+        const resultsContainer = document.getElementById('search-results');
+        resultsContainer.innerHTML = `
+            <div class="error-state">
+                <i class="fas fa-exclamation-triangle" style="color: var(--color-slate);"></i>
+                <h3 class="state-title">Error</h3>
+                <p class="state-text">${message}</p>
+            </div>
+        `;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    new BookSearch();
+});
+</script>
+
+
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
+        
+        <p>© 2026 Hudson Street Library · <a href="/identity/" class="text-neutral-600 underline hover:text-neutral-900">Identity</a> · <a href="/colophon.html" class="text-neutral-600 underline hover:text-neutral-900">Colophon</a></p>
+    </div>
+</footer>
+
+<script src="/assets/js/shared.js"></script>
+
+</body>
+</html>
