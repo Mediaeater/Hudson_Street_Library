@@ -1,0 +1,180 @@
+<h1>Hudson Street Library Design System</h1>
+<p>The working brief for this site. Every value below is the value actually in the
+code — <code>src/assets/css/design-system.css</code> and <code>src/assets/css/input.css</code> are the
+two files that define them, and <code>npm run test:design</code> fails the build if source
+and brief drift apart.</p>
+<p>Last verified against the code: 8 August 2026.</p>
+<h2>Core principles</h2>
+<ul>
+<li><strong>Clarity over ornament.</strong> Hierarchy, whitespace, and typography carry the page.</li>
+<li><strong>Restraint.</strong> One accent colour. Borders before shadows. Rounded corners with a reason.</li>
+<li><strong>Consistency.</strong> Reuse tokens. A raw hex in a page's <code>&lt;style&gt;</code> block is how the palette fractures.</li>
+</ul>
+<h2>Colour</h2>
+<h3>The library green</h3>
+<p>One green, used for the mark, every link, and the seal on the printed
+stationery. Screen and press share the value.</p>
+<pre><code class="language-css">--primary-400: #81b182;  /* oklch .715 .085 145 */
+--primary-500: #508950;  /* oklch .575 .105 144 */
+--primary-600: #276628;  /* oklch .455 .115 143.5 —  6.96:1 on white */
+--primary-700: #034706;  /* oklch .346 .113 143.1 — 11.01:1 on white  ← the mark */
+--forest-800: #003100;   /* hover / pressed */
+--forest-900: #002000;
+</code></pre>
+<p>The hue is locked at ~143° across the whole ramp. This matters: the previous
+ramp drifted from 117° at the light end to 143° at the dark end and its chroma
+collapsed to 0.029 at the 500 step, which is why it read grey rather than green.
+If you add a step, keep the hue and give it a chroma that fits the curve.</p>
+<p><code>teal-*</code> class names still exist and map onto this ramp — <code>.text-teal-700</code> and
+<code>.text-teal-900</code> both resolve to <code>--primary-700</code>. The names are historical. The
+colour is green. Do not &quot;correct&quot; a teal class name to an actual teal.</p>
+<h3>Semantic colours</h3>
+<p>Deliberately not brand. Status and feedback only.</p>
+<pre><code class="language-css">--success: #22c55e;   --warning: #f59e0b;   --error: #ef4444;
+
+/* badges + alerts */
+badge-success  #15803d on #dcfce7        alert-success  #bbf7d0 on #f0fdf4
+status-available #065f46 on #d1fae5
+</code></pre>
+<h3>Neutrals</h3>
+<p>Cool, blue-leaning, not Tailwind's default greys. <code>--neutral-50</code> is the page background.</p>
+<pre><code class="language-css">--neutral-50:  #F6F7F9;   --neutral-500: #737373;
+--neutral-100: #f5f5f5;   --neutral-600: #525252;
+--neutral-200: #e5e5e5;   --neutral-700: #404040;
+--neutral-300: #d4d4d4;   --neutral-800: #262626;
+--neutral-400: #a3a3a3;   --neutral-900: #171717;
+</code></pre>
+<h3>Where colour is defined</h3>
+<p>Two files, and they must stay in step:</p>
+<ul>
+<li><code>design-system.css</code> <code>:root</code> — unlayered, so it wins for <code>.text-primary-*</code> and <code>.text-teal-*</code></li>
+<li><code>input.css</code> <code>@theme</code> — backs every other utility (<code>hover:</code>, <code>border-</code>, <code>from-</code>)</li>
+</ul>
+<p>Changing one and not the other splits the palette in half, with the resting
+state correct and the hover state stale. <code>npm run test:design</code> catches this.</p>
+<h2>Typography</h2>
+<p>Three faces, all free and open source.</p>
+<ul>
+<li><strong>Literata</strong> (TypeTogether) — all content. One variable font; the optical-size
+axis gives a high-contrast display cut at headline sizes and a sturdier cut for
+running text.</li>
+<li><strong>Crimson Pro</strong> — the wordmark only (<code>.site-logo</code>). It set the whole site for
+years and now keeps the door. This is not a leftover; do not &quot;unify&quot; it away.</li>
+<li><strong>Archivo Narrow</strong> (Omnibus-Type) — dates, labels, small matter, UI chrome.</li>
+</ul>
+<h3>Type scale</h3>
+<pre><code>12  14  16  18  20  24  32  40  48  60  72 px      base 16px
+</code></pre>
+<p>Weights: 400 regular, 500 medium, 600 semibold, 700 bold (wordmark and titles).</p>
+<h2>Space, shape, motion</h2>
+<pre><code class="language-css">/* spacing */   4  8  12  16  24  32  48  64 px
+/* radius */    --radius-sm: 8px    --radius-md: 12px
+                --radius-lg: 16px   --radius-full: 9999px
+/* shadows */   --shadow-sm: 0 1px 2px rgba(0,0,0,.06)
+                --shadow-md: 0 4px 12px rgba(0,0,0,.08)
+/* borders */   --border: 1px solid rgba(0,0,0,.08)
+                --border-dark: 1px solid rgba(0,0,0,.12)
+/* motion */    --duration-fast: 80ms   --duration-base: 120ms
+                --duration-slow: 200ms  --ease: cubic-bezier(.4,0,.2,1)
+</code></pre>
+<p>Align to the 4px grid. Prefer a 1px border to a shadow. Respect
+<code>prefers-reduced-motion</code> — the reset already does.</p>
+<h2>Layout</h2>
+<ul>
+<li>Content max-width <strong>1200px</strong>, gutters <strong>24px</strong> (<code>.container</code>)</li>
+<li>Prose capped at <strong>65ch</strong>, centred with auto inline margins</li>
+<li>Section padding 48–64px desktop, 32–48px mobile</li>
+<li>Breakpoints: <code>sm 640</code> <code>md 768</code> <code>lg 1024</code> <code>xl 1280</code> <code>2xl 1536</code></li>
+</ul>
+<h2>The mark</h2>
+<p>A shelf of four spines, one leaning. The entire drawing is four rectangles, the
+fourth rotated 9°. It began as the favicon and now stands at the head of every
+page.</p>
+<ul>
+<li>Always <code>#034706</code>. The black variant exists only for a one-ink print fallback.</li>
+<li>Never below <strong>7mm</strong> in print — the leaning spine closes up.</li>
+<li>Clear space on all sides equal to one spine width.</li>
+<li><strong>Inline it as SVG with an explicit fill.</strong> The favicon file self-inverts in OS
+dark mode; used as <code>&lt;img&gt;</code> it vanishes against a light background.</li>
+</ul>
+<h2>Build architecture</h2>
+<p>Worth understanding before adding CSS, because two of the traps here have each
+cost a day.</p>
+<ul>
+<li><strong>Tailwind v4</strong>, configured in <code>input.css</code> via <code>@theme</code>. There is no
+<code>tailwind.config.js</code>.</li>
+<li><strong>Preflight is off</strong> (v3 parity). <code>input.css</code> <code>@layer base</code> carries the only
+reset. That includes <code>a { color: inherit; text-decoration: none }</code> — without
+it, any link lacking a colour class renders browser-blue <code>#0000EE</code>.</li>
+<li><strong><code>design-system.css</code> is unlayered and loads second</strong>, so its rules beat
+anything in a Tailwind layer. This is deliberate and load-bearing: several page
+templates ship their own inline <code>*{margin:0;padding:0}</code> reset, and only
+unlayered utilities beat it. Do not fold this sheet into a layer.</li>
+<li><strong>Seven built pages do not load <code>tailwind.css</code></strong> — four redirect stubs plus
+<code>discover.html</code>, <code>browse-gallery-demo/</code>, and this page. Anything added to
+<code>@layer base</code> is inert on them. They are listed in <code>NO_TAILWIND_OK</code> in
+<code>scripts/validate-design-system.js</code>.</li>
+<li><strong>The header is one component</strong>, <code>_includes/components/site-header.njk</code>. Pages
+that copied its markup froze at an older nav; 49 of them had to be repaired.</li>
+</ul>
+<h2>Accessibility</h2>
+<ul>
+<li>WCAG AA contrast: 4.5:1 body, 3:1 large text. The green ramp clears AAA at the
+600 and 700 steps.</li>
+<li>Keyboard navigation for every interactive element.</li>
+<li>Focus visible without relying on colour — 2px outline, 2px offset.</li>
+<li>Target size minimum 44×44px.</li>
+<li>Semantic HTML, linked form labels, alt text on every image.</li>
+</ul>
+<h2>Enforcement</h2>
+<p><code>npm run test:design</code> — runs in pre-commit (source checks) and in CI against the
+built site. Three invariants:</p>
+<table>
+<thead>
+<tr>
+<th>check</th>
+<th>fails when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>palette</code></td>
+<td>a green/teal-hue value outside the ramp appears in any CSS declaration</td>
+</tr>
+<tr>
+<td><code>coverage</code></td>
+<td>a built page doesn't load <code>tailwind.css</code> and isn't allowlisted</td>
+</tr>
+<tr>
+<td><code>header</code></td>
+<td>a page hand-rolls the wordmark instead of including the component</td>
+</tr>
+</tbody>
+</table>
+<p>A deliberately non-brand green goes in the <code>SEMANTIC</code> allowlist in that script,
+with a reason. That makes &quot;this green is fine&quot; a recorded decision instead of an
+assumption.</p>
+<h2>Do and don't</h2>
+<p><strong>Do</strong> — use a token, not a hex. Separate with borders and space. One primary
+action per view. Keep body measure at 60–75 characters. Implement every
+interactive state.</p>
+<p><strong>Don't</strong> — write a raw green hex anywhere outside the two token files. Stack
+heavy shadows. Centre long body text. Add a stylesheet when the existing build
+would do. Copy the header markup into a page.</p>
+<h2>Brief for an assistant</h2>
+<p>When implementing against this system:</p>
+<ol>
+<li>Semantic HTML with Tailwind utilities.</li>
+<li>Spacing from the 4px scale; type from the scale above.</li>
+<li>Neutral-first, with the green as the single accent.</li>
+<li>Colour by token. Never a raw hex — the palette check will fail the commit.</li>
+<li>Borders over shadows.</li>
+<li>Every interactive state: hover, focus, active, disabled.</li>
+<li>Transitions 80–200ms with the standard ease.</li>
+<li>WCAG AA minimum; verify contrast rather than assuming.</li>
+<li>Mobile-first, using the breakpoints above.</li>
+<li>Include the shared header and footer components. Do not reproduce them.</li>
+</ol>
+<p>Verify colour work by reading the CSS <strong>rules</strong>, not by screenshotting a page at
+one width. A rendered spot check cannot see <code>:hover</code>, <code>:focus-visible</code>, or
+anything behind a media query, which is exactly where stale colour survives.</p>

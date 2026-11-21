@@ -1,0 +1,670 @@
+/* All @import rules must precede other statements. */
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap');
+
+/*
+  Import Tailwind without Preflight. The v3 config used
+  `corePlugins: { preflight: false }`, and design-system.css provides its own
+  CSS reset, so we deliberately omit `tailwindcss/preflight.css` here to keep
+  the compiled output behavior identical to the v3 build.
+*/
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+@theme {
+  --text-*: initial;
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 18px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 32px;
+  --text-4xl: 40px;
+  --text-5xl: 48px;
+  --text-6xl: 60px;
+  --text-7xl: 72px;
+
+  --color-forest-400: #81b182;
+  --color-forest-500: #508950;
+  --color-forest-600: #276628;
+  --color-forest-700: #034706;
+  --color-forest-800: #003100;
+  --color-forest-900: #002000;
+
+  --font-playfair: Playfair Display, serif;
+  --font-montserrat: Montserrat, sans-serif;
+
+  /*
+    Ported from design-system.css. These override Tailwind's defaults so the
+    compiled utilities render the exact values design-system.css used to win
+    via its unlayered sheet (no visual change on the cutover).
+  */
+
+  /* Primary palette (design-system only; Tailwind had no `primary-*`).
+     Must stay in step with design-system.css :root — that sheet is unlayered
+     and wins for `.text-primary-*` / `.text-teal-*`, but these values back
+     every other utility (hover:, border-, from-), so a drift between the two
+     files splits the palette in half. */
+  --color-primary-400: #81b182;
+  --color-primary-500: #508950;
+  --color-primary-600: #276628;
+  --color-primary-700: #034706;
+
+  /* Neutral palette — design-system used warm hex, not Tailwind's oklch grays. */
+  --color-neutral-50: #F6F7F9;
+  --color-neutral-100: #f5f5f5;
+  --color-neutral-200: #e5e5e5;
+  --color-neutral-300: #d4d4d4;
+  --color-neutral-400: #a3a3a3;
+  --color-neutral-500: #737373;
+  --color-neutral-600: #525252;
+  --color-neutral-700: #404040;
+  --color-neutral-800: #262626;
+  --color-neutral-900: #171717;
+
+  /*
+    teal-* were aliased to the forest greens by design-system (the site logo
+    uses `text-teal-900`). Keep that mapping so the logo stays #034706.
+  */
+  --color-teal-700: #034706;
+  --color-teal-800: #276628;
+  --color-teal-900: #034706;
+
+  /* Radius scale — design-system values (rounded-lg = 12px, etc.). */
+  --radius-md: 12px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+
+  /* Shadows — design-system's softer values. */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/*
+  NOTE on default border color: The v3 build ran with Preflight disabled, so
+  bare `border` utilities had no Tailwind-provided default color and rendered
+  with `currentColor` (the browser default). To keep parity with that v3 build
+  we intentionally do NOT inject a gray-200 default border color here.
+*/
+
+@utility nav-item {
+  /* Preflight is off, so an <a> keeps the UA's blue + underline unless an
+     author rule says otherwise. Every .nav-item link on the hand-built pages
+     relied on inheritance and rendered default blue. */
+  color: inherit;
+  text-decoration: none;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 1px;
+    background: #034706;
+    transition: width 0.3s;
+  }
+
+  &:hover::after {
+    width: 100%;
+  }
+}
+
+@utility details-label {
+  font-weight: 500;
+  color: #4b5563;
+  min-width: 140px;
+  display: inline-block;
+  margin-bottom: 4px;
+}
+
+@utility detail-section-title {
+  margin-bottom: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+@utility prose {
+  & p {
+    margin-bottom: 0.75rem;
+  }
+}
+
+@utility subject-tag {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background-color: transparent;
+  color: #034706;
+  border: none;
+  border-radius: 0;
+  font-size: 0.875rem;
+  margin: 0.25rem;
+  transition: all 0.2s;
+  text-decoration: none;
+
+  &:hover {
+    background-color: #f3f4f6;
+    color: #003100;
+    text-decoration: none;
+  }
+}
+
+@utility back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #034706;
+  font-weight: 500;
+  transition: all 0.2s;
+
+  &:hover {
+    color: #003100;
+    transform: translateX(-2px);
+  }
+}
+
+@utility breadcrumb {
+  font-size: 0.875rem;
+  color: #6b7280;
+
+  & a {
+    color: #034706;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  & a:hover {
+    color: #003100;
+    text-decoration: underline;
+  }
+}
+
+@utility book-cover-section {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+@utility collection-link {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: #034706;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: all 0.2s;
+
+  &:hover {
+    color: #003100;
+    text-decoration: underline;
+  }
+}
+
+@utility mobile-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  z-index: 40;
+
+  &.active {
+    display: block;
+  }
+}
+
+@utility active {
+  &.mobile-menu {
+    display: block;
+  }
+}
+
+@utility availability-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+@utility available {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+@utility on-loan {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+@utility reference-only {
+  background-color: #e0e7ff;
+  color: #3730a3;
+}
+
+@utility serif {
+  /* Museum Catalog Design Styles */
+  font-family: 'Literata', Georgia, serif;
+}
+
+@utility book-title {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.75rem;
+}
+
+@utility book-author {
+  font-size: 1.5rem;
+  font-weight: 300;
+  letter-spacing: 0.01em;
+  color: #6b7280;
+}
+
+@utility section-heading {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #374151;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+@utility field-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  min-width: 140px;
+  display: inline-block;
+}
+
+@utility field-value {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #1f2937;
+}
+
+@utility description-text {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: #374151;
+}
+
+@utility section-divider {
+  height: 1px;
+  background: linear-gradient(to right, #e5e7eb, transparent);
+  margin: 3rem 0;
+}
+
+@utility line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/*
+  Replace Tailwind's breakpoint container with design-system's flat container
+  (fixed max-width + horizontal padding). `@utility` is required so it wins
+  over Tailwind's own generated `.container`.
+*/
+@utility container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+  max-width: 1200px;
+}
+
+/*
+  design-system's bare `.rounded` was 8px (Tailwind's built-in is 4px).
+  Redefining the built-in via `@utility` is a no-op, so override it in the
+  utilities layer — later source order wins over the generated `.rounded`,
+  and it leaves `.rounded-lg`/`.rounded-md` (separate selectors) untouched.
+*/
+@layer utilities {
+  .rounded {
+    border-radius: 8px;
+  }
+}
+
+/* ============================================================
+   Ported from design-system.css — bespoke components.
+   Tailwind generates the plain utilities (flex, grid, spacing,
+   colors, etc.) on its own; only these hand-authored component
+   classes need to live here.
+   ============================================================ */
+@layer components {
+  /* Navigation */
+  .nav-link {
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 120ms cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    color: inherit;
+  }
+  .nav-link:hover { background-color: #f5f5f5; }
+  .nav-link[aria-current="page"],
+  .nav-link-active { color: #034706; font-weight: 600; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 120ms cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 44px;
+    text-decoration: none;
+  }
+  .btn:focus { outline: none; box-shadow: 0 0 0 2px rgba(3, 71, 6, 0.15); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-primary { background-color: #171717; color: #fff; }
+  .btn-primary:hover:not(:disabled) { background-color: #262626; }
+  .btn-secondary { background-color: transparent; color: #171717; border: 1px solid rgba(0, 0, 0, 0.08); }
+  .btn-secondary:hover:not(:disabled) { background-color: #F6F7F9; }
+  .btn-ghost { background-color: transparent; color: #404040; }
+  .btn-ghost:hover:not(:disabled) { background-color: #f5f5f5; }
+  .btn-accent { background-color: #276628; color: #fff; }
+  .btn-accent:hover:not(:disabled) { background-color: #034706; }
+  .btn-destructive { background-color: #ef4444; color: #fff; }
+  .btn-destructive:hover:not(:disabled) { background-color: #dc2626; }
+  .btn-sm { padding: 6px 12px; font-size: 14px; min-height: 36px; }
+  .btn-lg { padding: 12px 24px; font-size: 18px; min-height: 52px; }
+
+  /* Focus ring helper */
+  .focus-ring:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(3, 71, 6, 0.15);
+    border-color: #508950;
+  }
+
+  /* Cards */
+  .card {
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    padding: 24px;
+  }
+
+  /* Badges */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 9999px;
+  }
+  .badge-default { background-color: #f5f5f5; color: #404040; }
+  .badge-success { background-color: #dcfce7; color: #15803d; }
+  .badge-warning { background-color: #fef3c7; color: #92400e; }
+  .badge-error { background-color: #fee2e2; color: #991b1b; }
+  .badge-info { background-color: #dbeafe; color: #1e40af; }
+
+  /* Alerts */
+  .alert {
+    padding: 16px;
+    border-radius: 8px;
+    border-width: 1px;
+    border-style: solid;
+  }
+  .alert-info { background-color: #eff6ff; border-color: #bfdbfe; color: #1e40af; }
+  .alert-success { background-color: #f0fdf4; border-color: #bbf7d0; color: #15803d; }
+  .alert-warning { background-color: #fffbeb; border-color: #fde68a; color: #92400e; }
+  .alert-error { background-color: #fef2f2; border-color: #fecaca; color: #991b1b; }
+
+  /* Collection + book components */
+  .line-divider {
+    position: relative;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+  }
+  .line-divider::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+    width: 60px;
+    height: 1px;
+    background: #034706;
+  }
+
+  .book-card { display: flex; flex-direction: column; height: 100%; }
+  .book-card .book-metadata { flex: 1; min-height: 0; }
+
+  .book-cover-tile {
+    aspect-ratio: 3 / 4;
+    background: #ffffff;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8% 10%;
+    flex-shrink: 0;
+  }
+  .book-cover-tile img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.12));
+  }
+
+  .book-description { margin-top: 12px; line-height: 1.6; color: #525252; }
+  .book-description p { margin-top: 0; margin-bottom: 6px; max-width: none; }
+  .book-description p + p { margin-top: 8px; }
+  .book-description p:last-child { margin-bottom: 0; }
+
+  .item-card a,
+  .item-card a:visited,
+  .item-card a:hover,
+  .item-card a:active { text-decoration: none; color: inherit; }
+  .item-card { transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+  .item-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.07); }
+
+  .collection-item { transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+  .collection-item:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08); }
+
+  .collection-card { transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+  .collection-card:hover { transform: translateY(-4px); }
+
+  .hero-image-container { box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); }
+
+  /* Category background gradients */
+  .fashion-bg { background: linear-gradient(135deg, #f3f4f6, #e5e7eb); color: #1f2937; }
+  .photography-bg { background: linear-gradient(135deg, #e0f2fe, #dbeafe); color: #1e3a8a; }
+  .queer-bg { background: linear-gradient(135deg, #f5f3ff, #ede9fe); color: #5b21b6; }
+  .music-bg { background: linear-gradient(135deg, #f0fdf4, #dcfce7); color: #15803d; }
+  .art-bg { background: linear-gradient(135deg, #fef2f2, #fee2e2); color: #991b1b; }
+  .design-bg { background: linear-gradient(135deg, #fffbeb, #fef3c7); color: #92400e; }
+  .ephemera-bg { background: linear-gradient(135deg, #eff6ff, #e0f2fe); color: #075985; }
+  .magazines-bg { background: linear-gradient(135deg, #fdf4ff, #fae8ff); color: #86198f; }
+  .books-bg { background: linear-gradient(135deg, #F4F5F7, #E8EAEE); color: #44403c; }
+
+  /* Display font */
+  .title-font,
+  .font-display { font-family: 'Literata', Georgia, serif; }
+
+  /* Skeleton loading shimmer */
+  .skeleton {
+    background: linear-gradient(90deg, #f5f5f5 0%, #e5e5e5 50%, #f5f5f5 100%);
+    background-size: 200px 100%;
+    animation: skeleton 1.2s ease-in-out infinite;
+  }
+}
+
+@keyframes skeleton {
+  0% { background-position: -200px 0; }
+  100% { background-position: calc(200px + 100%) 0; }
+}
+
+@layer base {
+  /*
+    Reset ported from design-system.css. Preflight stays OFF (v3 parity), so
+    this is the site's only reset. Lives in `base` so Tailwind's margin/padding
+    utilities still win over it.
+  */
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /*
+    The one piece of Preflight the reset was missing. Without it the UA styles
+    every <a> that lacks an explicit colour as #0000EE + underline, which is
+    how the footer Colophon link, the hand-built page navs and ~50 links on
+    news.html ended up browser-blue. Lives in `base`, so any `text-*` or
+    `underline` utility on the element still wins.
+  */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    line-height: 1.5;
+  }
+
+  body {
+    min-height: 100vh;
+    font-family: 'Archivo Narrow', sans-serif;
+    background-color: #F6F7F9;
+    color: #171717;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Archivo Narrow', sans-serif;
+    color: #111827;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  h1 { font-size: 40px; }
+  h2 { font-size: 32px; }
+  h3 { font-size: 24px; }
+  h4 { font-size: 20px; }
+  h5 { font-size: 18px; }
+  h6 { font-size: 16px; }
+
+  p {
+    line-height: 1.6;
+    max-width: 65ch;
+  }
+
+  /* Form controls */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="search"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    background-color: #fff;
+    transition: all 120ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-color: #508950;
+    box-shadow: 0 0 0 2px rgba(3, 71, 6, 0.15);
+  }
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; }
+  thead { background-color: #F6F7F9; border-bottom: 1px solid rgba(0, 0, 0, 0.08); }
+  th { padding: 12px 24px; text-align: left; font-size: 14px; font-weight: 500; }
+  td { padding: 16px 24px; }
+  tbody tr { border-bottom: 1px solid rgba(0, 0, 0, 0.08); }
+  tbody tr:hover { background-color: #F6F7F9; }
+
+  /* Keyboard focus ring */
+  :focus-visible {
+    outline: 2px solid #276628;
+    outline-offset: 2px;
+  }
+}
+
+/* Respect reduced-motion (ported from design-system.css). */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none;
+  }
+
+  .mobile-nav-button {
+    display: block;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-nav-button {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .book-title {
+    font-size: 2rem;
+  }
+  .book-author {
+    font-size: 1.25rem;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none;
+  }
+  body {
+    font-size: 12pt;
+  }
+  .book-title {
+    font-size: 24pt;
+    page-break-after: avoid;
+  }
+}

@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News & Updates · Hudson Street Library</title>
+    <link rel="canonical" href="https://hudsonstreetlibrary.com/news.html">
+
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    <link rel="stylesheet" href="/assets/css/tailwind.css">
+    <link rel="stylesheet" href="/assets/css/design-system.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-ink: #13161B;
+            --color-paper: #F4F5F7;
+            --color-vellum: #E8EAEE;
+            --color-slate: #5B6B84;
+            --color-border: rgba(19, 22, 27, 0.12);
+            --color-accent: #5B6B84;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--color-paper);
+            color: var(--color-ink);
+            font-family: 'Literata', Georgia, serif;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        /* Subtle paper texture */
+        body::before {
+            content: '';
+            /* Was position: fixed. A fixed full-viewport layer whose
+               background is a live SVG feTurbulence filter is repainted on
+               every scroll frame, and re-running the noise filter across the
+               whole viewport each frame overwhelms mobile GPUs — the page
+               visibly jitters/shakes while scrolling. `absolute` (body is
+               position: relative) paints the texture once with the document
+               and scrolls it along, so there is no per-frame repaint.
+               Visually identical; kills the mobile scroll jitter. */
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Mobile scroll-jitter fix (the real one).
+           This paper-texture overlay is a live SVG feTurbulence filter used as
+           a background. Over a long article the layer is many thousands of px
+           tall, which exceeds mobile-GPU texture limits, so the browser
+           re-rasterizes the noise filter in chunks as you scroll — the whole
+           page shudders and becomes unreadable. At 3% opacity the texture is
+           imperceptible on a phone, so drop it entirely on small/touch screens.
+           (Desktop keeps it.) */
+        @media (max-width: 900px), (hover: none) and (pointer: coarse) {
+            body::before { display: none; }
+        }
+
+        /* Header */
+        .page-header {
+            background: var(--color-paper);
+            padding: 6rem 2rem 3rem;
+            border-bottom: 1px solid var(--color-border);
+            position: relative;
+            z-index: 2;
+        }
+
+        .header-inner {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header-label {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-slate);
+            margin-bottom: 1rem;
+        }
+
+        .header-title {
+            font-family: 'Literata', Georgia, serif;
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 700;
+            line-height: 0.95;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+            color: var(--color-ink);
+        }
+
+        .header-subtitle {
+            font-size: clamp(1rem, 2vw, 1.125rem);
+            line-height: 1.6;
+            max-width: 65ch;
+            font-weight: 300;
+            color: var(--color-slate);
+        }
+
+        /* Main Content Grid */
+        .news-grid {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 5rem;
+            align-items: start;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Vertical divider between columns */
+        .news-grid::before {
+            content: '';
+            position: absolute;
+            right: 470px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: var(--color-border);
+        }
+
+        /* ============================================
+           FEATURED CONTENT AREA
+           ============================================ */
+
+        .featured-content {
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        /* Stacked featured articles */
+        .featured-column > .featured-content + .featured-content {
+            margin-top: 5rem;
+            padding-top: 5rem;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .feature-category {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--color-accent);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .feature-category::after {
+            content: '';
+            height: 1px;
+            width: 60px;
+            background: var(--color-accent);
+        }
+
+        .feature-title {
+            font-family: 'Literata', Georgia, serif;
+            font-size: clamp(2rem, 3.5vw, 3rem);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+            color: var(--color-ink);
+        }
+
+        .feature-subtitle {
+            font-family: 'Literata', Georgia, serif;
+            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+            line-height: 1.4;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--color-slate);
+            margin-bottom: 2rem;
+            max-width: 45ch;
+        }
+
+        .feature-meta {
+            display: flex;
+            gap: 2rem;
+            padding-bottom: 2rem;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--color-border);
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--color-slate);
+        }
+
+        .feature-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-meta i {
+            font-size: 0.75rem;
+            opacity: 0.6;
+        }
+
+        /* Hero Image */
+        .feature-hero {
+            width: 100%;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+            background: var(--color-vellum);
+            border: 1px solid var(--color-border);
+            aspect-ratio: 16/9;
+        }
+
+        .feature-hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.9;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .feature-hero:hover img {
+            transform: scale(1.02);
+        }
+
+        .feature-hero-caption {
+            margin-top: 0.75rem;
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.8125rem;
+            color: var(--color-slate);
+            font-style: italic;
+        }
+
+        /* Article Body */
+        .feature-body {
+            max-width: 680px;
+        }
+
+        .feature-body > p {
+            font-size: 1.1875rem;
+            line-height: 1.8;
+            margin-bottom: 1.75rem;
+            color: var(--color-ink);
+        }
+
+        /* Links in the running text. The base reset makes every <a> inherit
+           its colour and drop the underline, so prose links have to say what
+           they are or they read as body text. */
+        .feature-body a {
+            color: var(--primary-700);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+        .feature-body a:hover {
+            color: var(--primary-600);
+        }
+
+        /* Drop Cap */
+        .feature-body > p:first-of-type::first-letter {
+            font-family: 'Literata', Georgia, serif;
+            font-size: 5.5rem;
+            line-height: 0.85;
+            float: left;
+            margin: 0.1em 0.15em 0 0;
+            font-weight: 700;
+            color: var(--color-slate);
+        }
+
+        /* Pull Quote */
+        .pull-quote {
+            font-family: 'Literata', Georgia, serif;
+            font-size: 1.75rem;
+            line-height: 1.35;
+            font-weight: 400;
+            font-style: italic;
+            color: var(--color-slate);
+            margin: 3rem 0;
+            padding: 2rem 0;
+            border-top: 2px solid var(--color-ink);
+            border-bottom: 2px solid var(--color-ink);
+            position: relative;
+        }
+
+        .pull-quote::before {
+            content: '"';
+            font-size: 6rem;
+            position: absolute;
+            left: -0.25em;
+            top: -0.15em;
+            opacity: 0.15;
+            font-family: 'Literata', Georgia, serif;
+        }
+
+        /* Section Break */
+        .section-ornament {
+            text-align: center;
+            margin: 3rem 0;
+            font-size: 1.5rem;
+            color: var(--color-slate);
+            opacity: 0.4;
+            letter-spacing: 0.5rem;
+        }
+
+        /* ============================================
+           NEWS SIDEBAR
+           ============================================ */
+
+        .news-sidebar {
+            position: sticky;
+            top: 2rem;
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+        }
+
+        .sidebar-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--color-ink);
+        }
+
+        .sidebar-title {
+            font-family: 'Literata', Georgia, serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--color-ink);
+        }
+
+        .sidebar-subtitle {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-slate);
+        }
+
+        /* News Items */
+        .news-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .news-item {
+            display: block;
+            text-decoration: none;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--color-border);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .news-item:hover {
+            transform: translateX(4px);
+        }
+
+        .news-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .news-date {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-accent);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .news-item-title {
+            font-family: 'Literata', Georgia, serif;
+            font-size: 1.125rem;
+            font-weight: 700;
+            line-height: 1.3;
+            color: var(--color-ink);
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .news-item:hover .news-item-title {
+            color: var(--color-slate);
+        }
+
+        .news-item-excerpt {
+            font-size: 0.9375rem;
+            line-height: 1.5;
+            color: var(--color-slate);
+            opacity: 0.85;
+        }
+
+        .news-category {
+            font-family: 'Archivo Narrow', sans-serif;
+            font-size: 0.625rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-slate);
+            margin-top: 0.5rem;
+            opacity: 0.6;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .news-grid {
+                grid-template-columns: 1fr 360px;
+                gap: 3rem;
+            }
+
+            .news-grid::before {
+                right: 390px;
+            }
+        }
+
+        @media (max-width: 968px) {
+            .page-header {
+                padding: 4rem 1.5rem 2rem;
+            }
+
+            .news-grid {
+                grid-template-columns: 1fr;
+                gap: 4rem;
+                padding: 3rem 1.5rem;
+            }
+
+            .news-grid::before {
+                display: none;
+            }
+
+            .feature-body > p {
+                font-size: 1.0625rem;
+            }
+
+            .feature-body > p:first-of-type::first-letter {
+                font-size: 4.5rem;
+            }
+
+            .pull-quote {
+                font-size: 1.5rem;
+                margin: 2rem 0;
+                padding: 1.5rem 0;
+            }
+
+            .news-sidebar {
+                position: static;
+            }
+
+            .sidebar-header {
+                margin-top: 2rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .feature-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .feature-body > p:first-of-type::first-letter {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+
+<style>
+    .site-header {
+        font-family: 'Literata', Georgia, serif;
+    }
+    .site-header .site-logo {
+        font-family: 'Crimson Pro', Georgia, serif;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        white-space: nowrap;
+    }
+    /* Book-spines mark (same drawing as the favicon). Inlined with
+       fill: currentColor rather than <img src=favicon.svg> because the
+       SVG file self-inverts to off-white in OS dark mode and would
+       disappear against the white header. */
+    .site-header .logo-mark {
+        width: 1.3em;
+        height: 1.3em;
+        display: block;
+        flex-shrink: 0;
+        fill: currentColor;
+    }
+    .site-header .nav-link {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+        font-weight: 400;
+        letter-spacing: 0.005em;
+    }
+    .site-header .nav-link[aria-current="page"],
+    .site-header .nav-link-active {
+        font-weight: 600;
+    }
+    .site-header #mobile-nav-menu a {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 1.0625rem;
+    }
+
+    /*
+      Mobile menu uses self-contained, component-scoped CSS rather than
+      Tailwind utilities, so its layout can't be broken by global stylesheet
+      changes. This originally fixed an invisible-sliver bug: design-system.css
+      ships an unlayered `* { padding: 0 }` reset that beats Tailwind's layered
+      utilities and collapsed the old icon-only button. The self-contained
+      styling is kept deliberately.
+    */
+    .site-header .menu-toggle { display: none; }
+    .site-header .mobile-nav { display: none; }
+
+    /*
+      Mobile scroll-jitter fix.
+      The header ships as `sticky top-0 bg-white/95 backdrop-blur-sm`. On mobile
+      a sticky bar with backdrop-filter: blur() forces the browser to re-sample
+      and re-blur the pixels scrolling beneath it every frame; on mobile GPUs
+      that readback lags the scroll compositor and the bar (and the text passing
+      under it) shudders. Drop the blur and use an opaque background on small
+      screens — the frosted-glass effect stays desktop-only. The doubled
+      `.site-header.site-header` selector out-specifies the `bg-white/95` and
+      `backdrop-blur-sm` utility classes without needing !important.
+    */
+    @media (max-width: 900px), (hover: none) and (pointer: coarse) {
+        .site-header.site-header {
+            background-color: #ffffff;
+            -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+            /* Promote the sticky bar to its own compositor layer so it isn't
+               re-rasterized against the scrolling content every frame — this
+               is what stops the header (and the text under it) juddering on
+               mobile. Pairs with dropping the backdrop blur above. */
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            will-change: transform;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .site-header .menu-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.45rem 0.7rem;
+            border: 1px solid rgba(0, 49, 0, 0.3);
+            border-radius: 0.5rem;
+            background: #ffffff;
+            color: #003100;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .site-header .menu-toggle:hover { background: #f0f5f0; }
+        .site-header .menu-toggle:focus-visible {
+            outline: 2px solid #003100;
+            outline-offset: 2px;
+        }
+        .site-header .menu-toggle svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+            flex-shrink: 0;
+        }
+        .site-header .menu-toggle .menu-toggle-label {
+            font-family: 'Literata', Georgia, serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .site-header .menu-toggle .icon-close { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-open { display: none; }
+        .site-header .menu-toggle[aria-expanded="true"] .icon-close { display: block; }
+
+        .site-header .mobile-nav.is-open {
+            display: flex;
+            flex-direction: column;
+        }
+        .site-header .mobile-nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            padding: 0.5rem;
+            z-index: 40;
+        }
+        .site-header .mobile-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            color: #404040;
+            text-decoration: none;
+        }
+        .site-header .mobile-nav a:hover {
+            background: #f0f5f0;
+            color: #002000;
+        }
+    }
+</style>
+
+<header class="site-header sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-black/8">
+    <div class="mx-auto max-w-6xl px-6 py-4">
+        <div class="flex items-center justify-between">
+            <!-- Logo/Site Title -->
+            <a href="/" class="site-logo text-xl sm:text-2xl font-bold tracking-tight text-teal-900" style="text-decoration: none;">
+                <svg class="logo-mark" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+                    <rect x="38" y="128" width="72" height="318"/>
+                    <rect x="138" y="68" width="76" height="378"/>
+                    <rect x="242" y="100" width="72" height="346"/>
+                    <rect x="346" y="86" width="74" height="360" transform="rotate(9 346 446)"/>
+                </svg>
+                HUDSON STREET LIBRARY
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav id="main-nav" class="hidden md:flex items-center gap-1">
+                <a href="/#about"
+                   class="nav-link ">
+                   About
+                </a>
+                <a href="/collection-explore.html"
+                   class="nav-link ">
+                   Collections
+                </a>
+                <a href="/static-demo/"
+                   class="nav-link ">
+                   Search
+                </a>
+                <a href="/#publications"
+                   class="nav-link ">
+                   Publications
+                </a>
+                <a href="/news.html"
+                   class="nav-link nav-link-active">
+                   News
+                </a>
+                
+                <a href="/collections/recently_added.html"
+                   class="nav-link ">
+                   Accessions
+                </a>
+                
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <!-- Icon + visible "Menu" label so the control is obvious on mobile.
+                 Sizing/visibility come from the unlayered styles above, not
+                 Tailwind utilities (see note in the <style> block). Icons are
+                 inline SVGs so the menu works on pages without an icon font. -->
+            <button class="menu-toggle"
+                    aria-label="Toggle menu"
+                    aria-controls="mobile-nav-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <svg class="icon-open" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg class="icon-close" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+                <span class="menu-toggle-label">Menu</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-nav-menu" class="mobile-nav" aria-label="Mobile navigation">
+        <a href="/#about">About</a>
+        <a href="/collection-explore.html">Collections</a>
+        <a href="/static-demo/">Search</a>
+        <a href="/#publications">Publications</a>
+        <a href="/news.html">News</a>
+        <a href="/collections/recently_added.html">Accessions</a>
+        
+    </nav>
+</header>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const button = document.querySelector('button[aria-controls="mobile-nav-menu"]');
+    const willOpen = !menu.classList.contains('is-open');
+
+    menu.classList.toggle('is-open', willOpen);
+    // Icon swap (hamburger <-> X) is driven by aria-expanded in CSS.
+    if (button) button.setAttribute('aria-expanded', String(willOpen));
+}
+</script>
+
+
+<main>
+    <!-- Header -->
+    <header class="page-header">
+        <div class="header-inner">
+            <div class="header-label">Library Dispatch</div>
+            <h1 class="header-title">News & Features</h1>
+            <p class="header-subtitle">
+                In-depth features on artists, publishers, and the culture of the photobook, alongside news of acquisitions, exhibitions, and developments from Hudson Street Library.
+            </p>
+        </div>
+    </header>
+
+    <!-- Two-Column Grid -->
+    <div class="news-grid">
+
+        <!-- Featured Content Column -->
+        <div class="featured-column">
+
+        <!-- Featured Content Area - Lorna Simpson, 2027 Wolfgang Hahn Prize -->
+        <article class="featured-content" id="simpson-wolfgang-hahn-prize">
+            <div class="feature-category">Photography</div>
+
+            <h2 class="feature-title">Lorna Simpson Receives the 2027 Wolfgang Hahn Prize</h2>
+
+            <p class="feature-subtitle">
+                The Gesellschaft f&uuml;r Moderne Kunst at the Museum Ludwig in Cologne has named the Brooklyn artist its 33rd prizewinner. The library holds five books with her work.
+            </p>
+
+            <div class="feature-meta">
+                <span><i class="far fa-user"></i> Hudson Street Library</span>
+                <span><i class="far fa-calendar"></i> November 2026</span>
+                <span><i class="far fa-clock"></i> 2 min read</span>
+            </div>
+
+            <div class="feature-body">
+                <p><a href="https://www.artnews.com/art-news/news/lorna-simpson-2027-wolfgang-hahn-prize-1234805680/" target="_blank" rel="noopener noreferrer">ARTnews reported on 13 November</a> that Lorna Simpson will receive the 2027 Wolfgang Hahn Prize. The Gesellschaft f&uuml;r Moderne Kunst, the museum society of the Museum Ludwig in Cologne, has given the prize since 1994 to artists with an international reputation who are not yet as well known in Germany as their work deserves. It funds the purchase of a work by the winner for the museum&rsquo;s collection and comes with an exhibition and a publication. Lee Ufan won in 2026, and his exhibition runs at the museum until April 2027.</p>
+
+                <p>Naomi Beckwith, deputy director and chief curator of the Solomon R. Guggenheim Museum and artistic director of documenta 16, chose Simpson together with the society&rsquo;s board. Beckwith also wrote the new essay for the revised edition of Phaidon&rsquo;s <em><a href="/books/simpson_lorna-simpson_1081/">Lorna Simpson</a></em>, which we hold. Thelma Golden, Kellie Jones and Chrissie Iles wrote the other texts.</p>
+
+                <p>The Museum Ludwig first showed Simpson in 1999, when her two-part photo-text work <em>ID</em> (1990) hung in the group exhibition <em>Kunstwelten im Dialog</em>. The jury sees the prize as a way to add to the museum&rsquo;s American holdings, which began with the Pop Art bought by Peter and Irene Ludwig. Simpson&rsquo;s recent paintings set icebergs against blue and grey grounds and pair them with text and images from <em>Ebony</em>. She cut up the same magazine, along with <em>Jet</em>, for the works in <em><a href="/books/simpson_collages_1082/">Collages</a></em> (Chronicle Books, 2018).</p>
+
+                <p>We also hold Okwui Enwezor&rsquo;s <em><a href="/books/enwezor_lorna-simpson_1440/">Lorna Simpson</a></em> (Abrams, 2006), the Aspen Art Museum&rsquo;s <em><a href="/books/simpson_works-on-paper_1083/">Works on Paper</a></em> with essays by Hilton Als, Connie Butler and Franklin Sirmans, and <em><a href="/books/na_violent-images_2374/">Violent Images</a></em> (NERO Editions, 2025), which includes her work.</p>
+
+                <div class="section-ornament">❖ ❖ ❖</div>
+            </div>
+        </article>
+
+        <!-- Featured Content Area - Wolfgang Tillmans, Henri Cartier-Bresson Lifetime Achievement Award -->
+        <article class="featured-content" id="tillmans-hcb-award">
+            <div class="feature-category">Photography</div>
+
+            <h2 class="feature-title">Wolfgang Tillmans Receives the Henri Cartier-Bresson Lifetime Achievement Award</h2>
+
+            <p class="feature-subtitle">
+                The Fondation Henri Cartier-Bresson has given its third lifetime award to Tillmans, with a tribute from Michael Stipe. The library holds forty of his books.
+            </p>
+
+            <div class="feature-meta">
+                <span><i class="far fa-user"></i> Hudson Street Library</span>
+                <span><i class="far fa-calendar"></i> November 2026</span>
+                <span><i class="far fa-clock"></i> 2 min read</span>
+            </div>
+
+            <div class="feature-body">
+                <p>Galerie Chantal Crousel <a href="https://www.crousel.com/en/news/wolfgang-tillmans-wolfgang-tillmans-recoit-le-prix-henri-cartier-bresson-2026-2027-01-01/" target="_blank" rel="noopener noreferrer">announced on 9 November</a> that Wolfgang Tillmans has received the Henri Cartier-Bresson Lifetime Achievement Award. The Fondation Henri Cartier-Bresson introduced the award in 2024 and presents it each year at its gala in Paris. It goes to a photographer, or an artist working with photography, for an outstanding contribution to the medium. Sophie Calle received the first and Susan Meiselas the second.</p>
+
+                <p>The artist and musician Michael Stipe gave the tribute. The gallery says he spoke about their friendship, their work together and Tillmans&rsquo;s influence abroad. Stipe is one of the sitters in <em><a href="/books/tillmans_portraits_1147/">Portraits</a></em> (2001), the selection Tillmans made of his own portraits from 1988 to 2001.</p>
+
+                <p>The gallery&rsquo;s notice lists three exhibitions: the Tate Modern retrospective of 2017, <em>To Look Without Fear</em> at the Museum of Modern Art in 2022, and <em>Rien ne nous y pr&eacute;parait &ndash; Tout nous y pr&eacute;parait</em> at the Centre Pompidou in 2025. For the last, Tillmans took over 6,000 square metres of the Biblioth&egrave;que publique d&rsquo;information and reworked its furniture and architecture. We hold the books for two of them: <em><a href="/books/tillmans_to-look-without-fear_2311/">To Look Without Fear</a></em> (The Museum of Modern Art, 2022) and <em><a href="/books/tillmans_nothing-could-have-prepared-us-everything-could-have-prepared-us_2309/">Nothing Could Have Prepared Us &ndash; Everything Could Have Prepared Us</a></em> (Spector Books, 2026).</p>
+
+                <p>Tillmans is one of the most heavily collected artists here. <a href="/collections/wolfgang-tillmans.html">Forty titles</a> run from 1995 to 2026. Among them are <em><a href="/books/tillmans_if-one-thing-matters-everything-matters_1151/">If One Thing Matters, Everything Matters</a></em> (Tate Publishing, 2003), the <a href="/books/tillmans_wolfgang-tillmans-serpentine-gallery_1164/">Serpentine Gallery catalogue</a> of 2010 and four of the Wako Works of Art books from Tokyo.</p>
+
+                <div class="section-ornament">❖ ❖ ❖</div>
+            </div>
+        </article>
+
+        <!-- Featured Content Area - The World Around Visionary Award, Hans Ulrich Obrist -->
+        <article class="featured-content" id="world-around-visionary-award">
+            <div class="feature-category">Architecture &amp; Design</div>
+
+            <h2 class="feature-title">The World Around Names Hans Ulrich Obrist Its First Visionary Award Honoree</h2>
+
+            <p class="feature-subtitle">
+                The award was presented at the organization&rsquo;s annual dinner in Chinatown on 9 November. Its portrait of Obrist is made from photographs of other people&rsquo;s bookshelves.
+            </p>
+
+            <div class="feature-meta">
+                <span><i class="far fa-user"></i> Hudson Street Library</span>
+                <span><i class="far fa-calendar"></i> November 2026</span>
+                <span><i class="far fa-clock"></i> 2 min read</span>
+            </div>
+
+            <div class="feature-body">
+                <p>The World Around, the New York architecture and design nonprofit, gave its first Visionary Award to Hans Ulrich Obrist, artistic director of Serpentine. The award is annual and honors &ldquo;individuals whose ideas have shaped architecture, design and contemporary culture.&rdquo; The architect Junya Ishigami designed the object. Beatrice Galilee, the organization&rsquo;s founder and executive director, presented it at the <a href="https://theworldaround.org/whats-on/annual-dinner-2026" target="_blank" rel="noopener noreferrer">2026 annual dinner</a> on 9 November.</p>
+
+                <p>The dinner sold out. It was held at Wang Contemporary, a new space in the landmark former Citizens Savings Bank in Chinatown. Earlier dinners were at the Park Avenue Armory and the Refinery at Domino.</p>
+
+                <p>The part that interests a library is the Bookshelf Project. With its creative directors, 2x4, The World Around asked artists, architects, designers and writers to photograph Obrist&rsquo;s books where they keep them. The pictures show the writing desk of Shumon Basar, the London living room of Aric Chen, a shelf of Archigram postcards belonging to Smiljan Radi&cacute; Clarke in Santiago, and Germane Barnes&rsquo;s yellow shelves in Miami. A copy of <em>The Archipelago Conversations</em>, which Obrist wrote with &Eacute;douard Glissant, sits in Stefano Boeri&rsquo;s studio in Milan.</p>
+
+                <p>Our shelves would fit the project. Obrist is named in nineteen records in the catalogue, nearly always as the person asking the questions. <em><a href="/books/tillmans_wolfgang-tillmans-and-hans-ulrich-obrist-the-conversation-series-vol-6_1160/">The Conversation Series, Vol. 6</a></em> (Walther K&ouml;nig, 2007) is his book-length interview with Wolfgang Tillmans, who received <a href="#tillmans-hcb-award">an award of his own</a> this week. He interviews Jennifer Packer in <em><a href="/books/packer_the-eye-is-not-satisfied-with-seeing_830/">The Eye Is Not Satisfied with Seeing</a></em> (2021) and Cecily Brown in <em><a href="/books/brown_picture-making_2355/">Picture Making</a></em> (2026), and writes in Ian Cheng&rsquo;s <em><a href="/books/cheng_emissaries-guide-to-worlding_1993/">Emissaries Guide to Worlding</a></em> (2018). He also turns up in four issues of <em>Purple</em>.</p>
+
+                <div class="section-ornament">❖ ❖ ❖</div>
+            </div>
+        </article>
+
+        <!-- Featured Content Area - Paris Photo-Aperture PhotoBook Awards 2026 shortlist -->
+        <article class="featured-content" id="photobook-awards-2026">
+            <div class="feature-category">Photobooks</div>
+
+            <h2 class="feature-title">The 2026 PhotoBook Awards Shortlist</h2>
+
+            <p class="feature-subtitle">
+                Paris Photo and Aperture have named thirty-five books. One of them is on our shelves, and two of the artists in the running for PhotoBook of the Year are here with earlier work.
+            </p>
+
+            <div class="feature-meta">
+                <span><i class="far fa-user"></i> Hudson Street Library</span>
+                <span><i class="far fa-calendar"></i> October 2026</span>
+                <span><i class="far fa-clock"></i> 4 min read</span>
+            </div>
+
+            <div class="feature-body">
+                <p>Aperture <a href="https://aperture.org/editorial/announcing-the-2026-photobook-awards-shortlist/" target="_blank" rel="noopener noreferrer">published the shortlist</a> for the fourteenth Paris Photo&ndash;Aperture PhotoBook Awards on 8 October. There are twenty books in First PhotoBook, ten in PhotoBook of the Year and five in Photography Catalog of the Year. Aperture says entries came from fifty-six countries, a record for the prize, and names Armenia, Iran, Morocco and Venezuela among them.</p>
+
+                <p>The shortlist jury sat in New York from 22 to 24 September: the artist Alejandro Cartagena; Alexandra Cunningham Cameron, director of design at the Judd Foundation; Michael Famighetti, editor in chief of Aperture; Anna Planas, artistic director of Paris Photo; and Anshika Varma, curator and founder of Offset Projects. A second jury of five picks the winners in Paris on 12 November. They are announced at Paris Photo at 3 p.m. Paris time on Friday 13 November.</p>
+
+                <p>The books go on view at Paris Photo from 11 to 15 November, then travel. New Yorkers can see them at Printed Matter in January 2027, after a stop at PhotoIreland in Dublin in December.</p>
+
+                <p>One shortlisted title is in the library. Keisha Scarville&rsquo;s <em><a href="/books/scarville_passports_1806/">Passports</a></em> (MACK) is her first major monograph, built on more than three hundred reworkings of her father&rsquo;s passport photograph. It is up for PhotoBook of the Year. Two other artists in that category are on the shelves with earlier books. Takashi Homma, shortlisted for <em>This Is Not My Cat</em>, is here with <em><a href="/books/homma_portrait-of-j_1683/">Portrait of J</a></em> (Dashwood Books and Session Press, 2025), <em><a href="/books/homma_portrait_527/">Portrait</a></em> (Heibonsha, 2013), <em><a href="/books/homma_scandinavian-mushroom_1684/">Scandinavian Mushroom</a></em> (limArt, 2015) and his <em><a href="/books/homma_purple-book_1548/">Purple Book</a></em> (2016). Sohrab Hura, shortlisted for <em>Snow</em>, is here with his first book, <em><a href="/books/hura_life-is-elsewhere_536/">Life Is Elsewhere</a></em> (Ugly Dog, 2015).</p>
+
+                <p>The publishers are familiar too. The library holds 48 MACK titles, 34 from Apartamento, 29 from Spector Books, and fifteen each from Art Paper Editions and Roma Publications, all of which have books on this list.</p>
+
+                <h3 style="font-family: 'Literata', Georgia, serif; font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-slate);">First PhotoBook</h3>
+
+                <p style="margin-bottom: 0.75rem;">Ivan Anisimov, <em><a href="https://kultbooks.com/books/pants-on-top-of-shoes" target="_blank" rel="noopener noreferrer">Pants on Top of Shoes</a></em> (Kult Books, Stockholm), designed by Janne Riikonen.</p>
+                <p style="margin-bottom: 0.75rem;">Amparo Baquerizas, <em><a href="https://editorialrm.com/en/producto/gauchito-querido/" target="_blank" rel="noopener noreferrer">Gauchito Querido</a></em> (Editorial RM, Mexico City and Barcelona), designed by Amparo Baquerizas.</p>
+                <p style="margin-bottom: 0.75rem;">Miranda Barnes, <em><a href="https://mackbooks.co.uk/products/social-season" target="_blank" rel="noopener noreferrer">Social Season</a></em> (Important Flowers, London), designed by Anamaria Morris.</p>
+                <p style="margin-bottom: 0.75rem;">Sara Bennett, <em><a href="https://www.kehrerverlag.com/en/Sara-Bennett/978-3-96900-238-4" target="_blank" rel="noopener noreferrer">Looking Inside: Women with Life Sentences</a></em> (Kehrer Verlag, Heidelberg), designed by Teun van der Heijden and Heijdens Karwei.</p>
+                <p style="margin-bottom: 0.75rem;">Nata Drachinskaya, <em><a href="https://www.drachinskaya.com/binom-photobook" target="_blank" rel="noopener noreferrer">Binom</a></em> (BLOW UP PRESS, Warsaw, and Rencontres d&rsquo;Arles), designed by Nata Drachinskaya, Yumi Goto, Aneta Kowalczyk and Jan Rosseel.</p>
+                <p style="margin-bottom: 0.75rem;">Franco Dupuy, <em><a href="https://www.setmargins.press/books/cruising-diaries/" target="_blank" rel="noopener noreferrer">Cruising Diaries</a></em> (Set Margins, Eindhoven), designed by Furio and Santiago Bogani.</p>
+                <p style="margin-bottom: 0.75rem;">Jakob Ganslmeier and Ana Zibelnik, <em><a href="https://www.spectorbooks.com/book/jakob-ganslmeier-&amp;-ana-zibelnik-if-a-flower-bloomed-in-a-dark-room-would-you-trust-it" target="_blank" rel="noopener noreferrer">If a Flower Bloomed in a Dark Room, Would You Trust It?</a></em> (Spector Books, Leipzig), designed by Hamid Sallali.</p>
+                <p style="margin-bottom: 0.75rem;">Jesse Glazzard, <em><a href="https://mackbooks.co.uk/products/the-sound-of-dirt-and-beauty-jesse-glazzard" target="_blank" rel="noopener noreferrer">The Sound of Dirt and Beauty</a></em> (SPBH Editions, London), designed by Brian Paul Lamotte.</p>
+                <p style="margin-bottom: 0.75rem;">Ma Hailun, <em><a href="https://jiazazhistore.com/products/ma-hailun-uruklyn" target="_blank" rel="noopener noreferrer">&Uuml;ruklyn</a></em> (Jiazazhi, Ningbo), designed by Studio Pianpian He and Max Harvey.</p>
+                <p style="margin-bottom: 0.75rem;">Moeko Ishiguro, <em><a href="https://moekoishiguro.com/notations" target="_blank" rel="noopener noreferrer">Notation(s)</a></em> (Self-published, Tokyo), designed by Moeko Ishiguro.</p>
+                <p style="margin-bottom: 0.75rem;">Ad&eacute;l Kolesz&aacute;r, <em><a href="https://artpapereditions.org/products/adel-koleszar-only-have-faith" target="_blank" rel="noopener noreferrer">Only Have Faith (Solamente Ten Fe)</a></em> (Art Paper Editions, Ghent), designed by Jurgen Maelfeyt.</p>
+                <p style="margin-bottom: 0.75rem;">Jeremy Liebman, <em><a href="https://www.apartamentomagazine.com/product/coincidence-jeremy-liebman-book/" target="_blank" rel="noopener noreferrer">Coincidence</a></em> (Apartamento Publishing, Barcelona), designed by Apartamento Studios and Laura Delgado.</p>
+                <p style="margin-bottom: 0.75rem;">Augustin Lignier, <em><a href="https://artpapereditions.org/products/augustin-lignier-turning-point" target="_blank" rel="noopener noreferrer">Turning Point</a></em> (Art Paper Editions, Ghent), designed by Jurgen Maelfeyt.</p>
+                <p style="margin-bottom: 0.75rem;">Jo&atilde;o Linneu, <em><a href="https://void.photo/store/p/jjvffvv" target="_blank" rel="noopener noreferrer">JJ VFF VV</a></em> (Void, Athens), designed by Void.</p>
+                <p style="margin-bottom: 0.75rem;">Yufan Lu, <em><a href="https://editorialrm.com/en/producto/make-me-beautiful/" target="_blank" rel="noopener noreferrer">Make Me Beautiful</a></em> (Editorial RM, Mexico City and Barcelona; Ediciones Posibles and Fundaci&oacute;n Photographic Social Vision, Barcelona; Phree, Madrid), designed by Min Lyu.</p>
+                <p style="margin-bottom: 0.75rem;">Swan Moon, <em><a href="https://tbwbooks.com/products/swan-moons-swan-moon" target="_blank" rel="noopener noreferrer">Swan Moon&rsquo;s Swan Moon</a></em> (TBW Books, Oakland), designed by Paul Schiek.</p>
+                <p style="margin-bottom: 0.75rem;">Peter Rauch, <em><a href="https://www.perimeterbooks.com/products/peter-rauch-2-3" target="_blank" rel="noopener noreferrer">2, 3</a></em> (Perimeter Editions, Melbourne), designed by &Zcaron;iga Testen.</p>
+                <p style="margin-bottom: 0.75rem;">Allie Tsubota, <em><a href="https://www.eriskayconnection.com/dead-letter-room/" target="_blank" rel="noopener noreferrer">Dead Letter Room: A Transhistorical Correspondence with Hara Tamiki</a></em> (The Eriskay Connection, Breda), designed by Carel Fransen.</p>
+                <p style="margin-bottom: 0.75rem;">Jo&euml;l van Houdt, <em><a href="https://www.afghanistanism.com/" target="_blank" rel="noopener noreferrer">Afghanistanism</a></em> (Self-published, London), designed by -SYB-.</p>
+                <p style="margin-bottom: 0.75rem;">Farren van Wyk, <em><a href="https://fw-books.nl/product/farren-van-wyk-mixedness-is-my-mythology/" target="_blank" rel="noopener noreferrer">Mixedness Is My Mythology</a></em> (Fw:Books, Amsterdam, and <a href="https://deadbeatclubpress.com/products/mixedness-is-my-mythology-farren-van-wyk" target="_blank" rel="noopener noreferrer">Deadbeat Club</a>, Los Angeles), designed by Hans Gremmen.</p>
+
+                <h3 style="font-family: 'Literata', Georgia, serif; font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-slate);">PhotoBook of the Year</h3>
+
+                <p style="margin-bottom: 0.75rem;">Michele Borzoni and Rocco Rorandelli, <em><a href="https://loosejoints.biz/products/silent-springs" target="_blank" rel="noopener noreferrer">Silent Springs</a></em> (Loose Joints, Marseille and London), designed by Tommaso Tanini.</p>
+                <p style="margin-bottom: 0.75rem;">Bieke Depoorter, <em><a href="https://hannibalbooks.be/en/bieke-depoorter-beds-en" target="_blank" rel="noopener noreferrer">The Beds I Slept In</a></em> (Hannibal Books, Antwerp), designed by Armand Mevis and Bieke Depoorter.</p>
+                <p style="margin-bottom: 0.75rem;">B&eacute;rang&egrave;re Fromont, <em><a href="https://chosecommune.com/book/republique" target="_blank" rel="noopener noreferrer">R&eacute;publique</a></em> (Chose Commune, Marseille), designed by C&eacute;cile Poimb&oelig;uf-Koizumi and Perrine Serre.</p>
+                <p style="margin-bottom: 0.75rem;">Roger Grasas, <em><a href="https://rogergrasas.com/en/books/" target="_blank" rel="noopener noreferrer">WALLS: A Visual Study on Border Geographies</a></em> (Institut de les Desigualtats, Barcelona), designed by Studio Carles Murillo.</p>
+                <p style="margin-bottom: 0.75rem;">Nick Haymes, <em><a href="https://mackbooks.co.uk/products/chronograph-nick-haymes" target="_blank" rel="noopener noreferrer">Chronograph</a></em> (SPBH Editions, London), designed by Lina Kutsovskaya and Brian Paul Lamotte.</p>
+                <p style="margin-bottom: 0.75rem;">Takashi Homma, <em><a href="https://www.nieves.ch/17941/this_is_not_my_cat" target="_blank" rel="noopener noreferrer">This Is Not My Cat</a></em> (Nieves, Zurich, and Perimeter Editions, Melbourne), designed by Benjamin Sommerhalder.</p>
+                <p style="margin-bottom: 0.75rem;">Sohrab Hura, <em><a href="https://mackbooks.co.uk/products/snow-sohrab-hura" target="_blank" rel="noopener noreferrer">Snow</a></em> (MACK, London), designed by Sohrab Hura.</p>
+                <p style="margin-bottom: 0.75rem;">Zhu Mo, <em><a href="https://jiazazhistore.com/products/zhumo-undercurrents" target="_blank" rel="noopener noreferrer">Undercurrents</a></em> (JZZP, Ningbo), designed by PAY2PLAY.</p>
+                <p style="margin-bottom: 0.75rem;">Keisha Scarville, <em><a href="https://mackbooks.co.uk/products/passports-keisha-scarville" target="_blank" rel="noopener noreferrer">Passports, 2012&ndash;2025</a></em> (MACK, London), designed by Keisha Scarville and Morgan Crowcroft-Brown. <span style="font-family: 'Archivo Narrow', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-slate);"><a href="/books/scarville_passports_1806/" style="color: inherit;">In the library</a></span></p>
+                <p style="margin-bottom: 0.75rem;">Newsha Tavakolian, <em><a href="https://www.kehrerverlag.com/en/Newsha-Tavakolian/978-3-96900-213-1" target="_blank" rel="noopener noreferrer">And They Laughed at Me</a></em> (Kehrer Verlag, Heidelberg), designed by Kehrer Design, Laura Pecoroni.</p>
+
+                <h3 style="font-family: 'Literata', Georgia, serif; font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-slate);">Photography Catalog of the Year</h3>
+
+                <p style="margin-bottom: 0.75rem;">Nanina Guyer, <em><a href="https://www.spectorbooks.com/book/a-kind-of-paradise" target="_blank" rel="noopener noreferrer">A Kind of Paradise: Artistic Counter-Narratives to Colonial-Era Photography</a></em> (Spector Books, Leipzig), designed by NODE Berlin Oslo.</p>
+                <p style="margin-bottom: 0.75rem;">Marta Mart&iacute;n N&uacute;&ntilde;ez, <em><a href="https://editorialrm.com/en/producto/ecos-de-la-memoria/" target="_blank" rel="noopener noreferrer">Ecos de la Memoria (Echoes of Memory)</a></em> (Editorial RM, Mexico City and Barcelona, and Campgr&agrave;fic Editors, Valencia), designed by Underbau.</p>
+                <p style="margin-bottom: 0.75rem;">Damarice Amao, <em><a href="https://exb.fr/en/home/705-ghana-rever-l-independance-1957-1976.html" target="_blank" rel="noopener noreferrer">Ghana! R&ecirc;ver l&rsquo;ind&eacute;pendance, 1957&ndash;1976</a></em> (Atelier EXB, Paris), designed by Line C&eacute;lo.</p>
+                <p style="margin-bottom: 0.75rem;">Anne Lacoste and Rose Durr, <em><a href="https://www.spectorbooks.com/book/l-is-for-look" target="_blank" rel="noopener noreferrer">L Is for Look: Children&rsquo;s Photobooks</a></em> (Spector Books, Leipzig), designed by Ina Kwon and Helmut V&ouml;lter.</p>
+                <p style="margin-bottom: 0.75rem;">Anuschka Blommers, Niels Schumm and Julie Peeters, <em><a href="https://www.romapublications.org/?book=more-blommers-schumm" target="_blank" rel="noopener noreferrer">More</a></em> (Blommers &amp; Schumm and Roma Publications, Amsterdam), designed by Julie Peeters.</p>
+
+                <div class="section-ornament">❖ ❖ ❖</div>
+            </div>
+        </article>
+
+        <!-- Featured Content Area - NYC Museum Shows, Fall 2026 -->
+        <article class="featured-content" id="nyc-museum-shows">
+            <div class="feature-category">Exhibitions</div>
+
+            <h2 class="feature-title">Four Museum Shows in New York This Fall</h2>
+
+            <p class="feature-subtitle">
+                Arthur Jafa at the New Museum and Taryn Simon at the Guggenheim are open now. Krasner and Pollock at the Met and Roy Lichtenstein at the Whitney open within two weeks.
+            </p>
+
+            <div class="feature-meta">
+                <span><i class="far fa-user"></i> Hudson Street Library</span>
+                <span><i class="far fa-calendar"></i> September 2026</span>
+                <span><i class="far fa-clock"></i> 3 min read</span>
+            </div>
+
+            <div class="feature-body">
+                <p>Two of the season's large museum surveys opened in New York in the last two weeks, and two more open by 11 October. All four artists are on the library's shelves, and the books are listed under each show.</p>
+
+                <h3 style="font-family: 'Literata', Georgia, serif; font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-slate);">Arthur Jafa: I Am Tony</h3>
+
+                <p><strong><a href="https://www.newmuseum.org/exhibition/arthur-jafa-i-am-tony/" target="_blank" rel="noopener noreferrer">New Museum</a>, third and fourth floors. Open now, through early January 2027.</strong></p>
+
+                <!-- de-slop: ignore -->
+                <p>The New Museum calls this the first US museum survey to cover the full breadth of Jafa's practice. It takes two floors of the expanded building on the Bowery and is named for the jazz drummer Tony Williams. The films <em>Love is the Message, The Message is Death</em> (2016) and <em>The White Album</em> (2019), which won the Golden Lion in Venice, are shown with new work, recent paintings, video and film installations, and sculptural and photographic objects. Massimiliano Gioni and Gary Carrion-Murayari curated the show with Calvin Wang.</p>
+
+                <p>In the library: the exhibition catalogue, <em><a href="/books/jafa_arthur-jafa-i-am-tony_2371/">Arthur Jafa: I Am Tony</a></em> (Phaidon, 2026), <em><a href="/books/jafa_a-series-of-utterly-improbable-yet-extraordinary-renditions_544/">A Series of Utterly Improbable, Yet Extraordinary Renditions</a></em> (2017) and <em><a href="/books/jafa_helter-skelter_1863/">Helter Skelter</a></em> (Fondazione Prada, 2026), made with Richard Prince.</p>
+
+                <h3 style="font-family: 'Literata', Georgia, serif; font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-slate);">Taryn Simon | Father Country I Do Love You</h3>
+
+                <p><strong><a href="https://www.guggenheim.org/exhibition/taryn-simon" target="_blank" rel="noopener noreferrer">Solomon R. Guggenheim Museum</a>, rotunda. 18 September 2026 to 14 March 2027.</strong></p>
+
+                <p>Simon's new work follows the life of one unnamed federal agent across 42 multipart chapters of photographs, text, video and sculpture. It fills the whole rotunda. The Guggenheim says it is the first monographic exhibition by a photography-based artist to be shown there. Nat Trotman organized the exhibition, and the museum and Hatje Cantz are publishing an artist's book with it.</p>
+
+                <p>In the library: <em><a href="/books/simon_an-american-index-of-the-hidden-and-unfamiliar_1075/">An American Index of the Hidden and Unfamiliar</a></em> (Steidl, 2007), <em><a href="/books/simon_contraband_1076/">Contraband</a></em> (Steidl, 2010) and <em><a href="/books/simon_paperwork-and-the-will-of-capital_1073/">Paperwork and the Will of Capital</a></em> (Hatje Cantz and Gagosian, 2016), among seven Simon titles.</p>
+
+                <h3 style="font-family: 'Literata', Georgia, serif; font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-slate);">Krasner and Pollock: Past Continuous</h3>
+
+                <p><strong><a href="https://www.metmuseum.org/exhibitions/krasner-and-pollock-past-continuous" target="_blank" rel="noopener noreferrer">The Metropolitan Museum of Art</a>, Fifth Avenue. 4 October 2026 to 31 January 2027.</strong></p>
+
+                <p>The Met sets the careers of Lee Krasner (1908&ndash;1984) and Jackson Pollock (1912&ndash;1956) side by side from start to finish, with more than 120 works from over 80 lenders. The two met in New York in 1942, married in 1945 and moved to Springs, on Long Island. The museum describes the show as the first major New York presentation of either artist in more than twenty years. Pollock's <em>Autumn Rhythm: Number 30, 1950</em> and Krasner's <em>Combat</em> (1965) come from the Met's own collection. Loans include <em>Guardians of the Secret</em> (1943) from the San Francisco Museum of Modern Art.</p>
+
+                <p>In the library: <em><a href="/books/pollock_jackson-pollock_2054/">Jackson Pollock</a></em>, the catalogue of the Museum of Modern Art's 1998 retrospective.</p>
+
+                <h3 style="font-family: 'Literata', Georgia, serif; font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-slate);">Roy Lichtenstein: Like New</h3>
+
+                <p><strong><a href="https://whitney.org/exhibitions/lichtenstein" target="_blank" rel="noopener noreferrer">Whitney Museum of American Art</a>. 11 October 2026 to 10 May 2027.</strong></p>
+
+                <p>The Whitney brings together about 130 works made between the early 1940s and the 1990s, among them <em>Look Mickey</em> (1961), <em>Masterpiece</em> (1962) and <em>Drowning Girl</em> (1963). For the first time, every work from Lichtenstein's 1962 exhibition at Leo Castelli Gallery is back in one place. Three murals are recreated, including a version of <em>Greene Street Mural</em> (1983) nearly 96 feet long. Works by Louise Lawler, Richard Pettibone and Sturtevant hang alongside. Meg Onli organized the show with the artist Alex Da Corte as guest curator. The catalogue, <em><a href="/books/lichtenstein_roy-lichtenstein-like-new_2499/">Roy Lichtenstein: Like New</a></em>, is now in the library.</p>
+
+                <p>In the library: <em><a href="/books/lichtenstein_greene-street-mural_628/">Greene Street Mural</a></em> (Gagosian, 2015), <em><a href="/books/lichtenstein_roy-lichtenstein-a-retrospective_2035/">Roy Lichtenstein: A Retrospective</a></em> (2012) and <em><a href="/books/lichtenstein_roy-lichtenstein-history-in-the-making-1948-1960_626/">History in the Making, 1948&ndash;1960</a></em> (2020).</p>
+
+                <div class="section-ornament">❖ ❖ ❖</div>
+            </div>
+        </article>
+
+        <!-- Featured Content Area - Fall Want List -->
+        <article class="featured-content" id="fall-want-list">
+            <div class="feature-category">Want List</div>
+
+            <h2 class="feature-title">Fall Want List</h2>
+
+            <p class="feature-subtitle">
+                Eighteen titles we're chasing this season.
+            </p>
+
+            <div class="feature-meta">
+                <span><i class="far fa-user"></i> Hudson Street Library</span>
+                <span><i class="far fa-calendar"></i> August 2026</span>
+                <span><i class="far fa-clock"></i> 1 min read</span>
+            </div>
+
+            <div class="feature-body">
+                <p style="margin-bottom: 0.75rem;">Monique Peperkamp, <em><a href="https://artezpress.artez.nl/books/art-against-the-machine/" target="_blank" rel="noopener noreferrer">Art Against the Machine: Untrapping Life from Profit-Driven Tech Dependency</a></em> — ArtEZ Press</p>
+                <p style="margin-bottom: 0.75rem;">Jon Rafman, <em><a href="https://hatjecantz.com/collections/new-books/products/9783775763578" target="_blank" rel="noopener noreferrer">Main Stream Media</a></em> — Hatje Cantz</p>
+                <p style="margin-bottom: 0.75rem;">Beni Bischof, <em><a href="https://www.editionpatrickfrey.com/en/books/psychobuch-2" target="_blank" rel="noopener noreferrer">Psychobuch 2</a></em> — Edition Patrick Frey</p>
+                <p style="margin-bottom: 0.75rem;"><em><a href="https://www.phaidon.com/en-us/products/doron-langberg" target="_blank" rel="noopener noreferrer">Doron Langberg</a></em> — Phaidon</p>
+                <p style="margin-bottom: 0.75rem;">Nancy Spector, <em><a href="https://www.phaidon.com/en-us/products/felix-gonzalez-torres" target="_blank" rel="noopener noreferrer">Felix Gonzalez-Torres</a></em> — Phaidon</p>
+                <p style="margin-bottom: 0.75rem;"><a href="https://cargocollective.com/elleperez" target="_blank" rel="noopener noreferrer">Elle Pérez</a>, <em><a href="https://store.aperture.org/collections/coming-soon/products/elle-perez" target="_blank" rel="noopener noreferrer">Devotions</a></em> — Aperture</p>
+                <p style="margin-bottom: 0.75rem;">Jess T. Dugan &amp; Charlotte Cotton, <em><a href="https://www.radiusbooks.org/all-books/p/love-pictures" target="_blank" rel="noopener noreferrer">Love Pictures</a></em> — Radius Books</p>
+                <p style="margin-bottom: 0.75rem;">Nan Goldin, <em>Honey on a Razor Blade</em> — Steidl</p>
+                <p style="margin-bottom: 0.75rem;"><a href="https://www.gordonparksfoundation.org/" target="_blank" rel="noopener noreferrer">Gordon Parks</a>, <em><a href="https://steidl.de/Books/Diary-of-a-Harlem-Family-1967-1968-0213252837.html" target="_blank" rel="noopener noreferrer">Diary of a Harlem Family, 1967/1968</a></em> — Steidl</p>
+                <p style="margin-bottom: 0.75rem;"><a href="https://paulsepuya.com" target="_blank" rel="noopener noreferrer">Paul Mpagi Sepuya</a>, <em><a href="https://www.spectorbooks.com/book/paul-mpagi-sepuya-focus-desire" target="_blank" rel="noopener noreferrer">Focus Desire</a></em> — Spector Books</p>
+                <p style="margin-bottom: 0.75rem;">Walter Pfeiffer, <em><a href="https://www.moussemagazine.it/shop/walter-pfeiffer-in-good-company-pinacoteca-agnelli-book-2026/" target="_blank" rel="noopener noreferrer">In Good Company</a></em> — Mousse</p>
+                <p style="margin-bottom: 0.75rem;"><a href="https://www.rayjohnsonestate.com/" target="_blank" rel="noopener noreferrer">Ray Johnson</a>, <em><a href="https://bookstore.karmakarma.org/publication/ray-johnson-ray-johnson/" target="_blank" rel="noopener noreferrer">Ray Johnson</a></em> — Karma</p>
+                <p style="margin-bottom: 0.75rem;">Alex Da Corte, <em><a href="https://yalebooks.yale.edu/book/9780300292930/roy-lichtenstein-like-new/" target="_blank" rel="noopener noreferrer">Roy Lichtenstein: Like New</a></em> — Yale University Press</p>
+                <p style="margin-bottom: 0.75rem;">Antonio López Alonso, <em><a href="https://www.rizzoliusa.com/book/9780847877577/" target="_blank" rel="noopener noreferrer">Richard Prince: Tell Me Everything</a></em> — Rizzoli Electa</p>
+                <p style="margin-bottom: 0.75rem;"><em><a href="https://mitpress.mit.edu/9780262052658/pierre-huyghe/" target="_blank" rel="noopener noreferrer">Pierre Huyghe</a></em> — The MIT Press</p>
+                <p style="margin-bottom: 0.75rem;">Siri Engberg, <em><a href="https://steidl.de/Books/Catalogue-Raisonne-of-the-Books-Prints-and-Photographic-Editions-1960-2022-0920295558.html" target="_blank" rel="noopener noreferrer">Edward Ruscha: Catalogue Raisonné of the Books, Prints, and Photographic Editions, 1960–2022</a></em> — Steidl / Gagosian</p>
+                <p style="margin-bottom: 0.75rem;">Kari J. Brandtzæg, <em><a href="https://www.accartbooks.com/uk/book/paula-rego-dance-among-thorns/" target="_blank" rel="noopener noreferrer">Paula Rego – Dance Among Thorns</a></em> — MUNCH</p>
+                <p style="margin-bottom: 0.75rem;">Emma Lavigne, <em><a href="https://www.marsilioarte.it/en/prodotti/lorna-simpson-third-person/" target="_blank" rel="noopener noreferrer">Lorna Simpson: Third Person</a></em> — Marsilio Arte</p>
+
+                <div class="section-ornament">❖ ❖ ❖</div>
+            </div>
+        </article>
+
+        <!-- Featured Content Area - Conveyor Belt Books (teaser; full report at /news/conveyor-belt-books-ai-bulk-orders/) -->
+        <article class="featured-content" id="conveyor-belt-books">
+            <div class="feature-category">Report</div>
+
+            <h2 class="feature-title"><a href="/news/conveyor-belt-books-ai-bulk-orders/">A Kentucky Bookseller Called the Number on the Order. An AI Bot Picked Up.</a></h2>
+
+            <p class="feature-subtitle">
+                Conveyor Belt Books says it has fielded weeks of strange bulk-purchase requests, including two for a rare Chris Burden artist's book. In the replies, other dealers describe a trade dividing over whether to take the money.
+            </p>
+
+            <div class="feature-meta">
+                <span><i class="far fa-user"></i> Hudson Street Library</span>
+                <span><i class="far fa-calendar"></i> August 2026</span>
+                <span><i class="far fa-clock"></i> 7 min read</span>
+            </div>
+
+            <div class="feature-body">
+                <p><strong>COVINGTON, Ky.</strong> — Over roughly the past two months, the used and rare bookshop <a href="https://conveyorbeltbooks.com/" target="_blank" rel="noopener noreferrer">Conveyor Belt Books</a> has received what it describes as a series of atypical emails from unfamiliar buyers seeking to purchase titles in bulk. The groupings, the store says, had no thematic logic connecting them, mixing genuinely rare items with merely hard-to-find ones.</p>
+
+                <p>One title drew two separate inquiries: a Chris Burden artist's book that the shop notes was self-published by the artist and is especially difficult to locate.</p>
+
+                <p><a href="/news/conveyor-belt-books-ai-bulk-orders/">Read the report &rarr;</a></p>
+
+                <div class="section-ornament">❖ ❖ ❖</div>
+            </div>
+        </article>
+
+        
+        
+
+        <!-- Featured Content Area - A Library of Libraries (teaser; full essay at /news/library-of-libraries/) -->
+        <article class="featured-content" id="library-of-libraries">
+            <div class="feature-category">Essay</div>
+
+            <h2 class="feature-title"><a href="/news/library-of-libraries/">A Library of Libraries</a></h2>
+
+            <p class="feature-subtitle">
+                A proposal to house private collections whole, in the order their owners gave them. It needs a building, a budget, and its first patrons.
+            </p>
+
+            <div class="feature-meta">
+                <span><i class="far fa-user"></i> Hudson Street Library</span>
+                <span><i class="far fa-calendar"></i> July 2026</span>
+                <span><i class="far fa-clock"></i> 8 min read</span>
+            </div>
+
+            <div class="feature-body">
+                <p>This is a proposal with a cost, and the window on it is closing.</p>
+
+                <p>A collection of collections is the only acquisition left that can't be outbid, front-run, or bought at auction next spring. It has to be built. The great private collections of the last fifty years are being broken up right now, not eventually, and what disappears in a lot sale is not the books but the argument they were arranged to make. The number is knowable: $8 million to open in contributed space, $2 million a year to run, $45 million to endow. $100 million buys the building and founds it outright.</p>
+
+                <p><a href="/news/library-of-libraries/">Read the essay &rarr;</a></p>
+
+                <div class="section-ornament">❖ ❖ ❖</div>
+            </div>
+        </article>
+
+        <!-- Featured Content Area - Phillpot Diagram -->
+        <article class="featured-content">
+            <div class="feature-category">Essay</div>
+
+            <h2 class="feature-title">Historical Evolution of the Phillpot Diagram</h2>
+
+            <p class="feature-subtitle">
+                Clive Phillpot's 1982 taxonomy of the artist book, and Kione Kochi's updated version for Half Letter Press, maps the socioeconomic forces that dictate the life of a book-as-art.
+            </p>
+
+            <div class="feature-meta">
+                <span><i class="far fa-user"></i> Hudson Street Library</span>
+                <span><i class="far fa-calendar"></i> April 2026</span>
+                <span><i class="far fa-clock"></i> 5 min read</span>
+            </div>
+
+            <div class="feature-hero">
+                <img src="/assets/images/news/Kochi_Kione_2013_Clive_Phillpots_Artists_Books_Diagram_Updated.jpg" alt="Clive Phillpot's Artists' Books diagram, updated by Kione Kochi for Half Letter Press">
+            </div>
+            <div class="feature-hero-caption">
+                Kione Kochi's update of Clive Phillpot's 1982 Artists' Books diagram, published by Half Letter Press. The revision adds a Digital strata reflecting PDF and Print-on-Demand distribution.
+            </div>
+
+            <div class="feature-body">
+                <p>The diagram's history is rooted in the effort to institutionalize and define the "Artist Book" as a specific medium during the late 20th century.</p>
+
+                <p>Clive Phillpot, while serving as the Director of the Library at the Museum of Modern Art (MoMA), <a href="https://www.artforum.com/print/198205/books-bookworks-book-objects-artists-books-35588" target="_blank" rel="noopener noreferrer">developed the original version of this diagram in 1982</a>. His goal was to provide a rigorous taxonomic structure for librarians and curators. At the time, the term "artist book" was being applied broadly to everything from hand-painted one-offs to mass-market paperbacks.</p>
+
+                <p><a href="https://www.researchgate.net/publication/339188278_It's_All_in_the_Reading" target="_blank" rel="noopener noreferrer">Phillpot's diagrams</a> were polemic tools designed to isolate "Book Art" as a distinct category where the artist uses the book's specific mechanics (sequencing, paging, and portability) as the primary medium.</p>
+
+                <h3 style="font-family: 'Literata', Georgia, serif; font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-slate);">The Democratic Multiple</h3>
+
+                <p>The history of this diagram is tied to the 1960s and 70s movement of the <a href="https://www.printedmatter.org/programs/critical-essays/11-the-late-edition-twenty-years-of-dissemination-at-printed-matter" target="_blank" rel="noopener noreferrer">"Democratic Multiple."</a> Artists like <a href="https://library.si.edu/finding-aid/can-i-douse-you-salad-dressing-ed-ruschas-artists-books" target="_blank" rel="noopener noreferrer">Ed Ruscha</a> and groups like Fluxus sought to bypass the gallery system by creating cheap, mass-produced books. Phillpot used the diagram to champion these "multiples" over "book objects" (sculptural, unique works). He argued that the true artist book belonged in the "Multiple" or "Large Print Run" strata because its value lay in its ability to be widely distributed, rather than its rarity.</p>
+
+                <h3 style="font-family: 'Literata', Georgia, serif; font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-slate);">Reshaping the Institution</h3>
+
+                <p><a href="https://pubs.lib.uiowa.edu/bai/article/id/28729/download/pdf/" target="_blank" rel="noopener noreferrer">Phillpot's work at MoMA</a> shifted how the institution collected these works. By categorizing books based on their position between "Art" and "Books," he moved the acquisition of these items from the curated print departments into the museum library. This established the library as a site of active artistic engagement rather than just a repository for research materials.</p>
+
+                <h3 style="font-family: 'Literata', Georgia, serif; font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--color-slate);">The Kione Kochi Update</h3>
+
+                <p><a href="https://halfletterpress.com/kione-kochi-and-temporary-services-poster-set/" target="_blank" rel="noopener noreferrer">The version you are looking at</a> was updated by <a href="https://temporaryservices.org/served/projects-by-name/self-publishing-posters/" target="_blank" rel="noopener noreferrer">Kione Kochi for Half Letter Press</a> to address the collapse of traditional publishing hierarchies. While the 1982 original focused on the tension between the gallery and the bookstore, the modern update reflects the historical shift toward decentralized production. The inclusion of the "Digital" strata acknowledges that the "Democratic Multiple" has moved from the offset press to the PDF and Print-on-Demand (P.O.D.) services, effectively removing the "Gatekeeper" (the Pear side) from the equation entirely.</p>
+
+                <div class="pull-quote">
+                    The first visual attempt to map the socioeconomic forces (dealers, publishers, and distributors) that dictate the life of a book-as-art.
+                </div>
+
+                <p>The diagram remains a standard reference in Art History and Library Science curricula. It serves as the primary conceptual bridge between the Fine Art tradition (centered on the unique object) and the Mass Communication tradition (centered on the disseminated idea). It is historically significant for being the first visual attempt to map the socioeconomic forces (dealers, publishers, and distributors) that dictate the life of a book-as-art.</p>
+
+                <div class="section-ornament">❖ ❖ ❖</div>
+            </div>
+        </article>
+
+        </div>
+
+
+        <!-- News Sidebar -->
+        <aside class="news-sidebar">
+            <div class="sidebar-header">
+                <h3 class="sidebar-title">Recent News</h3>
+                <p class="sidebar-subtitle">Latest Updates</p>
+            </div>
+
+            
+            <div class="news-timeline">
+                
+                <a href="/news.html#simpson-wolfgang-hahn-prize" class="news-item">
+                    <time class="news-date">2026-11-13</time>
+                    <h4 class="news-item-title">Lorna Simpson Receives the 2027 Wolfgang Hahn Prize</h4>
+                    <p class="news-item-excerpt">The Gesellschaft für Moderne Kunst at the Museum Ludwig in Cologne has named the Brooklyn artist its 33rd prizewinner. The library holds five books with her work.</p>
+                    <div class="news-category">announcements</div>
+                </a>
+                
+                <a href="/news.html#tillmans-hcb-award" class="news-item">
+                    <time class="news-date">2026-11-10</time>
+                    <h4 class="news-item-title">Wolfgang Tillmans Receives the Henri Cartier-Bresson Lifetime Achievement Award</h4>
+                    <p class="news-item-excerpt">The Fondation Henri Cartier-Bresson has given its third lifetime award to Tillmans, with a tribute from Michael Stipe. The library holds forty of his books.</p>
+                    <div class="news-category">announcements</div>
+                </a>
+                
+                <a href="/news.html#world-around-visionary-award" class="news-item">
+                    <time class="news-date">2026-11-10</time>
+                    <h4 class="news-item-title">The World Around Names Hans Ulrich Obrist Its First Visionary Award Honoree</h4>
+                    <p class="news-item-excerpt">The award was presented at the annual dinner in Chinatown on 9 November. Its portrait of Obrist is made from photographs of other people&#39;s bookshelves, and he is in nineteen of our records.</p>
+                    <div class="news-category">announcements</div>
+                </a>
+                
+                <a href="/news.html#photobook-awards-2026" class="news-item">
+                    <time class="news-date">2026-10-08</time>
+                    <h4 class="news-item-title">The 2026 PhotoBook Awards Shortlist</h4>
+                    <p class="news-item-excerpt">Paris Photo and Aperture have named thirty-five books. Keisha Scarville&#39;s Passports is on our shelves, and Takashi Homma and Sohrab Hura are here with earlier work.</p>
+                    <div class="news-category">announcements</div>
+                </a>
+                
+                <a href="/news.html#nyc-museum-shows" class="news-item">
+                    <time class="news-date">2026-09-29</time>
+                    <h4 class="news-item-title">Four Museum Shows in New York This Fall</h4>
+                    <p class="news-item-excerpt">Arthur Jafa at the New Museum and Taryn Simon at the Guggenheim are open now. Krasner and Pollock at the Met and Roy Lichtenstein at the Whitney open by 11 October. With the books we hold on each.</p>
+                    <div class="news-category">features</div>
+                </a>
+                
+                <a href="https://gagosian.com/news/2026/09/22/tyler-mitchell-2026-don-tyson-prize-crystal-bridges-museum-of-american-art-bentonville-arkansas/" class="news-item">
+                    <time class="news-date">2026-09-22</time>
+                    <h4 class="news-item-title">Congratulations to Tyler Mitchell, Winner of the 2026 Don Tyson Prize</h4>
+                    <p class="news-item-excerpt">Crystal Bridges Museum of American Art has awarded Tyler Mitchell the 2026 Don Tyson Prize for the Advancement of American Art. His first monograph, I Can Make You Feel Good, is in the library.</p>
+                    <div class="news-category">announcements</div>
+                </a>
+                
+                <a href="/news/conveyor-belt-books-ai-bulk-orders/" class="news-item">
+                    <time class="news-date">2026-08-22</time>
+                    <h4 class="news-item-title">A Kentucky Bookseller Called the Number on the Order. An AI Bot Picked Up.</h4>
+                    <p class="news-item-excerpt">Conveyor Belt Books says it has fielded weeks of strange bulk-purchase requests, including two for a rare Chris Burden artist&#39;s book. In the replies, other dealers describe a trade dividing over whether to take the money.</p>
+                    <div class="news-category">features</div>
+                </a>
+                
+                <a href="#" class="news-item">
+                    <time class="news-date">2026-08-04</time>
+                    <h4 class="news-item-title">Summer Archiving: Newly Accessioned Works Join the Online Catalog</h4>
+                    <p class="news-item-excerpt">A summer of shelf work reaches the site: backlist titles accessioned and added to the online catalog, dozens of recovered cover images restored, and records corrected across the collection.</p>
+                    <div class="news-category">collection-development</div>
+                </a>
+                
+                <a href="/news/library-of-libraries/" class="news-item">
+                    <time class="news-date">2026-07-31</time>
+                    <h4 class="news-item-title">A Library of Libraries</h4>
+                    <p class="news-item-excerpt">A proposal to house private collections whole, in the order their owners gave them. It needs a building, a budget, and its first patrons. $8 million to open in contributed space, $2 million a year to run, $45 million to endow.</p>
+                    <div class="news-category">features</div>
+                </a>
+                
+                <a href="/collections/collage-collections.html" class="news-item">
+                    <time class="news-date">2026-07-31</time>
+                    <h4 class="news-item-title">Introducing the Collage Collection: 75+ Books on the Art of Cut-and-Paste</h4>
+                    <p class="news-item-excerpt">Hudson Street Library launches a curated collection of more than 75 books on collage, photomontage, and assemblage — from John Heartfield and Toshiko Okanoue to John Stezaker, Linder, and a new generation working scissors-first.</p>
+                    <div class="news-category">collection-development</div>
+                </a>
+                
+                <a href="#" class="news-item">
+                    <time class="news-date">2026-06-07</time>
+                    <h4 class="news-item-title">Discover: A Directory of Where to Find Art Books, Prints, and Editions</h4>
+                    <p class="news-item-excerpt">Hudson Street Library opens Discover, a free, searchable directory of more than 1,100 vetted sources for art and photography books, prints, and editions, spanning publishers, galleries, stores, and museum shops.</p>
+                    <div class="news-category">announcements</div>
+                </a>
+                
+                <a href="#" class="news-item">
+                    <time class="news-date">2026-04-17</time>
+                    <h4 class="news-item-title">National Gallery of Art Receives Landmark Gift of 1,261 Mitch Epstein Photographs</h4>
+                    <p class="news-item-excerpt">The National Gallery of Art announces a major gift spanning Epstein&#39;s five-decade career, establishing the most significant institutional collection of the influential American photographer&#39;s work, with selections on view in 2026.</p>
+                    <div class="news-category">announcements</div>
+                </a>
+                
+                <a href="/news/finding-fred/" class="news-item">
+                    <time class="news-date">2026-03-15</time>
+                    <h4 class="news-item-title">Finding Fred: The Hidden Art of Fred Cray</h4>
+                    <p class="news-item-excerpt">Have you ever found a genuine, one-of-a-kind work of art hidden inside a library book? Brooklyn artist Fred Cray&#39;s photographs turn up in the wild, not by invitation — hand-stamped and numbered, one of nearly 50,000 placed globally.</p>
+                    <div class="news-category">features</div>
+                </a>
+                
+                <a href="#" class="news-item">
+                    <time class="news-date">2026-03-27</time>
+                    <h4 class="news-item-title">March 2026 Acquisitions: Contemporary Art, Photography, and Artists&#39; Books</h4>
+                    <p class="news-item-excerpt">A significant expansion featuring George Condo&#39;s DESTE Foundation catalog, Larry Clark and James Gilroy&#39;s collaborative project, Melissa Shook&#39;s feminist photography milestone, Nazraeli&#39;s One Picture Book series, and essential titles on contemporary art and artists&#39; books.</p>
+                    <div class="news-category">acquisitions</div>
+                </a>
+                
+                <a href="#" class="news-item">
+                    <time class="news-date">2026-03-12</time>
+                    <h4 class="news-item-title">Introducing Client-Based Library Curatorial Projects</h4>
+                    <p class="news-item-excerpt">Hudson Street Library now offers bespoke curatorial services for collectors seeking more than color-blocked decor. Drawing from a deep bench of rare photography books, artist monographs, and contemporary art publications, we build substantive personal libraries for discerning collectors.</p>
+                    <div class="news-category">announcements</div>
+                </a>
+                
+                <a href="#" class="news-item">
+                    <time class="news-date">2026-02-21</time>
+                    <h4 class="news-item-title">Half Gallery Partners on Richard Prince Book Exhibition in Los Angeles</h4>
+                    <p class="news-item-excerpt">Half Gallery presents the most comprehensive Richard Prince book show to date in North America, opening February 22nd at LEADGRAM in Los Angeles with rare invites, drawings on books, prints, and larger works.</p>
+                    <div class="news-category">announcements</div>
+                </a>
+                
+                <a href="#" class="news-item">
+                    <time class="news-date">2026-02-21</time>
+                    <h4 class="news-item-title">Essential Guide to NYC Photobook Events, Fairs, and Exhibitions in 2026</h4>
+                    <p class="news-item-excerpt">From AIPAD and ICP Photobook Fest to Printed Matter exhibitions and community meet-ups, your comprehensive calendar for photobook events in New York City throughout 2026.</p>
+                    <div class="news-category">announcements</div>
+                </a>
+                
+                <a href="#" class="news-item">
+                    <time class="news-date">2026-02-14</time>
+                    <h4 class="news-item-title">Instituto Moreira Salles Acquires 10×10 Photobooks Collection: Historical Photobooks by Women</h4>
+                    <p class="news-item-excerpt">The library of Instituto Moreira Salles in São Paulo acquires the 111-volume collection assembled for What They Saw: Historical Photobooks by Women, 1843–1999, with a reading room exhibition opening March 17, 2026.</p>
+                    <div class="news-category">announcements</div>
+                </a>
+                
+                <a href="#" class="news-item">
+                    <time class="news-date">2026-02-03</time>
+                    <h4 class="news-item-title">The Gordon Parks Foundation Celebrates 20th Anniversary with Yearlong Program</h4>
+                    <p class="news-item-excerpt">The Gordon Parks Foundation marks two decades of preserving Parks&#39; legacy and supporting emerging artists with exhibitions, publications, and fellowships throughout 2026, including new Fellows in Art, Writing, and Music.</p>
+                    <div class="news-category">announcements</div>
+                </a>
+                
+                <a href="/books/wool_see-stop-run_1664/" class="news-item">
+                    <time class="news-date">2026-01-10</time>
+                    <h4 class="news-item-title">Christopher Wool Collection Expansion &amp; Purple Magazine Archive Completion</h4>
+                    <p class="news-item-excerpt">Major collection development update: Complete Christopher Wool artist book series cataloged with comprehensive metadata and cover images, plus all 33 Purple Magazine issues now individually cataloged.</p>
+                    <div class="news-category">collection-development</div>
+                </a>
+                
+                <a href="/books/marshall_rythm-mastr-this-is-how-it-begins_1304/" class="news-item">
+                    <time class="news-date">2025-10-20</time>
+                    <h4 class="news-item-title">New Acquisition: Kerry James Marshall - Rythm Mastr: This Is How It Begins</h4>
+                    <p class="news-item-excerpt">Hudson Street Library proudly announces the acquisition of Kerry James Marshall&#39;s groundbreaking comic series, a powerful blend of Afrofuturism, superhero mythology, and Black cultural history.</p>
+                    <div class="news-category">acquisitions</div>
+                </a>
+                
+                <a href="/books/divola_one-picture-book-two-vol-48-italian-cars_1308/" class="news-item">
+                    <time class="news-date">2025-10-20</time>
+                    <h4 class="news-item-title">John Divola - Italian Cars (One Picture Book Two Vol #48)</h4>
+                    <p class="news-item-excerpt">Limited edition photography book featuring John Divola&#39;s contemplative automotive studies, part of the acclaimed Nazraeli Press One Picture Book Two series.</p>
+                    <div class="news-category">acquisitions</div>
+                </a>
+                
+                <a href="/books/casagrande_one-picture-book-two-vol-47-paperworks_1307/" class="news-item">
+                    <time class="news-date">2025-10-20</time>
+                    <h4 class="news-item-title">Benedetta Casagrande - Paperworks (One Picture Book Two Vol #47)</h4>
+                    <p class="news-item-excerpt">Limited edition photography book featuring Benedetta Casagrande&#39;s innovative paper-based imagery, part of the acclaimed Nazraeli Press One Picture Book Two series.</p>
+                    <div class="news-category">acquisitions</div>
+                </a>
+                
+                <a href="/books/hosoe_one-picture-book-two-vol-48-kimono_1306/" class="news-item">
+                    <time class="news-date">2025-10-20</time>
+                    <h4 class="news-item-title">Eikoh Hosoe - Kimono (One Picture Book Two Vol #48)</h4>
+                    <p class="news-item-excerpt">Limited edition photography book featuring Eikoh Hosoe&#39;s iconic Japanese fashion imagery, part of the acclaimed Nazraeli Press One Picture Book Two series.</p>
+                    <div class="news-category">acquisitions</div>
+                </a>
+                
+                <a href="/books/zadeh_one-picture-book-two-vol-46-susan-zadeh-toer_1305/" class="news-item">
+                    <time class="news-date">2025-10-20</time>
+                    <h4 class="news-item-title">Susan Zadeh - Toer (One Picture Book Two Vol #46)</h4>
+                    <p class="news-item-excerpt">Limited edition photography book featuring Susan Zadeh&#39;s evocative photographic work, part of the acclaimed Nazraeli Press One Picture Book Two series.</p>
+                    <div class="news-category">acquisitions</div>
+                </a>
+                
+            </div>
+            
+        </aside>
+
+    </div>
+</main>
+
+
+
+
+
+<footer class="bg-neutral-50 border-t border-neutral-200 mt-24 py-12">
+    <div class="container mx-auto px-6 text-center text-neutral-600">
+        
+        <p>© 2026 Hudson Street Library · <a href="/identity/" class="text-neutral-600 underline hover:text-neutral-900">Identity</a> · <a href="/colophon.html" class="text-neutral-600 underline hover:text-neutral-900">Colophon</a></p>
+    </div>
+</footer>
+
+</body>
+</html>
