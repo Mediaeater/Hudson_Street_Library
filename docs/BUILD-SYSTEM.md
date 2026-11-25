@@ -195,7 +195,6 @@ eleventyConfig.addPassthroughCopy(".nojekyll");
 
 **Result:**
 - `src/assets/css/design-system.css` → `_site/assets/css/design-system.css`
-- `src/assets/js/shared.js` → `_site/assets/js/shared.js`
 - `src/_data/catalog/art.csv` → `_site/cms/data/books.csv`
 
 ### CSS Pipeline
@@ -210,12 +209,9 @@ src/assets/css/
 
 ### JavaScript Pipeline
 
-JavaScript files are copied without bundling or minification:
-
-```
-src/assets/js/
-└── shared.js              # Shared utilities
-```
+There is none. The site ships no standalone script files; client-side code is written
+inline in the template that uses it (`site-header.njk`, `book.njk`, `collection.njk`,
+`static-demo.html`, `aggregate-view.html`).
 
 ### Image Processing
 

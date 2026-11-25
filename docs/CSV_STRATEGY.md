@@ -10,7 +10,7 @@ The repository currently contains several CSV files with "book" data, leading to
 
 1.  **`src/_data/catalog/art.csv`** (541 KB)
     *   **Status**: **Active / Source of Truth**.
-    *   **Description**: This is the primary data file used by `generate-book-pages.js` to build the site. It is also the file targeted by the `fix-data-quality-issues.py` script. It contains the most complete and up-to-date dataset.
+    *   **Description**: This is the primary data file loaded by `scripts/utils/catalog.js` to build the site. It is also the file targeted by the `fix-data-quality-issues.py` script. It contains the most complete and up-to-date dataset.
 
 2.  **`src/_data/books_backup.csv`** (539 KB)
     *   **Status**: **Redundant / Backup**.

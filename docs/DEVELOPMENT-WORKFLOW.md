@@ -83,9 +83,7 @@ Hudson_Street_Library/
 │   └── *.html, *.njk      # Page templates
 ├── _site/                   # Build output (auto-generated, DON'T EDIT)
 ├── scripts/                 # Utility scripts and automation
-│   ├── news-pipeline/      # News generation
 │   ├── covers/             # Cover report and attach
-│   ├── generators/         # Page generators
 │   └── utils/              # Shared utilities (csv-handler, image-core, etc.)
 ├── docs/                    # Documentation (YOU ARE HERE)
 ├── .eleventy.js            # Eleventy configuration
@@ -223,7 +221,7 @@ git checkout -b feature/your-feature-name
 
 4. **Add interactivity if needed:**
    ```javascript
-   // Add to src/assets/js/shared.js or create new file
+   // Add in a <script> block in the template that renders the cards
    document.addEventListener('DOMContentLoaded', function() {
      const bookCards = document.querySelectorAll('.book-card');
      bookCards.forEach(card => {
@@ -766,10 +764,13 @@ Eleventy dev server concurrently. Use Tailwind utility classes as normal:
 
 ### Task 2: Adding JavaScript Functionality
 
-#### Add to Existing Shared JS
+#### Add to the Template That Uses It
+
+The site ships no shared script file. Page behaviour lives in a `<script>` block in the
+template that needs it (for example `src/_includes/components/site-header.njk`).
 
 ```javascript
-// src/assets/js/shared.js
+// inside a <script> block in the template
 
 // Add new function
 function initNewFeature() {
@@ -1753,12 +1754,10 @@ Templates:
 
 Assets:
   src/assets/css/           - Stylesheets
-  src/assets/js/            - JavaScript
   src/assets/images/        - Images
 
 Scripts:
   scripts/covers/           - Cover report and attach
-  scripts/generators/       - Page generators
   scripts/utils/            - Utilities (csv-handler, image-core, etc.)
 ```
 

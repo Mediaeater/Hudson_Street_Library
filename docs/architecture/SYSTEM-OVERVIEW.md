@@ -33,16 +33,6 @@ Hudson Street Library is a specialized photography book collection website built
 A row names its cover in `image_url`. `report.js` lists rows without one and files
 no row uses. `attach.js` puts one image on one row.
 
-#### News Generation Pipeline (`scripts/news-pipeline/`)
-7-step automated workflow:
-1. **Database Addition** - New book added to CSV
-2. **Collection Assignment** - Auto-categorization based on subjects
-3. **Page Creation** - Generate book page from template
-4. **Image Processing** - Handle cover optimization
-5. **Index Updates** - Update collection pages
-6. **News Generation** - Create announcement
-7. **Site Integration** - Update navigation and feeds
-
 ### 4. Build & Deployment
 - **Local Development**: `npm start` → http://localhost:8080 with live reload
 - **Build Process**: Eleventy processes Nunjucks templates, optimizes images, generates static HTML
@@ -61,8 +51,7 @@ Hudson_Street_Library/
 │   ├── collections/       # Collection showcase pages
 │   └── pages/             # Static pages
 ├── scripts/               # Automation tools
-│   ├── covers/            # Cover report and attach
-│   └── news-pipeline/     # Automated news generation
+│   └── covers/            # Cover report and attach
 ├── docs/                  # Documentation
 └── .github/workflows/     # GitHub Actions CI/CD
 ```

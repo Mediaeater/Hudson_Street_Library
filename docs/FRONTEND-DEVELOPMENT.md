@@ -54,8 +54,6 @@ src/
 │   ├── css/
 │   │   ├── design-system.css         # Main design system (neutral palette)
 │   │   └── input.css                 # Tailwind v4 source (→ tailwind.css)
-│   ├── js/
-│   │   └── shared.js                 # Core HudsonStreetLibrary class
 │   └── images/
 │       └── books/                    # Book cover images
 ├── _includes/
@@ -80,7 +78,7 @@ src/
 ├─────────────────────────────────────┤
 │  Nunjucks Templates + CSV Data      │
 ├─────────────────────────────────────┤
-│  JavaScript Components (ES6 Classes)│
+│  Inline page scripts (ES6)          │
 ├─────────────────────────────────────┤
 │ CSS (Custom Props + compiled Tailwind)│
 ├─────────────────────────────────────┤
@@ -92,240 +90,20 @@ src/
 
 ## JavaScript Component System
 
-### The HudsonStreetLibrary Class Pattern
+The site ships no standalone script files. Client-side code is written inline, in a
+`<script>` block in the template that uses it:
 
-All shared JavaScript functionality is consolidated in the `HudsonStreetLibrary` class, following a singleton pattern that initializes on page load.
+- `src/_includes/components/site-header.njk`: mobile menu toggle (`toggleMobileMenu`).
+- `src/_includes/layouts/book.njk` and `collection.njk`: page-specific behaviour.
+- `src/static-demo.html` and `src/aggregate-view.html`: the `BookSearch` class that
+  fetches `/cms/data/catalog-index.csv` and `/assets/data/book-urls.json` and renders
+  the catalogue in the browser.
 
-#### Core Architecture
+`src/assets/js/shared.js` and its `HudsonStreetLibrary` class were removed in November
+2026. No page loaded the file.
 
-**File:** `/src/assets/js/shared.js`
-
-```javascript
-class HudsonStreetLibrary {
-    constructor() {
-        this.init();
-    }
-
-    init() {
-        // Initialize all components when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => this.initializeComponents());
-        } else {
-            this.initializeComponents();
-        }
-    }
-
-    initializeComponents() {
-        this.initMobileMenu();
-        this.initSmoothScrolling();
-        this.initImageErrorHandling();
-        this.initBookThumbnails();
-        this.updateCopyrightYear();
-    }
-
-    // Component methods...
-}
-
-// Auto-initialize when script loads
-new HudsonStreetLibrary();
-```
-
-#### Key Components
-
-##### 1. Mobile Menu Management
-
-```javascript
-initMobileMenu() {
-    const mobileMenuButtons = document.querySelectorAll('button[aria-controls*="mobile-nav-menu"]');
-
-    mobileMenuButtons.forEach(button => {
-        const menuId = button.getAttribute('aria-controls');
-        const mobileNavMenu = document.getElementById(menuId);
-
-        if (mobileNavMenu) {
-            button.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.toggleMobileMenu(button, mobileNavMenu);
-            });
-        }
-    });
-}
-
-toggleMobileMenu(button, menu) {
-    const isExpanded = button.getAttribute('aria-expanded') === 'true';
-
-    button.setAttribute('aria-expanded', !isExpanded);
-    menu.classList.toggle('hidden');
-    menu.classList.toggle('flex');
-
-    // Toggle icon
-    const icon = button.querySelector('i');
-    if (icon) {
-        icon.classList.toggle('fa-bars');
-        icon.classList.toggle('fa-times');
-    }
-}
-```
-
-**Usage:** Automatically works with any button that has `aria-controls="mobile-nav-menu-*"` attribute.
-
-##### 2. Book Thumbnail Loading
-
-The system handles dynamic book cover loading with intelligent fallback:
-
-```javascript
-initBookThumbnails() {
-    const thumbnailImages = document.querySelectorAll('.thumbnail-image');
-
-    thumbnailImages.forEach((img) => {
-        if (img.dataset.processed === 'true') return;
-        img.dataset.processed = 'true';
-
-        const coverPath = this.generateThumbnailCoverPath(img);
-
-        if (coverPath) {
-            img.src = coverPath;
-        } else {
-            this.showThumbnailPlaceholder(img);
-        }
-    });
-}
-
-generateThumbnailCoverPath(img) {
-    const imageField = img.dataset.imageField;
-    const title = img.dataset.title;
-    const author = img.dataset.author;
-    const isbn = img.dataset.isbn;
-
-    // Try existing image field first
-    if (imageField && imageField.trim() && imageField !== 'null') {
-        return `/assets/images/books/${imageField}`;
-    }
-
-    // Generate from acquisition naming convention
-    if (isbn && isbn !== 'NULL' && isbn !== '') {
-        const cleanAuthor = author.replace(/[^a-zA-Z0-9.-]/g, '_');
-        const cleanTitle = title.replace(/[^a-zA-Z0-9.-]/g, '_');
-        const cleanISBN = isbn.replace(/[^a-zA-Z0-9.-]/g, '_');
-        const fileName = `${cleanAuthor}_${cleanTitle}_${cleanISBN}`
-            .replace(/_+/g, '_')
-            .replace(/^_|_$/g, '')
-            .substring(0, 100) + '.jpg';
-        return `/assets/images/books/${fileName}`;
-    }
-
-    return null;
-}
-```
-
-**Convention:** Book covers follow the pattern `Author_Title_ISBN.jpg` with sanitized characters.
-
-##### 3. Image Error Handling
-
-Global image fallback system:
-
-```javascript
-initImageErrorHandling() {
-    document.querySelectorAll('img[data-fallback]').forEach(img => {
-        img.addEventListener('error', () => this.handleImageError(img));
-    });
-}
-
-handleImageError(img) {
-    const fallback = img.dataset.fallback;
-    if (fallback && !img.dataset.attempted) {
-        img.dataset.attempted = 'true';
-        img.src = fallback;
-    } else {
-        // Show placeholder with book icon
-        const placeholder = this.createImagePlaceholder(
-            img.alt || 'Image not available',
-            img.dataset.title || '',
-            img.dataset.author || ''
-        );
-        img.parentNode.replaceChild(placeholder, img);
-    }
-}
-```
-
-##### 4. Smooth Scrolling
-
-Anchor link smooth scrolling:
-
-```javascript
-initSmoothScrolling() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', (e) => {
-            e.preventDefault();
-            const target = document.querySelector(anchor.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
-}
-```
-
-##### 5. Utility Methods
-
-```javascript
-// XSS Protection
-escapeHtml(text) {
-    const map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-    };
-    return text.replace(/[&<>"']/g, m => map[m]);
-}
-
-// URL Helper
-static resolvePath(path, base = '') {
-    if (path.startsWith('http') || path.startsWith('//')) {
-        return path;
-    }
-    if (path.startsWith('/')) {
-        return path;
-    }
-    return base + path;
-}
-
-// Collection Data Loader (async)
-static async loadCollectionData() {
-    try {
-        const response = await fetch('/data/collections.json');
-        return await response.json();
-    } catch (error) {
-        console.warn('Could not load collection data:', error);
-        return [];
-    }
-}
-```
-
-##### 6. Global API
-
-```javascript
-// Expose utilities globally
-window.HSL = {
-    resolvePath: HudsonStreetLibrary.resolvePath,
-    loadCollectionData: HudsonStreetLibrary.loadCollectionData
-};
-```
-
-### Specialized Components
-
-There are none. `shared.js` is the only client-side JavaScript the site ships.
-
-Book addition and bulk import run from the command line, not the browser — see
-`npm run add` and the scripts in `scripts/`. The browser-based `BookWorkflow`
-and `BatchOperations` classes documented here previously belonged to a CMS
-front-end that was removed in August 2026; it called API endpoints that were
-never implemented and was excluded from the build for its whole life.
+Book addition and bulk import run from the command line, not the browser. See
+`npm run add` and the scripts in `scripts/`.
 
 ---
 
@@ -800,7 +578,7 @@ Global navigation with mobile menu support.
 - Responsive desktop/mobile navigation
 - Active page highlighting
 - Accessible with ARIA attributes
-- Works with shared.js mobile menu handler
+- Mobile menu handler is inline in the component
 
 **Usage:**
 ```njk
@@ -961,7 +739,7 @@ Ansel_Adams_The_Negative_9780821221860.jpg
 
 #### JavaScript
 
-- `shared.js`: Core functionality, ~10KB — the only script the site ships
+- No standalone script files; page scripts are inline in their templates
 - All ES6+ code, modern browsers only
 
 #### Images
@@ -1103,67 +881,9 @@ Add to `design-system.css`:
 
 ### Adding New JavaScript Features
 
-#### 1. Extend HudsonStreetLibrary Class
-
-```javascript
-// In shared.js
-initializeComponents() {
-    this.initMobileMenu();
-    this.initSmoothScrolling();
-    this.initNewFeature();  // Add here
-}
-
-initNewFeature() {
-    // Implementation
-    const elements = document.querySelectorAll('.new-feature');
-    elements.forEach(el => {
-        el.addEventListener('click', () => this.handleNewFeature(el));
-    });
-}
-
-handleNewFeature(element) {
-    // Handler logic
-}
-```
-
-#### 2. Create New Component Class
-
-```javascript
-// In new-component.js
-class NewComponent {
-    constructor(options = {}) {
-        this.options = options;
-        this.init();
-    }
-
-    init() {
-        this.setupEventListeners();
-    }
-
-    setupEventListeners() {
-        // Event handlers
-    }
-}
-
-// Auto-initialize
-let newComponent;
-document.addEventListener('DOMContentLoaded', function() {
-    newComponent = new NewComponent();
-});
-```
-
-#### 3. Add Global Utilities
-
-```javascript
-// In shared.js
-window.HSL = {
-    resolvePath: HudsonStreetLibrary.resolvePath,
-    loadCollectionData: HudsonStreetLibrary.loadCollectionData,
-    newUtility: function(param) {
-        // Utility logic
-    }
-};
-```
+Add a `<script>` block to the template that needs the behaviour. Attach listeners with
+`addEventListener` and `data-` attributes instead of inline `onclick` strings, and build
+DOM nodes with `textContent` when the value comes from the catalogue.
 
 ### Creating New Components
 
@@ -1384,7 +1104,7 @@ Include in template:
 4. **Code Reuse**
    - Extract repeated patterns into components
    - Use mixins for common template logic
-   - Create utility functions in shared.js
+   - Keep page scripts in the template that uses them
 
 ### Responsive Design
 
@@ -1574,7 +1294,7 @@ console.log('Menu:', menu);
 ```
 
 **Solutions:**
-- Ensure `shared.js` is loaded
+- Confirm the page includes `components/site-header.njk` (the handler is inline there)
 - Check `aria-controls` matches menu ID
 - Verify no JavaScript errors in console
 

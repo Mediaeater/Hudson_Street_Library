@@ -98,8 +98,7 @@ lib/                # Project-specific libraries
 └── csv-handler.js   # CSV parsing utility
 
 scripts/            # Utility scripts and automation
-├── covers/         # Cover report and attach (the one cover workflow)
-└── news-pipeline/  # Automated news generation system
+└── covers/         # Cover report and attach (the one cover workflow)
 .github/            # GitHub Actions workflows
 └── workflows/      # Automated build and deploy
 ```
@@ -171,15 +170,6 @@ python3 scripts/auto-crop-covers.py --input src/assets/images/books/<file>.jpg -
 The report reads each row's `image_url` and checks the file on disk. It writes nothing.
 `attach.js` refuses a row that already has a cover unless you pass `--overwrite`.
 
-#### News Pipeline
-```bash
-# Generate news for new book
-node scripts/news-pipeline/cli.js generate-single --title "Book Title" --author "Author"
-
-# Process CSV updates
-node scripts/news-pipeline/cli.js process-csv --file _data/catalog/art.csv
-```
-
 ## 🔧 Local Development
 
 ```bash
@@ -232,7 +222,6 @@ npm run clean
 
 ### Automated Systems
 - [Image System Documentation](docs/IMAGE-SYSTEM-DOCUMENTATION.md) - Complete image pipeline and optimization
-- [News Pipeline Documentation](docs/NEWS-PIPELINE-DOCUMENTATION.md) - Automated news generation system
 
 ### Deployment & Operations
 - [Deployment Guide](docs/DEPLOYMENT.md) - How deployment works

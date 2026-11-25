@@ -66,11 +66,6 @@
 - [Frontend Development](FRONTEND-DEVELOPMENT.md) - JS, CSS, templates
 - [Aggregate Views](AGGREGATE-VIEWS.md) - Clickable metadata
 - [Quick Start Search](QUICK-START-SEARCH.md) - Search features
-- [Path Structure](PATH-STRUCTURE.md) - URL routing
-
-### News & Content
-
-- [News Pipeline](NEWS-PIPELINE-DOCUMENTATION.md) - Automated news generation
 
 ### API & Integration
 

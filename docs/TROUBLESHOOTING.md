@@ -401,39 +401,9 @@ npm start
 
 #### 4. JavaScript Not Loading
 
-**Symptom:**
-- Interactive features not working
-- Console shows 404 for JS files
-- Scripts not executing
-
-**Cause:**
-- Incorrect script path
-- File not in passthrough copy
-- MIME type error
-- Script loading before DOM ready
-
-**Solution:**
-
-```html
-<!-- Check script path -->
-<!-- WRONG (absolute path from site root) -->
-<script src="/assets/js/shared.js"></script>
-
-<!-- CORRECT (relative to _site output) -->
-<script src="/assets/js/shared.js"></script>
-
-<!-- Check file exists -->
-ls -la _site/assets/js/shared.js
-
-<!-- Verify passthrough copy in .eleventy.js -->
-eleventyConfig.addPassthroughCopy("src/assets");
-
-<!-- Ensure script loads after DOM -->
-<script defer src="/assets/js/shared.js"></script>
-<!-- or -->
-<script src="/assets/js/shared.js"></script>
-<!-- Place before </body> tag -->
-```
+The site ships no standalone script files, so there is no script path to get wrong.
+Page scripts are inline in their templates. If a feature is dead, open the browser
+console for the error and read the `<script>` block in the template that renders the page.
 
 ---
 
@@ -847,36 +817,13 @@ Client-side JavaScript errors, console errors, and script loading issues.
 
 **Symptom:**
 - Features not working
-- Console shows 404 for JS file
 - "X is not defined" errors
 
-**Diagnosis:**
-
-```javascript
-// Open browser DevTools (F12)
-// Check Console tab for errors
-// Check Network tab for 404s
-
-// Common error:
-GET http://localhost:8080/assets/js/shared.js 404 (Not Found)
-```
-
-**Solution:**
+The site ships no standalone script files. Page scripts are inline in the template that
+renders the page, so a 404 for a `.js` file under `/assets/js/` means a stale reference in
+a template. Remove the `<script src>` tag, then rebuild:
 
 ```bash
-# Verify file exists in build
-ls -la _site/assets/js/shared.js
-
-# Check passthrough copy in .eleventy.js
-eleventyConfig.addPassthroughCopy("src/assets");
-
-# Verify path in HTML
-<script src="/assets/js/shared.js"></script>
-
-# Check file is in src directory
-ls -la src/assets/js/shared.js
-
-# Rebuild
 npm run clean && npm run build
 ```
 
@@ -914,9 +861,6 @@ menuButton.addEventListener('click', function() {
 document.addEventListener('DOMContentLoaded', function() {
   // All your code here
 });
-
-// Or use defer attribute
-<script defer src="/assets/js/shared.js"></script>
 
 // Verify IDs match
 <!-- In HTML -->
@@ -2023,7 +1967,7 @@ curl "https://openlibrary.org/api/books?bibkeys=ISBN:9783869304311&format=json"
 
 # Test local server
 curl -I http://localhost:8080
-curl http://localhost:8080/assets/js/shared.js
+curl -I http://localhost:8080/assets/data/book-urls.json
 
 # Check DNS
 dig hudsonstreetlibrary.com
