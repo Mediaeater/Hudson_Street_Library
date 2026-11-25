@@ -613,13 +613,17 @@ window.LIBRARY_WINGS = [{% for w in wings %}{"slug": {{ w.slug | dump | safe }},
 </script>
 
 <script>
+const PLACEHOLDER_COVER = '/assets/images/placeholder-book.svg';
+
 class BookSearch {
     constructor() {
         this.books = [];
+        this.bookUrls = {};
         this.filteredBooks = [];
         this.currentPage = 1;
         this.itemsPerPage = 20;
         this.searchTerm = '';
+        this.searchTimer = null;
         this.filters = {
             publisher: '',
             year: '',
@@ -640,30 +644,34 @@ class BookSearch {
         await this.loadBooks();
         this.setupEventListeners();
         this.populateFilters();
+        this.applyUrlParams();
         this.performSearch();
     }
 
     async loadBooks() {
-        console.log('Starting to load books...');
         return await this.loadBooksFromCSV();
     }
 
     async loadBooksFromCSV() {
         try {
-            console.log('Fetching CSV from /cms/data/catalog-index.csv...');
-            const response = await fetch('/cms/data/catalog-index.csv');
-            console.log('CSV response status:', response.status);
+            const [response, urlsRes] = await Promise.all([
+                fetch('/cms/data/catalog-index.csv'),
+                fetch('/assets/data/book-urls.json').catch(() => null)
+            ]);
 
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
 
             const csvText = await response.text();
-            console.log('CSV text length:', csvText.length);
-            console.log('First 200 chars:', csvText.substring(0, 200));
-
+            if (urlsRes && urlsRes.ok) {
+                try {
+                    this.bookUrls = await urlsRes.json();
+                } catch (_) {
+                    this.bookUrls = {};
+                }
+            }
             this.books = this.parseCSV(csvText);
-            console.log('Final books array length:', this.books.length);
 
         } catch (error) {
             console.error('Failed to load books data:', error);
@@ -696,7 +704,6 @@ class BookSearch {
                 }
             }
 
-            console.log(`Parsed ${books.length} books from CSV`);
             return books;
 
         } catch (error) {
@@ -757,9 +764,13 @@ class BookSearch {
         const nextPage = document.getElementById('next-page');
 
         searchInput.addEventListener('input', (e) => {
-            this.searchTerm = e.target.value.toLowerCase();
-            this.currentPage = 1;
-            this.performSearch();
+            const val = e.target.value.toLowerCase();
+            clearTimeout(this.searchTimer);
+            this.searchTimer = setTimeout(() => {
+                this.searchTerm = val;
+                this.currentPage = 1;
+                this.performSearch();
+            }, 120);
         });
 
         sortSelect.addEventListener('change', (e) => {
@@ -867,12 +878,25 @@ class BookSearch {
         // Wing landing pages link here with the wing preselected; ?collection=all
         // is the escape hatch to the unscoped view. Anything else falls back to
         // the default wing rather than filtering the page to nothing.
-        const requested = new URLSearchParams(window.location.search).get('collection');
+        const params = new URLSearchParams(window.location.search);
+        const requested = params.get('collection');
+        const requestedAuthor = params.get('author');
         const wing = requested === 'all' ? ''
             : (requested && slugs.includes(requested)) ? requested
+            : requestedAuthor ? ''
             : this.defaultWingSlug;
         select.value = wing;
         this.filters.wing = wing;
+    }
+
+    applyUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+        const author = (params.get('author') || '').trim();
+        if (author) {
+            const searchInput = document.getElementById('search-input');
+            searchInput.value = author;
+            this.searchTerm = author.toLowerCase();
+        }
     }
 
     // The registry's own default wing, if it has rows. Empty string (all wings)
@@ -933,6 +957,7 @@ class BookSearch {
                 const searchableText = [
                     book.title,
                     book.author_full_name,
+                    book.publisher,
                     book.tags
                 ].join(' ').toLowerCase();
 
@@ -1043,16 +1068,17 @@ class BookSearch {
 
     renderVisualCard(book) {
         const imageUrl = this.generateCoverImagePath(book);
-        const hasRealCover = imageUrl !== '/assets/images/placeholder-book.svg';
+        const hasRealCover = this.hasRealCover(book);
+        const bookUrl = this.generateBookPageUrl(book);
         const author = (book.author_full_name && book.author_full_name !== 'NULL') ? book.author_full_name : 'Unknown Author';
 
         return `
-            <div class="visual-card">
+            <a href="${this.escapeHtml(bookUrl)}" class="visual-card" style="text-decoration: none; color: inherit; display: block;">
                 <div class="visual-cover">
-                    <img src="${imageUrl}"
+                    <img src="${this.escapeHtml(imageUrl)}"
                          alt="${this.escapeHtml(book.title)}"
                          style="${hasRealCover ? '' : 'opacity: 0.3;'}"
-                         onerror="this.src='/assets/images/placeholder-book.svg'"
+                         onerror="this.onerror=null; this.src='${PLACEHOLDER_COVER}'; this.style.opacity='0.3';"
                          loading="lazy">
                 </div>
                 <div class="visual-title line-clamp-2">
@@ -1061,49 +1087,33 @@ class BookSearch {
                 <div class="visual-author line-clamp-1">
                     ${this.escapeHtml(author.length > 30 ? author.substring(0, 30) + '...' : author)}
                 </div>
-            </div>
+            </a>
         `;
     }
 
+    hasRealCover(book) {
+        const u = (book.image_url || '').trim();
+        return Boolean(u) && u !== 'NULL' && u !== 'null' && !/\/placeholder-book[^/]*\.svg$/.test(u);
+    }
+
     generateCoverImagePath(book) {
-        if (book.image_url &&
-            book.image_url !== 'NULL' &&
-            book.image_url !== '' &&
-            book.image_url !== null &&
-            book.image_url !== 'null') {
-            return book.image_url;
-        }
-
-        const authorLast = (book.author_last || 'Unknown').replace(/[^a-zA-Z0-9.-]/g, '_');
-        const title = (book.title || 'Untitled').replace(/[^a-zA-Z0-9.-]/g, '_');
-        const isbn = (book.isbn_asin || '').replace(/[^a-zA-Z0-9.-]/g, '_').replace(/[-\s]/g, '');
-
-        let filename;
-        if (isbn && isbn !== 'NULL' && isbn !== '' && isbn !== 'null') {
-            filename = `${authorLast}_${title}_${isbn}`;
-        } else {
-            filename = `${authorLast}_${title}_NULL`;
-        }
-
-        const sanitized = filename
-            .replace(/[^a-zA-Z0-9.-]/g, '_')
-            .replace(/_+/g, '_')
-            .replace(/^_|_$/g, '')
-            .substring(0, 100);
-
-        return `/assets/images/books/${sanitized}.jpg`;
+        return this.hasRealCover(book) ? book.image_url.trim() : PLACEHOLDER_COVER;
     }
 
     generateBookPageUrl(book) {
-        // Match Eleventy's slugify behavior (slugify npm package with strict: true)
+        const canonical = this.bookUrls[String(book.id)];
+        if (canonical) return canonical;
+
+        // Fallback matching Eleventy's slugify behavior (strict: true)
         const slugifyText = (text) => {
             return (text || '')
+                .normalize('NFKD')
+                .replace(/[\u0300-\u036f]/g, '')
                 .toLowerCase()
-                .replace(/&/g, 'and')                    // & → and
-                .replace(/[^\w\s-]/g, '')                // Remove special chars (keep word chars, spaces, hyphens)
-                .replace(/\s+/g, '-')                    // Spaces → hyphens
-                .replace(/-+/g, '-')                     // Multiple hyphens → single hyphen
-                .replace(/^-+|-+$/g, '');                // Trim leading/trailing hyphens
+                .replace(/&/g, 'and')
+                .replace(/['’]/g, '')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '');
         };
 
         const author = slugifyText(book.author_last || 'unknown');
@@ -1115,7 +1125,8 @@ class BookSearch {
 
     renderBookCard(book) {
         const imageUrl = this.generateCoverImagePath(book);
-        const hasRealCover = imageUrl !== '/assets/images/placeholder-book.svg';
+        const hasRealCover = this.hasRealCover(book);
+        const bookUrl = this.generateBookPageUrl(book);
 
         const year = (book.publication_year && book.publication_year !== 'NULL') ? book.publication_year : '';
         const pages = (book.page_count && book.page_count !== 'NULL') ? `${book.page_count} pages` : '';
@@ -1123,19 +1134,28 @@ class BookSearch {
         const publisher = (book.publisher && book.publisher !== 'NULL') ? book.publisher : '';
         const author = (book.author_full_name && book.author_full_name !== 'NULL') ? book.author_full_name : 'Unknown Author';
 
+        const metaParts = [
+            publisher ? `<span><strong>Publisher:</strong> ${this.escapeHtml(publisher)}</span>` : '',
+            year ? `<span><strong>Year:</strong> ${this.escapeHtml(year)}</span>` : '',
+            binding ? `<span><strong>Format:</strong> ${this.escapeHtml(binding)}</span>` : '',
+            pages ? `<span><strong>Pages:</strong> ${this.escapeHtml(pages)}</span>` : ''
+        ].filter(Boolean);
+
         return `
             <div class="book-card">
                 <div style="display: grid; grid-template-columns: 120px 1fr; gap: 1.5rem;">
                     <div>
-                        <img src="${imageUrl}"
-                             alt="${this.escapeHtml(book.title)}"
-                             style="width: 100%; height: 160px; object-fit: cover; border: 1px solid var(--color-border); ${hasRealCover ? '' : 'opacity: 0.3;'}"
-                             onerror="this.src='/assets/images/placeholder-book.svg'"
-                             loading="lazy">
+                        <a href="${this.escapeHtml(bookUrl)}">
+                            <img src="${this.escapeHtml(imageUrl)}"
+                                 alt="${this.escapeHtml(book.title)}"
+                                 style="width: 100%; height: 160px; object-fit: cover; border: 1px solid var(--color-border); ${hasRealCover ? '' : 'opacity: 0.3;'}"
+                                 onerror="this.onerror=null; this.src='${PLACEHOLDER_COVER}'; this.style.opacity='0.3';"
+                                 loading="lazy">
+                        </a>
                     </div>
                     <div>
                         <h3 class="book-title">
-                            <a href="${this.generateBookPageUrl(book)}">
+                            <a href="${this.escapeHtml(bookUrl)}">
                                 ${this.escapeHtml(book.title)}
                             </a>
                         </h3>
@@ -1143,10 +1163,7 @@ class BookSearch {
                             ${this.escapeHtml(author)}
                         </p>
                         <div class="book-meta">
-                            ${publisher ? `<span><strong>Publisher:</strong> ${this.escapeHtml(publisher)}</span> · ` : ''}
-                            ${year ? `<span><strong>Year:</strong> ${year}</span> · ` : ''}
-                            ${binding ? `<span><strong>Format:</strong> ${this.escapeHtml(binding)}</span> · ` : ''}
-                            ${pages ? `<span><strong>Pages:</strong> ${pages}</span>` : ''}
+                            ${metaParts.join(' · ')}
                         </div>
                         ${(() => {
                             const plain = this.stripHtml(book.description);
@@ -1219,18 +1236,20 @@ class BookSearch {
     }
 
     escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
+        return String(text ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
     }
 
     // Descriptions in the CSV contain editorial HTML (<p>, <em>, etc.);
-    // strip tags and collapse whitespace before rendering as body copy.
+    // strip tags via DOMParser (inert: no script execution or image fetches).
     stripHtml(text) {
         if (!text) return '';
-        const div = document.createElement('div');
-        div.innerHTML = text;
-        return (div.textContent || div.innerText || '').replace(/\s+/g, ' ').trim();
+        const doc = new DOMParser().parseFromString(String(text), 'text/html');
+        return (doc.body.textContent || '').replace(/\s+/g, ' ').trim();
     }
 
     // accession_no in the CSV is inconsistently formatted: some entries are
@@ -1280,7 +1299,7 @@ class BookSearch {
             <div class="error-state">
                 <i class="fas fa-exclamation-triangle" style="color: var(--color-slate);"></i>
                 <h3 class="state-title">Error</h3>
-                <p class="state-text">${message}</p>
+                <p class="state-text">${this.escapeHtml(message)}</p>
             </div>
         `;
     }
@@ -1292,8 +1311,6 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 {% include "components/site-footer.njk" %}
-
-<script src="/assets/js/shared.js"></script>
 
 </body>
 </html>

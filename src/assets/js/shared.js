@@ -58,8 +58,10 @@ class HudsonStreetLibrary {
     initSmoothScrolling() {
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', (e) => {
+                const href = anchor.getAttribute('href');
+                if (!href || href === '#') return;
                 e.preventDefault();
-                const target = document.querySelector(anchor.getAttribute('href'));
+                const target = document.querySelector(href);
                 if (target) {
                     target.scrollIntoView({
                         behavior: 'smooth',
@@ -176,7 +178,7 @@ class HudsonStreetLibrary {
             '"': '&quot;',
             "'": '&#039;'
         };
-        return text.replace(/[&<>"']/g, m => map[m]);
+        return String(text ?? '').replace(/[&<>"']/g, m => map[m]);
     }
 
     // URL Helper for consistent path resolution
@@ -225,15 +227,20 @@ function showToast(message, type = 'success') {
                  type === 'warning' ? 'exclamation' : 'info';
 
     toast.className = `toast px-6 py-4 rounded-lg shadow-lg text-white max-w-sm ${bgColor} transform transition-all duration-300 ease-out`;
-    toast.innerHTML = `
-        <div class="flex items-center">
-            <i class="fas fa-${icon} mr-3"></i>
-            <span>${message}</span>
-            <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white hover:text-gray-200">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-    `;
+    const row = document.createElement('div');
+    row.className = 'flex items-center';
+    const iconEl = document.createElement('i');
+    iconEl.className = `fas fa-${icon} mr-3`;
+    const msgEl = document.createElement('span');
+    msgEl.textContent = String(message ?? '');
+    const closeBtn = document.createElement('button');
+    closeBtn.type = 'button';
+    closeBtn.className = 'ml-4 text-white hover:text-gray-200';
+    closeBtn.setAttribute('aria-label', 'Dismiss notification');
+    closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+    closeBtn.addEventListener('click', () => toast.remove());
+    row.append(iconEl, msgEl, closeBtn);
+    toast.appendChild(row);
     container.appendChild(toast);
 
     // Auto-remove after 5 seconds

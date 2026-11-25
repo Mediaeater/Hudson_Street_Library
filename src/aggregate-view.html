@@ -560,14 +560,14 @@ permalink: /aggregate-view/index.html
         <div class="search-controls">
             <div class="control-row primary">
                 <div>
-                    <label class="control-label">Search</label>
+                    <label for="search-input" class="control-label">Search</label>
                     <input type="text"
                            id="search-input"
                            placeholder="Search books by title, author, or keywords..."
                            class="search-input">
                 </div>
                 <div>
-                    <label class="control-label">Sort By</label>
+                    <label for="sort-select" class="control-label">Sort By</label>
                     <select id="sort-select" class="search-select">
                         <option value="title">Title</option>
                         <option value="author">Author</option>
@@ -576,7 +576,7 @@ permalink: /aggregate-view/index.html
                     </select>
                 </div>
                 <div>
-                    <label class="control-label">Per Page</label>
+                    <label for="items-per-page" class="control-label">Per Page</label>
                     <select id="items-per-page" class="search-select">
                         <option value="12">12</option>
                         <option value="24" selected>24</option>
@@ -588,25 +588,25 @@ permalink: /aggregate-view/index.html
 
             <div class="control-row filters">
                 <div>
-                    <label class="control-label">Publisher</label>
+                    <label for="publisher-filter" class="control-label">Publisher</label>
                     <select id="publisher-filter" class="search-select">
                         <option value="">All Publishers</option>
                     </select>
                 </div>
                 <div>
-                    <label class="control-label">Year</label>
+                    <label for="year-filter" class="control-label">Year</label>
                     <select id="year-filter" class="search-select">
                         <option value="">All Years</option>
                     </select>
                 </div>
                 <div>
-                    <label class="control-label">Collection</label>
+                    <label for="collection-filter" class="control-label">Collection</label>
                     <select id="collection-filter" class="search-select">
                         <option value="">All Collections</option>
                     </select>
                 </div>
                 <div>
-                    <label class="control-label">Cover Status</label>
+                    <label for="cover-filter" class="control-label">Cover Status</label>
                     <select id="cover-filter" class="search-select">
                         <option value="">All Books</option>
                         <option value="with-covers">With Covers</option>
@@ -614,7 +614,7 @@ permalink: /aggregate-view/index.html
                     </select>
                 </div>
                 <div>
-                    <label class="control-label">Tag</label>
+                    <label for="tag-filter" class="control-label">Tag</label>
                     <select id="tag-filter" class="search-select">
                         <option value="">All Tags</option>
                     </select>
@@ -626,7 +626,7 @@ permalink: /aggregate-view/index.html
                     <input type="checkbox" id="visual-browse">
                     <span>Visual Browse Mode</span>
                 </label>
-                <button onclick="bookSearch.clearAllFilters()" class="clear-all-btn">
+                <button type="button" id="clear-all-btn" class="clear-all-btn">
                     <i class="fas fa-times"></i> Clear All Filters
                 </button>
             </div>
@@ -644,13 +644,13 @@ permalink: /aggregate-view/index.html
 
         <!-- Pagination -->
         <div id="pagination" class="pagination">
-            <button id="prev-page" disabled>
+            <button type="button" id="prev-page" aria-label="Previous page" disabled>
                 <i class="fas fa-chevron-left"></i>
             </button>
             <div id="page-numbers">
                 <!-- Page numbers will be generated here -->
             </div>
-            <button id="next-page">
+            <button type="button" id="next-page" aria-label="Next page">
                 <i class="fas fa-chevron-right"></i>
             </button>
         </div>
@@ -660,12 +660,16 @@ permalink: /aggregate-view/index.html
 {% include "components/site-footer.njk" %}
 
 <script>
+const PLACEHOLDER_COVER = '/assets/images/placeholder-book.svg';
+
 class BookSearch {
     constructor() {
         this.books = [];
+        this.bookUrls = {};
         this.filteredBooks = [];
         this.searchTerm = '';
-        this.filters = { publisher: '', year: '', collection: '', cover: '', tag: '' };
+        this.searchTimer = null;
+        this.filters = { author: '', publisher: '', year: '', collection: '', cover: '', tag: '' };
         this.activeFilter = null;
         this.sortBy = 'title';
         this.currentPage = 1;
@@ -676,13 +680,25 @@ class BookSearch {
 
     async init() {
         try {
-            const response = await fetch('/cms/data/catalog-index.csv');
-            const csvText = await response.text();
+            const [csvRes, urlsRes] = await Promise.all([
+                fetch('/cms/data/catalog-index.csv'),
+                fetch('/assets/data/book-urls.json').catch(() => null)
+            ]);
+            if (!csvRes.ok) {
+                throw new Error(`HTTP ${csvRes.status}: ${csvRes.statusText}`);
+            }
+            const csvText = await csvRes.text();
+            if (urlsRes && urlsRes.ok) {
+                try {
+                    this.bookUrls = await urlsRes.json();
+                } catch (_) {
+                    this.bookUrls = {};
+                }
+            }
             this.books = this.parseCSV(csvText);
-            console.log(`Loaded ${this.books.length} books`);
 
-            this.checkUrlParams();
             this.populateFilters();
+            this.checkUrlParams();
             this.setupEventListeners();
             this.performSearch();
         } catch (error) {
@@ -698,12 +714,22 @@ class BookSearch {
         const filterValue = params.get('value');
 
         if (filterType && filterValue) {
-            this.activeFilter = { type: filterType, value: decodeURIComponent(filterValue) };
+            this.activeFilter = { type: filterType, value: filterValue };
 
-            if (filterType === 'publisher') this.filters.publisher = filterValue;
-            else if (filterType === 'year') this.filters.year = filterValue;
-            else if (filterType === 'tag') this.filters.tag = filterValue;
-            else if (filterType === 'collection') this.filters.collection = filterValue;
+            if (filterType === 'author') this.filters.author = filterValue;
+            else if (filterType === 'publisher') {
+                this.filters.publisher = filterValue;
+                document.getElementById('publisher-filter').value = filterValue;
+            } else if (filterType === 'year') {
+                this.filters.year = filterValue;
+                document.getElementById('year-filter').value = filterValue;
+            } else if (filterType === 'tag') {
+                this.filters.tag = filterValue;
+                document.getElementById('tag-filter').value = filterValue;
+            } else if (filterType === 'collection') {
+                this.filters.collection = filterValue;
+                document.getElementById('collection-filter').value = filterValue;
+            }
 
             this.showActiveFilter();
         }
@@ -716,19 +742,29 @@ class BookSearch {
         const filterDesc = document.getElementById('filter-description');
 
         filterDiv.classList.add('visible');
+        filterDesc.textContent = '';
 
-        let description = '';
-        if (this.activeFilter.type === 'publisher') {
-            description = `Viewing all books by <strong>${this.activeFilter.value}</strong>`;
+        const appendLabeled = (prefix, value, suffix = '') => {
+            filterDesc.appendChild(document.createTextNode(prefix));
+            const strong = document.createElement('strong');
+            strong.textContent = value;
+            filterDesc.appendChild(strong);
+            if (suffix) filterDesc.appendChild(document.createTextNode(suffix));
+        };
+
+        if (this.activeFilter.type === 'author') {
+            appendLabeled('Viewing all books by ', this.activeFilter.value);
+        } else if (this.activeFilter.type === 'publisher') {
+            appendLabeled('Viewing all books published by ', this.activeFilter.value);
         } else if (this.activeFilter.type === 'year') {
-            description = `Viewing all books from <strong>${this.activeFilter.value}</strong>`;
+            appendLabeled('Viewing all books from ', this.activeFilter.value);
         } else if (this.activeFilter.type === 'tag') {
-            description = `Viewing all books tagged <strong>"${this.activeFilter.value}"</strong>`;
+            appendLabeled('Viewing all books tagged ', `"${this.activeFilter.value}"`);
         } else if (this.activeFilter.type === 'collection') {
-            description = `Viewing <strong>${this.activeFilter.value}</strong> collection`;
+            appendLabeled('Viewing ', this.activeFilter.value, ' collection');
+        } else {
+            appendLabeled('Filtered by ', this.activeFilter.value);
         }
-
-        filterDesc.innerHTML = description;
     }
 
     clearActiveFilter() {
@@ -739,77 +775,95 @@ class BookSearch {
     }
 
     navigateToAggregate(filterType, filterValue) {
-        const url = `${window.location.pathname}?filter=${filterType}&value=${encodeURIComponent(filterValue)}`;
+        const url = `${window.location.pathname}?filter=${encodeURIComponent(filterType)}&value=${encodeURIComponent(filterValue)}`;
         window.location.href = url;
     }
 
     parseCSV(csvText) {
-        const lines = csvText.split('\n').filter(line => line.trim());
-        if (lines.length === 0) return [];
+        const rows = this.parseCSVStream(csvText);
+        if (rows.length < 2) return [];
 
-        const headers = this.parseCSVLine(lines[0]);
+        const headers = rows[0].map(h => h.trim());
         const books = [];
 
-        for (let i = 1; i < lines.length; i++) {
-            const values = this.parseCSVLine(lines[i]);
-            if (values.length === headers.length) {
-                const book = {};
-                headers.forEach((header, index) => {
-                    book[header] = values[index] || '';
-                });
-                books.push(book);
-            }
+        for (let i = 1; i < rows.length; i++) {
+            const values = rows[i];
+            if (values.length !== headers.length) continue;
+            const book = {};
+            headers.forEach((header, index) => {
+                book[header] = (values[index] || '').trim();
+            });
+            books.push(book);
         }
 
         return books;
     }
 
-    parseCSVLine(line) {
-        const values = [];
+    parseCSVStream(csvText) {
+        const rows = [];
+        let row = [];
         let current = '';
         let inQuotes = false;
 
-        for (let i = 0; i < line.length; i++) {
-            const char = line[i];
-            const nextChar = line[i + 1];
+        for (let i = 0; i < csvText.length; i++) {
+            const char = csvText[i];
+            const nextChar = csvText[i + 1];
 
-            if (char === '"' && inQuotes && nextChar === '"') {
-                current += '"';
-                i++;
-            } else if (char === '"') {
-                inQuotes = !inQuotes;
+            if (char === '"') {
+                if (inQuotes && nextChar === '"') {
+                    current += '"';
+                    i++;
+                } else {
+                    inQuotes = !inQuotes;
+                }
             } else if (char === ',' && !inQuotes) {
-                values.push(current.trim());
+                row.push(current);
                 current = '';
+            } else if ((char === '\n' || char === '\r') && !inQuotes) {
+                if (char === '\r' && nextChar === '\n') i++;
+                row.push(current);
+                current = '';
+                if (row.length > 1 || row[0] !== '') rows.push(row);
+                row = [];
             } else {
                 current += char;
             }
         }
 
-        values.push(current.trim());
-        return values;
+        if (current !== '' || row.length > 0) {
+            row.push(current);
+            if (row.length > 1 || row[0] !== '') rows.push(row);
+        }
+
+        return rows;
     }
 
     escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
+        return String(text ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
     }
 
     // Descriptions can carry HTML (<p class="mt-6">, <em>) — reduce to plain
-    // text before truncating for card excerpts, or the tags print literally.
+    // text via DOMParser (inert: no script execution or image fetches).
     stripHtml(text) {
         if (!text) return '';
-        const div = document.createElement('div');
-        div.innerHTML = text;
-        return (div.textContent || div.innerText || '').replace(/\s+/g, ' ').trim();
+        const doc = new DOMParser().parseFromString(String(text), 'text/html');
+        return (doc.body.textContent || '').replace(/\s+/g, ' ').trim();
     }
 
     setupEventListeners() {
         document.getElementById('search-input').addEventListener('input', (e) => {
-            this.searchTerm = e.target.value.toLowerCase();
-            this.currentPage = 1;
-            this.performSearch();
+            const val = e.target.value.toLowerCase();
+            clearTimeout(this.searchTimer);
+            this.searchTimer = setTimeout(() => {
+                this.searchTerm = val;
+                this.currentPage = 1;
+                this.performSearch();
+            }, 120);
         });
 
         document.getElementById('sort-select').addEventListener('change', (e) => {
@@ -832,8 +886,19 @@ class BookSearch {
             this.performSearch();
         });
 
+        document.getElementById('clear-all-btn').addEventListener('click', () => {
+            this.clearAllFilters();
+        });
+
+        document.getElementById('results-container').addEventListener('click', (e) => {
+            const trigger = e.target.closest('[data-filter-type]');
+            if (!trigger) return;
+            e.preventDefault();
+            this.navigateToAggregate(trigger.dataset.filterType, trigger.dataset.filterValue);
+        });
+
         document.getElementById('items-per-page').addEventListener('change', (e) => {
-            this.itemsPerPage = parseInt(e.target.value);
+            this.itemsPerPage = parseInt(e.target.value, 10);
             this.currentPage = 1;
             this.performSearch();
         });
@@ -907,7 +972,7 @@ class BookSearch {
         document.getElementById('visual-browse').checked = false;
 
         this.searchTerm = '';
-        this.filters = { publisher: '', year: '', collection: '', cover: '', tag: '' };
+        this.filters = { author: '', publisher: '', year: '', collection: '', cover: '', tag: '' };
         this.visualBrowse = false;
         this.sortBy = 'title';
         this.currentPage = 1;
@@ -928,6 +993,12 @@ class BookSearch {
                 if (!searchableText.includes(this.searchTerm)) return false;
             }
 
+            if (this.filters.author) {
+                const want = this.filters.author.trim().toLowerCase();
+                const full = (book.author_full_name || '').trim().toLowerCase();
+                const last = (book.author_last || '').trim().toLowerCase();
+                if (full !== want && last !== want) return false;
+            }
             if (this.filters.publisher && book.publisher !== this.filters.publisher) return false;
             if (this.filters.year && book.publication_year !== this.filters.year) return false;
             if (this.filters.collection && book.collection_grouping !== this.filters.collection) return false;
@@ -942,7 +1013,7 @@ class BookSearch {
             }
 
             if (this.filters.cover) {
-                const hasCover = this.generateCoverImagePath(book) !== '/assets/images/placeholder-book.svg';
+                const hasCover = this.hasRealCover(book);
                 if (this.filters.cover === 'with-covers' && !hasCover) return false;
                 if (this.filters.cover === 'without-covers' && hasCover) return false;
             }
@@ -968,8 +1039,8 @@ class BookSearch {
                     bVal = b.author_full_name || '';
                     break;
                 case 'year':
-                    aVal = parseInt(a.publication_year) || 0;
-                    bVal = parseInt(b.publication_year) || 0;
+                    aVal = parseInt(a.publication_year, 10) || 0;
+                    bVal = parseInt(b.publication_year, 10) || 0;
                     return bVal - aVal;
                 case 'publisher':
                     aVal = a.publisher || '';
@@ -1010,28 +1081,35 @@ class BookSearch {
 
     renderVisualCard(book) {
         const imageUrl = this.generateCoverImagePath(book);
+        const hasRealCover = this.hasRealCover(book);
+        const bookUrl = this.generateBookPageUrl(book);
         const author = (book.author_full_name && book.author_full_name !== 'NULL') ? book.author_full_name : 'Unknown Author';
         const year = (book.publication_year && book.publication_year !== 'NULL') ? book.publication_year : '';
 
         return `
             <div class="visual-card">
-                <div class="visual-card-image">
-                    <img src="${imageUrl}"
-                         alt="${this.escapeHtml(book.title)}"
-                         onerror="this.src='/assets/images/placeholder-book.svg'"
-                         loading="lazy">
-                </div>
-                <h4 class="line-clamp-2">${this.escapeHtml(book.title)}</h4>
-                <p class="line-clamp-1 clickable-meta"
-                   onclick="bookSearch.navigateToAggregate('publisher', '${this.escapeHtml(author).replace(/'/g, "\\'")}')">${this.escapeHtml(author)}</p>
-                ${year ? `<p class="clickable-meta"
-                          onclick="bookSearch.navigateToAggregate('year', '${year}')">${year}</p>` : ''}
+                <a href="${this.escapeHtml(bookUrl)}" style="text-decoration: none; color: inherit; display: block;">
+                    <div class="visual-card-image">
+                        <img src="${this.escapeHtml(imageUrl)}"
+                             alt="${this.escapeHtml(book.title)}"
+                             style="${hasRealCover ? '' : 'opacity: 0.3;'}"
+                             onerror="this.onerror=null; this.src='${PLACEHOLDER_COVER}'; this.style.opacity='0.3';"
+                             loading="lazy">
+                    </div>
+                    <h4 class="line-clamp-2">${this.escapeHtml(book.title)}</h4>
+                </a>
+                <button type="button" class="line-clamp-1 clickable-meta" style="background: none; border: 0; padding: 0; font: inherit; text-align: left;"
+                   data-filter-type="author" data-filter-value="${this.escapeHtml(author)}">${this.escapeHtml(author)}</button>
+                ${year ? `<button type="button" class="clickable-meta" style="background: none; border: 0; padding: 0; font: inherit; text-align: left;"
+                          data-filter-type="year" data-filter-value="${this.escapeHtml(year)}">${this.escapeHtml(year)}</button>` : ''}
             </div>
         `;
     }
 
     renderBookCard(book) {
         const imageUrl = this.generateCoverImagePath(book);
+        const hasRealCover = this.hasRealCover(book);
+        const bookUrl = this.generateBookPageUrl(book);
         const year = (book.publication_year && book.publication_year !== 'NULL') ? book.publication_year : '';
         const pages = (book.page_count && book.page_count !== 'NULL') ? `${book.page_count} pages` : '';
         const binding = (book.binding && book.binding !== 'NULL') ? book.binding : '';
@@ -1050,24 +1128,27 @@ class BookSearch {
             <div class="book-card">
                 <div class="book-card-inner">
                     <div>
-                        <img src="${imageUrl}"
-                             alt="${this.escapeHtml(book.title)}"
-                             class="book-cover"
-                             onerror="this.src='/assets/images/placeholder-book.svg'"
-                             loading="lazy">
+                        <a href="${this.escapeHtml(bookUrl)}">
+                            <img src="${this.escapeHtml(imageUrl)}"
+                                 alt="${this.escapeHtml(book.title)}"
+                                 class="book-cover"
+                                 style="${hasRealCover ? '' : 'opacity: 0.3;'}"
+                                 onerror="this.onerror=null; this.src='${PLACEHOLDER_COVER}'; this.style.opacity='0.3';"
+                                 loading="lazy">
+                        </a>
                     </div>
                     <div class="book-details">
                         <h3>
-                            <a href="${this.generateBookPageUrl(book)}">${this.escapeHtml(book.title)}</a>
+                            <a href="${this.escapeHtml(bookUrl)}">${this.escapeHtml(book.title)}</a>
                         </h3>
                         <p class="book-author">
-                            by <span class="clickable-meta" onclick="bookSearch.navigateToAggregate('publisher', '${this.escapeHtml(author).replace(/'/g, "\\'")}')">${this.escapeHtml(author)}</span>
+                            by <button type="button" class="clickable-meta" style="background: none; border: 0; padding: 0; font: inherit;" data-filter-type="author" data-filter-value="${this.escapeHtml(author)}">${this.escapeHtml(author)}</button>
                         </p>
                         <div class="book-meta">
-                            ${publisher ? `<span><strong>Publisher:</strong> <span class="clickable-meta" onclick="bookSearch.navigateToAggregate('publisher', '${this.escapeHtml(publisher).replace(/'/g, "\\'")}')">${this.escapeHtml(publisher)}</span></span>` : ''}
-                            ${year ? `<span><strong>Year:</strong> <span class="clickable-meta" onclick="bookSearch.navigateToAggregate('year', '${year}')">${year}</span></span>` : ''}
+                            ${publisher ? `<span><strong>Publisher:</strong> <button type="button" class="clickable-meta" style="background: none; border: 0; padding: 0; font: inherit;" data-filter-type="publisher" data-filter-value="${this.escapeHtml(publisher)}">${this.escapeHtml(publisher)}</button></span>` : ''}
+                            ${year ? `<span><strong>Year:</strong> <button type="button" class="clickable-meta" style="background: none; border: 0; padding: 0; font: inherit;" data-filter-type="year" data-filter-value="${this.escapeHtml(year)}">${this.escapeHtml(year)}</button></span>` : ''}
                             ${binding ? `<span><strong>Format:</strong> ${this.escapeHtml(binding)}</span>` : ''}
-                            ${pages ? `<span><strong>Pages:</strong> ${pages}</span>` : ''}
+                            ${pages ? `<span><strong>Pages:</strong> ${this.escapeHtml(pages)}</span>` : ''}
                         </div>
                         ${(() => {
                             const plain = this.stripHtml(book.description);
@@ -1079,19 +1160,19 @@ class BookSearch {
                         ${tags.length > 0 ? `
                             <div class="tag-pills">
                                 ${tags.map(tag => `
-                                    <span class="tag-pill"
-                                          onclick="bookSearch.navigateToAggregate('tag', '${this.escapeHtml(tag).replace(/'/g, "\\'")}')">
+                                    <button type="button" class="tag-pill"
+                                          data-filter-type="tag" data-filter-value="${this.escapeHtml(tag)}">
                                         ${this.escapeHtml(tag)}
-                                    </span>
+                                    </button>
                                 `).join('')}
                             </div>
                         ` : ''}
 
                         ${book.collection_grouping && book.collection_grouping !== 'NULL' ? `
-                            <span class="collection-badge"
-                                  onclick="bookSearch.navigateToAggregate('collection', '${this.escapeHtml(book.collection_grouping).replace(/'/g, "\\'")}')">
+                            <button type="button" class="collection-badge"
+                                  data-filter-type="collection" data-filter-value="${this.escapeHtml(book.collection_grouping)}">
                                 ${this.escapeHtml(book.collection_grouping)}
-                            </span>
+                            </button>
                         ` : ''}
                     </div>
                 </div>
@@ -1099,35 +1180,30 @@ class BookSearch {
         `;
     }
 
+    hasRealCover(book) {
+        const u = (book.image_url || '').trim();
+        return Boolean(u) && u !== 'NULL' && u !== 'null' && !/\/placeholder-book[^/]*\.svg$/.test(u);
+    }
+
     generateCoverImagePath(book) {
-        if (book.image_url && book.image_url !== 'NULL' && book.image_url !== '' && book.image_url !== null && book.image_url !== 'null') {
-            return book.image_url;
-        }
-
-        const author = (book.author_last || 'Unknown').replace(/[^a-zA-Z0-9.-]/g, '_');
-        const title = (book.title || 'Untitled').replace(/[^a-zA-Z0-9.-]/g, '_');
-        const isbn = (book.isbn_asin || '').replace(/[^a-zA-Z0-9.-]/g, '_');
-
-        if (isbn && isbn !== 'NULL' && isbn !== '') {
-            const coverFileName = `${author}_${title}_${isbn}`.replace(/_+/g, '_').replace(/^_|_$/g, '').substring(0, 150) + '.jpg';
-            return `/assets/images/books/${coverFileName}`;
-        } else {
-            const coverFileName = `${author}_${title}_NULL`.replace(/_+/g, '_').replace(/^_|_$/g, '').substring(0, 150) + '.jpg';
-            return `/assets/images/books/${coverFileName}`;
-        }
+        return this.hasRealCover(book) ? book.image_url.trim() : PLACEHOLDER_COVER;
     }
 
     generateBookPageUrl(book) {
-        const author = (book.author_last || 'unknown')
+        const canonical = this.bookUrls[String(book.id)];
+        if (canonical) return canonical;
+
+        const slugifyText = (text) => (text || '')
+            .normalize('NFKD')
+            .replace(/[\u0300-\u036f]/g, '')
             .toLowerCase()
+            .replace(/&/g, 'and')
+            .replace(/['’]/g, '')
             .replace(/[^a-z0-9]+/g, '-')
             .replace(/^-+|-+$/g, '');
 
-        const title = (book.title || 'untitled')
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/^-+|-+$/g, '');
-
+        const author = slugifyText(book.author_last || 'unknown');
+        const title = slugifyText(book.title || 'untitled');
         const id = book.id || '';
 
         return `/books/${author}_${title}_${id}/`;
