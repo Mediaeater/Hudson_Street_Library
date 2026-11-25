@@ -171,8 +171,16 @@ function checkStructure(file, canonicalHeader) {
 }
 
 function fatal(result, file) {
-    const err = result.errors.find(e => e.type === 'fatal');
-    if (err) throw new CatalogError(`cannot read ${rel(file)}: ${err.message}`);
+    const err = result.errors.find(e =>
+        e.type === 'fatal' || e.type === 'error' || e.type === 'recovery' || e.type === 'skipped'
+    );
+    if (err) {
+        const where = err.row ? ` row ${err.row}` : '';
+        throw new CatalogError(`cannot read ${rel(file)}${where}: ${err.message}`);
+    }
+    if (result.stats && result.stats.invalidRows > 0) {
+        throw new CatalogError(`cannot read ${rel(file)}: ${result.stats.invalidRows} invalid row(s)`);
+    }
 }
 
 /**
@@ -292,8 +300,11 @@ function wingFile(wing, dataDir = DATA_DIR) {
  * @param {string} [dataDir]
  */
 function wingForId(id, dataDir = DATA_DIR) {
-    const n = Number(id);
-    if (!Number.isInteger(n)) return null;
+    if (typeof id === 'boolean' || id === null || id === undefined) return null;
+    const raw = String(id).trim();
+    if (!/^\d+$/.test(raw)) return null;
+    const n = Number(raw);
+    if (!Number.isSafeInteger(n)) return null;
     const wings = loadWings(dataDir);
     return wings.find(w => (w.allowLegacyIds || []).map(Number).includes(n))
         || wings.find(w => n >= w.idBlock[0] && n <= w.idBlock[1])
@@ -337,7 +348,12 @@ function fileForIdentifier(identifier, options = {}) {
     const byId = wingForId(identifier, dataDir);
     if (byId) return { slug: byId.slug, file: wingFile(byId, dataDir) };
     const { data } = loadCatalogSync({ dataDir });
-    const row = data.find(r => r.isbn_asin === identifier || r.id === String(identifier));
+    const normIsbn = s => String(s || '').toUpperCase().replace(/[^0-9A-Z]/g, '');
+    const wantIsbn = normIsbn(identifier);
+    const wantId = String(identifier);
+    const row = data.find(r =>
+        (wantIsbn && normIsbn(r.isbn_asin) === wantIsbn) || r.id === wantId
+    );
     if (!row) return null;
     const wing = resolveWing(row.collection, dataDir);
     return { slug: wing.slug, file: wingFile(wing, dataDir) };
@@ -425,7 +441,7 @@ function writeMergedCsv(outFile, options = {}) {
  * @param {{dataDir?: string, includeUnpublished?: boolean}} [options]
  * @returns {string}
  */
-function renderBooksJson(options = {}) {
+function buildBooksJsonRows(options = {}) {
     const dataDir = options.dataDir || DATA_DIR;
     const { data, wings, columns } = loadCatalogSync(options);
     const published = new Set(
@@ -434,13 +450,16 @@ function renderBooksJson(options = {}) {
     const keys = [...columns, 'collection'];
     // Cover files sit under src/assets; the data dir is src/_data.
     const srcDir = options.srcDir || path.dirname(dataDir);
-    const rows = data
+    return data
         .filter(b => published.has(b.collection))
         .map(b => ({
             ...Object.fromEntries(keys.map(k => [k, b[k] == null ? '' : String(b[k])])),
             cover_url: existingCoverPath(b, { srcDir }),
         }));
-    return JSON.stringify(rows, null, 2) + '\n';
+}
+
+function renderBooksJson(options = {}) {
+    return JSON.stringify(buildBooksJsonRows(options), null, 2) + '\n';
 }
 
 /**
@@ -450,10 +469,11 @@ function renderBooksJson(options = {}) {
  * @returns {{file: string, bytes: number, rows: number}}
  */
 function writeBooksJson(outFile, options = {}) {
-    const json = renderBooksJson(options);
+    const rows = buildBooksJsonRows(options);
+    const json = JSON.stringify(rows, null, 2) + '\n';
     fs.mkdirSync(path.dirname(outFile), { recursive: true });
     fs.writeFileSync(outFile, json);
-    return { file: outFile, bytes: Buffer.byteLength(json), rows: JSON.parse(json).length };
+    return { file: outFile, bytes: Buffer.byteLength(json), rows: rows.length };
 }
 
 /**
@@ -480,8 +500,11 @@ const INDEX_DESCRIPTION_CHARS = 400;
 function indexDescription(html) {
     if (!html || html === 'NULL') return '';
     const plain = String(html).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-    if (plain.length <= INDEX_DESCRIPTION_CHARS) return plain;
-    return plain.slice(0, INDEX_DESCRIPTION_CHARS).replace(/&[^;\s]{0,10}$/, '');
+    const cut = plain.length <= INDEX_DESCRIPTION_CHARS
+        ? plain
+        : plain.slice(0, INDEX_DESCRIPTION_CHARS).replace(/&[^;\s]{0,10}$/, '').trimEnd();
+    // Stripping a leading <p> tag can expose a spreadsheet formula prefix.
+    return CSVHandler.sanitizeCSVField(cut);
 }
 
 /**

@@ -30,14 +30,14 @@ function validateSchema(value, schema, at = '$') {
 
     if (isType(value, 'object') && (schema.properties || schema.required || schema.additionalProperties === false)) {
         for (const key of schema.required || []) {
-            if (!(key in value)) fail(`missing required property "${key}"`);
+            if (!Object.hasOwn(value, key)) fail(`missing required property "${key}"`);
         }
         for (const [key, sub] of Object.entries(schema.properties || {})) {
-            if (key in value) problems.push(...validateSchema(value[key], sub, `${at}.${key}`));
+            if (Object.hasOwn(value, key)) problems.push(...validateSchema(value[key], sub, `${at}.${key}`));
         }
         if (schema.additionalProperties === false) {
             for (const key of Object.keys(value)) {
-                if (!(schema.properties && key in schema.properties)) fail(`unknown property "${key}"`);
+                if (!(schema.properties && Object.hasOwn(schema.properties, key))) fail(`unknown property "${key}"`);
             }
         }
     }

@@ -92,6 +92,13 @@ describe('cover-path', () => {
       expect(coverFileExists('/../../etc/passwd', srcDir)).to.equal(false);
       expect(coverFileExists('/assets/images/books/../books/recorded.jpg', srcDir)).to.equal(true);
     });
+
+    it('refuses directories and relative paths without a leading slash', () => {
+      expect(coverFileExists('/', srcDir)).to.equal(false);
+      expect(coverFileExists('/assets/images', srcDir)).to.equal(false);
+      expect(coverFileExists('/assets/images/books', srcDir)).to.equal(false);
+      expect(coverFileExists('assets/images/books/recorded.jpg', srcDir)).to.equal(false);
+    });
   });
 
   // What the generateCoverPath filter is. Before Sept 2026 the filter was

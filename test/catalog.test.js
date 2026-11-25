@@ -146,6 +146,23 @@ describe('catalog loader', () => {
       expect(wingForId(42, dir).slug).to.equal('zz'); // out of block, allowed
       expect(wingForId(500000, dir)).to.equal(null);
       expect(wingForId('9780306406157', dir)).to.equal(null);
+      expect(wingForId(true, dir)).to.equal(null);
+      expect(wingForId('1e2', dir)).to.equal(null);
+    });
+
+    it('throws CatalogError when a row has a blank or NULL id instead of silently dropping it', () => {
+      const os = require('os');
+      const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'hsl-cat-blank-id-'));
+      try {
+        fs.cpSync(fixture('ok').dataDir, tmp, { recursive: true });
+        const artPath = path.join(tmp, 'catalog', 'art.csv');
+        const lines = fs.readFileSync(artPath, 'utf8').trimEnd().split('\n');
+        const badRow = lines[1].replace(/^"1"/, '""');
+        fs.writeFileSync(artPath, [...lines, badRow].join('\n') + '\n');
+        expect(() => loadCatalogSync({ dataDir: tmp })).to.throw(CatalogError, /Missing required field: id/);
+      } finally {
+        fs.rmSync(tmp, { recursive: true, force: true });
+      }
     });
 
     it('nextIdForWing counts within the wing, not across the catalogue', () => {

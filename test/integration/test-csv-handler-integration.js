@@ -633,4 +633,58 @@ describe('CSV Handler Integration Tests', function() {
       assert.strictEqual(merged.data.length, 3);
     });
   });
+
+  describe('Phase 1 Hardening Regressions', function() {
+    it('read() rejects cleanly on missing file instead of crashing', async function() {
+      let failed = false;
+      try {
+        await CSVHandler.read(path.join(testDir, 'does-not-exist.csv'));
+      } catch (err) {
+        failed = true;
+        assert.strictEqual(err.code, 'ENOENT');
+      }
+      assert.strictEqual(failed, true);
+    });
+
+    it('filter() filters rows and writes valid output', async function() {
+      const inPath = path.join(testDir, 'in.csv');
+      const outPath = path.join(testDir, 'out.csv');
+      fs.writeFileSync(inPath, 'id,title,author_full_name\n1,Keep Me,Author A\n2,Drop Me,Author B\n');
+      const count = await CSVHandler.filter(inPath, outPath, r => r.id === '1', { allowedDir: testDir });
+      assert.strictEqual(count, 1);
+      const out = await CSVHandler.read(outPath);
+      assert.strictEqual(out.data.length, 1);
+      assert.strictEqual(out.data[0].title, 'Keep Me');
+    });
+
+    it('readBooks() preserves lowercase x check digit in ISBN-10', async function() {
+      const csvPath = path.join(testDir, 'isbn10.csv');
+      fs.writeFileSync(csvPath, 'id,title,author_full_name,isbn_asin\n1,Book X,Author X,0-306-40615-x\n');
+      const res = await CSVHandler.readBooks(csvPath);
+      assert.strictEqual(res.data[0].isbn_asin, '030640615X');
+      const syncRes = CSVHandler.readBooksSync(csvPath);
+      assert.strictEqual(syncRes.data[0].isbn_asin, '030640615X');
+    });
+
+    it('updateBook() accepts numeric IDs and hyphenated ISBNs and sanitizes formula writes', async function() {
+      const csvPath = path.join(testDir, 'upd.csv');
+      fs.writeFileSync(csvPath, 'id,title,author_full_name,isbn_asin,publisher\n1,Book One,Author One,0-306-40615-x,Pub\n');
+      const byNum = await CSVHandler.updateBook(1, { publisher: '=CMD|calc' }, csvPath, { allowedDir: testDir });
+      assert.strictEqual(byNum.success, true);
+      assert.strictEqual(byNum.updatedBook.publisher, "'=CMD|calc");
+      const byHyphenIsbn = await CSVHandler.updateBook('0-306-40615-x', { publisher: 'Clean Pub' }, csvPath, { allowedDir: testDir });
+      assert.strictEqual(byHyphenIsbn.success, true);
+      assert.strictEqual(byHyphenIsbn.updatedBook.publisher, 'Clean Pub');
+    });
+
+    it('appendBook() sanitizes formula prefixes on newly appended rows', async function() {
+      const csvPath = path.join(testDir, 'app.csv');
+      fs.writeFileSync(csvPath, 'id,title,author_full_name\n1,Book One,Author One\n');
+      const res = await CSVHandler.appendBook(csvPath, { id: '2', title: '=1+1', author_full_name: '@evil' }, { allowedDir: testDir });
+      assert.strictEqual(res.success, true);
+      const raw = fs.readFileSync(csvPath, 'utf8');
+      assert.ok(raw.includes("'=1+1"), 'formula title should be neutralized on disk');
+      assert.ok(raw.includes("'@evil"), 'formula author should be neutralized on disk');
+    });
+  });
 });

@@ -57,7 +57,10 @@ class CSVHandler {
         return new Promise((resolve, reject) => {
             let rowIndex = 0;
 
-            fs.createReadStream(filePath)
+            const readStream = fs.createReadStream(filePath);
+            readStream.on('error', reject);
+
+            readStream
                 .pipe(parse(defaultOptions))
                 .on('data', (record) => {
                     rowIndex++;
@@ -116,12 +119,13 @@ class CSVHandler {
      * @returns {Promise<{success: boolean, backup?: string, errors: Array}>}
      */
     static async write(filePath, data, options = {}) {
+        const { allowedDir, ...stringifyOpts } = options;
         const defaultOptions = {
             header: true,
             quoted: true,
             quoted_empty: false,   // bare empties match the on-disk format (see append below); true churned every row
             escape: '"',
-            ...options
+            ...stringifyOpts
         };
 
         const result = {
@@ -139,7 +143,7 @@ class CSVHandler {
 
             // Create backup if file exists
             if (fs.existsSync(filePath)) {
-                const backupOpts = options.allowedDir ? { allowedDir: options.allowedDir } : {};
+                const backupOpts = allowedDir ? { allowedDir } : {};
                 const backupPath = this.createBackup(filePath, backupOpts);
                 result.backup = backupPath;
             }
@@ -150,21 +154,31 @@ class CSVHandler {
                 fs.mkdirSync(dir, { recursive: true });
             }
 
-            return new Promise((resolve, reject) => {
-                stringify(data, defaultOptions, (err, output) => {
+            // SECURITY: Enforce CWE-1236 formula neutralization on write paths as well.
+            const safeData = data.map(row => {
+                const out = {};
+                for (const [k, v] of Object.entries(row)) {
+                    out[k] = typeof v === 'string' ? this.sanitizeCSVField(v) : v;
+                }
+                return out;
+            });
+
+            return new Promise((resolve) => {
+                stringify(safeData, defaultOptions, (err, output) => {
                     if (err) {
                         result.errors.push(`Stringify error: ${err.message}`);
                         resolve(result);
                     } else {
-                        fs.writeFile(filePath, output, (writeErr) => {
-                            if (writeErr) {
-                                result.errors.push(`Write error: ${writeErr.message}`);
-                                resolve(result);
-                            } else {
-                                result.success = true;
-                                resolve(result);
-                            }
-                        });
+                        const tmpPath = `${filePath}.tmp-${process.pid}-${Date.now()}`;
+                        try {
+                            fs.writeFileSync(tmpPath, output);
+                            fs.renameSync(tmpPath, filePath);
+                            result.success = true;
+                        } catch (writeErr) {
+                            try { if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath); } catch { /* ignore */ }
+                            result.errors.push(`Write error: ${writeErr.message}`);
+                        }
+                        resolve(result);
                     }
                 });
             });
@@ -208,7 +222,7 @@ class CSVHandler {
             // keeps the appended row structurally identical to existing rows.
             const nl = content.indexOf('\n');
             const headerLine = (nl === -1 ? content : content.slice(0, nl)).replace(/\r$/, '');
-            const headers = parseSync(headerLine, { columns: false, relax_column_count: true })[0];
+            const headers = parseSync(headerLine, { columns: false, relax_column_count: true, bom: true })[0];
             if (!headers || headers.length === 0) {
                 result.errors.push('Could not parse CSV header row');
                 return result;
@@ -216,7 +230,8 @@ class CSVHandler {
 
             const row = headers.map((h) => {
                 const v = record[h];
-                return (v === undefined || v === null) ? '' : String(v);
+                if (v === undefined || v === null) return '';
+                return this.sanitizeCSVField(String(v));
             });
 
             // Back up before mutating, matching write()'s safety policy.
@@ -331,10 +346,13 @@ class CSVHandler {
      * @param {string} outputPath - Output CSV path
      * @param {Function} filterFn - Filter function
      */
-    static async filter(inputPath, outputPath, filterFn) {
-        const data = await this.read(inputPath);
+    static async filter(inputPath, outputPath, filterFn, options = {}) {
+        const { data } = await this.read(inputPath);
         const filtered = data.filter(filterFn);
-        await this.write(outputPath, filtered);
+        const writeResult = await this.write(outputPath, filtered, options);
+        if (!writeResult.success) {
+            throw new Error(`Filter write failed: ${writeResult.errors.join('; ')}`);
+        }
         return filtered.length;
     }
 
@@ -430,10 +448,14 @@ class CSVHandler {
                     cleaned = '';
                 }
 
-                // Fix common encoding issues
+                // Fix common UTF-8-as-Windows-1252 mojibake sequences (match full
+                // 3-char sequences so em-dash/en-dash/ellipsis aren't corrupted).
                 cleaned = cleaned.replace(/\u00e2\u20ac\u2122/g, "'");
                 cleaned = cleaned.replace(/\u00e2\u20ac\u0153/g, '"');
-                cleaned = cleaned.replace(/\u00e2\u20ac/g, '"');
+                cleaned = cleaned.replace(/\u00e2\u20ac\u009d/g, '"');
+                cleaned = cleaned.replace(/\u00e2\u20ac\u201c/g, '\u2013');
+                cleaned = cleaned.replace(/\u00e2\u20ac\u2014/g, '\u2014');
+                cleaned = cleaned.replace(/\u00e2\u20ac\u00a6/g, '\u2026');
 
                 // SECURITY: Prevent CSV formula injection (CWE-1236)
                 cleaned = this.sanitizeCSVField(cleaned);
@@ -455,7 +477,11 @@ class CSVHandler {
                         throw new Error(`Missing required field: ${field}`);
                     } else {
                         result.warnings.push(`Missing required field: ${field}`);
-                        result.record[field] = BOOKS_SCHEMA.defaults[field] || 'Unknown';
+                        if (field === 'author_full_name' && (result.record.author_first || result.record.author_last)) {
+                            result.record[field] = `${result.record.author_first || ''} ${result.record.author_last || ''}`.trim();
+                        } else {
+                            result.record[field] = BOOKS_SCHEMA.defaults[field] || 'Unknown';
+                        }
                         result.corrected = true;
                     }
                 }
@@ -610,10 +636,10 @@ class CSVHandler {
      */
     static pruneBackups(backupDir, stem, keep = this.KEEP_BACKUPS) {
         const stamp = /^\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}\.csv$/;
-        const old = fs.readdirSync(backupDir)
+        const all = fs.readdirSync(backupDir)
             .filter(name => name.startsWith(stem) && stamp.test(name.slice(stem.length)))
-            .sort()
-            .slice(0, -keep);
+            .sort();
+        const old = keep <= 0 ? all : all.slice(0, -keep);
         for (const name of old) {
             // Losing an old backup must never fail the write it follows.
             try { fs.unlinkSync(path.join(backupDir, name)); } catch { /* leave it */ }
@@ -652,8 +678,11 @@ class CSVHandler {
             const headerLine = lines[0];
             let headers;
             try {
-                headers = parse(headerLine, { columns: false })[0];
+                headers = parseSync(headerLine, { columns: false, bom: true })[0];
             } catch (error) {
+                throw new Error('Cannot parse header line');
+            }
+            if (!headers || !headers.length) {
                 throw new Error('Cannot parse header line');
             }
 
@@ -665,7 +694,7 @@ class CSVHandler {
                 result.stats.totalRows++;
 
                 try {
-                    const parsedLine = parse(line, { columns: false, relax_column_count: true })[0];
+                    const parsedLine = parseSync(line, { columns: false, relax_column_count: true })[0];
 
                     // Create record object
                     const record = {};
@@ -726,9 +755,9 @@ class CSVHandler {
                 book.author_full_name = `${book.author_first || ''} ${book.author_last || ''}`.trim();
             }
 
-            // Clean ISBN
+            // Clean ISBN (preserve ISBN-10 check digit 'X'/'x')
             if (book.isbn_asin) {
-                book.isbn_asin = book.isbn_asin.replace(/[^0-9A-Z]/g, '');
+                book.isbn_asin = book.isbn_asin.toUpperCase().replace(/[^0-9A-Z]/g, '');
             }
 
             return book;
@@ -771,10 +800,11 @@ class CSVHandler {
         const booksPath = this.resolveCatalogFile(identifier, csvPath);
         const readResult = await this.readBooks(booksPath);
 
-        // Find the book to update
-        let bookIndex = -1;
-        bookIndex = readResult.data.findIndex(book =>
-            book.isbn_asin === identifier || book.id === identifier
+        // Find the book to update (accept numeric IDs and hyphenated/lowercase ISBNs)
+        const wantId = String(identifier);
+        const wantIsbn = wantId.toUpperCase().replace(/[^0-9A-Z]/g, '');
+        const bookIndex = readResult.data.findIndex(book =>
+            book.id === wantId || (wantIsbn && book.isbn_asin === wantIsbn)
         );
 
         if (bookIndex === -1) {
@@ -792,7 +822,9 @@ class CSVHandler {
         const originalBook = { ...readResult.data[bookIndex] };
         Object.entries(updates).forEach(([key, value]) => {
             if (validColumns.has(key)) {
-                readResult.data[bookIndex][key] = value;
+                readResult.data[bookIndex][key] = typeof value === 'string'
+                    ? this.sanitizeCSVField(value)
+                    : value;
             }
         });
 
@@ -860,8 +892,10 @@ class CSVHandler {
 
         // Apply all updates
         for (const update of updates) {
+            const wantId = String(update.identifier);
+            const wantIsbn = wantId.toUpperCase().replace(/[^0-9A-Z]/g, '');
             const bookIndex = readResult.data.findIndex(book =>
-                book.isbn_asin === update.identifier || book.id === update.identifier
+                book.id === wantId || (wantIsbn && book.isbn_asin === wantIsbn)
             );
 
             if (bookIndex === -1) {
@@ -879,7 +913,9 @@ class CSVHandler {
             const originalBook = { ...readResult.data[bookIndex] };
             Object.entries(update.updates).forEach(([key, value]) => {
                 if (validColumns.has(key)) {
-                    readResult.data[bookIndex][key] = value;
+                    readResult.data[bookIndex][key] = typeof value === 'string'
+                        ? this.sanitizeCSVField(value)
+                        : value;
                 }
             });
 
@@ -950,8 +986,7 @@ class CSVHandler {
             const content = fs.readFileSync(booksPath, 'utf8');
 
             // Use synchronous CSV parsing
-            const { parse } = require('csv-parse/sync');
-            const records = parse(content, {
+            const records = parseSync(content, {
                 columns: true,
                 skip_empty_lines: true,
                 trim: true,
@@ -1007,9 +1042,9 @@ class CSVHandler {
                     book.author_full_name = `${book.author_first || ''} ${book.author_last || ''}`.trim();
                 }
 
-                // Clean ISBN
+                // Clean ISBN (preserve ISBN-10 check digit 'X'/'x')
                 if (book.isbn_asin) {
-                    book.isbn_asin = book.isbn_asin.replace(/[^0-9A-Z]/g, '');
+                    book.isbn_asin = book.isbn_asin.toUpperCase().replace(/[^0-9A-Z]/g, '');
                 }
 
                 return book;

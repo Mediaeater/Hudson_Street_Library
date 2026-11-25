@@ -77,4 +77,18 @@ describe('web-images shrinkImages', function () {
     await run();
     expect(fs.readdirSync(cacheDir).length).to.equal(entries - 1);
   });
+
+  it('handles identical duplicate source images concurrently without racing', async () => {
+    fs.copyFileSync(path.join(srcDir, 'books', 'big.jpg'), path.join(srcDir, 'books', 'big-copy-1.jpg'));
+    fs.copyFileSync(path.join(srcDir, 'books', 'big.jpg'), path.join(srcDir, 'books', 'big-copy-2.jpg'));
+    passthrough();
+    const stats = await shrinkImages({ srcDir, outDir, cacheDir, concurrency: 4 });
+    expect(stats.resized).to.equal(3);
+    // 1 encode for the 3 identical copies of big.jpg + 1 metadata check for small.jpg = 2
+    expect(stats.encoded).to.equal(2);
+    for (const name of ['big.jpg', 'big-copy-1.jpg', 'big-copy-2.jpg']) {
+      const meta = await sharp(path.join(outDir, 'books', name)).metadata();
+      expect(meta.width).to.equal(1600);
+    }
+  });
 });

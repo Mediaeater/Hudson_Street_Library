@@ -53,17 +53,19 @@ function walk(dir, found = []) {
  * should ship (small enough already, or the re-encode saves too little).
  * Throws when sharp can't read the file.
  */
-async function encode(sharp, input, opts) {
+async function encode(sharp, input, opts, ext) {
     const meta = await sharp(input).metadata();
     const longEdge = Math.max(meta.width || 0, meta.height || 0);
     if (longEdge <= opts.maxEdge && input.length <= opts.minBytes) return null;
 
     // rotate() bakes in the EXIF orientation, which is dropped with the rest of
-    // the metadata on output.
+    // the metadata on output. Output format follows the file extension so a
+    // misnamed container never ships mismatched bytes.
     const pipeline = sharp(input)
         .rotate()
         .resize({ width: opts.maxEdge, height: opts.maxEdge, fit: 'inside', withoutEnlargement: true });
-    const output = meta.format === 'png'
+    const wantPng = ext ? ext === '.png' : meta.format === 'png';
+    const output = wantPng
         ? await pipeline.png({ compressionLevel: 9 }).toBuffer()
         : await pipeline.jpeg({ quality: opts.jpegQuality, mozjpeg: true }).toBuffer();
 
@@ -80,6 +82,7 @@ async function encode(sharp, input, opts) {
 async function shrinkImages(options) {
     const opts = { ...DEFAULTS, ...options };
     if (!opts.outDir) throw new Error('shrinkImages: outDir is required');
+    const concurrency = Math.max(1, Number(opts.concurrency) || 1);
     const sharp = require('sharp');
 
     fs.mkdirSync(opts.cacheDir, { recursive: true });
@@ -87,9 +90,33 @@ async function shrinkImages(options) {
     const files = walk(opts.srcDir);
     const stats = { files: files.length, resized: 0, encoded: 0, unreadable: [], bytesBefore: 0, bytesAfter: 0 };
     const used = new Set();
+    // Deduplicate concurrent encodes of identical source files so two workers
+    // never race on the same cache key / temp file.
+    const inFlight = new Map();
+
+    const ensureCached = (cacheKey, input, ext, small, keep, workerId) => {
+        if (fs.existsSync(small) || fs.existsSync(keep)) return Promise.resolve({ ok: true });
+        if (inFlight.has(cacheKey)) return inFlight.get(cacheKey);
+        const p = (async () => {
+            let output = null;
+            try {
+                output = await encode(sharp, input, opts, ext);
+                stats.encoded++;
+            } catch (err) {
+                return { ok: false, err };
+            }
+            const entry = output ? small : keep;
+            const tmp = `${entry}.${process.pid}.${workerId}.tmp`;
+            fs.writeFileSync(tmp, output || '');
+            fs.renameSync(tmp, entry);
+            return { ok: true };
+        })();
+        inFlight.set(cacheKey, p);
+        return p;
+    };
 
     let next = 0;
-    const worker = async () => {
+    const worker = async (workerId) => {
         while (next < files.length) {
             const file = files[next++];
             const rel = path.relative(opts.srcDir, file);
@@ -97,28 +124,19 @@ async function shrinkImages(options) {
             const input = fs.readFileSync(file);
             stats.bytesBefore += input.length;
 
+            const ext = path.extname(file).toLowerCase();
             const hash = crypto.createHash('sha1').update(input).digest('hex');
             const base = `${hash}-${settings}`;
-            const small = path.join(opts.cacheDir, `${base}${path.extname(file).toLowerCase()}`);
+            const cacheKey = `${base}${ext}`;
+            const small = path.join(opts.cacheDir, cacheKey);
             const keep = path.join(opts.cacheDir, `${base}.keep`);
 
-            if (!fs.existsSync(small) && !fs.existsSync(keep)) {
-                let output = null;
-                try {
-                    output = await encode(sharp, input, opts);
-                    stats.encoded++;
-                } catch (err) {
-                    // Not cached: a file that is fixed later gets another try.
-                    stats.unreadable.push(rel);
-                    stats.bytesAfter += input.length;
-                    continue;
-                }
-                // Write-then-rename so an interrupted build can't leave a
-                // truncated entry behind.
-                const entry = output ? small : keep;
-                const tmp = `${entry}.${process.pid}.tmp`;
-                fs.writeFileSync(tmp, output || '');
-                fs.renameSync(tmp, entry);
+            const res = await ensureCached(cacheKey, input, ext, small, keep, workerId);
+            if (!res.ok) {
+                // Not cached: a file that is fixed later gets another try.
+                stats.unreadable.push(rel);
+                stats.bytesAfter += input.length;
+                continue;
             }
 
             if (fs.existsSync(small)) {
@@ -133,10 +151,10 @@ async function shrinkImages(options) {
             }
         }
     };
-    await Promise.all(Array.from({ length: opts.concurrency }, worker));
+    await Promise.all(Array.from({ length: concurrency }, (_, i) => worker(i)));
 
     for (const name of fs.readdirSync(opts.cacheDir)) {
-        if (!used.has(name)) fs.rmSync(path.join(opts.cacheDir, name), { force: true });
+        if (!used.has(name)) fs.rmSync(path.join(opts.cacheDir, name), { recursive: true, force: true });
     }
     return stats;
 }

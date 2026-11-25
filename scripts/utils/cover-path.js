@@ -36,7 +36,8 @@ const PLACEHOLDER = '/assets/images/placeholder-book.svg';
  * the catalogue uses for "nothing here".
  */
 function isSet(value) {
-    return Boolean(value) && value !== 'NULL' && value !== 'null';
+    const s = typeof value === 'string' ? value.trim() : value;
+    return Boolean(s) && s !== 'NULL' && s !== 'null' && s !== 'undefined';
 }
 
 /**
@@ -125,9 +126,15 @@ function resolveCoverPath(book) {
  */
 function coverFileExists(url, srcDir = SRC) {
     if (!isSet(url)) return false;
-    const file = path.resolve(srcDir, `.${path.posix.normalize(url)}`);
-    if (file !== srcDir && !file.startsWith(srcDir + path.sep)) return false;
-    return fs.existsSync(file);
+    const raw = String(url).trim();
+    if (!raw.startsWith('/')) return false;
+    const file = path.resolve(srcDir, `.${path.posix.normalize(raw)}`);
+    if (!file.startsWith(srcDir + path.sep)) return false;
+    try {
+        return fs.statSync(file).isFile();
+    } catch {
+        return false;
+    }
 }
 
 /**
