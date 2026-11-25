@@ -565,10 +565,33 @@ module.exports = function(eleventyConfig) {
 
   // --- Plain text from an HTML description, for meta tags / JSON-LD ---
   // Catalogue descriptions are HTML (<p class="mt-6">, <em>); any text-only
-  // surface must strip tags BEFORE truncating or the markup prints literally.
+  // surface must strip tags and decode HTML entities BEFORE truncating so
+  // markup and entities never print literally in JSON-LD or snippets.
+  const HTML_ENTITIES = {
+    amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ',
+    mdash: '—', ndash: '–', rsquo: '’', lsquo: '‘', ldquo: '“', rdquo: '”', hellip: '…',
+  };
   eleventyConfig.addFilter("stripHtml", function(text) {
     if (!text) return '';
-    return String(text).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    return String(text)
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/&(#x[\da-f]+|#\d+|[a-z]+);/gi, (m, ent) => {
+        if (ent[0] === '#') {
+          const code = ent[1].toLowerCase() === 'x' ? parseInt(ent.slice(2), 16) : parseInt(ent.slice(1), 10);
+          return Number.isFinite(code) ? String.fromCodePoint(code) : m;
+        }
+        return HTML_ENTITIES[ent.toLowerCase()] ?? m;
+      })
+      .replace(/\s+/g, ' ')
+      .trim();
+  });
+
+  // --- Safe JSON string literal for <script type="application/ld+json"> ---
+  // Produces a quoted JSON string with `"`, `\`, and control chars properly
+  // escaped (unlike Nunjucks `| escape`, which emits HTML entities). Escapes
+  // `<` as `\u003c` so a value can never close the surrounding <script> tag.
+  eleventyConfig.addFilter("jsonString", function(value) {
+    return JSON.stringify(String(value ?? '')).replace(/</g, '\\u003c');
   });
 
   // --- Format and truncate descriptions with paragraph support ---

@@ -8,10 +8,10 @@
 {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  "name": "{{ schemaName | escape }}",
-  "url": "https://hudsonstreetlibrary.com{{ page.url }}"
+  "name": {{ schemaName | jsonString | safe }},
+  "url": {{ ("https://hudsonstreetlibrary.com" + page.url) | jsonString | safe }}
   {%- if schemaDescription %},
-  "description": "{{ schemaDescription | escape | replace('\n', ' ') | replace('\r', '') }}"
+  "description": {{ schemaDescription | stripHtml | jsonString | safe }}
   {%- endif %},
   "isPartOf": {
     "@type": "WebSite",

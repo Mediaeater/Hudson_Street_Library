@@ -34,7 +34,31 @@ const SITE = path.join(ROOT, '_site');
 const quiet = process.argv.includes('--quiet');
 
 const BLOCK_RE =
-  /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
+  /<script[^>]*type=["']?application\/ld\+json(?:;[^"'>\s]*)?["']?[^>]*>([\s\S]*?)<\/script>/gi;
+
+const HTML_ENTITY_RE = /&(amp|quot|lt|gt|#39|#x27|apos);/i;
+
+function findHtmlEntity(value, keyPath = '$') {
+  if (typeof value === 'string') {
+    const m = HTML_ENTITY_RE.exec(value);
+    if (m) return `${keyPath}: contains literal HTML entity "${m[0]}"`;
+    return null;
+  }
+  if (Array.isArray(value)) {
+    for (let i = 0; i < value.length; i++) {
+      const hit = findHtmlEntity(value[i], `${keyPath}[${i}]`);
+      if (hit) return hit;
+    }
+    return null;
+  }
+  if (value && typeof value === 'object') {
+    for (const [k, v] of Object.entries(value)) {
+      const hit = findHtmlEntity(v, `${keyPath}.${k}`);
+      if (hit) return hit;
+    }
+  }
+  return null;
+}
 
 function walkHtml(dir, out = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -105,7 +129,20 @@ for (const file of files) {
     index++;
     const body = match[1];
     try {
-      JSON.parse(body);
+      const parsed = JSON.parse(body);
+      const items = Array.isArray(parsed) ? parsed : [parsed];
+      for (const item of items) {
+        if (!item || typeof item !== 'object' || Array.isArray(item)) {
+          throw new Error('JSON-LD root must be an object or array of objects');
+        }
+        if (!item['@context'] || !item['@type']) {
+          throw new Error('JSON-LD object missing required @context or @type');
+        }
+      }
+      const entityHit = findHtmlEntity(parsed);
+      if (entityHit) {
+        throw new Error(`HTML-escaped string in JSON-LD (${entityHit}) — use jsonString filter, not escape`);
+      }
     } catch (err) {
       failures.push({
         file: path.relative(ROOT, file),
@@ -123,8 +160,13 @@ if (!quiet) {
   );
 }
 
+if (blocks === 0) {
+  console.error('\n❌ Found 0 ld+json blocks across _site — structured data templates may be broken.\n');
+  process.exit(1);
+}
+
 if (failures.length) {
-  console.error(`\n❌ ${failures.length} block(s) failed to parse\n`);
+  console.error(`\n❌ ${failures.length} block(s) failed validation\n`);
   for (const f of failures.slice(0, 25)) {
     console.error(`   ${f.file}  (block ${f.index})`);
     console.error(`   ${f.message}`);
@@ -134,15 +176,14 @@ if (failures.length) {
   if (failures.length > 25) {
     console.error(`   ... and ${failures.length - 25} more\n`);
   }
-  console.error('   These blocks are discarded by search engines.');
+  console.error('   These blocks are discarded or misread by search engines.');
   console.error(
     '   Check the emitting template in src/_includes/components/schema-*.njk —',
   );
   console.error(
-    '   an optional property needs a guard that holds for every value the',
+    '   use `| jsonString | safe` for strings and guard every optional property.\n',
   );
-  console.error('   column can actually contain, not just for empty.\n');
   process.exit(1);
 }
 
-console.log('\n✨ Every ld+json block parses\n');
+if (!quiet) console.log('\n✨ Every ld+json block is valid\n');

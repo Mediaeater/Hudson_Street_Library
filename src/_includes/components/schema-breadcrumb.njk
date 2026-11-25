@@ -19,8 +19,8 @@
     {
       "@type": "ListItem",
       "position": 3,
-      "name": "{{ book.title | escape }}",
-      "item": "https://hudsonstreetlibrary.com{{ page.url }}"
+      "name": {{ book.title | jsonString | safe }},
+      "item": {{ ("https://hudsonstreetlibrary.com" + page.url) | jsonString | safe }}
     }
     {#- A wing landing page sits directly under the homepage: it is the front
         door for its wing, not an entry in the art wing's collections index. -#}
@@ -28,8 +28,8 @@
     {
       "@type": "ListItem",
       "position": 2,
-      "name": "{{ wingPage.name | escape }}",
-      "item": "https://hudsonstreetlibrary.com{{ page.url }}"
+      "name": {{ wingPage.name | jsonString | safe }},
+      "item": {{ ("https://hudsonstreetlibrary.com" + page.url) | jsonString | safe }}
     }
     {#- `page.url` is the resolved URL. `permalink` is the raw front-matter
         string, which on any paginated page is itself a template expression and
@@ -42,8 +42,8 @@
       "@type": "ListItem",
       "position": 2,
       {%- if crumbWing %}
-      "name": "{{ crumbWing.name | escape }}",
-      "item": "https://hudsonstreetlibrary.com/{{ crumbWing.slug }}/"
+      "name": {{ crumbWing.name | jsonString | safe }},
+      "item": {{ ("https://hudsonstreetlibrary.com/" + crumbWing.slug + "/") | jsonString | safe }}
       {%- else %}
       "name": "Collections",
       "item": "https://hudsonstreetlibrary.com/collection-explore.html"
@@ -52,8 +52,8 @@
     {
       "@type": "ListItem",
       "position": 3,
-      "name": "{{ title | escape }}",
-      "item": "https://hudsonstreetlibrary.com{{ page.url }}"
+      "name": {{ title | jsonString | safe }},
+      "item": {{ ("https://hudsonstreetlibrary.com" + page.url) | jsonString | safe }}
     }
     {%- endif %}
   ]
