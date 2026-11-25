@@ -163,7 +163,7 @@ Deletions: -$DELETIONS lines
 
 This is an automatic backup commit created by backup-books-csv.sh"
 
-        if git commit -m "$COMMIT_MSG" --no-verify 2>/dev/null; then
+        if git commit -m "$COMMIT_MSG" --no-verify -- "$CATALOG_DIR" 2>/dev/null; then
             success "Git backup commit created"
             log "To push to remote: git push origin main"
         else
@@ -194,12 +194,23 @@ done
 rotate_count() {
     local dir="$1" prefix="$2" keep="$3" count
     [[ -d "$dir" ]] || return 0
-    count=$(find "$dir" -name "${prefix}_*.csv" -type f | wc -l)
+    count=$(find "$dir" -maxdepth 1 -name "${prefix}_*.csv" -type f | wc -l)
     if [[ $count -gt $keep ]]; then
-        find "$dir" -name "${prefix}_*.csv" -type f -print0 | \
-            xargs -0 ls -t | \
-            tail -n +$((keep + 1)) | \
-            xargs rm -f
+        # Sort by mtime descending via stat (handles spaces and large file counts
+        # without batched `xargs ls -t` or whitespace-splitting `xargs rm`).
+        local f idx=0
+        while IFS=$'\t' read -r _mtime f; do
+            idx=$((idx + 1))
+            if [[ $idx -gt $keep ]]; then
+                rm -f -- "$f"
+            fi
+        done < <(
+            find "$dir" -maxdepth 1 -name "${prefix}_*.csv" -type f -print0 | \
+                while IFS= read -r -d '' path; do
+                    mtime=$(stat -f '%m' "$path" 2>/dev/null || stat -c '%Y' "$path")
+                    printf '%s\t%s\n' "$mtime" "$path"
+                done | sort -rn -k1,1
+        )
         log "  Rotated $(basename "$dir") ${prefix}_ backups (keeping $keep most recent)"
     fi
 }

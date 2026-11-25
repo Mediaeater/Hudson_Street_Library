@@ -78,20 +78,24 @@ case $choice in
     6)
         echo ""
         echo "Enter custom cron schedule (e.g., '0 */6 * * *' for every 6 hours):"
-        read -p "Schedule: " CRON_SCHEDULE
+        read -r -p "Schedule: " CRON_SCHEDULE
+        if [[ ! "$CRON_SCHEDULE" =~ ^[0-9*/,-]+[[:space:]]+[0-9*/,-]+[[:space:]]+[0-9*/,-]+[[:space:]]+[0-9*/,-]+[[:space:]]+[0-9*/,-]+$ ]]; then
+            echo "Invalid cron schedule (expected 5 standard cron fields)."
+            exit 1
+        fi
         DESCRIPTION="custom schedule: $CRON_SCHEDULE"
         ;;
     7)
         echo ""
         echo "Removing backup cron job..."
 
-        # Remove existing backup cron job
-        crontab -l 2>/dev/null | grep -v "backup-books-csv.sh" | crontab - 2>/dev/null || true
+        # Remove existing backup cron job and its header comment
+        crontab -l 2>/dev/null | grep -v -E "backup-books-csv\.sh|# Hudson Street Library - Automatic CSV backup" | crontab - 2>/dev/null || true
 
         echo -e "${GREEN}✓ Backup cron job removed${NC}"
         echo ""
         echo "You can still run backups manually with:"
-        echo "  ./scripts/backup-books-csv.sh"
+        echo "  ./scripts/backup-books-csv.sh --no-git"
         exit 0
         ;;
     *)
@@ -100,11 +104,13 @@ case $choice in
         ;;
 esac
 
-# Create the cron job entry
-CRON_ENTRY="$CRON_SCHEDULE cd $PROJECT_DIR && $BACKUP_SCRIPT >> $CRON_LOG 2>&1"
+# Create the cron job entry (--no-git is mandatory for unattended runs so
+# mid-edit CSVs are never committed with --no-verify; GitHub Actions snapshots
+# validated CSVs on every push).
+CRON_ENTRY="$CRON_SCHEDULE cd \"$PROJECT_DIR\" && \"$BACKUP_SCRIPT\" --no-git >> \"$CRON_LOG\" 2>&1"
 
-# Remove any existing backup-books-csv entries to avoid duplicates
-crontab -l 2>/dev/null | grep -v "backup-books-csv.sh" | crontab - 2>/dev/null || true
+# Remove any existing backup-books-csv entries and comments to avoid duplicates
+crontab -l 2>/dev/null | grep -v -E "backup-books-csv\.sh|# Hudson Street Library - Automatic CSV backup" | crontab - 2>/dev/null || true
 
 # Add new cron job
 (crontab -l 2>/dev/null; echo "# Hudson Street Library - Automatic CSV backup ($DESCRIPTION)"; echo "$CRON_ENTRY") | crontab -
@@ -114,13 +120,13 @@ echo -e "${GREEN}✓ Backup cron job configured!${NC}"
 echo ""
 echo "Schedule: $DESCRIPTION"
 echo "Cron:     $CRON_SCHEDULE"
-echo "Script:   $BACKUP_SCRIPT"
+echo "Script:   $BACKUP_SCRIPT --no-git"
 echo "Logs:     $CRON_LOG"
 echo ""
 echo "Backup locations:"
 echo "  1. Local:  $PROJECT_DIR/src/_data/backups/"
 echo "  2. Safe:   ~/.hudson-library-backups/"
-echo "  3. Git:    Auto-commits if changes detected"
+echo "  3. Git:    Handled on push by GitHub Actions (unattended cron runs with --no-git)"
 echo ""
 echo -e "${YELLOW}Important:${NC}"
 echo "  - Backups run automatically in the background"

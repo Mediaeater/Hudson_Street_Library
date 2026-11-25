@@ -35,6 +35,16 @@ if git diff --cached --name-only | grep -qE '^src/_data/(catalog/[^/]+\.csv|wing
   git add data/row-dates.json
 fi
 
+# Block re-introduction of hardcoded collection pages; new collections must be
+# driven by src/_data/collections/<slug>.json.
+NEW_HARDCODED=$(git diff --cached --name-only --diff-filter=A | grep -E '^src/collections/[^/]+\.html$' || true)
+if [ -n "$NEW_HARDCODED" ]; then
+  echo "❌ New hardcoded collection page(s) staged:"
+  echo "$NEW_HARDCODED" | sed 's/^/  /'
+  echo "   Drive new collections via src/_data/collections/<slug>.json instead."
+  exit 1
+fi
+
 # Design system invariants — one green, one header. Source-level only, so it
 # needs no build and stays fast. The _site coverage check runs in CI.
 if git diff --cached --name-only | grep -qE '\.(css|njk|html)$'; then
@@ -43,6 +53,11 @@ fi
 
 # Scan staged changes for secrets
 echo "🔒 Scanning staged changes for secrets..."
+if ! command -v gitleaks >/dev/null 2>&1; then
+  echo ""
+  echo "❌ gitleaks is not installed. Install it (e.g. brew install gitleaks) before committing."
+  exit 1
+fi
 if ! gitleaks git --pre-commit --staged --redact --no-banner; then
   echo ""
   echo "❌ Secret scan failed! A potential secret was found in staged changes."
