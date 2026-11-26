@@ -33,12 +33,27 @@ function claimedElsewhere(book, rule) {
   return !owned.some(t => wanted.includes(t));
 }
 
+// A config can leave out a form or a shelf it would otherwise match, e.g.
+// Queer Culture drops periodicals to stay a page of books. Exact match on the
+// whole cell, one value or a list. The book keeps its tags; only this page
+// stops listing it.
+const EXCLUDE_RULES = ['classification', 'collection_grouping'];
+
+function excludedByConfig(book, config) {
+  const exclude = config.exclude || {};
+  return Object.keys(exclude).some(k => {
+    if (!EXCLUDE_RULES.includes(k)) throw new Error(`collection "${config.slug}": unknown exclude rule "${k}"`);
+    return [].concat(exclude[k]).includes((book[k] || '').trim());
+  });
+}
+
 function matchesCollection(book, config) {
   const rule = config.matchBy || {};
   for (const k of Object.keys(rule)) {
     if (!RULES.includes(k)) throw new Error(`collection "${config.slug}": unknown matchBy rule "${k}"`);
   }
   if (claimedElsewhere(book, rule)) return false;
+  if (excludedByConfig(book, config)) return false;
   if (rule.collection_grouping) {
     return (book.collection_grouping || '').trim() === rule.collection_grouping;
   }

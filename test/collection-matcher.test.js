@@ -121,6 +121,32 @@ describe('collection-matcher', () => {
         expect(matchesCollection(plain, { matchBy: { tag: 'Photography' } })).to.be.true;
       });
     });
+
+    describe('exclude (a config drops a form or a shelf)', () => {
+      const config = { slug: 'queer-culture', matchBy: { tag: 'Queer Culture' }, exclude: { classification: ['Periodical', 'Magazines'] } };
+
+      it('drops a book whose cell equals an excluded value', () => {
+        expect(matchesCollection({ tags: 'Queer Culture', classification: 'Periodical' }, config)).to.be.false;
+        expect(matchesCollection({ tags: 'Queer Culture', classification: 'Magazines' }, config)).to.be.false;
+      });
+
+      it('keeps every other book the rule matches', () => {
+        expect(matchesCollection({ tags: 'Queer Culture', classification: 'Photobook' }, config)).to.be.true;
+        expect(matchesCollection({ tags: 'Queer Culture', classification: '' }, config)).to.be.true;
+        expect(matchesCollection({ tags: 'Queer Culture', classification: 'Periodical Index' }, config)).to.be.true;
+      });
+
+      it('accepts a single value and the shelf column', () => {
+        const byShelf = { matchBy: { tag: 'Queer Culture' }, exclude: { collection_grouping: 'Magazines' } };
+        expect(matchesCollection({ tags: 'Queer Culture', collection_grouping: 'Magazines' }, byShelf)).to.be.false;
+        expect(matchesCollection({ tags: 'Queer Culture', collection_grouping: 'Photography' }, byShelf)).to.be.true;
+      });
+
+      it('throws on a column it does not know', () => {
+        expect(() => matchesCollection({ tags: 'Queer Culture' }, { slug: 'x', matchBy: { tag: 'Queer Culture' }, exclude: { title: 'BUTT' } }))
+          .to.throw('unknown exclude rule "title"');
+      });
+    });
   });
 
   describe('assignSection', () => {

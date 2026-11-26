@@ -65,7 +65,7 @@ Outside the art wing these pages are also left out of the sitemap. In the art wi
 
 ## Exclusive tags
 
-`EXCLUSIVE_TAGS` in `scripts/utils/collection-matcher.js` is `['Queer Culture']`. A book carrying an exclusive tag appears in that tag's collection and in no other tag, shelf, decade or form collection. Pages that name a specific title or author (BUTT, Purple, a person page) are identity pages and are not affected.
+`EXCLUSIVE_TAGS` in `scripts/utils/collection-matcher.js` is `['Queer Culture']`. A book carrying an exclusive tag appears in that tag's collection and in no other tag, shelf, decade or form collection. Pages that name a specific title or author (BUTT, Purple, a person page) are identity pages and are not affected. The Queer Culture page itself lists books only: its config excludes the `Periodical` and `Magazines` classifications, so a magazine carrying the tag shows on its identity page or on no collection page.
 
 ## Links
 
@@ -77,7 +77,7 @@ The search matches a tag as a whole value, in any letter case. It runs over ever
 
 ## Curated configs
 
-One JSON file per collection in `src/_data/collections/`. Fields: `slug`, `title`, `description`, `matchBy`, and optionally `wing`, `allWings`, `sections`, `sortBy`, `intro`, `coversFirst`, `image`, `featured`, `category`, `headerImage`, `relatedLinks`, `externalUrl`. `src/_data/collections/_schema.md` describes each one.
+One JSON file per collection in `src/_data/collections/`. Fields: `slug`, `title`, `description`, `matchBy`, and optionally `exclude`, `wing`, `allWings`, `sections`, `sortBy`, `intro`, `coversFirst`, `image`, `featured`, `category`, `headerImage`, `relatedLinks`, `externalUrl`. `src/_data/collections/_schema.md` describes each one.
 
 `matchBy` takes exactly one rule:
 

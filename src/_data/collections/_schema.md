@@ -34,6 +34,11 @@ configs in one wing naming the same tag also fail the build.
 
 ## Optional fields
 
+- `exclude`: books the rule matches that this page leaves out, by form or by
+  shelf: `{ "classification": ["Periodical", "Magazines"] }` or
+  `{ "collection_grouping": "Magazines" }`. Exact match on the whole cell, one
+  value or a list. Any other column fails the build. The book keeps its tags.
+  Used by `queer-culture`, which lists books only.
 - `wing`: the wing the collection belongs to. Defaults to the art wing. The
   page publishes at `/collections/<slug>.html` in the art wing and at
   `/<wing>/collections/<slug>.html` elsewhere.
