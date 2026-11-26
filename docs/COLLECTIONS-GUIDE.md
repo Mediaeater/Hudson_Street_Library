@@ -65,7 +65,7 @@ Outside the art wing these pages are also left out of the sitemap. In the art wi
 
 ## Exclusive tags
 
-`EXCLUSIVE_TAGS` in `scripts/utils/collection-matcher.js` is `['Queer Culture']`. A book carrying an exclusive tag appears in that tag's collection and in no other tag, shelf, decade or form collection. Pages that name a specific title or author (BUTT, Purple, a person page) are identity pages and are not affected. The Queer Culture page itself lists books only: its config excludes the `Periodical` and `Magazines` classifications, so a magazine carrying the tag shows on its identity page or on no collection page.
+`EXCLUSIVE_TAGS` in `scripts/utils/collection-matcher.js` is `['Queer Culture']`. A book carrying an exclusive tag appears in that tag's collection and in no other tag, shelf, decade or form collection. Pages that name a specific title or author (BUTT, Purple, a person page) are identity pages and are not affected. The Queer Culture page itself lists books only: its config excludes the `Periodical` and `Magazines` classifications, and a book the owning page excludes is released: other curated pages (Magazines) list it. Generated tag, decade and form pages still leave it out.
 
 ## Links
 

@@ -4,6 +4,8 @@
 // title or author (BUTT, Purple, Richard Prince) are identity pages, not
 // subject pages, and are not affected. Rule set 2026-09-13: a book tagged
 // Queer Culture shows only in the Queer Culture collection.
+const fs = require('fs');
+const path = require('path');
 const { slugifyTag, resolveAlias } = require('./tag-vocabulary');
 
 const EXCLUSIVE_TAGS = ['Queer Culture'];
@@ -23,11 +25,28 @@ function splitTags(book) {
   return tagKeys((book.tags || '').split(','));
 }
 
-// True when the book carries an exclusive tag that this config does not name.
+// The curated configs that own an exclusive tag, read once. A book such a
+// config excludes (Queer Culture leaves out periodicals) is not on its page,
+// so the tag does not claim it and other curated pages may list it.
+let exclusiveOwners = null;
+function ownersOf(tagKey_) {
+  if (!exclusiveOwners) {
+    const dir = path.join(__dirname, '../../src/_data/collections');
+    exclusiveOwners = fs.readdirSync(dir).filter(f => f.endsWith('.json'))
+      .map(f => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')))
+      .filter(cfg => cfg.matchBy && cfg.matchBy.tag);
+  }
+  return exclusiveOwners.filter(cfg => tagKeys(cfg.matchBy.tag).includes(tagKey_));
+}
+
+// True when the book carries an exclusive tag that this config does not name,
+// and the page that owns the tag lists the book.
 function claimedElsewhere(book, rule) {
   if (!SUBJECT_RULES.some(k => rule[k])) return false;
   const bookTags = splitTags(book);
-  const owned = tagKeys(EXCLUSIVE_TAGS).filter(t => bookTags.includes(t));
+  const owned = tagKeys(EXCLUSIVE_TAGS)
+    .filter(t => bookTags.includes(t))
+    .filter(t => !ownersOf(t).some(cfg => excludedByConfig(book, cfg)));
   if (!owned.length) return false;
   const wanted = tagKeys(rule.tag);
   return !owned.some(t => wanted.includes(t));

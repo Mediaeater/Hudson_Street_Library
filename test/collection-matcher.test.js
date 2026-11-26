@@ -142,6 +142,13 @@ describe('collection-matcher', () => {
         expect(matchesCollection({ tags: 'Queer Culture', collection_grouping: 'Photography' }, byShelf)).to.be.true;
       });
 
+      it('releases an excluded book to other curated pages', () => {
+        const mag = { tags: 'Queer Culture, Magazines', classification: 'Periodical', collection_grouping: 'Magazines' };
+        expect(matchesCollection(mag, { matchBy: { collection_grouping: 'Magazines' } })).to.be.true;
+        const book = { ...mag, classification: 'Photobook' };
+        expect(matchesCollection(book, { matchBy: { collection_grouping: 'Magazines' } })).to.be.false;
+      });
+
       it('throws on a column it does not know', () => {
         expect(() => matchesCollection({ tags: 'Queer Culture' }, { slug: 'x', matchBy: { tag: 'Queer Culture' }, exclude: { title: 'BUTT' } }))
           .to.throw('unknown exclude rule "title"');
